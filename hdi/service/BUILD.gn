@@ -1,0 +1,58 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//base/powermgr/battery_manager/batterymgr.gni")
+import("//build/ohos.gni")
+import("//drivers/adapter/uhdf2/uhdf.gni")
+
+config("batteryd_private_config") {
+  include_dirs = [
+    "//drivers/ability/sbuf/include",
+    "//drivers/framework/include",
+    "//drivers/framework/include/core",
+  ]
+}
+
+config("batteryd_public_config") {
+  include_dirs = [
+    "include",
+    "${battery_manager_path}/hdi/api/include",
+  ]
+}
+
+ohos_shared_library("batteryd") {
+  sources = [
+    "src/batteryd.c",
+    "src/batteryd_dispatcher.c",
+    "src/batteryd_parser.c",
+    "src/batteryd_publisher.c",
+  ]
+
+  configs = [
+    "${utils_path}:utils_config",
+    ":batteryd_private_config",
+  ]
+
+  public_configs = [ ":batteryd_public_config" ]
+
+  deps = [
+    "${hdf_uhdf_path}/host:libhdf_host",
+    "${hdf_uhdf_path}/ipc:libhdf_ipc_adapter",
+    "${hdf_uhdf_path}/osal:libhdf_utils",
+    "//utils/native/base:utils",
+  ]
+
+  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
+
+  part_name = "battery_manager_native"
+}

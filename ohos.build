@@ -1,0 +1,33 @@
+{
+  "subsystem": "powermgr",
+  "parts": {
+    "battery_manager_native": {
+      "system_capabilities": [
+        "SystemCapability.PowerMgr.BatteryManager"
+      ],
+      "module_list": [
+        "//base/powermgr/battery_manager/hdi:hdi_group",
+        "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client",
+        "//base/powermgr/battery_manager/sa_profile:batterymgr_sa_profile",
+        "//base/powermgr/battery_manager/services:batteryservice",
+        "//base/powermgr/battery_manager/interfaces/kits/js/napi:batteryinfo"
+      ],
+      "inner_kits": [
+        {
+          "name": "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client",
+          "header": {
+            "header_files": [
+              "battery_srv_client.h",
+              "ibattery_srv.h",
+              "battery_info.h"
+            ],
+            "header_base": "//base/powermgr/battery_manager/interfaces/innerkits/native/include"
+          }
+        }
+      ],
+      "test_list": [
+        "//base/powermgr/battery_manager/services/native/test:unittest"
+      ]
+    }
+  }
+}
