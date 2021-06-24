@@ -54,7 +54,7 @@ describe('appInfoTest', function () {
     it('battery_temperature_test', 0, function () {
         var batteryTemperature = batteryInfo.batteryTemperature;
         console.info('batteryTemperature = ' + batteryTemperature);
-        expect(batteryTemperature <= 100).assertEqual('1')
+        expect(batteryTemperature <= 700).assertEqual('1')
     })
 
     it('enum_health_state_test_unknown', 0, function () {
