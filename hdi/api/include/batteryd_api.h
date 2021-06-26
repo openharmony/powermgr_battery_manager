@@ -17,6 +17,7 @@
 #define BATTERYD_API_H
 
 #include <stdlib.h>
+#include <stdint.h>
 
 enum BatterydCmd {
     CMD_BIND_BATTERY_SUBSCRIBER = 0,
