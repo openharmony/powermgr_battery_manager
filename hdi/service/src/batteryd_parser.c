@@ -397,7 +397,8 @@ int32_t ParseHealthState(int32_t *healthState)
     if (ret != HDF_SUCCESS) {
         return ret;
     }
-    value = ParseInt(buf);
+    TrimNewLine(buf);
+    value = HealthStateEnumConverter(buf);
     HDF_LOGD("%{public}s: healthState is %{public}d", __func__, value);
     *healthState = value;
     return HDF_SUCCESS;
@@ -466,7 +467,8 @@ int32_t ParseChargeState(int32_t *chargeState)
     if (ret != HDF_SUCCESS) {
         return ret;
     }
-    value = ParseInt(buf);
+    TrimNewLine(buf);
+    value = ChargeStateEnumConverter(buf);
     HDF_LOGD("%{public}s: chargeState is %{public}d", __func__, value);
     *chargeState = value;
     return HDF_SUCCESS;
@@ -544,6 +546,7 @@ int32_t ParsePluggedMaxVoltage(int32_t *maxVoltage)
 
 void ParseUeventToBatterydInfo(const char *msg, struct BatterydInfo *info)
 {
+    info->technology_ = "";
     while (*msg) {
         for (int i = 0; g_batteryAssigners[i].prefix; ++i) {
             if (!strncmp(msg, g_batteryAssigners[i].prefix, g_batteryAssigners[i].prefixLen)) {
