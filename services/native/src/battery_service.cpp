@@ -53,6 +53,10 @@ void BatteryService::OnStart()
         POWER_HILOGE(MODULE_BATT_SERVICE, "OnStart call initBatteryd fail");
         return;
     }
+    if (!Publish(this) {
+        POWER_HILOGE(MODULE_BATT_SERVICE, "OnStart register to system ability manager failed!");
+        return;
+    }
     ready_ = true;
     POWER_HILOGI(MODULE_BATT_SERVICE, "OnStart and add system ability success");
 }
