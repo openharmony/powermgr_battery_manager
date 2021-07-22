@@ -35,7 +35,7 @@
 #define INVALID_BATT_INT_VALUE (-1)
 
 #define POWER_SUPPLY_BASE_PATH "/sys/class/power_supply"
-#define POWER_SUPPLY_BATTERY "Battery"
+#define POWER_SUPPLY_TYPE_BATTERY "Battery"
 
 #define BATTERY_KEY_CAPACITY "POWER_SUPPLY_CAPACITY="
 #define BATTERY_KEY_VOLTAGE "POWER_SUPPLY_VOLTAGE_NOW="
@@ -161,6 +161,51 @@ inline static void TrimNewLine(char *str)
     str[strcspn(str, "\n")] = 0;
 }
 
+static int32_t ReadSysfsFile(const char *path, char *buf, size_t size)
+{
+    int32_t ret;
+    int fd = open(path, O_RDONLY);
+    if (fd < HDF_SUCCESS) {
+        HDF_LOGE("%{public}s: failed to open %{private}s", __func__, path);
+        return HDF_ERR_IO;
+    }
+    ret = read(fd, buf, size);
+    if (ret < HDF_SUCCESS) {
+        HDF_LOGE("%{public}s: failed to read %{private}s", __func__, path);
+        close(fd);
+        return HDF_ERR_IO;
+    }
+    close(fd);
+    buf[size - 1] = '\0';
+    return HDF_SUCCESS;
+}
+
+static int32_t ReadBatterySysfsToBuff(const char *path, char *buf, size_t size)
+{
+    int32_t ret;
+    if (path == NULL) {
+        HDF_LOGW("%{public}s: battery sysfs info is not exist. path=%{public}s", __func__, path);
+        return HDF_ERR_INVALID_OBJECT;
+    }
+    ret = ReadSysfsFile(path, buf, size);
+    if (ret != HDF_SUCCESS) {
+        HDF_LOGW("%{public}s: read path %{private}s failed, ret: %{public}d", __func__, path, ret);
+        return ret;
+    }
+    return HDF_SUCCESS;
+}
+
+static bool IsBatteryType(const char *typePath)
+{
+    char buf[MAX_BUFF_SIZE] = {0};
+    int32_t ret = ReadBatterySysfsToBuff(typePath, buf, MAX_BUFF_SIZE);
+    if (ret != HDF_SUCCESS) {
+        return false;
+    }
+    TrimNewLine(buf);
+    return strcmp(buf, POWER_SUPPLY_TYPE_BATTERY) == 0;
+}
+
 inline static void CapacityAssigner(const char *str, struct BatterydInfo *info)
 {
     info->capacity_ = ParseInt(str); // default in percent format
@@ -250,7 +295,7 @@ static void FormatSysfsPaths(struct PowerSupplySysfsInfo *info)
         info->name);
     FormatPath(info->voltageMaxPath, sizeof(info->voltageMaxPath), "%s/%s/voltage_max", POWER_SUPPLY_BASE_PATH,
         info->name);
-    if (strcmp(info->name, POWER_SUPPLY_BATTERY) != 0) {
+    if (!IsBatteryType(info->typePath)) {
         return;
     }
     // Format paths for battery only
@@ -306,40 +351,6 @@ int32_t InitBatterydSysfs(void)
         }
     }
     closedir(dir);
-    return HDF_SUCCESS;
-}
-
-static int32_t ReadSysfsFile(const char *path, char *buf, size_t size)
-{
-    int32_t ret;
-    int fd = open(path, O_RDONLY);
-    if (fd < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to open %{private}s", __func__, path);
-        return HDF_ERR_IO;
-    }
-    ret = read(fd, buf, size);
-    if (ret < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{private}s", __func__, path);
-        close(fd);
-        return HDF_ERR_IO;
-    }
-    close(fd);
-    buf[size - 1] = '\0';
-    return HDF_SUCCESS;
-}
-
-static int32_t ReadBatterySysfsToBuff(const char *path, char *buf, size_t size)
-{
-    int32_t ret;
-    if (g_batterySysfsInfo.name == NULL) {
-        HDF_LOGW("%{public}s: battery sysfs info is not exist", __func__);
-        return HDF_ERR_INVALID_OBJECT;
-    }
-    ret = ReadSysfsFile(path, buf, size);
-    if (ret != HDF_SUCCESS) {
-        HDF_LOGW("%{public}s: read path %{private}s failed, ret: %{public}d", __func__, path, ret);
-        return ret;
-    }
     return HDF_SUCCESS;
 }
 
@@ -409,7 +420,7 @@ void GetPluggedTypeName(char *buf, size_t size)
     int32_t ret;
     int32_t online;
     for (int i = 0; i < MAX_SYSFS_SIZE && g_powerSupplySysfsInfos[i].name; ++i) {
-        if (strcmp(g_powerSupplySysfsInfos[i].name, POWER_SUPPLY_BATTERY) == 0) {
+        if (IsBatteryType(g_powerSupplySysfsInfos[i].typePath)) {
             // ignore the battery type
             continue;
         }
