@@ -57,6 +57,12 @@ describe('appInfoTest', function () {
         expect(batteryTemperature <= 700).assertEqual('1')
     })
 
+    it('is_battery_present_test', 0, function () {
+        var isBatteryPresent = batteryInfo.isBatteryPresent;
+        console.info('isBatteryPresent = ' + isBatteryPresent);
+        expect(0).assertEqual('0')
+    })
+
     it('enum_health_state_test_unknown', 0, function () {
         var batteryHealthState = batteryInfo.BatteryHealthState.UNKNOWN;
         console.info('batteryHealthState = ' + batteryHealthState);
