@@ -109,6 +109,18 @@ static napi_value GetBatteryTemperature(napi_env env, napi_callback_info info)
     return napiValue;
 }
 
+static napi_value GetBatteryPresent(napi_env env, napi_callback_info info)
+{
+    napi_value napiValue = nullptr;
+    bool present = g_battClient.GetPresent();
+
+    NAPI_CALL(env, napi_get_boolean(env, present, &napiValue));
+
+    POWER_HILOGD(MODULE_JS_NAPI, "%{public}d", present);
+
+    return napiValue;
+}
+
 static napi_value EnumHealthClassConstructor(napi_env env, napi_callback_info info)
 {
     napi_value thisArg = nullptr;
@@ -253,6 +265,7 @@ static napi_value BatteryInit(napi_env env, napi_value exports)
         DECLARE_NAPI_GETTER("voltage", GetVoltage),
         DECLARE_NAPI_GETTER("technology", GetTechnology),
         DECLARE_NAPI_GETTER("batteryTemperature", GetBatteryTemperature),
+        DECLARE_NAPI_GETTER("isBatteryPresent", GetBatteryPresent),
     };
     NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc));
 
