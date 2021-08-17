@@ -20,78 +20,96 @@
  * voltage, temperature, model, and charger type.
  *
  * @SysCap SystemCapability.PowerMgr.BatteryManager
- * @devices phone, tablet
+ * @devices phone, tablet, tv, wearable
  * @since 6
  */
 declare namespace batteryInfo {
     /**
      * Battery state of charge (SoC) of the current device.
-     * @devices phone, tablet
+     * @devices phone, tablet, tv, wearable
+     * @since 6
      */
     const batterySOC: number;
 
     /**
      * Battery charging status of the current device.
-     * @devices phone, tablet
+     * @devices phone, tablet, tv, wearable
+     * @since 6
      */
     const chargingStatus: BatteryChargeState;
 
     /**
      * Battery health state of the current device.
-     * @devices phone, tablet
+     * @devices phone, tablet, tv, wearable
+     * @since 6
      */
     const healthStatus: BatteryHealthState;
 
     /**
      * Charger type of the current device.
-     * @devices phone, tablet
+     * @devices phone, tablet, tv, wearable
+     * @since 6
      */
     const pluggedType: BatteryPluggedType;
 
     /**
      * Battery voltage of the current device.
-     * @devices phone, tablet
+     * @devices phone, tablet, tv, wearable
+     * @since 6
      */
     const voltage: number;
 
     /**
      * Battery technology of the current device.
-     * @devices phone, tablet
+     * @devices phone, tablet, tv, wearable
+     * @since 6
      */
     const technology: string;
 
     /**
      * Battery temperature of the current device.
-     * @devices phone, tablet
+     * @devices phone, tablet, tv, wearable
+     * @since 6
      */
     const batteryTemperature: number;
+
+    /**
+     * Battery present state of the current device.
+     * @devices phone, tablet, tv, wearable
+     * @since 7
+     */
+    const isBatteryPresent: boolean;
 
     /**
      * Indicates the charger type of a device.
      *
      * @SysCap SystemCapability.PowerMgr.BatteryManager
-     * @devices phone, tablet
+     * @devices phone, tablet, tv, wearable
      * @since 6
      */
     export enum BatteryPluggedType {
         /**
          * Unknown type
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         NONE,
         /**
          * AC charger
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         AC,
         /**
          * USB charger
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         USB,
         /**
          * Wireless charger
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         WIRELESS
     }
@@ -100,28 +118,32 @@ declare namespace batteryInfo {
      * Indicates the battery charging status of a device.
      *
      * @SysCap SystemCapability.PowerMgr.BatteryManager
-     * @devices phone, tablet
+     * @devices phone, tablet, tv, wearable
      * @since 6
      */
     export enum BatteryChargeState {
         /**
          * Unknown state.
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         NONE,
         /**
          * The battery is being charged.
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         ENABLE,
         /**
          * The battery is not being charged.
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         DISABLE,
         /**
          * The battery is fully charged.
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         FULL
     }
@@ -130,38 +152,44 @@ declare namespace batteryInfo {
      * Indicates the battery health status of a device.
      *
      * @SysCap SystemCapability.PowerMgr.BatteryManager
-     * @devices phone, tablet
+     * @devices phone, tablet, tv, wearable
      * @since 6
      */
     export enum BatteryHealthState {
         /**
          * Unknown state.
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         UNKNOWN,
         /**
          * The battery is in healthy state.
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         GOOD,
         /**
          * The battery is overheated.
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         OVERHEAT,
         /**
          * The battery voltage is over high.
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         OVERVOLTAGE,
         /**
          * The battery temperature is low.
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         COLD,
         /**
          * The battery is dead.
-         * @devices phone, tablet
+         * @devices phone, tablet, tv, wearable
+         * @since 6
          */
         DEAD
     }
