@@ -43,8 +43,19 @@ ErrCode BatterySrvClient::Connect()
         POWER_HILOGE(MODULE_BATT_INNERKIT, "GetSystemAbility failed.");
         return E_GET_POWER_SERVICE_FAILED;
     }
+
+    deathRecipient_ = sptr<IRemoteObject::DeathRecipient>(new BatterySrvDeathRecipient());
+    if (deathRecipient_ == nullptr) {
+        POWER_HILOGE(MODULE_INNERKIT, "%{public}s :Failed to create BatterySrvDeathRecipient!", __func__);
+        return ERR_NO_MEMORY;
+    }
+    if ((remoteObject_->IsProxyObject()) && (!remoteObject_->AddDeathRecipient(deathRecipient_))) {
+        POWER_HILOGE(MODULE_INNERKIT, "%{public}s :Add death recipient to BatterySrv failed.", __func__);
+        return E_ADD_DEATH_RECIPIENT_FAILED;
+    }
+
     proxy_ = iface_cast<IBatterySrv>(remoteObject_);
-    POWER_HILOGI(MODULE_BATT_INNERKIT, "%{public}s :Connect PowerMgrService ok.", __func__);
+    POWER_HILOGI(MODULE_BATT_INNERKIT, "%{public}s :Connect BatterySrv ok.", __func__);
     return ERR_OK;
 }
 
