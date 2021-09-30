@@ -36,7 +36,7 @@ ohos_shared_library("batteryd_client") {
   deps = [
     "${hdf_uhdf_path}/hdi:libhdi",
     "${hdf_uhdf_path}/host:libhdf_host",
-    "${hdf_uhdf_path}/osal:libhdf_utils",
+    "${hdf_uhdf_path}/utils:libhdf_utils",
     "//utils/native/base:utils",
   ]
 

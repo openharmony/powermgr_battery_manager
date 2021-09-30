@@ -48,7 +48,7 @@ ohos_shared_library("batteryd") {
   deps = [
     "${hdf_uhdf_path}/host:libhdf_host",
     "${hdf_uhdf_path}/ipc:libhdf_ipc_adapter",
-    "${hdf_uhdf_path}/osal:libhdf_utils",
+    "${hdf_uhdf_path}/utils:libhdf_utils",
     "//utils/native/base:utils",
   ]
 
