@@ -26,8 +26,8 @@ config("batterysrv_public_config") {
 
 ohos_shared_library("batterysrv_client") {
   sources = [
+    "${battery_manager_path}/frameworks/native/src/battery_srv_client.cpp",
     "${battery_manager_path}/services/zidl/src/battery_srv_proxy.cpp",
-    "native/src/battery_srv_client.cpp",
   ]
 
   configs = [

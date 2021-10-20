@@ -1,0 +1,15 @@
+--- interfaces/kits/js/napi/battery_info.cpp
++++ frameworks/js/napi/battery_info.cpp
+@@ -16,11 +16,11 @@
+ #include <cstdio>
+ #include <cstdlib>
+ #include <string>
+-#include "battery_info.h"
+ #include "battery_srv_client.h"
+ #include "hilog_wrapper.h"
+ #include "napi/native_api.h"
+ #include "napi/native_node_api.h"
++#include "battery_info.h"
+ 
+ using namespace OHOS::PowerMgr;
+ 

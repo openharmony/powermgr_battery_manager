@@ -25,7 +25,7 @@
 #include "batteryd_subscriber.h"
 #include "battery_service_subscriber.h"
 #include "battery_srv_stub.h"
-#include "batterysrv_event_handler.h"
+#include "battery_service_event_handler.h"
 
 namespace OHOS {
 namespace PowerMgr {
@@ -43,7 +43,7 @@ public:
         return ready_;
     }
 
-    std::shared_ptr<BatterysrvEventHandler> GetHandler() const
+    std::shared_ptr<BatteryServiceEventHandler> GetHandler() const
     {
         return handler_;
     }
@@ -56,7 +56,6 @@ public:
     bool GetPresent() override;
     std::string GetTechnology() override;
     int32_t GetBatteryTemperature() override;
-
 private:
     bool Init();
     bool InitBatteryd();
@@ -65,7 +64,7 @@ private:
     int32_t commEventRetryTimes_ {0};
     std::mutex mutex_;
     std::shared_ptr<AppExecFwk::EventRunner> eventRunner_;
-    std::shared_ptr<BatterysrvEventHandler> handler_;
+    std::shared_ptr<BatteryServiceEventHandler> handler_;
     sptr<BatteryServiceSubscriber> batterydSubscriber_;
 };
 } // namespace PowerMgr
