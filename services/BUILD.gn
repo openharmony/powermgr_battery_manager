@@ -28,8 +28,8 @@ ohos_shared_library("batteryservice") {
   sources = [
     "${battery_manager_path}/services/zidl/src/battery_srv_stub.cpp",
     "native/src/battery_service.cpp",
+    "native/src/battery_service_event_handler.cpp",
     "native/src/battery_service_subscriber.cpp",
-    "native/src/batterysrv_event_handler.cpp",
   ]
 
   configs = [

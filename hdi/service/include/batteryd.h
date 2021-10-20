@@ -16,17 +16,20 @@
 #ifndef BATTERYD_H
 #define BATTERYD_H
 
-#include "batteryd_api.h"
 #include "core/hdf_device_desc.h"
 
-struct BatterydService {
+namespace OHOS {
+namespace HDI {
+namespace Battery {
+namespace V1_0 {
+struct HdfBatterydService {
     struct IDeviceIoService ioService;
     struct HdfDeviceObject *device;
-    struct BatterydSubscriber *subscriber;
-    int32_t ueventFd;
+    void *instance;
 };
-
-int32_t BindBatterySubscriber(struct BatterydService *service, struct BatterydSubscriber *subscriber);
-int32_t UnbindBatterySubscriber(struct BatterydService *service);
+}  // namespace V1_0
+}  // namespace Battery
+}  // namespace HDI
+}  // namespace OHOS
 
 #endif // BATTERYD_H
