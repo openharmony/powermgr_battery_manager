@@ -16,6 +16,9 @@
 #ifndef BATTERY_SERVICE_SUBSCRIBER_H
 #define BATTERY_SERVICE_SUBSCRIBER_H
 
+#include "common_event_data.h"
+#include "common_event_manager.h"
+#include "common_event_support.h"
 #include "batteryd_subscriber.h"
 
 namespace OHOS {
@@ -27,7 +30,17 @@ public:
     int32_t Update(const BatteryInfo &info) override;
 
 private:
-    static bool HandleBatteryChangedEvent(const BatteryInfo &info);
+    static bool HandleCapacityChangedEvent(const BatteryInfo &info);
+    static bool HandleVoltageChangedEvent(const BatteryInfo &info);
+    static bool HandleTemperatureChangedEvent(const BatteryInfo &info);
+    static bool HandleHealthStateChangedEvent(const BatteryInfo &info);
+    static bool HandlePluggedTypeChangedEvent(const BatteryInfo &info);
+    static bool HandleMaxCurrentChangedEvent(const BatteryInfo &info);
+    static bool HandleMaxVoltageChangedEvent(const BatteryInfo &info);
+    static bool HandleChargeStateChangedEvent(const BatteryInfo &info);
+    static bool HandleChargeCounterChangedEvent(const BatteryInfo &info);
+    static bool HandlePresentChangedEvent(const BatteryInfo &info);
+    static bool HandleTechnologyChangedEvent(const BatteryInfo &info);
 };
 } // namespace PowerMgr
 } // namespace OHOS

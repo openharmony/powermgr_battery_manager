@@ -26,6 +26,7 @@ class BatterydClient {
 public:
     static ErrCode BindBatterydSubscriber(const sptr<BatterydSubscriber> &subscriber);
     static ErrCode UnbindBatterydSubscriber();
+    static ErrCode ChangePath(std::string path);
     static int32_t GetCapacity();
     static int32_t GetVoltage();
     static int32_t GetTemperature();
