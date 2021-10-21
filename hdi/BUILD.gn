@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import("//build/ohos.gni")
+import("//drivers/adapter/uhdf2/uhdf.gni")
 
 group("hdi_group") {
   deps = [

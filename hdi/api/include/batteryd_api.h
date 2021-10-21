@@ -17,7 +17,7 @@
 #define BATTERYD_API_H
 
 #include <stdlib.h>
-#include <stdint.h>
+#include <string>
 
 enum BatterydCmd {
     CMD_BIND_BATTERY_SUBSCRIBER = 0,
@@ -30,7 +30,8 @@ enum BatterydCmd {
     CMD_GET_PLUGGED_TYPE,
     CMD_GET_CHARGE_STATE,
     CMD_GET_PRESENT,
-    CMD_GET_TECHNOLOGY
+    CMD_GET_TECHNOLOGY,
+    CMD_CHANGE_PATH
 };
 
 // Keep it same as the inner kit battery_info.h
@@ -45,7 +46,7 @@ struct BatterydInfo {
     int32_t chargeState_;
     int32_t chargeCounter_;
     int8_t present_;
-    const char *technology_;
+    std::string technology_;
 };
 
 #endif // BATTERYD_API_H

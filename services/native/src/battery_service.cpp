@@ -34,7 +34,9 @@ const bool G_REGISTER_RESULT = SystemAbility::MakeAndRegisterAbility(
     DelayedSpSingleton<BatteryService>::GetInstance().GetRefPtr());
 
 BatteryService::BatteryService()
-    : SystemAbility(POWER_MANAGER_BATT_SERVICE_ID, true) {}
+    : SystemAbility(POWER_MANAGER_BATT_SERVICE_ID, true)
+{
+}
 
 BatteryService::~BatteryService() {}
 
@@ -54,7 +56,7 @@ void BatteryService::OnStart()
         return;
     }
     if (!Publish(this)) {
-        POWER_HILOGE(MODULE_BATT_SERVICE, "OnStart register to system ability manager failed!");
+        POWER_HILOGE(MODULE_BATT_SERVICE, "OnStart register to system ability manager failed");
         return;
     }
     ready_ = true;
@@ -72,13 +74,14 @@ bool BatteryService::Init()
         }
     }
     if (!handler_) {
-        handler_ = std::make_shared<BatterysrvEventHandler>(eventRunner_,
+        handler_ = std::make_shared<BatteryServiceEventHandler>(eventRunner_,
             DelayedSpSingleton<BatteryService>::GetInstance());
         if (handler_ == nullptr) {
             POWER_HILOGE(MODULE_BATT_SERVICE, "Init failed due to create handler error");
             return false;
         }
     }
+
     while (commEventRetryTimes_ <= COMMEVENT_REGISTER_RETRY_TIMES) {
         if (!IsCommonEventServiceAbilityExist()) {
             commEventRetryTimes_++;
@@ -120,7 +123,7 @@ bool BatteryService::IsCommonEventServiceAbilityExist()
             "IsCommonEventServiceAbilityExist Get ISystemAbilityManager failed, no SystemAbilityManager");
         return false;
     }
-    sptr<IRemoteObject> remote = sm->CheckSystemAbility(COMMON_EVENT_SERVICE_ABILITY_ID);
+    sptr<IRemoteObject> remote = sm->CheckSystemAbility(COMMON_EVENT_SERVICE_ID);
     if (!remote) {
         POWER_HILOGE(MODULE_BATT_SERVICE, "No CesServiceAbility");
         return false;

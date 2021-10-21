@@ -79,6 +79,21 @@ ErrCode BatterydClient::UnbindBatterydSubscriber()
     return DoDispatch(CMD_UNBIND_BATTERY_SUBSCRIBER, data, reply);
 }
 
+ErrCode BatterydClient::ChangePath(std::string path)
+{
+    POWER_HILOGD(MODULE_BATTERYD, "ChangePath enter");
+    MessageParcel data;
+    MessageParcel reply;
+
+    POWER_HILOGW(MODULE_BATTERYD, "path is %{public}s", path.c_str());
+    if (!data.WriteString(path)) {
+        POWER_HILOGW(MODULE_BATTERYD, "write result failed.");
+        return ERR_INVALID_VALUE;
+    }
+
+    return DoDispatch(CMD_CHANGE_PATH, data, reply);
+}
+
 int32_t BatterydClient::GetCapacity()
 {
     POWER_HILOGD(MODULE_BATTERYD, "GetCapacity enter");
@@ -187,7 +202,7 @@ std::string BatterydClient::GetTechnology()
         POWER_HILOGW(MODULE_BATTERYD, "CMD_GET_TECHNOLOGY failed, return INVALID_STRING_VALUE");
         return INVALID_STRING_VALUE;
     }
-    std::string technology = reply.ReadCString();
+    std::string technology = reply.ReadString();
     return technology;
 }
 } // namespace PowerMgr

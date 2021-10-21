@@ -7,10 +7,13 @@
       ],
       "module_list": [
         "//base/powermgr/battery_manager/hdi:hdi_group",
+        "//base/powermgr/battery_manager/charger:charger_group",
         "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client",
         "//base/powermgr/battery_manager/sa_profile:batterymgr_sa_profile",
         "//base/powermgr/battery_manager/services:batteryservice",
-        "//base/powermgr/battery_manager/interfaces/kits/js/napi:batteryinfo"
+        "//base/powermgr/battery_manager/frameworks/js/napi:batteryinfo",
+        "//base/powermgr/battery_manager/charger:led_service",
+        "//base/powermgr/battery_manager/charger:resources_service"
       ],
       "inner_kits": [
         {
@@ -26,7 +29,12 @@
         }
       ],
       "test_list": [
-        "//base/powermgr/battery_manager/services/native/test:unittest"
+        "//base/powermgr/battery_manager/services/native/test:unittest",
+        "//base/powermgr/battery_manager/hdi/service/test:unittest",
+        "//base/powermgr/battery_manager/hdi/client/test:unittest",
+        "//base/powermgr/battery_manager/frameworks/native/test:unittest",
+        "//base/powermgr/battery_manager/hdi/test:moduletest",
+        "//base/powermgr/battery_manager/test:systemtest"
       ]
     }
   }
