@@ -36,9 +36,7 @@ public:
     friend class BatteryThreadTest;
 private:
     void Init();
-    static void Reboot(std::string &reason);
     static void UpdateAnimation(const int32_t &capacity);
-    void ShutDown(std::string &reason);
     void Run(void *service) override;
     void UpdateBatteryInfo(void *arg, char *msg) override;
     void UpdateBatteryInfo(void *arg) override;

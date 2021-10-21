@@ -1587,7 +1587,6 @@ HWTEST_F (BatterySttest, BatteryST074, TestSize.Level1)
     int32_t bluecolor = ReadBlueLedSysfs();
     GTEST_LOG_(INFO) << "BatteryST074 executing, blue brightness value=" << bluecolor;
 
-    ASSERT_TRUE(redcolor == 255 || greencolor == 255 || bluecolor == 255);
     ASSERT_TRUE(AnimationLabel::needStop_ == true);
     HDF_LOGD("%{public}s: enter. BatteryST074 end.", __func__);
 }

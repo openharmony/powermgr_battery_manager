@@ -15,19 +15,38 @@
 
 #include "battery_backlight.h"
 
+#include <iostream>
+#include <fstream>
+#include <unistd.h>
 #include <hdf_log.h>
 #include <hdf_base.h>
 #include <string>
+#include <dirent.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#define Hi3516DV300
 
 namespace OHOS {
 namespace HDI {
 namespace Battery {
 namespace V1_0 {
+#ifdef Hi3516DV300
+static const std::string BACKLIGHT_DEVICE_PATH = "/data/brightness";
+#else
 static const std::string BACKLIGHT_DEVICE_PATH = "/sys/class/backlight/sprd_backlight/brightness";
+#endif
 static const std::string SEMICOLON = ";";
 static const int MAX_STR = 255;
 static const unsigned int BACKLIGHT_ON = 128;
 static const unsigned int BACKLIGHT_OFF = 0;
+static const unsigned int MKDIR_WAIT_TIME = 1;
+
+BatteryBacklight::BatteryBacklight()
+{
+    InitDefaultSysfs();
+}
 
 void BatteryBacklight::TurnOnScreen()
 {
@@ -47,6 +66,32 @@ bool BatteryBacklight::GetScreenState()
 {
     HDF_LOGI("%{public}s enter", __func__);
     return screenOn_;
+}
+
+const char *BatteryBacklight::CreateFile(const char *path, const char *content)
+{
+    HDF_LOGI("%{public}s enter", __func__);
+    std::ofstream stream(path);
+    if (!stream.is_open()) {
+        HDF_LOGD("%{public}s: Cannot create file %{public}s", __func__, path);
+        return nullptr;
+    }
+    stream << content << std::endl;
+    stream.close();
+    return path;
+}
+
+void BatteryBacklight::InitDefaultSysfs(void)
+{
+    HDF_LOGI("%{public}s enter", __func__);
+    std::string brightnessPath = "/data";
+    if (access(brightnessPath.c_str(), 0) == -1) {
+        mkdir("/data", S_IRWXU);
+        sleep(MKDIR_WAIT_TIME);
+    }
+
+    HDF_LOGE("%{public}s: create default brightness path for Hi3516DV300", __func__);
+    CreateFile("/data/brightness", "127");
 }
 
 int BatteryBacklight::HandleBacklight(const unsigned int backlight)

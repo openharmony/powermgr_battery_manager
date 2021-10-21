@@ -141,95 +141,62 @@ public:
         COMMON_EVENT_CODE_TECHNOLOGY = 10,
     };
 
-    class Builder {
-    public:
-        Builder()
-        {
-            this->info_ = new BatteryInfo;
-        };
-
-        ~Builder()
-        {
-            delete info_;
-        };
-
-        Builder *SetCapacity(int32_t capacity)
-        {
-            this->info_->capacity_ = capacity;
-            return this;
-        }
-
-        Builder *SetVoltage(int32_t voltage)
-        {
-            this->info_->voltage_ = voltage;
-            return this;
-        }
-
-        Builder *SetTemperature(int32_t temperature)
-        {
-            this->info_->temperature_ = temperature;
-            return this;
-        }
-
-        Builder *SetHealthState(BatteryHealthState healthState)
-        {
-            this->info_->healthState_ = healthState;
-            return this;
-        }
-
-        Builder *SetPluggedType(BatteryPluggedType pluggedType)
-        {
-            this->info_->pluggedType_ = pluggedType;
-            return this;
-        }
-
-        Builder *SetPluggedMaxCurrent(int32_t maxCurrent)
-        {
-            this->info_->pluggedMaxCurrent_ = maxCurrent;
-            return this;
-        }
-
-        Builder *SetPluggedMaxVoltage(int32_t maxVoltage)
-        {
-            this->info_->pluggedMaxVoltage_ = maxVoltage;
-            return this;
-        }
-
-        Builder *SetChargeState(BatteryChargeState chargeState)
-        {
-            this->info_->chargeState_ = chargeState;
-            return this;
-        }
-
-        Builder *SetChargeCounter(int32_t chargeCounter)
-        {
-            this->info_->chargeCounter_ = chargeCounter;
-            return this;
-        }
-
-        Builder *SetPresent(bool present)
-        {
-            this->info_->present_ = present;
-            return this;
-        }
-
-        Builder *SetTechnology(const std::string &technology)
-        {
-            this->info_->technology_ = technology;
-            return this;
-        }
-
-        const BatteryInfo *Build()
-        {
-            return info_;
-        }
-
-    private:
-        BatteryInfo *info_;
-    };
-
     BatteryInfo() = default;
     ~BatteryInfo() = default;
+    void SetCapacity(const int32_t capacity)
+    {
+        capacity_ = capacity;
+    }
+
+    void SetVoltage(const int32_t voltage)
+    {
+        voltage_ = voltage;
+    }
+
+    void SetTemperature(const int32_t temperature)
+    {
+        temperature_ = temperature;
+    }
+
+    void SetHealthState(const BatteryHealthState healthState)
+    {
+        healthState_ = healthState;
+    }
+
+    void SetPluggedType(const BatteryPluggedType pluggedType)
+    {
+        pluggedType_ = pluggedType;
+    }
+
+    void SetPluggedMaxCurrent(const int32_t maxCurrent)
+    {
+        pluggedMaxCurrent_ = maxCurrent;
+    }
+
+    void SetPluggedMaxVoltage(const int32_t maxVoltage)
+    {
+        pluggedMaxVoltage_ = maxVoltage;
+    }
+
+    void SetChargeState(const BatteryChargeState chargeState)
+    {
+        chargeState_ = chargeState;
+    }
+
+    void SetChargeCounter(const int32_t chargeCounter)
+    {
+        chargeCounter_ = chargeCounter;
+    }
+
+    void SetPresent(const bool present)
+    {
+        present_ = present;
+    }
+
+    void SetTechnology(const std::string &technology)
+    {
+        technology_ = technology;
+    }
 
     const int32_t &GetCapacity() const
     {

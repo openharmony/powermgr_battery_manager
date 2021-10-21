@@ -41,6 +41,10 @@ private:
     static bool HandleChargeCounterChangedEvent(const BatteryInfo &info);
     static bool HandlePresentChangedEvent(const BatteryInfo &info);
     static bool HandleTechnologyChangedEvent(const BatteryInfo &info);
+    static bool HandleBatteryLowEvent(const BatteryInfo &info);
+    static bool HandleBatteryOkayEvent(const BatteryInfo &info);
+    static bool HandleBatteryPowerConnectedEvent(const BatteryInfo &info);
+    static bool HandleBatteryPowerDisconnectedEvent(const BatteryInfo &info);
 };
 } // namespace PowerMgr
 } // namespace OHOS
