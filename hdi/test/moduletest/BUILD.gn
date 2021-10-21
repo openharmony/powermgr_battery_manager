@@ -45,6 +45,7 @@ config("module_private_config") {
     "${battery_manager_path}/hdi/api/include",
     "${battery_manager_path}/interfaces/innerkits/native/include",
     "${battery_manager_path}/services/zidl/include",
+    "//base/powermgr/power_manager/interfaces/innerkits/native/include",
   ]
 }
 
@@ -76,6 +77,7 @@ ohos_unittest("test_module") {
     "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/battery_manager/charger/ui:libminui",
     "//base/powermgr/battery_manager/services:batteryservice",
+    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",

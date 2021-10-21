@@ -33,6 +33,7 @@ config("batteryd_public_config") {
     "//base/powermgr/battery_manager/charger/vibrate",
     "//base/powermgr/battery_manager/charger/backlight",
     "//base/powermgr/battery_manager/charger/led",
+    "//base/powermgr/power_manager/interfaces/innerkits/native/include",
     "//drivers/peripheral/input/interfaces/include",
     "//third_party/libpng",
   ]
@@ -62,6 +63,7 @@ ohos_executable("charger") {
     "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/battery_manager/charger/ui:libminui",
     "//base/powermgr/battery_manager/hdi/service:batteryd",
+    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//third_party/jsoncpp:jsoncpp",
     "//utils/native/base:utils",

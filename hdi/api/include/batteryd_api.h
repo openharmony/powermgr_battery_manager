@@ -34,6 +34,14 @@ enum BatterydCmd {
     CMD_CHANGE_PATH
 };
 
+enum BatterydPluggedType {
+    PLUGGED_TYPE_NONE = 0,
+    PLUGGED_TYPE_AC,
+    PLUGGED_TYPE_USB,
+    PLUGGED_TYPE_WIRELESS,
+    PLUGGED_TYPE_BUTT
+};
+
 // Keep it same as the inner kit battery_info.h
 struct BatterydInfo {
     int32_t capacity_;

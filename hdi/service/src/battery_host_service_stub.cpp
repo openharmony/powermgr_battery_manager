@@ -26,6 +26,7 @@
 #include "utils/hdf_log.h"
 
 #include "batteryd.h"
+#include "power_mgr_client.h"
 
 #define Hi3516DV300
 
@@ -33,8 +34,6 @@ namespace OHOS {
 namespace HDI {
 namespace Battery {
 namespace V1_0 {
-static const int CMD_MAX_SIZE = 92;
-
 int32_t BatteryHostServiceStub::Init()
 {
     HDF_LOGI("%{public}s enter", __func__);
@@ -310,27 +309,11 @@ void BatteryHostServiceStub::HandleTemperature(const int32_t &temperature) const
     HDF_LOGD("%{public}s: temperature=%{public}d, tempConf.lower=%{public}d, tempConf.upper=%{public}d",
         __func__, temperature, tempConf.lower, tempConf.upper);
 
+    auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
     if (((temperature <= tempConf.lower) || (temperature >= tempConf.upper)) && (tempConf.lower != tempConf.upper)) {
         std::string reason = "TemperatureOutOfRange";
-        ShutDown(reason);
+        powerMgrClient.ShutDownDevice(reason);
     }
-
-    HDF_LOGI("%{public}s exit", __func__);
-    return;
-}
-
-void BatteryHostServiceStub::ShutDown(std::string &reason) const
-{
-    HDF_LOGI("%{public}s enter", __func__);
-    char updateCmd[CMD_MAX_SIZE];
-
-    if (snprintf_s(updateCmd, CMD_MAX_SIZE, CMD_MAX_SIZE - 1, "shutdown,%s", reason.c_str()) < 0) {
-        HDF_LOGD("%{public}s: snprintf failed.", __func__);
-        return;
-    }
-
-    HDF_LOGD("%{public}s: Shutdown executing.", __func__);
-    OHOS::system::SetParameter("sys.powerctl", updateCmd);
 
     HDF_LOGI("%{public}s exit", __func__);
     return;
