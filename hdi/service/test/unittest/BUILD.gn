@@ -41,6 +41,7 @@ config("module_private_config") {
     "//base/powermgr/battery_manager/charger/backlight",
     "//base/powermgr/battery_manager/charger/vibrate",
     "//base/powermgr/battery_manager/charger/include",
+    "//base/powermgr/power_manager/interfaces/innerkits/native/include",
   ]
 }
 
@@ -71,6 +72,7 @@ ohos_unittest("test_hdisrv") {
     "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/battery_manager/charger/ui:libminui",
     "//base/powermgr/battery_manager/hdi/client:batteryd_client",
+    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
@@ -110,6 +112,7 @@ ohos_unittest("test_capacity_shutdown") {
     "${hdf_uhdf_path}/ipc:libhdf_ipc_adapter",
     "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/battery_manager/charger/ui:libminui",
+    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
@@ -143,6 +146,7 @@ ohos_unittest("test_input_event") {
     "//drivers/peripheral/input/hal/include",
     "//drivers/peripheral/input/interfaces/include",
     "//third_party/FreeBSD/sys/dev/evdev",
+    "//base/powermgr/power_manager/interfaces/innerkits/native/include",
   ]
 
   sources = [ "src/hdi_input_test.cpp" ]
@@ -157,6 +161,7 @@ ohos_unittest("test_input_event") {
     "${hdf_uhdf_path}/ipc:libhdf_ipc_adapter",
     "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/battery_manager/charger/ui:libminui",
+    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",

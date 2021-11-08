@@ -27,8 +27,8 @@ using namespace OHOS::EventFwk;
 namespace OHOS {
 namespace PowerMgr {
 bool g_firstPublish = true;
-std::string g_technology;
 BatterydInfo g_batteryInfo;
+static const int BATTERY_LOW_CAPACITY = 3;
 
 BatteryServiceSubscriber::BatteryServiceSubscriber() {}
 
@@ -43,9 +43,7 @@ int32_t BatteryServiceSubscriber::Update(const BatteryInfo &info)
         info.GetCapacity(), info.GetVoltage(), info.GetTemperature(), info.GetHealthState(),
         info.GetPluggedType(), info.GetPluggedMaxCurrent(), info.GetPluggedMaxVoltage(), info.GetChargeState(),
         info.GetChargeCounter(), info.IsPresent(), info.GetTechnology().c_str());
-    bool ret = HandleTechnologyChangedEvent(info);
-    isAllSuccess &= ret;
-    ret = HandleCapacityChangedEvent(info);
+    bool ret = HandleCapacityChangedEvent(info);
     isAllSuccess &= ret;
     ret = HandleVoltageChangedEvent(info);
     isAllSuccess &= ret;
@@ -64,6 +62,17 @@ int32_t BatteryServiceSubscriber::Update(const BatteryInfo &info)
     ret = HandleChargeCounterChangedEvent(info);
     isAllSuccess &= ret;
     ret = HandlePresentChangedEvent(info);
+    isAllSuccess &= ret;
+    ret = HandleTechnologyChangedEvent(info);
+    isAllSuccess &= ret;
+    ret = HandleBatteryLowEvent(info);
+    isAllSuccess &= ret;
+    ret = HandleBatteryOkayEvent(info);
+    isAllSuccess &= ret;
+    ret = HandleBatteryPowerConnectedEvent(info);
+    isAllSuccess &= ret;
+    ret = HandleBatteryPowerDisconnectedEvent(info);
+    isAllSuccess &= ret;
     g_firstPublish = false;
 
     return isAllSuccess ? ERR_OK : ERR_NO_INIT;
@@ -333,6 +342,102 @@ bool BatteryServiceSubscriber::HandleTechnologyChangedEvent(const BatteryInfo &i
 
     if (!isSuccess) {
         POWER_HILOGD(MODULE_BATT_SERVICE, "failed to publish TECHNOLOGY_CHANGED event");
+    }
+    return isSuccess;
+}
+
+bool BatteryServiceSubscriber::HandleBatteryLowEvent(const BatteryInfo &info)
+{
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_LOW);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(true);
+    bool isSuccess = true;
+
+    if (info.GetCapacity() > BATTERY_LOW_CAPACITY) {
+        return isSuccess;
+    }
+    data.SetCode(BatteryInfo::COMMON_EVENT_CODE_CAPACITY);
+    data.SetData(ToString(info.GetCapacity()));
+    POWER_HILOGD(MODULE_BATT_SERVICE, "publisher capacity=%{public}d", info.GetCapacity());
+    isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
+    if (!isSuccess) {
+        POWER_HILOGD(MODULE_BATT_SERVICE, "failed to publish battery_low event");
+    }
+    return isSuccess;
+}
+
+bool BatteryServiceSubscriber::HandleBatteryOkayEvent(const BatteryInfo &info)
+{
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_OKAY);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(true);
+    bool isSuccess = true;
+
+    if (info.GetCapacity() <= BATTERY_LOW_CAPACITY) {
+        return isSuccess;
+    }
+    data.SetCode(BatteryInfo::COMMON_EVENT_CODE_CAPACITY);
+    data.SetData(ToString(info.GetCapacity()));
+    POWER_HILOGD(MODULE_BATT_SERVICE, "publisher capacity=%{public}d", info.GetCapacity());
+    isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
+    if (!isSuccess) {
+        POWER_HILOGD(MODULE_BATT_SERVICE, "failed to publish battery_okay event");
+    }
+    return isSuccess;
+}
+
+bool BatteryServiceSubscriber::HandleBatteryPowerConnectedEvent(const BatteryInfo &info)
+{
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_CONNECTED);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(true);
+    bool isSuccess = true;
+
+    if ((static_cast<uint32_t>(info.GetPluggedType()) == PLUGGED_TYPE_NONE) ||
+        (static_cast<uint32_t>(info.GetPluggedType()) == PLUGGED_TYPE_BUTT)) {
+        return isSuccess;
+    }
+    data.SetCode(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_TYPE);
+    data.SetData(ToString(static_cast<uint32_t>(info.GetPluggedType())));
+    POWER_HILOGD(MODULE_BATT_SERVICE, "publisher pluggedtype=%{public}d",
+        static_cast<uint32_t>(info.GetPluggedType()));
+    isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
+    if (!isSuccess) {
+        POWER_HILOGD(MODULE_BATT_SERVICE, "failed to publish power_connected event");
+    }
+    return isSuccess;
+}
+
+bool BatteryServiceSubscriber::HandleBatteryPowerDisconnectedEvent(const BatteryInfo &info)
+{
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_DISCONNECTED);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(true);
+    bool isSuccess = true;
+
+    if ((static_cast<uint32_t>(info.GetPluggedType()) != PLUGGED_TYPE_NONE) &&
+        (static_cast<uint32_t>(info.GetPluggedType()) != PLUGGED_TYPE_BUTT)) {
+        return isSuccess;
+    }
+    data.SetCode(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_TYPE);
+    data.SetData(ToString(static_cast<uint32_t>(info.GetPluggedType())));
+    POWER_HILOGD(MODULE_BATT_SERVICE, "publisher pluggedtype=%{public}d",
+        static_cast<uint32_t>(info.GetPluggedType()));
+    isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
+    if (!isSuccess) {
+        POWER_HILOGD(MODULE_BATT_SERVICE, "failed to publish power_disconnected event");
     }
     return isSuccess;
 }

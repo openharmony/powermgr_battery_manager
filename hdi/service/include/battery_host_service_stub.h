@@ -52,7 +52,6 @@ public:
     std::unique_ptr<PowerSupplyProvider> provider_ = nullptr;
 private:
     void HandleTemperature(const int32_t &temperature) const;
-    void ShutDown(std::string &reason) const;
     void NotifySubscriber(const struct BatterydInfo *batteryInfo) const;
     struct HdfRemoteService *subscriber_ =  nullptr;
     std::unique_ptr<BatteryThread> loop_ = nullptr;

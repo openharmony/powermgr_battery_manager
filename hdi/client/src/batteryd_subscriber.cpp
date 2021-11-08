@@ -23,7 +23,7 @@ int BatterydSubscriber::OnRemoteRequest(uint32_t code, MessageParcel &data, Mess
 {
     switch (code) {
         case CMD_NOTIFY_SUBSCRIBER: {
-            const BatteryInfo &info = ParserBatteryInfo(data, reply, option);
+            const BatteryInfo info = ParseBatteryInfo(data, reply, option);
             return Update(info);
         }
         default: {
@@ -33,23 +33,22 @@ int BatterydSubscriber::OnRemoteRequest(uint32_t code, MessageParcel &data, Mess
     }
 }
 
-const BatteryInfo &BatterydSubscriber::ParserBatteryInfo(MessageParcel &data, MessageParcel &reply,
+const BatteryInfo BatterydSubscriber::ParseBatteryInfo(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    auto builder = std::make_shared<BatteryInfo::Builder>();
-    auto *info = builder->SetCapacity(data.ReadInt32())
-        ->SetVoltage(data.ReadInt32())
-        ->SetTemperature(data.ReadInt32())
-        ->SetHealthState((BatteryHealthState)data.ReadInt32())
-        ->SetPluggedType((BatteryPluggedType)data.ReadInt32())
-        ->SetPluggedMaxCurrent(data.ReadInt32())
-        ->SetPluggedMaxVoltage(data.ReadInt32())
-        ->SetChargeState((BatteryChargeState)data.ReadInt32())
-        ->SetChargeCounter(data.ReadInt32())
-        ->SetPresent((bool)data.ReadInt8())
-        ->SetTechnology(data.ReadCString())
-        ->Build();
-    return *info;
+    BatteryInfo info;
+    info.SetCapacity(data.ReadInt32());
+    info.SetVoltage(data.ReadInt32());
+    info.SetTemperature(data.ReadInt32());
+    info.SetHealthState((BatteryHealthState)data.ReadInt32());
+    info.SetPluggedType((BatteryPluggedType)data.ReadInt32());
+    info.SetPluggedMaxCurrent(data.ReadInt32());
+    info.SetPluggedMaxVoltage(data.ReadInt32());
+    info.SetChargeState((BatteryChargeState)data.ReadInt32());
+    info.SetChargeCounter(data.ReadInt32());
+    info.SetPresent((bool)data.ReadInt8());
+    info.SetTechnology(data.ReadCString());
+    return info;
 }
 } // namespace PowerMgr
 } // namespace OHOS

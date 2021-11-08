@@ -515,7 +515,7 @@ void PowerSupplyProvider::InitDefaultSysfs(void)
     CreateFile("/data/local/tmp/sc27xx-fgu/current_avg", "1000");
     CreateFile("/data/local/tmp/sc27xx-fgu/current_now", "1000");
     CreateFile("/data/local/tmp/sc27xx-fgu/health", "Over voltage");
-    CreateFile("/data/local/tmp/sc27xx-fgu/present", "1");
+    CreateFile("/data/local/tmp/sc27xx-fgu/present", "0");
     CreateFile("/data/local/tmp/sc27xx-fgu/status", "Not charging");
     CreateFile("/data/local/tmp/sc27xx-fgu/type", "Unknown");
     CreateFile("/data/local/tmp/sc27xx-fgu/temp", "345");
@@ -537,7 +537,7 @@ void PowerSupplyProvider::InitDefaultSysfs(void)
     CreateFile("/data/local/tmp/battery/health", "Good");
     CreateFile("/data/local/tmp/battery/input_current_limit", "0");
     CreateFile("/data/local/tmp/battery/online", "1");
-    CreateFile("/data/local/tmp/battery/present", "1");
+    CreateFile("/data/local/tmp/battery/present", "0");
     CreateFile("/data/local/tmp/battery/status", "Full");
     CreateFile("/data/local/tmp/battery/temp", "222");
     CreateFile("/data/local/tmp/battery/voltage_avg", "4123456");
