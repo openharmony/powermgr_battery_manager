@@ -28,6 +28,7 @@
 #include "text_label.h"
 #include "view.h"
 #include "input_manager.h"
+#include "power_mgr_client.h"
 
 #define HDF_LOG_TAG Charger
 
@@ -42,7 +43,6 @@ struct keyState {
 };
 
 static const int SHUTDOWN_TIME_MS = 2000;
-static const int CMD_MAX_SIZE = 92;
 static const long long MAX_INT64 = 9223372036854775807;
 static const int SEC_TO_MSEC = 1000;
 static const int NSEC_TO_MSEC = 1000000;
@@ -272,11 +272,12 @@ void ChargerThread::UpdateBatteryInfo(void *arg)
 void ChargerThread::HandleCapacity(const int32_t &capacity)
 {
     HDF_LOGI("%{public}s enter", __func__);
+    auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
     if ((capacity <= batteryConfig_->GetCapacityConf()) &&
         ((chargeState_ == PowerSupplyProvider::CHARGE_STATE_NONE) ||
         (chargeState_ == PowerSupplyProvider::CHARGE_STATE_RESERVED))) {
         std::string reason = "LowCapacity";
-        ShutDown(reason);
+        powerMgrClient.ShutDownDevice(reason);
     }
 
     HDF_LOGI("%{public}s exit", __func__);
@@ -290,10 +291,11 @@ void ChargerThread::HandleTemperature(const int32_t &temperature)
     HDF_LOGD("%{public}s: temperature=%{public}d, tempConf.lower=%{public}d, tempConf.upper=%{public}d",
         __func__, temperature, tempConf.lower, tempConf.upper);
 
+    auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
     if (((temperature <= tempConf.lower) || (temperature >= tempConf.upper)) &&
         (tempConf.lower != tempConf.upper)) {
         std::string reason = "TemperatureOutOfRange";
-        ShutDown(reason);
+        powerMgrClient.ShutDownDevice(reason);
     }
 
     HDF_LOGI("%{public}s exit", __func__);
@@ -316,6 +318,7 @@ void ChargerThread::HandleChargingState()
 {
     HDF_LOGI("%{public}s enter", __func__);
     int64_t now = GetCurrentTime();
+    auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
 
     if ((chargeState_ == PowerSupplyProvider::CHARGE_STATE_NONE) ||
         (chargeState_ == PowerSupplyProvider::CHARGE_STATE_RESERVED)) {
@@ -327,9 +330,9 @@ void ChargerThread::HandleChargingState()
             pluginWait_ = now + SHUTDOWN_TIME_MS;
         } else if (now >= pluginWait_) {
             std::string reason = "charger unplugged";
-            ShutDown(reason);
+            powerMgrClient.ShutDownDevice(reason);
         } else {
-            HDF_LOGD("%{public}s: ShutDown timer already in scheduled.", __func__);
+            HDF_LOGD("%{public}s: ShutDownDevice timer already in scheduled.", __func__);
         }
     } else {
         if (pluginWait_ != -1) {
@@ -354,40 +357,6 @@ void ChargerThread::HandleScreenState()
         AnimationLabel::needStop_ = true;
         backlightWait_ = -1;
     }
-
-    HDF_LOGI("%{public}s exit", __func__);
-    return;
-}
-
-void ChargerThread::ShutDown(std::string &reason)
-{
-    HDF_LOGI("%{public}s enter", __func__);
-    char updateCmd[CMD_MAX_SIZE];
-
-    if (snprintf_s(updateCmd, CMD_MAX_SIZE, CMD_MAX_SIZE - 1, "shutdown,%s", reason.c_str()) < 0) {
-        HDF_LOGD("%{public}s: snprintf failed.", __func__);
-        return;
-    }
-
-    HDF_LOGD("%{public}s: Shutdown executing.", __func__);
-    OHOS::system::SetParameter("sys.powerctl", updateCmd);
-
-    HDF_LOGI("%{public}s exit", __func__);
-    return;
-}
-
-void ChargerThread::Reboot(std::string &reason)
-{
-    HDF_LOGI("%{public}s enter", __func__);
-    char updateCmd[CMD_MAX_SIZE];
-
-    if (snprintf_s(updateCmd, CMD_MAX_SIZE, CMD_MAX_SIZE - 1, "reboot,%s", reason.c_str()) < 0) {
-        HDF_LOGD("%{public}s: snprintf failed.", __func__);
-        return;
-    }
-
-    HDF_LOGD("%{public}s: Reboot executing.", __func__);
-    OHOS::system::SetParameter("sys.powerctl", updateCmd);
 
     HDF_LOGI("%{public}s exit", __func__);
     return;
@@ -439,6 +408,7 @@ void ChargerThread::HandlePowerKeyState()
 void ChargerThread::HandlePowerKey(int keycode, int64_t now)
 {
     HDF_LOGI("%{public}s enter", __func__);
+    auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
     keyState *key = &keys_[keycode];
     if (keycode == KEY_POWER) {
         if (key->down) {
@@ -449,7 +419,7 @@ void ChargerThread::HandlePowerKey(int keycode, int64_t now)
                 AnimationLabel::needStop_ = true;
                 vibrate_->HandleVibrate(VIBRATE_TIME_MS);
                 std::string reason = "Reboot";
-                Reboot(reason);
+                powerMgrClient.RebootDevice(reason);
             } else {
                 SetKeyWait(key, REBOOT_TIME);
                 backlight_->TurnOnScreen();

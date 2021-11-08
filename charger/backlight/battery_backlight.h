@@ -22,11 +22,14 @@ namespace Battery {
 namespace V1_0 {
 class BatteryBacklight {
 public:
+    BatteryBacklight();
     void TurnOnScreen();
     void TurnOffScreen();
     int HandleBacklight(const unsigned int backlight);
     bool GetScreenState();
 private:
+    const char *CreateFile(const char *path, const char *content);
+    void InitDefaultSysfs(void);
     bool screenOn_ = false;
 };
 }  // namespace V1_0

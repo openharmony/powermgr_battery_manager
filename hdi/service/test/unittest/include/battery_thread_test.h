@@ -49,7 +49,6 @@ bool GetBatteryInfoTest(ChargerThread& cthread);
 void SetChargeStateTest(const int32_t state, ChargerThread& cthread);
 int32_t GetChargeStateTest(ChargerThread& cthread);
 void HandleCapacityTest(const int32_t &capacity, ChargerThread& cthread);
-void RebootTest(std::string &reason, ChargerThread& cthread);
 void HandleTemperatureTest(const int32_t &temperature, BatteryHostServiceStub& stub);
 void ChargerThreadHandleTemperatureTest(const int32_t &temperature, ChargerThread& cthread);
 
@@ -190,14 +189,6 @@ class HandleCapacityImplement {
 };
 
 template <typename Tag, typename PrivateFun, PrivateFun privateFun>
-class RebootImplement {
-    friend void RebootTest(std::string &reason, ChargerThread& cthread)
-    {
-        (cthread.*privateFun)(reason);
-    }
-};
-
-template <typename Tag, typename PrivateFun, PrivateFun privateFun>
 class GetChargeStateImplement {
     friend int32_t GetChargeStateTest(ChargerThread& cthread)
     {
@@ -331,12 +322,6 @@ template class HandleCapacityImplement <
     &ChargerThread::HandleCapacity
 >;
 
-template class RebootImplement <
-    ChargerThreadUnitTest,
-    decltype(&ChargerThread::Reboot),
-    &ChargerThread::Reboot
->;
-
 template class GetChargeStateImplement <
     ChargerThreadUnitTest,
     decltype(&ChargerThread::chargeState_),
@@ -363,11 +348,6 @@ template class HandleTemperatureImplement<
 
 class BatteryThreadTest {
 public:
-    void Reboot(std::string &reason, ChargerThread &ct)
-    {
-        ct.Reboot(reason);
-    }
-
     void SetKeyState(int code, int value, int64_t now, ChargerThread &ct)
     {
         ct.SetKeyState(code, value, now);
