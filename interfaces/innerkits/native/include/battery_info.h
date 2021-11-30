@@ -23,7 +23,7 @@ namespace PowerMgr {
 static constexpr int32_t INVALID_BATT_INT_VALUE = -1;
 static constexpr int32_t INVALID_BATT_TEMP_VALUE = 100;
 static const std::string INVALID_STRING_VALUE = "Invalid";
-static constexpr bool INVALID_BATT_BOOL_VALUE = true;
+static constexpr bool INVALID_BATT_BOOL_VALUE = false;
 
 /**
  * Type for acquire BatteryChargeState.
