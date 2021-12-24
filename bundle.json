@@ -1,0 +1,60 @@
+{
+    "name": "@ohos/powermgr_battery_manager",
+    "version": "",
+    "description": "电池、充放电状态查询，状态上报",
+    "homePage": "https://gitee.com/openharmony",
+    "license": "Apache V2",
+    "repository": "https://gitee.com/openharmony/powermgr_battery_manager",
+    "domain": "os",
+    "language": "",
+    "publishAs": "code-segment",
+    "private": false,
+    "scripts": {},
+    "tags": [
+        "base"
+    ],
+    "keywords": [
+        "powermgr",
+        "battery",
+        "manager"
+    ],
+    "envs": [],
+    "dirs": [],
+    "author": {
+        "name": "",
+        "email": "",
+        "url": ""
+    },
+    "contributors": [
+        {
+            "name": "",
+            "email": "",
+            "url": ""
+        }
+    ],
+    "segment": {
+        "destPath": "base/powermgr/battery_manager"
+    },
+    "component": {
+        "name": "battery_manger",
+        "subsystem": "powermgr",
+        "syscap": [
+            "SystemCapability.PowerMgr.BatteryManager"
+        ],
+        "features": [],
+        "adapted_system_type": [
+            "standard"
+        ],
+        "rom": "",
+        "ram": "",
+        "deps": {
+            "components": [],
+            "third_party": []
+        },
+        "build": {
+            "sub_component": [],
+            "inner_kits": [],
+            "test": []
+        }
+    }
+}
