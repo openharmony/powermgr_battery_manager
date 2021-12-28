@@ -13,27 +13,18 @@
  * limitations under the License.
  */
 
-#ifndef BATTERY_VIBRATE_H
-#define BATTERY_VIBRATE_H
+#ifndef CHARGER_OVERTEMPERATURE_SHUTDOWN_TEST_H
+#define CHARGER_OVERTEMPERATURE_SHUTDOWN_TEST_H
 
-#include <fstream>
+#include <gtest/gtest.h>
 
-namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_0 {
-class BatteryVibrate {
+namespace ChargerOvertemperatureShutdownTest {
+class ChargerOvertemperatureShutdownTest : public testing::Test {
 public:
-    int VibrateInit();
-    void HandleVibrate(const int time);
-private:
-    void HandlePlayMode(const int time) const;
-    void HandleDurationMode(const int time) const;
-    FILE* HandlePlayModePath() const;
-    int vibrateMode_ = -1;
+    static void SetUpTestCase();
+    static void TearDownTestCase();
+    void SetUp();
+    void TearDown();
 };
-}  // namespace V1_0
-}  // namespace Battery
-}  // namespace HDI
-}  // namespace OHOS
-#endif
+}
+#endif // CHARGER_OVERTEMPERATURE_SHUTDOWN_TEST_H

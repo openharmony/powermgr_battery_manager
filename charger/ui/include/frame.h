@@ -26,7 +26,7 @@ namespace HDI {
 namespace Battery {
 namespace V1_0 {
 struct CmpByStartY {
-    bool operator()(const View *v1, const View *v2) const
+    bool operator()(const View* v1, const View* v2) const
     {
         return v1->startY_ < v2->startY_;
     }
@@ -34,13 +34,13 @@ struct CmpByStartY {
 
 class Frame : public View {
 public:
-    Frame(unsigned int w, unsigned int h, View::PixelFormat pixType, SurfaceDev *sfDev);
+    Frame(unsigned int w, unsigned int h, View::PixelFormat pixType, SurfaceDev* sfDev);
 
     ~Frame() override;
 
     void OnDraw() override;
 
-    void ViewRegister(View *view);
+    void ViewRegister(View* view);
 
 private:
     void FlushThreadLoop();
@@ -51,7 +51,7 @@ private:
     int frameViewId = 0;
     bool flushFlag_ = false;
     bool needStop_ = false;
-    SurfaceDev *sfDev_ = nullptr;
+    SurfaceDev* sfDev_ = nullptr;
     std::mutex frameMutex_;
     std::mutex keyMutex_;
     std::condition_variable_any mCondFlush_;

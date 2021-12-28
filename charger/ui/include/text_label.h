@@ -36,9 +36,9 @@ enum class AlignmentMethod {
     ALIGN_TO_TOP,
 };
 public:
-    TextLabel(int mStartX, int mStartY, int w, int h, Frame *mparent);
+    TextLabel(int mStartX, int mStartY, int w, int h, Frame* mparent);
     ~TextLabel() override {};
-    void SetText(const char *str);
+    void SetText(const char* str);
     void SetTextColor(BRGA888Pixel color);
     void SetFont(FontType fType);
     void SetOutLineBold(bool topBold, bool bottomBold);
@@ -46,15 +46,15 @@ public:
     void OnDraw() override;
 private:
     void InitFont();
-    FILE *InitFontType();
+    FILE* InitFontType();
     void DrawText();
-    void DrawTextLoop(unsigned char ch, char *tmpBuf, int textSx, int textSy);
+    void DrawTextLoop(unsigned char ch, char* tmpBuf, int textSx, int textSy);
     void DrawOutline();
     void DrawFocus();
 
     ClickCallback callBack_;
     char textBuf_[512 + 1] {};
-    Frame *parent_ {};
+    Frame* parent_ {};
 
     AlignmentMethod fontAligMethodLevel_ = AlignmentMethod::ALIGN_TO_LEFT;
     AlignmentMethod fontAligMethodUpright_ = AlignmentMethod::ALIGN_CENTER;
@@ -68,7 +68,7 @@ private:
     bool boldBottomLine_ = false;
 
     FontType fontType_ { FontType::DEFAULT_FONT };
-    char fontBuf_[16 * 16] {};
+    char fontBuf_[4096 * 4096] {};
     unsigned int fontWidth_ = 0;
     unsigned int fontHeight_ = 0;
 };

@@ -21,12 +21,13 @@
 #include <memory>
 #include <mutex>
 #include <streambuf>
-#include <string>
+#include <cstring>
 #include <thread>
 #include <vector>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/types.h>
+#include <dirent.h>
 
 #include "utils/hdf_log.h"
 #include "batteryd_client.h"
@@ -44,17 +45,22 @@ using namespace OHOS::PowerMgr;
 using namespace OHOS::HDI::Battery::V1_0;
 using namespace std;
 
-static sptr<BatteryService> service;
+static sptr<BatteryService> g_service;
+static std::vector<std::string> g_ledsNodeName;
+static const std::string LEDS_BASE_PATH = "/sys/class/leds";
+static std::string g_redLedsNode = "red";
+static std::string g_greenLedsNode = "green";
+static std::string g_blueLedsNode = "blue";
 
 void BatterySttest::SetUpTestCase(void)
 {
-    service = DelayedSpSingleton<BatteryService>::GetInstance();
-    service->OnStart();
+    g_service = DelayedSpSingleton<BatteryService>::GetInstance();
+    g_service->OnStart();
 }
 
 void BatterySttest::TearDownTestCase(void)
 {
-    service->OnStop();
+    g_service->OnStop();
     DelayedSpSingleton<BatteryService>::DestroyInstance();
 }
 
@@ -66,19 +72,20 @@ void BatterySttest::TearDown(void)
 {
 }
 
-const char *CreateFile(const char *path, const char *content)
+std::string CreateFile(std::string path, std::string content)
 {
-    std::ofstream stream(path);
+    HDF_LOGD("%{public}s: enter. CreateFile enter.", __func__);
+    std::ofstream stream(path.c_str());
     if (!stream.is_open()) {
-        HDF_LOGD("%{public}s: enter, Cannot create file %{public}s", __func__, path);
+        HDF_LOGD("%{public}s: enter, Cannot create file %{public}s", __func__, path.c_str());
         return nullptr;
     }
-    stream << content << std::endl;
+    stream << content.c_str() << std::endl;
     stream.close();
     return path;
 }
 
-void MockFileInit()
+static void MockFileInit()
 {
     std::string path = "/data/local/tmp";
     mkdir("/data/local/tmp/battery", S_IRWXU);
@@ -95,21 +102,105 @@ void MockFileInit()
     BatterydClient::ChangePath(path);
 }
 
-int32_t ReadRedLedSysfs()
+static void TraversalNode()
 {
+    HDF_LOGD("%{public}s: enter", __func__);
+    string::size_type idx;
+
+    for (auto iter = g_ledsNodeName.begin(); iter != g_ledsNodeName.end(); ++iter) {
+        idx = iter->find(g_redLedsNode);
+        if (idx == string::npos) {
+            HDF_LOGD("%{public}s: not found red leds node", __func__);
+        } else {
+            g_redLedsNode = *iter;
+            HDF_LOGD("%{public}s: red leds node is %{public}s", __func__, iter->c_str());
+        }
+
+        idx = iter->find(g_greenLedsNode);
+        if (idx == string::npos) {
+            HDF_LOGD("%{public}s: not found green leds node", __func__);
+        } else {
+            g_greenLedsNode = *iter;
+            HDF_LOGD("%{public}s: green leds node is %{public}s", __func__, iter->c_str());
+        }
+
+        idx = iter->find(g_blueLedsNode);
+        if (idx == string::npos) {
+            HDF_LOGD("%{public}s: not found blue leds node", __func__);
+        } else {
+            g_blueLedsNode = *iter;
+            HDF_LOGD("%{public}s: blue leds node is %{public}s", __func__, iter->c_str());
+        }
+    }
+
+    HDF_LOGD("%{public}s: exit", __func__);
+}
+
+static int32_t InitLedsSysfs(void)
+{
+    HDF_LOGI("%{public}s enter", __func__);
+    DIR* dir = nullptr;
+    struct dirent* entry = nullptr;
+    int32_t index = 0;
+    int maxSize = 64;
+
+    dir = opendir(LEDS_BASE_PATH.c_str());
+    if (dir == nullptr) {
+        HDF_LOGE("%{public}s: leds base path is not exist", __func__);
+        return HDF_ERR_IO;
+    }
+
+    while (true) {
+        entry = readdir(dir);
+        if (entry == nullptr) {
+            break;
+        }
+
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
+            continue;
+        }
+
+        if (entry->d_type == DT_DIR || entry->d_type == DT_LNK) {
+            HDF_LOGD("%{public}s: init leds info of %{public}s", __func__, entry->d_name);
+            if (index >= maxSize) {
+                HDF_LOGE("%{public}s: too many leds types", __func__);
+                break;
+            }
+            g_ledsNodeName.emplace_back(entry->d_name);
+            index++;
+        }
+    }
+
+    TraversalNode();
+    HDF_LOGD("%{public}s: index is %{public}d", __func__, index);
+    closedir(dir);
+
+    HDF_LOGI("%{public}s exit", __func__);
+    return HDF_SUCCESS;
+}
+
+static int32_t ReadRedLedSysfs()
+{
+    HDF_LOGD("%{public}s: enter", __func__);
     int strlen = 10;
     char buf[128] = {0};
     int32_t readSize;
     std::string redLedPath = "/data/local/tmp/leds/sc27xx:red/brightness";
+    std::string sysRedLedPath = LEDS_BASE_PATH + "/" + g_redLedsNode + "/" + "brightness";
 
-    int fd = open(redLedPath.c_str(), O_RDONLY);
+    int fd = open(sysRedLedPath.c_str(), O_RDWR);
     if (fd < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to open %{private}s", __func__, redLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to open sys red led path %{public}s", __func__, g_redLedsNode.c_str());
+        fd = open(redLedPath.c_str(), O_RDWR);
+        if (fd < HDF_SUCCESS) {
+            HDF_LOGE("%{public}s: failed to open created red led path %{public}s", __func__, redLedPath.c_str());
+            return -1;
+        }
     }
 
     readSize = read(fd, buf, sizeof(buf) - 1);
     if (readSize < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{private}s", __func__, redLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, redLedPath.c_str());
         close(fd);
     }
 
@@ -117,24 +208,32 @@ int32_t ReadRedLedSysfs()
     int32_t redcolor = strtol(buf, nullptr, strlen);
     close(fd);
 
+    HDF_LOGE("%{public}s: read redcolor value is %{public}d", __func__, redcolor);
     return redcolor;
 }
 
-int32_t ReadGreenLedSysfs()
+static int32_t ReadGreenLedSysfs()
 {
+    HDF_LOGD("%{public}s: enter", __func__);
     int strlen = 10;
     char buf[128] = {0};
     int32_t readSize;
     std::string greenLedPath = "/data/local/tmp/leds/sc27xx:green/brightness";
+    std::string sysGreenLedPath = LEDS_BASE_PATH + "/" + g_greenLedsNode + "/" + "brightness";
 
-    int fd = open(greenLedPath.c_str(), O_RDONLY);
+    int fd = open(sysGreenLedPath.c_str(), O_RDWR);
     if (fd < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to open %{private}s", __func__, greenLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to open sys green led path %{public}s", __func__, g_greenLedsNode.c_str());
+        fd = open(greenLedPath.c_str(), O_RDWR);
+        if (fd < HDF_SUCCESS) {
+            HDF_LOGE("%{public}s: failed to open created green led path %{public}s", __func__, greenLedPath.c_str());
+            return -1;
+        }
     }
 
     readSize = read(fd, buf, sizeof(buf) - 1);
     if (readSize < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{private}s", __func__, greenLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, greenLedPath.c_str());
         close(fd);
     }
 
@@ -142,24 +241,32 @@ int32_t ReadGreenLedSysfs()
     int32_t greencolor = strtol(buf, nullptr, strlen);
     close(fd);
 
+    HDF_LOGE("%{public}s: read greencolor value is %{public}d", __func__, greencolor);
     return greencolor;
 }
 
-int32_t ReadBlueLedSysfs()
+static int32_t ReadBlueLedSysfs()
 {
+    HDF_LOGD("%{public}s: enter", __func__);
     int strlen = 10;
     char buf[128] = {0};
     int32_t readSize;
     std::string blueLedPath = "/data/local/tmp/leds/sc27xx:blue/brightness";
+    std::string sysBlueLedPath = LEDS_BASE_PATH + "/" + g_blueLedsNode + "/" + "brightness";
 
-    int fd = open(blueLedPath.c_str(), O_RDONLY);
+    int fd = open(sysBlueLedPath.c_str(), O_RDWR);
     if (fd < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to open %{private}s", __func__, blueLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to open sys blue led path %{public}s", __func__, g_blueLedsNode.c_str());
+        fd = open(blueLedPath.c_str(), O_RDWR);
+        if (fd < HDF_SUCCESS) {
+            HDF_LOGE("%{public}s: failed to open created blue led path %{public}s", __func__, blueLedPath.c_str());
+            return -1;
+        }
     }
 
     readSize = read(fd, buf, sizeof(buf) - 1);
     if (readSize < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{private}s", __func__, blueLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, blueLedPath.c_str());
         close(fd);
     }
 
@@ -167,6 +274,7 @@ int32_t ReadBlueLedSysfs()
     int32_t bluecolor = strtol(buf, nullptr, strlen);
     close(fd);
 
+    HDF_LOGE("%{public}s: read bluecolor value is %{public}d", __func__, bluecolor);
     return bluecolor;
 }
 
@@ -175,7 +283,7 @@ int32_t ReadBlueLedSysfs()
  * @tc.desc: Test functions of HDI Interface GetTemperature
  * @tc.type: FUNC
  */
-HWTEST_F (BatterySttest, BatteryST001, TestSize.Level1)
+static HWTEST_F (BatterySttest, BatteryST001, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST001 start.", __func__);
     MockFileInit();
@@ -436,6 +544,8 @@ HWTEST_F (BatterySttest, BatteryST016, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST016 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "USB");
+    CreateFile("/data/local/tmp/battery/type", "USB");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST016::pluggedType=%{public}d.", __func__, pluggedType);
@@ -453,6 +563,8 @@ HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST017 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_PD_DRP");
+    CreateFile("/data/local/tmp/battery/type", "USB_PD_DRP");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_PD_DRP");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST017::pluggedType=%{public}d.", __func__, pluggedType);
@@ -470,6 +582,8 @@ HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST018 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "Wireless");
+    CreateFile("/data/local/tmp/battery/type", "Wireless");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Wireless");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST018::pluggedType=%{public}d.", __func__, pluggedType);
@@ -487,6 +601,8 @@ HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST019 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "Mains");
+    CreateFile("/data/local/tmp/battery/type", "Mains");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Mains");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST019::pluggedType=%{public}d.", __func__, pluggedType);
@@ -504,6 +620,8 @@ HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST020 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "UPS");
+    CreateFile("/data/local/tmp/battery/type", "UPS");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "UPS");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST020::pluggedType=%{public}d.", __func__, pluggedType);
@@ -521,6 +639,8 @@ HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST021 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_ACA");
+    CreateFile("/data/local/tmp/battery/type", "USB_ACA");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_ACA");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST021::pluggedType=%{public}d.", __func__, pluggedType);
@@ -538,6 +658,8 @@ HWTEST_F (BatterySttest, BatteryST022, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST022 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_C");
+    CreateFile("/data/local/tmp/battery/type", "USB_C");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_C");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST022::pluggedType=%{public}d.", __func__, pluggedType);
@@ -555,6 +677,8 @@ HWTEST_F (BatterySttest, BatteryST023, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST023 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_CDP");
+    CreateFile("/data/local/tmp/battery/type", "USB_CDP");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_CDP");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST023::pluggedType=%{public}d.", __func__, pluggedType);
@@ -572,6 +696,8 @@ HWTEST_F (BatterySttest, BatteryST024, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST024 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_DCP");
+    CreateFile("/data/local/tmp/battery/type", "USB_DCP");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_DCP");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST024::pluggedType=%{public}d.", __func__, pluggedType);
@@ -589,6 +715,8 @@ HWTEST_F (BatterySttest, BatteryST025, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST025 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_HVDCP");
+    CreateFile("/data/local/tmp/battery/type", "USB_HVDCP");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_HVDCP");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST025::pluggedType=%{public}d.", __func__, pluggedType);
@@ -606,6 +734,8 @@ HWTEST_F (BatterySttest, BatteryST026, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST026 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_PD");
+    CreateFile("/data/local/tmp/battery/type", "USB_PD");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_PD");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST026::pluggedType=%{public}d.", __func__, pluggedType);
@@ -623,6 +753,8 @@ HWTEST_F (BatterySttest, BatteryST027, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST027 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "Unknown");
+    CreateFile("/data/local/tmp/battery/type", "Unknown");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Unknown");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST027::pluggedType=%{public}d.", __func__, pluggedType);
@@ -640,6 +772,8 @@ HWTEST_F (BatterySttest, BatteryST028, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST028 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "");
+    CreateFile("/data/local/tmp/battery/type", "");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST028::pluggedType=%{public}d.", __func__, pluggedType);
@@ -657,6 +791,8 @@ HWTEST_F (BatterySttest, BatteryST029, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST029 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "other");
+    CreateFile("/data/local/tmp/battery/type", "other");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "other");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST029::pluggedType=%{public}d.", __func__, pluggedType);
@@ -878,6 +1014,9 @@ HWTEST_F (BatterySttest, BatteryST042, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST042 start.", __func__);
     CreateFile("/data/local/tmp/battery/capacity", "44");
+    sptr<BatteryServiceSubscriber> batterydSubscriber = new BatteryServiceSubscriber();
+    auto errCode = BatterydClient::BindBatterydSubscriber(batterydSubscriber);
+    HDF_LOGD("%{public}s: enter. BatteryST042::errCode=%{public}d.", __func__, errCode);
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto capacity = BatterySrvClient.GetCapacity();
@@ -1186,6 +1325,7 @@ HWTEST_F (BatterySttest, BatteryST059, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST059 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "None");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "None");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1204,6 +1344,8 @@ HWTEST_F (BatterySttest, BatteryST060, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST060 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "Mains");
+    CreateFile("/data/local/tmp/battery/type", "Mains");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Mains");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1222,6 +1364,8 @@ HWTEST_F (BatterySttest, BatteryST061, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST061 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "USB");
+    CreateFile("/data/local/tmp/battery/type", "USB");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1240,6 +1384,8 @@ HWTEST_F (BatterySttest, BatteryST062, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST062 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "Wireless");
+    CreateFile("/data/local/tmp/battery/type", "Wireless");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Wireless");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1259,6 +1405,8 @@ HWTEST_F (BatterySttest, BatteryST063, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST063 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "Unknown");
+    CreateFile("/data/local/tmp/battery/type", "Unknown");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Unknown");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1276,10 +1424,12 @@ HWTEST_F (BatterySttest, BatteryST063, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST064, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST064 start.", __func__);
+    InitLedsSysfs();
 
     int32_t chargestate = PowerSupplyProvider::CHARGE_STATE_ENABLE;
     int32_t capacity = 0;
     BatteryLed batteryled;
+    batteryled.InitLedsSysfs();
     UpdateLedColorTest(chargestate, capacity, batteryled);
 
     int32_t value = ReadRedLedSysfs();
@@ -1556,37 +1706,4 @@ HWTEST_F (BatterySttest, BatteryST073, TestSize.Level1)
 
     ASSERT_TRUE(value == 0);
     HDF_LOGD("%{public}s: enter. BatteryST073 end.", __func__);
-}
-
-/**
- * @tc.name: BatteryST074
- * @tc.desc: Test animatin and led turn on when charging
- * @tc.type: FUNC
- */
-HWTEST_F (BatterySttest, BatteryST074, TestSize.Level1)
-{
-    HDF_LOGD("%{public}s: enter. BatteryST074 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB");
-    CreateFile("/data/local/tmp/battery/capacity", "11");
-    CreateFile("/data/local/tmp/battery/status", "Charging");
-    ChargerThread cthread;
-    BatteryThreadTest bthread;
-    void *arg = nullptr;
-    std::unique_ptr<BatteryHostServiceStub> stub = std::make_unique<BatteryHostServiceStub>();
-
-    stub->Init();
-    bthread.Init(cthread);
-    bthread.UpdateBatteryInfo(arg, cthread);
-
-    int32_t redcolor = ReadRedLedSysfs();
-    GTEST_LOG_(INFO) << "BatteryST074 executing, red brightness value=" << redcolor;
-
-    int32_t greencolor = ReadGreenLedSysfs();
-    GTEST_LOG_(INFO) << "BatteryST074 executing, green brightness value=" << greencolor;
-
-    int32_t bluecolor = ReadBlueLedSysfs();
-    GTEST_LOG_(INFO) << "BatteryST074 executing, blue brightness value=" << bluecolor;
-
-    ASSERT_TRUE(AnimationLabel::needStop_ == true);
-    HDF_LOGD("%{public}s: enter. BatteryST074 end.", __func__);
 }

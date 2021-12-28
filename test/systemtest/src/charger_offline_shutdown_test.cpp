@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
+#include "charger_offline_shutdown_test.h"
+
 #include <csignal>
 #include <iostream>
 #include "utils/hdf_log.h"
@@ -20,27 +22,26 @@
 #include "power_supply_provider.h"
 #include "battery_host_service_stub.h"
 #include "battery_thread_test.h"
-#include "hdi_service_test.h"
 #include "charger_thread.h"
 
 using namespace testing::ext;
 using namespace OHOS::HDI::Battery::V1_0;
 using namespace std;
 
-namespace HdiServiceTest {
-void HdiServiceTest::SetUpTestCase(void)
+namespace ChargerOfflineShutdownTest {
+void ChargerOfflineShutdownTest::SetUpTestCase(void)
 {
 }
 
-void HdiServiceTest::TearDownTestCase(void)
+void ChargerOfflineShutdownTest::TearDownTestCase(void)
 {
 }
 
-void HdiServiceTest::SetUp(void)
+void ChargerOfflineShutdownTest::SetUp(void)
 {
 }
 
-void HdiServiceTest::TearDown(void)
+void ChargerOfflineShutdownTest::TearDown(void)
 {
 }
 
@@ -48,20 +49,20 @@ namespace {
     struct ChargerThreadUnitTest {};
 }
 
-void HandleChargingStateTest(ChargerThread &cthread);
-std::unique_ptr<BatteryBacklight> GetBacklightTest(ChargerThread &cthread);
+void HandleChargingStateTest(ChargerThread& cthread);
+std::unique_ptr<BatteryBacklight> GetBacklightTest(ChargerThread& cthread);
 
-template <typename Tag, typename PrivateFun, PrivateFun privateFun>
+template<typename Tag, typename PrivateFun, PrivateFun privateFun>
 class HandleChargingStateImplement {
-    friend void HandleChargingStateTest(ChargerThread &cthread)
+    friend void HandleChargingStateTest(ChargerThread& cthread)
     {
         (cthread.*privateFun)();
     }
 };
 
-template <typename Tag, typename PrivateFun, PrivateFun privateFun>
+template<typename Tag, typename PrivateFun, PrivateFun privateFun>
 class GetBacklightImplement {
-    friend std::unique_ptr<BatteryBacklight> GetBacklightTest(ChargerThread &cthread)
+    friend std::unique_ptr<BatteryBacklight> GetBacklightTest(ChargerThread& cthread)
     {
         return std::move(cthread.*privateFun);
     }
@@ -84,7 +85,7 @@ template class GetBacklightImplement <
  * @tc.desc: Test functions shutdown during charing and offline less than 2 seconds
  * @tc.type: FUNC
  */
-HWTEST_F (HdiServiceTest, BatteryST_011, TestSize.Level1)
+HWTEST_F (ChargerOfflineShutdownTest, BatteryST_011, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: BatteryST_011 start.", __func__);
     ChargerThread ct;
@@ -107,7 +108,7 @@ HWTEST_F (HdiServiceTest, BatteryST_011, TestSize.Level1)
  * @tc.desc: Test functions shutdown during charing and offline 2 seconds
  * @tc.type: FUNC
  */
-HWTEST_F (HdiServiceTest, BatteryST_012, TestSize.Level1)
+HWTEST_F (ChargerOfflineShutdownTest, BatteryST_012, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: BatteryST_012 start.", __func__);
     ChargerThread ct;

@@ -27,24 +27,24 @@ class BatteryServiceSubscriber : public BatterydSubscriber {
 public:
     BatteryServiceSubscriber();
     ~BatteryServiceSubscriber() = default;
-    int32_t Update(const BatteryInfo &info) override;
+    int32_t Update(const BatteryInfo& info) override;
 
 private:
-    static bool HandleCapacityChangedEvent(const BatteryInfo &info);
-    static bool HandleVoltageChangedEvent(const BatteryInfo &info);
-    static bool HandleTemperatureChangedEvent(const BatteryInfo &info);
-    static bool HandleHealthStateChangedEvent(const BatteryInfo &info);
-    static bool HandlePluggedTypeChangedEvent(const BatteryInfo &info);
-    static bool HandleMaxCurrentChangedEvent(const BatteryInfo &info);
-    static bool HandleMaxVoltageChangedEvent(const BatteryInfo &info);
-    static bool HandleChargeStateChangedEvent(const BatteryInfo &info);
-    static bool HandleChargeCounterChangedEvent(const BatteryInfo &info);
-    static bool HandlePresentChangedEvent(const BatteryInfo &info);
-    static bool HandleTechnologyChangedEvent(const BatteryInfo &info);
-    static bool HandleBatteryLowEvent(const BatteryInfo &info);
-    static bool HandleBatteryOkayEvent(const BatteryInfo &info);
-    static bool HandleBatteryPowerConnectedEvent(const BatteryInfo &info);
-    static bool HandleBatteryPowerDisconnectedEvent(const BatteryInfo &info);
+    static bool HandleCapacityChangedEvent(const BatteryInfo& info);
+    static bool HandleVoltageChangedEvent(const BatteryInfo& info);
+    static bool HandleTemperatureChangedEvent(const BatteryInfo& info);
+    static bool HandleHealthStateChangedEvent(const BatteryInfo& info);
+    static bool HandlePluggedTypeChangedEvent(const BatteryInfo& info);
+    static bool HandleMaxCurrentChangedEvent(const BatteryInfo& info);
+    static bool HandleMaxVoltageChangedEvent(const BatteryInfo& info);
+    static bool HandleChargeStateChangedEvent(const BatteryInfo& info);
+    static bool HandleChargeCounterChangedEvent(const BatteryInfo& info);
+    static bool HandlePresentChangedEvent(const BatteryInfo& info);
+    static bool HandleTechnologyChangedEvent(const BatteryInfo& info);
+    static bool HandleBatteryLowEvent(const BatteryInfo& info);
+    static bool HandleBatteryOkayEvent(const BatteryInfo& info);
+    static bool HandleBatteryPowerConnectedEvent(const BatteryInfo& info);
+    static bool HandleBatteryPowerDisconnectedEvent(const BatteryInfo& info);
 };
 } // namespace PowerMgr
 } // namespace OHOS

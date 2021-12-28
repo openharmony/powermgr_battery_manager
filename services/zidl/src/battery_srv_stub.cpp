@@ -20,7 +20,7 @@
 
 namespace OHOS {
 namespace PowerMgr {
-int BatterySrvStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option)
+int BatterySrvStub::OnRemoteRequest(uint32_t code, MessageParcel& data, MessageParcel& reply, MessageOption& option)
 {
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatterySrvStub::OnRemoteRequest, cmd = %d, flags = %d", code, option.GetFlags());
     std::u16string descriptor = BatterySrvStub::GetDescriptor();
@@ -61,56 +61,56 @@ int BatterySrvStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageP
     }
 }
 
-int32_t BatterySrvStub::GetCapacityStub(MessageParcel &reply)
+int32_t BatterySrvStub::GetCapacityStub(MessageParcel& reply)
 {
     int32_t ret = GetCapacity();
     WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
-int32_t BatterySrvStub::GetChargingStatusStub(MessageParcel &reply)
+int32_t BatterySrvStub::GetChargingStatusStub(MessageParcel& reply)
 {
     BatteryChargeState ret = GetChargingStatus();
     WRITE_PARCEL_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
-int32_t BatterySrvStub::GetHealthStatusStub(MessageParcel &reply)
+int32_t BatterySrvStub::GetHealthStatusStub(MessageParcel& reply)
 {
     BatteryHealthState ret = GetHealthStatus();
     WRITE_PARCEL_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
-int32_t BatterySrvStub::GetPluggedTypeStub(MessageParcel &reply)
+int32_t BatterySrvStub::GetPluggedTypeStub(MessageParcel& reply)
 {
     BatteryPluggedType ret = GetPluggedType();
     WRITE_PARCEL_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
-int32_t BatterySrvStub::GetVoltageStub(MessageParcel &reply)
+int32_t BatterySrvStub::GetVoltageStub(MessageParcel& reply)
 {
     int32_t ret = GetVoltage();
     WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
-int32_t BatterySrvStub::GetPresentStub(MessageParcel &reply)
+int32_t BatterySrvStub::GetPresentStub(MessageParcel& reply)
 {
     bool ret = GetPresent();
     WRITE_PARCEL_WITH_RET(reply, Bool, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
-int32_t BatterySrvStub::GetTechnologyStub(MessageParcel &reply)
+int32_t BatterySrvStub::GetTechnologyStub(MessageParcel& reply)
 {
     std::string ret = GetTechnology();
     WRITE_PARCEL_WITH_RET(reply, String, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
-int32_t BatterySrvStub::GetBatteryTemperatureStub(MessageParcel &reply)
+int32_t BatterySrvStub::GetBatteryTemperatureStub(MessageParcel& reply)
 {
     int32_t ret = GetBatteryTemperature();
     WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);

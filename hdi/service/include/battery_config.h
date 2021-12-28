@@ -52,9 +52,9 @@ private:
         INDEX_THREE,
     };
 
-    int32_t ParseLedConf(Json::Value &root);
-    int32_t ParseTempConf(Json::Value &root);
-    int32_t ParseCapacityConf(Json::Value &root);
+    int32_t ParseLedConf(Json::Value& root);
+    int32_t ParseTempConf(Json::Value& root);
+    int32_t ParseCapacityConf(Json::Value& root);
     int32_t ParseConfig(const std::string filename);
     std::vector<BatteryConfig::LedConf> ledConf_;
     struct TempConf tempConf_;

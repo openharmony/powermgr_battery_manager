@@ -13,37 +13,43 @@
  * limitations under the License.
  */
 
-#ifndef BATTERY_STTEST_H
-#define BATTERY_STTEST_H
+#ifndef REBOOT_TEST_H
+#define REBOOT_TEST_H
 
 #include <gtest/gtest.h>
-#include "battery_led.h"
+#include "power_supply_provider.h"
+#include "battery_host_service_stub.h"
+#include "battery_thread_test.h"
+#include "charger_thread.h"
 
-class BatterySttest : public testing::Test {
+namespace RebootTest {
+class RebootTest : public testing::Test {
 public:
     static void SetUpTestCase();
     static void TearDownTestCase();
     void SetUp();
     void TearDown();
 };
+namespace {
+    struct ChargerThreadUnitTest {};
+}
 
-struct BatteryLedUnitTest {};
-
-void UpdateLedColorTest(const int32_t& chargestate, const int32_t& capacity,
-    OHOS::HDI::Battery::V1_0::BatteryLed& batteryled);
+std::unique_ptr<OHOS::HDI::Battery::V1_0::BatteryBacklight>
+    GetBacklightTest(OHOS::HDI::Battery::V1_0::ChargerThread& cthread);
 
 template<typename Tag, typename PrivateFun, PrivateFun privateFun>
-class UpdateLedColorImplement {
-    friend void UpdateLedColorTest(const int32_t& chargestate, const int32_t& capacity,
-        OHOS::HDI::Battery::V1_0::BatteryLed& batteryled)
+class Reboot {
+    friend std::unique_ptr<OHOS::HDI::Battery::V1_0::BatteryBacklight> GetBacklightTest(
+        OHOS::HDI::Battery::V1_0::ChargerThread& cthread)
     {
-        (batteryled.*privateFun)(chargestate, capacity);
+        return std::move(cthread.*privateFun);
     }
 };
 
-template class UpdateLedColorImplement <
-    BatteryLedUnitTest,
-    decltype(&OHOS::HDI::Battery::V1_0::BatteryLed::UpdateLedColor),
-    &OHOS::HDI::Battery::V1_0::BatteryLed::UpdateLedColor
+template class Reboot <
+    ChargerThreadUnitTest,
+    decltype(&OHOS::HDI::Battery::V1_0::ChargerThread::backlight_),
+    &OHOS::HDI::Battery::V1_0::ChargerThread::backlight_
 >;
-#endif // BATTERY_STTEST_H
+}
+#endif // REBOOT_TEST_H

@@ -24,7 +24,7 @@ namespace OHOS {
 namespace PowerMgr {
 class BatterydClient {
 public:
-    static ErrCode BindBatterydSubscriber(const sptr<BatterydSubscriber> &subscriber);
+    static ErrCode BindBatterydSubscriber(const sptr<BatterydSubscriber>& subscriber);
     static ErrCode UnbindBatterydSubscriber();
     static ErrCode ChangePath(std::string path);
     static int32_t GetCapacity();
@@ -37,7 +37,7 @@ public:
     static std::string GetTechnology();
 private:
     static sptr<IRemoteObject> GetBatterydService();
-    static ErrCode DoDispatch(uint32_t cmd, MessageParcel &data, MessageParcel &reply);
+    static ErrCode DoDispatch(uint32_t cmd, MessageParcel& data, MessageParcel& reply);
 };
 } // namespace PowerMgr
 } // namespace OHOS

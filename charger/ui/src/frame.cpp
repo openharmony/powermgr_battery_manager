@@ -24,7 +24,7 @@ namespace Battery {
 namespace V1_0 {
 using namespace std;
 
-Frame::Frame(unsigned int w, unsigned int h, View::PixelFormat pixType, SurfaceDev  *sfDev)
+Frame::Frame(unsigned int w, unsigned int h, View::PixelFormat pixType, SurfaceDev* sfDev)
 {
     this->CreateBuffer(w, h, pixType);
     this->startX_ = 0;
@@ -57,10 +57,10 @@ void Frame::FlushThreadLoop()
         frameMutex_.lock();
         std::map<View*, int>::iterator iter;
         for (iter = viewMapList_.begin(); iter != viewMapList_.end(); ++iter) {
-            View *tmpView = (*iter).first;
+            View* tmpView = (*iter).first;
             HDF_LOGD("%{public}s enter, tmpView->IsVisiable()=%{public}d", __func__, tmpView->IsVisiable());
             if (tmpView->IsVisiable()) {
-                char *bufTmp = static_cast<char *>(tmpView->GetBuffer());
+                char* bufTmp = static_cast<char*>(tmpView->GetBuffer());
                 DrawSubView(tmpView->startX_, tmpView->startY_, tmpView->viewWidth_, tmpView->viewHeight_, bufTmp);
             }
         }
@@ -70,7 +70,7 @@ void Frame::FlushThreadLoop()
     }
 }
 
-void Frame::ViewRegister(View *view)
+void Frame::ViewRegister(View* view)
 {
     HDF_LOGD("%{public}s enter", __func__);
     std::unique_lock<std::mutex> locker(frameMutex_);

@@ -19,31 +19,103 @@
 #include <hdf_base.h>
 #include <fstream>
 #include <memory>
-#include <string>
+#include <cstring>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-
-#define Hi3516DV300
+#include <dirent.h>
 
 namespace OHOS {
 namespace HDI {
 namespace Battery {
 namespace V1_0 {
-#ifdef Hi3516DV300
-static const std::string LED_RED_PATH = "/data/local/tmp/leds/sc27xx:red/brightness";
-static const std::string LED_GREEN_PATH = "/data/local/tmp/leds/sc27xx:green/brightness";
-static const std::string LED_BLUE_PATH = "/data/local/tmp/leds/sc27xx:blue/brightness";
-#else
-static const std::string LED_RED_PATH = "/sys/class/leds/sc27xx:red/brightness";
-static const std::string LED_GREEN_PATH = "/sys/class/leds/sc27xx:green/brightness";
-static const std::string LED_BLUE_PATH = "/sys/class/leds/sc27xx:blue/brightness";
-#endif
-static const int CAPACITY_FULL = 100;
-static const int MKDIR_WAIT_TIME = 1;
-static const int LED_COLOR_GREEN = 2;
-static const int LED_COLOR_RED = 4;
-static const int LED_COLOR_YELLOW = 6;
+const int CAPACITY_FULL = 100;
+const int MKDIR_WAIT_TIME = 1;
+const int LED_COLOR_GREEN = 2;
+const int LED_COLOR_RED = 4;
+const int LED_COLOR_YELLOW = 6;
+std::vector<std::string> g_ledsNodeName;
+const std::string LEDS_BASE_PATH = "/sys/class/leds";
+std::string g_redLedsNode = "red";
+std::string g_greenLedsNode = "green";
+std::string g_blueLedsNode = "blue";
+
+void BatteryLed::TraversalNode()
+{
+    HDF_LOGD("%{public}s: enter", __func__);
+    std::string::size_type idx;
+
+    for (auto iter = g_ledsNodeName.begin(); iter != g_ledsNodeName.end(); ++iter) {
+        idx = iter->find(g_redLedsNode);
+        if (idx == std::string::npos) {
+            HDF_LOGD("%{public}s: not found red leds node", __func__);
+        } else {
+            g_redLedsNode = *iter;
+            HDF_LOGD("%{public}s: red leds node is %{public}s", __func__, iter->c_str());
+        }
+
+        idx = iter->find(g_greenLedsNode);
+        if (idx == std::string::npos) {
+            HDF_LOGD("%{public}s: not found green leds node", __func__);
+        } else {
+            g_greenLedsNode = *iter;
+            HDF_LOGD("%{public}s: green leds node is %{public}s", __func__, iter->c_str());
+        }
+
+        idx = iter->find(g_blueLedsNode);
+        if (idx == std::string::npos) {
+            HDF_LOGD("%{public}s: not found blue leds node", __func__);
+        } else {
+            g_blueLedsNode = *iter;
+            HDF_LOGD("%{public}s: blue leds node is %{public}s", __func__, iter->c_str());
+        }
+    }
+
+    HDF_LOGD("%{public}s: exit", __func__);
+}
+
+int32_t BatteryLed::InitLedsSysfs()
+{
+    HDF_LOGI("%{public}s enter", __func__);
+    DIR* dir = nullptr;
+    struct dirent* entry = nullptr;
+    int32_t index = 0;
+    int maxSize = 64;
+
+    dir = opendir(LEDS_BASE_PATH.c_str());
+    if (dir == nullptr) {
+        HDF_LOGE("%{public}s: leds base path is not exist", __func__);
+        return HDF_ERR_IO;
+    }
+
+    while (true) {
+        entry = readdir(dir);
+        if (entry == nullptr) {
+            break;
+        }
+
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
+            continue;
+        }
+
+        if (entry->d_type == DT_DIR || entry->d_type == DT_LNK) {
+            HDF_LOGD("%{public}s: init leds info of %{public}s", __func__, entry->d_name);
+            if (index >= maxSize) {
+                HDF_LOGE("%{public}s: too many leds types", __func__);
+                break;
+            }
+            g_ledsNodeName.emplace_back(entry->d_name);
+            index++;
+        }
+    }
+
+    TraversalNode();
+    HDF_LOGD("%{public}s: index is %{public}d", __func__, index);
+    closedir(dir);
+
+    HDF_LOGI("%{public}s exit", __func__);
+    return HDF_SUCCESS;
+}
 
 void BatteryLed::TurnOffLed()
 {
@@ -54,7 +126,7 @@ void BatteryLed::TurnOffLed()
     return;
 }
 
-void BatteryLed::UpdateLedColor(const int32_t &chargestate, const int32_t &capacity)
+void BatteryLed::UpdateLedColor(const int32_t& chargestate, const int32_t& capacity)
 {
     HDF_LOGI("%{public}s enter", __func__);
     if ((chargestate == PowerSupplyProvider::CHARGE_STATE_NONE) ||
@@ -114,14 +186,17 @@ void BatteryLed::UpdateLedColor(const int32_t &chargestate, const int32_t &capac
 void BatteryLed::WriteLedInfoToSys(const int redbrightness, const int greenbrightness, const int bluebrightness)
 {
     HDF_LOGI("%{public}s enter", __func__);
-    FILE *file = nullptr;
+    FILE* file = nullptr;
+    std::string redLedPath = LEDS_BASE_PATH + "/" + g_redLedsNode + "/" + "brightness";
+    std::string greenLedPath = LEDS_BASE_PATH + "/" + g_greenLedsNode + "/" + "brightness";
+    std::string blueLedPath = LEDS_BASE_PATH + "/" + g_blueLedsNode + "/" + "brightness";
+    HDF_LOGD("%{public}s: redLedPath is %{public}s, greenLedPath is %{public}s, blueLedPath is %{public}s", __func__,
+        redLedPath.c_str(), greenLedPath.c_str(), blueLedPath.c_str());
+    InitMockLedFile(redLedPath, greenLedPath, blueLedPath);
 
-#ifdef Hi3516DV300
-    InitMockLedFile();
-#endif
-    file = fopen(LED_RED_PATH.c_str(), "w");
+    file = fopen(redLedPath.c_str(), "w");
     if (file == nullptr) {
-        HDF_LOGD("%{public}s: red led file open failed.", __func__);
+        HDF_LOGD("%{public}s: red led file open failed. redLedPath is %{public}s", __func__, redLedPath.c_str());
         return;
     }
     int ret = fprintf(file, "%d\n", redbrightness);
@@ -133,9 +208,9 @@ void BatteryLed::WriteLedInfoToSys(const int redbrightness, const int greenbrigh
         return;
     }
 
-    file = fopen(LED_GREEN_PATH.c_str(), "w");
+    file = fopen(greenLedPath.c_str(), "w");
     if (file == nullptr) {
-        HDF_LOGD("%{public}s: green led file open failed.", __func__);
+        HDF_LOGD("%{public}s: green led file open failed. greenLedPath is %{public}s", __func__, greenLedPath.c_str());
         return;
     }
     ret = fprintf(file, "%d\n", greenbrightness);
@@ -147,14 +222,14 @@ void BatteryLed::WriteLedInfoToSys(const int redbrightness, const int greenbrigh
         return;
     }
 
-    file = fopen(LED_BLUE_PATH.c_str(), "w");
+    file = fopen(blueLedPath.c_str(), "w");
     if (file == nullptr) {
         HDF_LOGD("%{public}s: blue led file open failed.", __func__);
         return;
     }
     ret = fprintf(file, "%d\n", bluebrightness);
     if (ret < 0) {
-        HDF_LOGD("%{public}s: blue led file fprintf failed.", __func__);
+        HDF_LOGD("%{public}s: blue led file fprintf failed. blueLedPath is %{public}s", __func__, blueLedPath.c_str());
     }
     ret = fclose(file);
     if (ret < 0) {
@@ -165,30 +240,39 @@ void BatteryLed::WriteLedInfoToSys(const int redbrightness, const int greenbrigh
     return;
 }
 
-const char *BatteryLed::CreateFile(const char *path, const char *content)
+std::string BatteryLed::CreateFile(std::string path, std::string content) const
 {
     HDF_LOGI("%{public}s enter", __func__);
-    std::ofstream stream(path);
+    std::ofstream stream(path.c_str());
     if (!stream.is_open()) {
-        HDF_LOGD("%{public}s: Cannot create file %{public}s", __func__, path);
+        HDF_LOGD("%{public}s: Cannot create file %{public}s", __func__, path.c_str());
         return nullptr;
     }
-    stream << content << std::endl;
+    stream << content.c_str() << std::endl;
     stream.close();
     return path;
 }
 
-void BatteryLed::InitMockLedFile()
+void BatteryLed::InitMockLedFile(std::string& redPath, std::string& greenPath, std::string& bluePath) const
 {
     HDF_LOGI("%{public}s enter", __func__);
+    std::string mockLedsPath = "/data/local/tmp/leds";
+    std::string sysLedsPath = "/sys/class/leds";
     std::string redLedPath = "/data/local/tmp/leds/sc27xx:red";
     std::string greenLedPath = "/data/local/tmp/leds/sc27xx:green";
     std::string blueLedPath = "/data/local/tmp/leds/sc27xx:blue";
-    std::string ledsPath = "/data/local/tmp/leds";
-    int ret = 0;
 
-    if (access(ledsPath.c_str(), 0) == -1) {
-        ret = mkdir("/data/local/tmp/leds", S_IRWXU);
+    if (access(sysLedsPath.c_str(), F_OK) == 0) {
+        HDF_LOGD("%{public}s: system leds path exist.", __func__);
+        return;
+    } else {
+        redPath = "/data/local/tmp/leds/sc27xx:red/brightness";
+        greenPath = "/data/local/tmp/leds/sc27xx:green/brightness";
+        bluePath = "/data/local/tmp/leds/sc27xx:blue/brightness";
+    }
+
+    if (access(mockLedsPath.c_str(), 0) == -1) {
+        int ret = mkdir("/data/local/tmp/leds", S_IRWXU);
         if (ret == -1) {
             HDF_LOGD("%{public}s: create leds path fail.", __func__);
             return;
@@ -196,8 +280,21 @@ void BatteryLed::InitMockLedFile()
         sleep(MKDIR_WAIT_TIME);
     }
 
+    InitRedLedPath(redLedPath);
+    InitGreenLedPath(greenLedPath);
+    InitBlueLedPath(blueLedPath);
+
+    HDF_LOGE("%{public}s: create mock path for Hi3516DV300", __func__);
+    CreateFile("/data/local/tmp/leds/sc27xx:red/brightness", "0");
+    CreateFile("/data/local/tmp/leds/sc27xx:green/brightness", "0");
+    CreateFile("/data/local/tmp/leds/sc27xx:blue/brightness", "0");
+}
+
+void BatteryLed::InitRedLedPath(std::string& redLedPath) const
+{
+    HDF_LOGI("%{public}s enter", __func__);
     if (access(redLedPath.c_str(), 0) == -1) {
-        ret = mkdir("/data/local/tmp/leds/sc27xx:red", S_IRWXU);
+        int ret = mkdir("/data/local/tmp/leds/sc27xx:red", S_IRWXU);
         if (ret == -1) {
             HDF_LOGD("%{public}s: create red led path fail.", __func__);
             return;
@@ -205,8 +302,14 @@ void BatteryLed::InitMockLedFile()
         sleep(MKDIR_WAIT_TIME);
     }
 
+    HDF_LOGI("%{public}s exit", __func__);
+}
+
+void BatteryLed::InitGreenLedPath(std::string& greenLedPath) const
+{
+    HDF_LOGI("%{public}s enter", __func__);
     if (access(greenLedPath.c_str(), 0) == -1) {
-        ret = mkdir("/data/local/tmp/leds/sc27xx:green", S_IRWXU);
+        int ret = mkdir("/data/local/tmp/leds/sc27xx:green", S_IRWXU);
         if (ret == -1) {
             HDF_LOGD("%{public}s: create green led path fail.", __func__);
             return;
@@ -214,18 +317,22 @@ void BatteryLed::InitMockLedFile()
         sleep(MKDIR_WAIT_TIME);
     }
 
+    HDF_LOGI("%{public}s exit", __func__);
+}
+
+void BatteryLed::InitBlueLedPath(std::string& blueLedPath) const
+{
+    HDF_LOGI("%{public}s enter", __func__);
     if (access(blueLedPath.c_str(), 0) == -1) {
-        ret = mkdir("/data/local/tmp/leds/sc27xx:blue", S_IRWXU);
+        int ret = mkdir("/data/local/tmp/leds/sc27xx:blue", S_IRWXU);
         if (ret == -1) {
             HDF_LOGD("%{public}s: create blue led path fail.", __func__);
             return;
         }
         sleep(MKDIR_WAIT_TIME);
     }
-    HDF_LOGE("%{public}s: create mock path for Hi3516DV300", __func__);
-    CreateFile("/data/local/tmp/leds/sc27xx:red/brightness", "0");
-    CreateFile("/data/local/tmp/leds/sc27xx:green/brightness", "0");
-    CreateFile("/data/local/tmp/leds/sc27xx:blue/brightness", "0");
+
+    HDF_LOGI("%{public}s exit", __func__);
 }
 }  // namespace V1_0
 }  // namespace Battery
