@@ -25,10 +25,10 @@ class BatteryService;
 
 class BatteryServiceEventHandler : public AppExecFwk::EventHandler {
 public:
-    BatteryServiceEventHandler(const std::shared_ptr<AppExecFwk::EventRunner> &runner,
-        const wptr<BatteryService> &service);
+    BatteryServiceEventHandler(const std::shared_ptr<AppExecFwk::EventRunner>& runner,
+        const wptr<BatteryService>& service);
     ~BatteryServiceEventHandler() = default;
-    void ProcessEvent(const AppExecFwk::InnerEvent::Pointer &event) override;
+    void ProcessEvent(const AppExecFwk::InnerEvent::Pointer& event) override;
 
 private:
     wptr<BatteryService> service_;

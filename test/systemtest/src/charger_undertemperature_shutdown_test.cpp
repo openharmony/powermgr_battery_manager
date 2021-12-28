@@ -13,11 +13,12 @@
  * limitations under the License.
  */
 
+#include "charger_undertemperature_shutdown_test.h"
+
 #include <csignal>
 #include <iostream>
 #include "utils/hdf_log.h"
 
-#include "hdi_service_test.h"
 #include "power_supply_provider.h"
 #include "battery_host_service_stub.h"
 #include "battery_thread_test.h"
@@ -26,20 +27,20 @@ using namespace testing::ext;
 using namespace OHOS::HDI::Battery::V1_0;
 using namespace std;
 
-namespace HdiServiceTest {
-void HdiServiceTest::SetUpTestCase(void)
+namespace ChargerUndertemperatureShutdownTest {
+void ChargerUndertemperatureShutdownTest::SetUpTestCase(void)
 {
 }
 
-void HdiServiceTest::TearDownTestCase(void)
+void ChargerUndertemperatureShutdownTest::TearDownTestCase(void)
 {
 }
 
-void HdiServiceTest::SetUp(void)
+void ChargerUndertemperatureShutdownTest::SetUp(void)
 {
 }
 
-void HdiServiceTest::TearDown(void)
+void ChargerUndertemperatureShutdownTest::TearDown(void)
 {
 }
 
@@ -48,7 +49,7 @@ void HdiServiceTest::TearDown(void)
  * @tc.desc: Test functions temperature in normal range in chargerThread
  * @tc.type: FUNC
  */
-HWTEST_F (HdiServiceTest, BatteryST_009, TestSize.Level1)
+HWTEST_F (ChargerUndertemperatureShutdownTest, BatteryST_009, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST_009 start.", __func__);
     ChargerThread ct;
@@ -63,7 +64,7 @@ HWTEST_F (HdiServiceTest, BatteryST_009, TestSize.Level1)
  * @tc.desc: Test functions low temperature shutdown in chargerThread
  * @tc.type: FUNC
  */
-HWTEST_F (HdiServiceTest, BatteryST_010, TestSize.Level1)
+HWTEST_F (ChargerUndertemperatureShutdownTest, BatteryST_010, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST_010 start.", __func__);
     ChargerThread ct;

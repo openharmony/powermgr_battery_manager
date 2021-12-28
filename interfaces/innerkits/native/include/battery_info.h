@@ -23,7 +23,7 @@ namespace PowerMgr {
 static constexpr int32_t INVALID_BATT_INT_VALUE = -1;
 static constexpr int32_t INVALID_BATT_TEMP_VALUE = 100;
 static const std::string INVALID_STRING_VALUE = "Invalid";
-static constexpr bool INVALID_BATT_BOOL_VALUE = false;
+static constexpr bool INVALID_BATT_BOOL_VALUE = true;
 
 /**
  * Type for acquire BatteryChargeState.
@@ -193,22 +193,22 @@ public:
         present_ = present;
     }
 
-    void SetTechnology(const std::string &technology)
+    void SetTechnology(const std::string& technology)
     {
         technology_ = technology;
     }
 
-    const int32_t &GetCapacity() const
+    const int32_t& GetCapacity() const
     {
         return capacity_;
     }
 
-    const int32_t &GetVoltage() const
+    const int32_t& GetVoltage() const
     {
         return voltage_;
     }
 
-    const int32_t &GetTemperature() const
+    const int32_t& GetTemperature() const
     {
         return temperature_;
     }
@@ -223,12 +223,12 @@ public:
         return pluggedType_;
     }
 
-    const int32_t &GetPluggedMaxCurrent() const
+    const int32_t& GetPluggedMaxCurrent() const
     {
         return pluggedMaxCurrent_;
     }
 
-    const int32_t &GetPluggedMaxVoltage() const
+    const int32_t& GetPluggedMaxVoltage() const
     {
         return pluggedMaxVoltage_;
     }
@@ -238,7 +238,7 @@ public:
         return chargeState_;
     }
 
-    const int32_t &GetChargeCounter() const
+    const int32_t& GetChargeCounter() const
     {
         return chargeCounter_;
     }
@@ -248,7 +248,7 @@ public:
         return present_;
     }
 
-    const std::string &GetTechnology() const
+    const std::string& GetTechnology() const
     {
         return technology_;
     }

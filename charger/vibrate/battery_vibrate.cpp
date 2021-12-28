@@ -24,30 +24,28 @@ namespace OHOS {
 namespace HDI {
 namespace Battery {
 namespace V1_0 {
-static const std::string VIBRATOR_PLAYMODE_PATH = "/sys/class/leds/vibrator/play_mode";
-static const std::string VIBRATOR_DURATIONMODE_PATH = "/sys/class/leds/vibrator/duration";
-static const std::string VIBRATOR_ACTIVATEMODE_PATH = "/sys/class/leds/vibrator/activate";
-static const int VIBRATION_PLAYMODE = 0;
-static const int VIBRATION_DURATIONMODE = 1;
-static const int VIBRATION_UNKNOWNMODE = -1;
-static int VIBRANTION_MODE = VIBRATION_UNKNOWNMODE;
-static const int VIBRATE_DELAY_MS = 5;
-static const int USEC_TO_MSEC = 1000;
+const std::string VIBRATOR_PLAYMODE_PATH = "/sys/class/leds/vibrator/play_mode";
+const std::string VIBRATOR_DURATIONMODE_PATH = "/sys/class/leds/vibrator/duration";
+const std::string VIBRATOR_ACTIVATEMODE_PATH = "/sys/class/leds/vibrator/activate";
+const int VIBRATION_PLAYMODE = 0;
+const int VIBRATION_DURATIONMODE = 1;
+const int VIBRATE_DELAY_MS = 5;
+const int USEC_TO_MSEC = 1000;
 
 int BatteryVibrate::VibrateInit()
 {
     HDF_LOGI("%{public}s enter", __func__);
-    struct stat st;
+    struct stat st {};
 
     if (!stat(VIBRATOR_PLAYMODE_PATH.c_str(), &st)) {
         HDF_LOGD("%{public}s: vibrate path is play mode path", __func__);
-        VIBRANTION_MODE = VIBRATION_PLAYMODE;
+        vibrateMode_ = VIBRATION_PLAYMODE;
         return 0;
     }
 
     if (!stat(VIBRATOR_DURATIONMODE_PATH.c_str(), &st)) {
         HDF_LOGD("%{public}s: vibrate path is duration path", __func__);
-        VIBRANTION_MODE = VIBRATION_DURATIONMODE;
+        vibrateMode_ = VIBRATION_DURATIONMODE;
         return 0;
     }
 
@@ -55,10 +53,10 @@ int BatteryVibrate::VibrateInit()
     return -1;
 }
 
-FILE *BatteryVibrate::HandlePlayModePath()
+FILE* BatteryVibrate::HandlePlayModePath() const
 {
     HDF_LOGI("%{public}s enter", __func__);
-    FILE *file = nullptr;
+    FILE* file = nullptr;
 
     file = fopen(VIBRATOR_PLAYMODE_PATH.c_str(), "w");
     if (file == nullptr) {
@@ -75,10 +73,10 @@ FILE *BatteryVibrate::HandlePlayModePath()
     return file;
 }
 
-void BatteryVibrate::HandlePlayMode(const int time)
+void BatteryVibrate::HandlePlayMode(const int time) const
 {
     HDF_LOGI("%{public}s enter", __func__);
-    FILE *file = nullptr;
+    FILE* file = nullptr;
 
     file = HandlePlayModePath();
     if (file == nullptr) {
@@ -123,10 +121,10 @@ void BatteryVibrate::HandlePlayMode(const int time)
     }
 }
 
-void BatteryVibrate::HandleDurationMode(const int time)
+void BatteryVibrate::HandleDurationMode(const int time) const
 {
     HDF_LOGI("%{public}s enter", __func__);
-    FILE *file = nullptr;
+    FILE* file = nullptr;
 
     file = fopen(VIBRATOR_DURATIONMODE_PATH.c_str(), "w");
     if (file == nullptr) {
@@ -169,7 +167,7 @@ void BatteryVibrate::HandleDurationMode(const int time)
 void BatteryVibrate::HandleVibrate(const int time)
 {
     HDF_LOGI("%{public}s enter", __func__);
-    switch (VIBRANTION_MODE) {
+    switch (vibrateMode_) {
         case VIBRATION_PLAYMODE: {
             HDF_LOGD("%{public}s: vibrate mode sysfs1", __func__);
             HandlePlayMode(time);

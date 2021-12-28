@@ -13,63 +13,39 @@
  * limitations under the License.
  */
 
+#include "reboot_test.h"
+
 #include <csignal>
 #include <iostream>
 #include "utils/hdf_log.h"
-
-#include "power_supply_provider.h"
-#include "battery_host_service_stub.h"
-#include "battery_thread_test.h"
-#include "hdi_service_test.h"
-#include "charger_thread.h"
 
 using namespace testing::ext;
 using namespace OHOS::HDI::Battery::V1_0;
 using namespace std;
 
-namespace HdiServiceTest {
-void HdiServiceTest::SetUpTestCase(void)
+namespace RebootTest {
+void RebootTest::SetUpTestCase(void)
 {
 }
 
-void HdiServiceTest::TearDownTestCase(void)
+void RebootTest::TearDownTestCase(void)
 {
 }
 
-void HdiServiceTest::SetUp(void)
+void RebootTest::SetUp(void)
 {
 }
 
-void HdiServiceTest::TearDown(void)
+void RebootTest::TearDown(void)
 {
 }
-
-namespace {
-    struct ChargerThreadUnitTest {};
-}
-
-std::unique_ptr<BatteryBacklight> GetBacklightTest(ChargerThread &cthread);
-
-template <typename Tag, typename PrivateFun, PrivateFun privateFun>
-class RebootTest {
-    friend std::unique_ptr<BatteryBacklight> GetBacklightTest(ChargerThread &cthread)
-    {
-        return std::move(cthread.*privateFun);
-    }
-};
-
-template class RebootTest <
-    ChargerThreadUnitTest,
-    decltype(&ChargerThread::backlight_),
-    &ChargerThread::backlight_
->;
 
 /**
  * @tc.name: BatteryST_001
  * @tc.desc: Test functions reboot in ChargerThread, unplugged not until reboot
  * @tc.type: FUNC
  */
-HWTEST_F (HdiServiceTest, BatteryST_001, TestSize.Level1)
+HWTEST_F (RebootTest, BatteryST_001, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: BatteryST_001 start.", __func__);
     std::string reason = "rebootTest";
@@ -91,7 +67,7 @@ HWTEST_F (HdiServiceTest, BatteryST_001, TestSize.Level1)
  * @tc.desc: Test functions reboot in ChargerThread, unplugged until reboot
  * @tc.type: FUNC
  */
-HWTEST_F (HdiServiceTest, BatteryST_002, TestSize.Level1)
+HWTEST_F (RebootTest, BatteryST_002, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: BatteryST_002 start.", __func__);
     std::string reason = "rebootTest";

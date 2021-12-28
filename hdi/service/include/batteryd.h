@@ -24,8 +24,8 @@ namespace Battery {
 namespace V1_0 {
 struct HdfBatterydService {
     struct IDeviceIoService ioService;
-    struct HdfDeviceObject *device;
-    void *instance;
+    struct HdfDeviceObject* device;
+    void* instance;
 };
 }  // namespace V1_0
 }  // namespace Battery

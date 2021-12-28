@@ -34,7 +34,7 @@ constexpr int LABEL_HEIGHT = 15;
 constexpr int LABEL0_OFFSET = 0;
 constexpr int LABEL2_OFFSET = 1;
 
-void TextLabelInit(TextLabel *t, const std::string &text, struct Bold bold,
+void TextLabelInit(TextLabel* t, const std::string& text, struct Bold bold,
     struct FocusInfo focus, View::BRGA888Pixel color)
 {
     HDF_LOGD("%{public}s enter", __func__);
@@ -47,33 +47,33 @@ void TextLabelInit(TextLabel *t, const std::string &text, struct Bold bold,
     }
 }
 
-void MenuItemInit(int height, int width, View::BRGA888Pixel bgColor, Frame *g_hosFrame)
+void MenuItemInit(int height, int width, View::BRGA888Pixel bgColor, Frame* gHosFrame)
 {
     HDF_LOGD("%{public}s enter", __func__);
-    TextLabel *g_textLabel0;
-    TextLabel *g_textLabel2;
+    TextLabel* gTextLabel0 = nullptr;
+    TextLabel* gTextLabel2 = nullptr;
 
-    if (g_hosFrame == nullptr) {
+    if (gHosFrame == nullptr) {
         HDF_LOGD("%{public}s enter, Frame is null.", __func__);
         return;
     }
-    g_textLabel0 = new TextLabel(0, height * LABEL0_OFFSET / LABEL_HEIGHT, width, height /
-        LABEL_HEIGHT, g_hosFrame);
+    gTextLabel0 = new TextLabel(0, height * LABEL0_OFFSET / LABEL_HEIGHT, width, height /
+        LABEL_HEIGHT, gHosFrame);
     struct FocusInfo info {true, true};
     struct Bold bold {true, false};
-    TextLabelInit(g_textLabel0, "Reboot to normal system", bold, info, bgColor);
-    if (!g_textLabel0) {
-        HDF_LOGD("%{public}s enter, g_textLabel0 is null.", __func__);
+    TextLabelInit(gTextLabel0, "Reboot to normal system", bold, info, bgColor);
+    if (!gTextLabel0) {
+        HDF_LOGD("%{public}s enter, gTextLabel0 is null.", __func__);
         return;
     }
 
-    g_textLabel2 = new TextLabel(0, height * LABEL2_OFFSET / LABEL_HEIGHT, width, height /
-        LABEL_HEIGHT, g_hosFrame);
+    gTextLabel2 = new TextLabel(0, height * LABEL2_OFFSET / LABEL_HEIGHT, width, height /
+        LABEL_HEIGHT, gHosFrame);
     info = {false, true};
     bold = {false, false};
-    TextLabelInit(g_textLabel2, "Userdata reset", bold, info, bgColor);
-    if (!g_textLabel2) {
-        HDF_LOGD("%{public}s enter, g_textLabel2 is null.", __func__);
+    TextLabelInit(gTextLabel2, "Userdata reset", bold, info, bgColor);
+    if (!gTextLabel2) {
+        HDF_LOGD("%{public}s enter, gTextLabel2 is null.", __func__);
         return;
     }
 }

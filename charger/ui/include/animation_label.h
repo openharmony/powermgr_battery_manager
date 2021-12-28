@@ -33,12 +33,12 @@ public:
         ANIMATION_MODE = 0,
         STATIC_MODE,
     };
-    AnimationLabel(int startX, int startY, int w, int h, Frame *mParent);
+    AnimationLabel(int startX, int startY, int w, int h, Frame* mParent);
     AnimationLabel() {}
     ~AnimationLabel() override;
 public:
-    void AddImg(const std::string &imgFileName);
-    int AddStaticImg(const std::string &imgFileName);
+    void AddImg(const std::string& imgFileName);
+    int AddStaticImg(const std::string& imgFileName);
     void SetStaticImg(int picId);
     void SetPlayMode(AnimationLabel::PlayMode mode);
     void SetInterval(int ms);
@@ -55,14 +55,14 @@ private:
         int bitDepth;
         int colorType;
     };
-    void *LoadPng(const std::string &imgFileName);
-    View::BRGA888Pixel *HandleLoadPng(FILE **fp, char **pictureBufferTmp, struct PictureAttr &attr);
-    int LoadPngInternalWithFile(FILE *fp, png_structpp pngPtr, png_infopp pngInfoPtr, struct PictureAttr &attr);
-    void CopyPictureBuffer(struct PictureAttr &attr, char *pictureBufferTmp, BRGA888Pixel *pictureBuffer) const;
-    Frame *parent_ {};
+    void* LoadPng(const std::string& imgFileName);
+    View::BRGA888Pixel* HandleLoadPng(FILE** fp, char** pictureBufferTmp, struct PictureAttr& attr);
+    int LoadPngInternalWithFile(FILE* fp, png_structpp pngPtr, png_infopp pngInfoPtr, struct PictureAttr& attr);
+    void CopyPictureBuffer(struct PictureAttr& attr, char* pictureBufferTmp, BRGA888Pixel* pictureBuffer) const;
+    Frame* parent_ {};
     int intervalMs_ = 50;
     std::vector<char*> imgList_ {};
-    char *staticImgList_[255] {};
+    char* staticImgList_[255] {};
     int staticShowId_ = 0;
     bool showStatic_ = false;
     int staticImgSize_ = 0;

@@ -28,12 +28,12 @@
 #include "batteryd.h"
 #include "power_mgr_client.h"
 
-#define Hi3516DV300
-
 namespace OHOS {
 namespace HDI {
 namespace Battery {
 namespace V1_0 {
+int32_t g_lastChargeState = 0;
+
 int32_t BatteryHostServiceStub::Init()
 {
     HDF_LOGI("%{public}s enter", __func__);
@@ -42,9 +42,7 @@ int32_t BatteryHostServiceStub::Init()
         HDF_LOGE("%{public}s: instantiate PowerSupplyProvider error", __func__);
         return HDF_ERR_MALLOC_FAIL;
     }
-#ifdef Hi3516DV300
-    provider_->InitDefaultSysfs();
-#endif
+    provider_->InitBatteryPath();
     provider_->InitPowerSupplySysfs();
 
     batteryConfig_ = std::make_unique<BatteryConfig>();
@@ -59,6 +57,7 @@ int32_t BatteryHostServiceStub::Init()
         HDF_LOGE("%{public}s: instantiate BatteryLed error", __func__);
         return HDF_ERR_MALLOC_FAIL;
     }
+    batteryLed_->InitLedsSysfs();
 
     loop_ = std::make_unique<BatteryThread>();
     if (loop_ == nullptr) {
@@ -74,7 +73,7 @@ int32_t BatteryHostServiceStub::Init()
 int32_t BatteryHostServiceStub::DispatchBindBatterySubscriber(HdfSBuf& data)
 {
     HDF_LOGI("%{public}s enter", __func__);
-    struct HdfRemoteService *remoteService = HdfSBufReadRemoteService(&data);
+    struct HdfRemoteService* remoteService = HdfSBufReadRemoteService(&data);
     if (remoteService == nullptr) {
         HDF_LOGW("%{public}s: remoteService is nullptr", __func__);
         return HDF_ERR_INVALID_PARAM;
@@ -260,7 +259,7 @@ int32_t BatteryHostServiceStub::DispatchGetTechnology(MessageParcel& reply) cons
     return HDF_SUCCESS;
 }
 
-void BatteryHostServiceStub::UpdateBatterydInfo(const char *msg) const
+void BatteryHostServiceStub::UpdateBatterydInfo(const char* msg) const
 {
     HDF_LOGI("%{public}s enter", __func__);
     std::unique_ptr<BatterydInfo> batteryInfo = std::make_unique<BatterydInfo>();
@@ -279,6 +278,7 @@ void BatteryHostServiceStub::UpdateBatterydInfo(const char *msg) const
     NotifySubscriber(batteryInfo.get());
     HandleTemperature(batteryInfo->temperature_);
     batteryLed_->UpdateLedColor(batteryInfo->chargeState_, batteryInfo->capacity_);
+    WakeupDevice(batteryInfo->chargeState_);
 
     HDF_LOGI("%{public}s exit", __func__);
     return;
@@ -297,12 +297,29 @@ void BatteryHostServiceStub::UpdateBatterydInfo() const
     NotifySubscriber(batteryInfo.get());
     HandleTemperature(batteryInfo->temperature_);
     batteryLed_->UpdateLedColor(batteryInfo->chargeState_, batteryInfo->capacity_);
+    WakeupDevice(batteryInfo->chargeState_);
 
     HDF_LOGI("%{public}s exit", __func__);
     return;
 }
 
-void BatteryHostServiceStub::HandleTemperature(const int32_t &temperature) const
+void BatteryHostServiceStub::WakeupDevice(const int32_t& chargestate) const
+{
+    HDF_LOGI("%{public}s enter", __func__);
+    if ((g_lastChargeState == PowerSupplyProvider::CHARGE_STATE_NONE ||
+        g_lastChargeState == PowerSupplyProvider::CHARGE_STATE_RESERVED) &&
+        (chargestate != PowerSupplyProvider::CHARGE_STATE_NONE &&
+        chargestate != PowerSupplyProvider::CHARGE_STATE_RESERVED)) {
+        auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
+        powerMgrClient.WakeupDevice();
+    }
+    g_lastChargeState = chargestate;
+
+    HDF_LOGI("%{public}s exit", __func__);
+    return;
+}
+
+void BatteryHostServiceStub::HandleTemperature(const int32_t& temperature) const
 {
     HDF_LOGI("%{public}s enter", __func__);
     auto tempConf = batteryConfig_->GetTempConf();
@@ -319,7 +336,7 @@ void BatteryHostServiceStub::HandleTemperature(const int32_t &temperature) const
     return;
 }
 
-void BatteryHostServiceStub::NotifySubscriber(const struct BatterydInfo *batteryInfo) const
+void BatteryHostServiceStub::NotifySubscriber(const struct BatterydInfo* batteryInfo) const
 {
     HDF_LOGI("%{public}s enter", __func__);
     if (subscriber_ == nullptr) {
@@ -327,8 +344,8 @@ void BatteryHostServiceStub::NotifySubscriber(const struct BatterydInfo *battery
         return;
     }
 
-    struct HdfSBuf *data = HdfSBufTypedObtain(SBUF_IPC);
-    struct HdfSBuf *reply = HdfSBufTypedObtain(SBUF_IPC);
+    struct HdfSBuf* data = HdfSBufTypedObtain(SBUF_IPC);
+    struct HdfSBuf* reply = HdfSBufTypedObtain(SBUF_IPC);
     if (data == nullptr || reply == nullptr) {
         HDF_LOGE("%{public}s: failed to obtain hdf sbuf", __func__);
         HdfSBufRecycle(data);
@@ -336,9 +353,9 @@ void BatteryHostServiceStub::NotifySubscriber(const struct BatterydInfo *battery
         return;
     }
     HDF_LOGD("%{public}s: BatteryInfo capacity=%{public}d, voltage=%{public}d, temperature=%{public}d, " \
-             "healthState=%{public}d, pluggedType=%{public}d, pluggedMaxCurrent=%{public}d, " \
-             "pluggedMaxVoltage=%{public}d, chargeState=%{public}d, chargeCounter=%{public}d, present=%{public}d, " \
-             "technology=%{public}s", __func__, batteryInfo->capacity_, batteryInfo->voltage_,
+        "healthState=%{public}d, pluggedType=%{public}d, pluggedMaxCurrent=%{public}d, " \
+        "pluggedMaxVoltage=%{public}d, chargeState=%{public}d, chargeCounter=%{public}d, present=%{public}d, " \
+        "technology=%{public}s", __func__, batteryInfo->capacity_, batteryInfo->voltage_,
         batteryInfo->temperature_, batteryInfo->healthState_, batteryInfo->pluggedType_,
         batteryInfo->pluggedMaxCurrent_, batteryInfo->pluggedMaxVoltage_, batteryInfo->chargeState_,
         batteryInfo->chargeCounter_, batteryInfo->present_, batteryInfo->technology_.c_str());
@@ -368,11 +385,11 @@ void BatteryHostServiceStub::NotifySubscriber(const struct BatterydInfo *battery
     return;
 }
 
-void *BatteryHostServiceStubInstance()
+void* BatteryHostServiceStubInstance()
 {
     HDF_LOGI("%{public}s enter", __func__);
     using namespace OHOS::HDI::Battery::V1_0;
-    BatteryHostServiceStub *stub = new BatteryHostServiceStub();
+    BatteryHostServiceStub* stub = new BatteryHostServiceStub();
     if (stub == nullptr) {
         HDF_LOGE("%{public}s: failed to create BatteryHostServiceStub", __func__);
         return nullptr;
@@ -385,17 +402,17 @@ void *BatteryHostServiceStubInstance()
     }
 
     HDF_LOGI("%{public}s exit", __func__);
-    return reinterpret_cast<void *>(stub);
+    return reinterpret_cast<void*>(stub);
 }
 
-int32_t BatteryHostServiceOnRemoteRequest(char *stub, int cmdId, struct HdfSBuf *data, struct HdfSBuf *reply)
+int32_t BatteryHostServiceOnRemoteRequest(char* stub, int cmdId, struct HdfSBuf* data, struct HdfSBuf* reply)
 {
     HDF_LOGI("%{public}s enter", __func__);
     using namespace OHOS::HDI::Battery::V1_0;
-    BatteryHostServiceStub *serviceStub = reinterpret_cast<BatteryHostServiceStub *>(stub);
+    BatteryHostServiceStub* serviceStub = reinterpret_cast<BatteryHostServiceStub*>(stub);
 
-    OHOS::MessageParcel *replyParcel = nullptr;
-    OHOS::MessageParcel *dataParcel = nullptr;
+    OHOS::MessageParcel* replyParcel = nullptr;
+    OHOS::MessageParcel* dataParcel = nullptr;
 
     if (SbufToParcel(reply, &replyParcel) != HDF_SUCCESS) {
         return HDF_ERR_INVALID_PARAM;

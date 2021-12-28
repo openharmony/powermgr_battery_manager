@@ -56,19 +56,19 @@ void HdiClientTest::TearDown(void)
 {
 }
 
-const char *CreateFile(const char *path, const char *content)
+std::string CreateFile(std::string path, std::string content)
 {
-    std::ofstream stream(path);
+    std::ofstream stream(path.c_str());
     if (!stream.is_open()) {
-        HDF_LOGD("%{public}s: enter, Cannot create file %{public}s", __func__, path);
+        HDF_LOGD("%{public}s: enter, Cannot create file %{public}s", __func__, path.c_str());
         return nullptr;
     }
-    stream << content << std::endl;
+    stream << content.c_str() << std::endl;
     stream.close();
     return path;
 }
 
-void MockFileInit()
+static void MockFileInit()
 {
     std::string path = "/data/local/tmp";
     mkdir("/data/local/tmp/battery", S_IRWXU);
@@ -89,7 +89,7 @@ void MockFileInit()
  * @tc.desc: Test functions of HdiClient GetTemperature
  * @tc.type: FUNC
  */
-HWTEST_F (HdiClientTest, HdiClient001, TestSize.Level1)
+static HWTEST_F (HdiClientTest, HdiClient001, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. HdiClient001 start.", __func__);
     MockFileInit();
@@ -167,6 +167,8 @@ HWTEST_F (HdiClientTest, HdiClient005, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. HdiClient005 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "Mains");
+    CreateFile("/data/local/tmp/battery/type", "Mains");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Mains");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. HdiClient005::pluggedType=%{public}d.", __func__, pluggedType);

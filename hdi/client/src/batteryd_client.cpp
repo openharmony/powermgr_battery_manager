@@ -41,7 +41,7 @@ sptr<IRemoteObject> BatterydClient::GetBatterydService()
     return batterydService;
 }
 
-ErrCode BatterydClient::DoDispatch(uint32_t cmd, MessageParcel &data, MessageParcel &reply)
+ErrCode BatterydClient::DoDispatch(uint32_t cmd, MessageParcel& data, MessageParcel& reply)
 {
     POWER_HILOGD(MODULE_BATTERYD, "Start to dispatch cmd: %{public}d", cmd);
     auto batteryd = GetBatterydService();
@@ -58,7 +58,7 @@ ErrCode BatterydClient::DoDispatch(uint32_t cmd, MessageParcel &data, MessagePar
     return ERR_OK;
 }
 
-ErrCode BatterydClient::BindBatterydSubscriber(const sptr<BatterydSubscriber> &subscriber)
+ErrCode BatterydClient::BindBatterydSubscriber(const sptr<BatterydSubscriber>& subscriber)
 {
     POWER_HILOGD(MODULE_BATTERYD, "BindBatterydSubscriber enter");
     if (subscriber == nullptr) {

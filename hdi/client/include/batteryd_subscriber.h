@@ -26,10 +26,10 @@ class BatterydSubscriber : public IPCObjectStub {
 public:
     explicit BatterydSubscriber() : IPCObjectStub(u"ohos.powermgr.IBatterydSubscriber") {};
     virtual ~BatterydSubscriber() = default;
-    virtual int32_t Update(const BatteryInfo &info) = 0;
-    int OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option) override;
+    virtual int32_t Update(const BatteryInfo& info) = 0;
+    int OnRemoteRequest(uint32_t code, MessageParcel& data, MessageParcel& reply, MessageOption& option) override;
 private:
-    static const BatteryInfo ParseBatteryInfo(MessageParcel &data, MessageParcel &reply, MessageOption &option);
+    static const BatteryInfo ParseBatteryInfo(MessageParcel& data, MessageParcel& reply, MessageOption& option);
 };
 } // namespace PowerMgr
 } // namespace OHOS

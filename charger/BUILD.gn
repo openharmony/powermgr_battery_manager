@@ -150,6 +150,7 @@ group("resources_service") {
     "resources:resources_config63",
     "resources:resources_config64",
     "resources:resources_config65",
+    "resources:resources_config66",
     "resources:resources_config7",
     "resources:resources_config8",
     "resources:resources_config9",

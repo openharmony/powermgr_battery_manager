@@ -30,7 +30,7 @@ public:
 
     virtual ~BatterySrvStub() = default;
 
-    int OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option) override;
+    int OnRemoteRequest(uint32_t code, MessageParcel& data, MessageParcel& reply, MessageOption& option) override;
 
 private:
     int32_t GetCapacityStub(MessageParcel& reply);

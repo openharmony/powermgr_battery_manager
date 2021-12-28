@@ -24,7 +24,7 @@ namespace HDI {
 namespace Battery {
 namespace V1_0 {
 constexpr int RGBA_PIXEL_SIZE = 4;
-void *View::CreateBuffer(int w, int h, View::PixelFormat pixelFormat)
+void* View::CreateBuffer(int w, int h, View::PixelFormat pixelFormat)
 {
     HDF_LOGD("%{public}s enter", __func__);
     int pixelSize = -1;
@@ -39,12 +39,12 @@ void *View::CreateBuffer(int w, int h, View::PixelFormat pixelFormat)
             break;
     }
     bufferSize_ = w * h * pixelSize;
-    viewBuffer_ = static_cast<char *>(malloc(bufferSize_));
+    viewBuffer_ = static_cast<char*>(malloc(bufferSize_));
     if (viewBuffer_ == nullptr) {
         HDF_LOGE("%{public}s, Allocate memory for view failed: %{public}d", __func__, errno);
         return nullptr;
     }
-    shadowBuffer_ = static_cast<char *>(malloc(bufferSize_));
+    shadowBuffer_ = static_cast<char*>(malloc(bufferSize_));
     if (shadowBuffer_ == nullptr) {
         HDF_LOGE("%{public}s, Allocate memory for shadow failed: %{public}d", __func__, errno);
         free(viewBuffer_);
@@ -62,7 +62,7 @@ void *View::CreateBuffer(int w, int h, View::PixelFormat pixelFormat)
     return viewBuffer_;
 }
 
-void View::SetBackgroundColor(BRGA888Pixel *color)
+void View::SetBackgroundColor(BRGA888Pixel* color)
 {
     HDF_LOGD("%{public}s enter", __func__);
     BRGA888Pixel pixelBuffer[viewWidth_];
@@ -84,7 +84,7 @@ void View::SetBackgroundColor(BRGA888Pixel *color)
     }
 }
 
-void View::DrawSubView(int x, int y, int w, int h, char *buf)
+void View::DrawSubView(int x, int y, int w, int h, char* buf)
 {
     HDF_LOGD("%{public}s enter", __func__);
     int minWidth = ((x + w) <= viewWidth_) ? w : (viewWidth_ - x);
@@ -92,8 +92,8 @@ void View::DrawSubView(int x, int y, int w, int h, char *buf)
     HDF_LOGD("%{public}s, x = %{public}d, y = %{public}d, w = %{public}d, h = %{public}d", __func__, x, y, w, h);
     HDF_LOGD("%{public}s, minWidth = %{public}d, minHeight = %{public}d", __func__, minWidth, minHeight);
     for (int i = 0; i < minHeight; i++) {
-        char *src = buf + i * w * sizeof(BRGA888Pixel);
-        char *dst = shadowBuffer_ + (i + y) * viewWidth_ * sizeof(BRGA888Pixel) + x * sizeof(BRGA888Pixel);
+        char* src = buf + i * w * sizeof(BRGA888Pixel);
+        char* dst = shadowBuffer_ + (i + y) * viewWidth_ * sizeof(BRGA888Pixel) + x * sizeof(BRGA888Pixel);
         if (memcpy_s(dst, minWidth * sizeof(BRGA888Pixel) + 1, src, minWidth * sizeof(BRGA888Pixel)) != EOK) {
             return;
         }
@@ -107,6 +107,24 @@ void View::OnDraw()
     SyncBuffer();
 }
 
+void View::Hide()
+{
+    HDF_LOGD("%{public}s enter", __func__);
+    if (isVisiable_) {
+        isVisiable_ = false;
+        OnDraw();
+    }
+}
+
+void View::Show()
+{
+    HDF_LOGD("%{public}s enter", __func__);
+    if (!isVisiable_) {
+        isVisiable_ = true;
+        OnDraw();
+    }
+}
+
 void View::SyncBuffer()
 {
     HDF_LOGD("%{public}s enter", __func__);
@@ -115,13 +133,13 @@ void View::SyncBuffer()
     }
 }
 
-char *View::GetBuffer() const
+char* View::GetBuffer() const
 {
     HDF_LOGD("%{public}s enter", __func__);
     return shadowBuffer_;
 }
 
-void *View::GetRawBuffer() const
+void* View::GetRawBuffer() const
 {
     HDF_LOGD("%{public}s enter", __func__);
     return viewBuffer_;

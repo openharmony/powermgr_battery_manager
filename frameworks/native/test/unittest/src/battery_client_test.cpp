@@ -44,17 +44,17 @@ using namespace OHOS::PowerMgr;
 using namespace OHOS;
 using namespace std;
 
-static sptr<BatteryService> service;
+static sptr<BatteryService> g_service;
 
 void BatteryClientTest::SetUpTestCase(void)
 {
-    service = DelayedSpSingleton<BatteryService>::GetInstance();
-    service->OnStart();
+    g_service = DelayedSpSingleton<BatteryService>::GetInstance();
+    g_service->OnStart();
 }
 
 void BatteryClientTest::TearDownTestCase(void)
 {
-    service->OnStop();
+    g_service->OnStop();
     DelayedSpSingleton<BatteryService>::DestroyInstance();
 }
 
@@ -67,14 +67,14 @@ void BatteryClientTest::TearDown(void)
 }
 
 namespace {
-const char *CreateFile(const char *path, const char *content)
+std::string CreateFile(std::string path, std::string content)
 {
-    std::ofstream stream(path);
+    std::ofstream stream(path.c_str());
     if (!stream.is_open()) {
-        POWER_HILOGI(MODULE_BATT_SERVICE, "Cannot create file %{public}s", path);
+        POWER_HILOGI(MODULE_BATT_SERVICE, "Cannot create file %{public}s", path.c_str());
         return nullptr;
     }
-    stream << content << std::endl;
+    stream << content.c_str() << std::endl;
     stream.close();
     return path;
 }
@@ -233,6 +233,8 @@ HWTEST_F (BatteryClientTest, BatteryClient008, TestSize.Level1)
 {
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient008 start.");
     CreateFile("/data/local/tmp/bq2560x_charger/type", "USB");
+    CreateFile("/data/local/tmp/battery/type", "USB");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();

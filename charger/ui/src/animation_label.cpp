@@ -29,14 +29,14 @@ namespace OHOS {
 namespace HDI {
 namespace Battery {
 namespace V1_0 {
-static constexpr int PNG_HEADER_SIZE = 8;
-static constexpr int MAX_PICTURE_CHANNELS = 3;
-static constexpr int MAX_BIT_DEPTH = 8;
-static constexpr useconds_t SECOND_PER_MS = 1000;
+constexpr int PNG_HEADER_SIZE = 8;
+constexpr int MAX_PICTURE_CHANNELS = 3;
+constexpr int MAX_BIT_DEPTH = 8;
+constexpr useconds_t SECOND_PER_MS = 1000;
 bool AnimationLabel::isVisible_ = true;
 bool AnimationLabel::needStop_ = false;
 
-AnimationLabel::AnimationLabel(int startX, int startY, int w, int h, Frame *mParent)
+AnimationLabel::AnimationLabel(int startX, int startY, int w, int h, Frame* mParent)
 {
     startX_ = startX;
     startY_ = startY;
@@ -122,16 +122,16 @@ void AnimationLabel::UpdateLoop()
     HDF_LOGD("%{public}s loop end.", __func__);
 }
 
-void AnimationLabel::AddImg(const std::string &imgFileName)
+void AnimationLabel::AddImg(const std::string& imgFileName)
 {
     HDF_LOGD("%{public}s enter", __func__);
     mutex_.lock();
-    char *buf = static_cast<char*>(LoadPng(imgFileName));
+    char* buf = static_cast<char*>(LoadPng(imgFileName));
     imgList_.push_back(buf);
     mutex_.unlock();
 }
 
-int AnimationLabel::AddStaticImg(const std::string &imgFileName)
+int AnimationLabel::AddStaticImg(const std::string& imgFileName)
 {
     HDF_LOGD("%{public}s enter", __func__);
     int id = staticImgSize_;
@@ -142,8 +142,8 @@ int AnimationLabel::AddStaticImg(const std::string &imgFileName)
     return id;
 }
 
-int AnimationLabel::LoadPngInternalWithFile(FILE *fp, png_structpp pngPtr, png_infopp pngInfoPtr,
-    struct PictureAttr &attr)
+int AnimationLabel::LoadPngInternalWithFile(FILE* fp, png_structpp pngPtr, png_infopp pngInfoPtr,
+    struct PictureAttr& attr)
 {
     HDF_LOGD("%{public}s enter", __func__);
     if (fp == nullptr) {
@@ -193,15 +193,15 @@ int AnimationLabel::LoadPngInternalWithFile(FILE *fp, png_structpp pngPtr, png_i
     return 0;
 }
 
-void AnimationLabel::CopyPictureBuffer(struct PictureAttr &attr, char *pictureBufferTmp,
-    BRGA888Pixel *pictureBuffer) const
+void AnimationLabel::CopyPictureBuffer(struct PictureAttr& attr, char* pictureBufferTmp,
+    BRGA888Pixel* pictureBuffer) const
 {
     HDF_LOGD("%{public}s enter", __func__);
     int copyHeight = (viewHeight_ < static_cast<int>(attr.pictureHeight)) ? viewHeight_ :
         static_cast<int>(attr.pictureHeight);
     int copyWidth = (viewWidth_ < static_cast<int>(attr.pictureWidth)) ? viewWidth_ :
         static_cast<int>(attr.pictureWidth);
-    auto *rgb = reinterpret_cast<RGB888Pixel*>(pictureBufferTmp);
+    auto* rgb = reinterpret_cast<RGB888Pixel*>(pictureBufferTmp);
     for (int y = 0; y < copyHeight; y++) {
         for (int x = 0; x < copyWidth; x++) {
             unsigned int colorValue = rgb[x + y * attr.pictureWidth].r +
@@ -216,16 +216,16 @@ void AnimationLabel::CopyPictureBuffer(struct PictureAttr &attr, char *pictureBu
     }
 }
 
-void *AnimationLabel::LoadPng(const std::string &imgFileName)
+void* AnimationLabel::LoadPng(const std::string& imgFileName)
 {
     HDF_LOGD("%{public}s enter", __func__);
     png_structp pngPtr = nullptr;
     png_infop pngInfoPtr = nullptr;
     struct PictureAttr attr {};
-    char *pictureBufferTmp = nullptr;
-    uint8_t *pictureRow = nullptr;
+    char* pictureBufferTmp = nullptr;
+    uint8_t* pictureRow = nullptr;
 
-    FILE *fp = fopen(imgFileName.c_str(), "rb");
+    FILE* fp = fopen(imgFileName.c_str(), "rb");
     if (fp == nullptr) {
         HDF_LOGD("%{public}s: open font file failed.", __func__);
         return nullptr;
@@ -237,7 +237,7 @@ void *AnimationLabel::LoadPng(const std::string &imgFileName)
         return nullptr;
     }
     unsigned int pictureRowSize = attr.pictureWidth * attr.pictureChannels;
-    pictureBufferTmp = static_cast<char *>(malloc(pictureRowSize * attr.pictureHeight));
+    pictureBufferTmp = static_cast<char*>(malloc(pictureRowSize * attr.pictureHeight));
     if (pictureBufferTmp == nullptr) {
         HDF_LOGD("%{public}s: Allocate memory failed.", __func__);
         if (fp != nullptr) {
@@ -248,20 +248,20 @@ void *AnimationLabel::LoadPng(const std::string &imgFileName)
     }
 
     for (unsigned int y = 0; y < attr.pictureHeight; y++) {
-        pictureRow = reinterpret_cast<uint8_t *>((pictureBufferTmp) + y * pictureRowSize);
+        pictureRow = reinterpret_cast<uint8_t*>((pictureBufferTmp) + y * pictureRowSize);
         png_read_row(pngPtr, pictureRow, nullptr);
     }
 
-    BRGA888Pixel *pictureBuffer = HandleLoadPng(&fp, &pictureBufferTmp, attr);
-    return static_cast<void *>(pictureBuffer);
+    BRGA888Pixel* pictureBuffer = HandleLoadPng(&fp, &pictureBufferTmp, attr);
+    return static_cast<void*>(pictureBuffer);
 }
 
-View::BRGA888Pixel *AnimationLabel::HandleLoadPng(FILE **fp, char **pictureBufferTmp, struct PictureAttr &attr)
+View::BRGA888Pixel* AnimationLabel::HandleLoadPng(FILE** fp, char** pictureBufferTmp, struct PictureAttr& attr)
 {
     HDF_LOGD("%{public}s enter", __func__);
     int pictureBufferSize = viewHeight_ * viewWidth_ * sizeof(BRGA888Pixel);
-    BRGA888Pixel *pictureBuffer = nullptr;
-    char *backgroundBuffer = static_cast<char*>(GetRawBuffer());
+    BRGA888Pixel* pictureBuffer = nullptr;
+    char* backgroundBuffer = static_cast<char*>(GetRawBuffer());
 
     pictureBuffer = static_cast<BRGA888Pixel*>(malloc(pictureBufferSize));
     if (pictureBuffer == nullptr) {
@@ -277,7 +277,7 @@ View::BRGA888Pixel *AnimationLabel::HandleLoadPng(FILE **fp, char **pictureBuffe
         return nullptr;
     }
 
-    if (memcpy_s(reinterpret_cast<char *>(pictureBuffer), pictureBufferSize,
+    if (memcpy_s(reinterpret_cast<char*>(pictureBuffer), pictureBufferSize,
         backgroundBuffer, pictureBufferSize) != EOK) {
         if (*pictureBufferTmp != nullptr) {
             free(*pictureBufferTmp);

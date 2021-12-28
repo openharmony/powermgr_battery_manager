@@ -41,7 +41,7 @@ const int TIMER_INTERVAL = 10;
 const int TIMER_FAST_SEC = 2;
 const int TIMER_SLOW_SEC = 10;
 const int SEC_TO_MSEC = 1000;
-const std::string PowerSupply = "SUBSYSTEM=power_supply";
+const std::string POWER_SUPPLY = "SUBSYSTEM=power_supply";
 
 int32_t BatteryThread::OpenUeventSocket(void) const
 {
@@ -66,7 +66,7 @@ int32_t BatteryThread::OpenUeventSocket(void) const
         return ERR_INVALID_FD;
     }
 
-    ret = bind(fd, reinterpret_cast<const struct sockaddr *>(&address), sizeof(struct sockaddr_nl));
+    ret = bind(fd, reinterpret_cast<const struct sockaddr*>(&address), sizeof(struct sockaddr_nl));
     if (ret == ERR_OPERATION_FAILED) {
         HDF_LOGE("%{public}s: bind socket address failed, ret: %{public}d", __func__, ret);
         close(fd);
@@ -169,11 +169,12 @@ int32_t BatteryThread::InitUevent()
     return HDF_SUCCESS;
 }
 
-int32_t BatteryThread::Init(void *service)
+int32_t BatteryThread::Init(void* service)
 {
     HDF_LOGI("%{public}s enter", __func__);
-    BatteryHostServiceStub *stubService = reinterpret_cast<BatteryHostServiceStub *>(service);
+    BatteryHostServiceStub* stubService = reinterpret_cast<BatteryHostServiceStub*>(service);
     if (stubService != nullptr) {
+        stubService->provider_->InitBatteryPath();
         stubService->provider_->InitPowerSupplySysfs();
     }
 
@@ -217,7 +218,7 @@ int32_t BatteryThread::InitTimer()
     return HDF_SUCCESS;
 }
 
-void BatteryThread::TimerCallback(void *service)
+void BatteryThread::TimerCallback(void* service)
 {
     HDF_LOGI("%{public}s enter", __func__);
     unsigned long long timers;
@@ -233,7 +234,7 @@ void BatteryThread::TimerCallback(void *service)
     return;
 }
 
-void BatteryThread::UeventCallback(void *service)
+void BatteryThread::UeventCallback(void* service)
 {
     HDF_LOGI("%{public}s enter", __func__);
     char msg[UEVENT_MSG_LEN + UEVENT_RESERVED_SIZE] = { 0 };
@@ -256,10 +257,10 @@ void BatteryThread::UeventCallback(void *service)
     return;
 }
 
-void BatteryThread::UpdateBatteryInfo(void *service, char *msg)
+void BatteryThread::UpdateBatteryInfo(void* service, char* msg)
 {
     HDF_LOGI("%{public}s enter", __func__);
-    BatteryHostServiceStub *stubService = reinterpret_cast<BatteryHostServiceStub *>(service);
+    BatteryHostServiceStub* stubService = reinterpret_cast<BatteryHostServiceStub*>(service);
     if (stubService != nullptr) {
         stubService->UpdateBatterydInfo(msg);
     }
@@ -268,10 +269,10 @@ void BatteryThread::UpdateBatteryInfo(void *service, char *msg)
     return;
 }
 
-void BatteryThread::UpdateBatteryInfo(void *service)
+void BatteryThread::UpdateBatteryInfo(void* service)
 {
     HDF_LOGI("%{public}s enter", __func__);
-    BatteryHostServiceStub *stubService = reinterpret_cast<BatteryHostServiceStub *>(service);
+    BatteryHostServiceStub* stubService = reinterpret_cast<BatteryHostServiceStub*>(service);
     if (stubService != nullptr) {
         stubService->UpdateBatterydInfo();
     }
@@ -280,11 +281,11 @@ void BatteryThread::UpdateBatteryInfo(void *service)
     return;
 }
 
-bool BatteryThread::IsPowerSupplyEvent(const char *msg) const
+bool BatteryThread::IsPowerSupplyEvent(const char* msg) const
 {
     HDF_LOGI("%{public}s enter", __func__);
     while (*msg) {
-        if (!strcmp(msg, PowerSupply.c_str())) {
+        if (!strcmp(msg, POWER_SUPPLY.c_str())) {
             return true;
         }
         while (*msg++) {} // move to next
@@ -294,7 +295,7 @@ bool BatteryThread::IsPowerSupplyEvent(const char *msg) const
     return false;
 }
 
-int BatteryThread::LoopingThreadEntry(void *arg)
+int BatteryThread::LoopingThreadEntry(void* arg)
 {
     HDF_LOGI("%{public}s enter", __func__);
     int nevents = 0;
@@ -323,14 +324,14 @@ int BatteryThread::LoopingThreadEntry(void *arg)
 
         for (int n = 0; n < nevents; ++n) {
             if (events[n].data.ptr) {
-                BatteryThread *func = const_cast<BatteryThread *>(this);
+                BatteryThread* func = const_cast<BatteryThread*>(this);
                 (callbacks_.find(events[n].data.fd)->second)(func, arg);
             }
         }
     }
 }
 
-void BatteryThread::StartThread(void *service)
+void BatteryThread::StartThread(void* service)
 {
     HDF_LOGI("%{public}s enter", __func__);
     Init(service);
@@ -340,7 +341,7 @@ void BatteryThread::StartThread(void *service)
     return;
 }
 
-void BatteryThread::Run(void *service)
+void BatteryThread::Run(void* service)
 {
     HDF_LOGI("%{public}s enter", __func__);
     std::make_unique<std::thread>(&BatteryThread::LoopingThreadEntry, this, service)->detach();
