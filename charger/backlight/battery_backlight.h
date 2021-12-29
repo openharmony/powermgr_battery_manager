@@ -16,6 +16,8 @@
 #ifndef BATTERY_BACKLIGHT_H
 #define BATTERY_BACKLIGHT_H
 
+#include <string>
+
 namespace OHOS {
 namespace HDI {
 namespace Battery {
@@ -23,13 +25,16 @@ namespace V1_0 {
 class BatteryBacklight {
 public:
     BatteryBacklight();
+    int32_t InitBacklightSysfs();
     void TurnOnScreen();
     void TurnOffScreen();
-    int HandleBacklight(const unsigned int backlight);
-    bool GetScreenState();
+    int HandleBacklight(const unsigned int backlight) const;
+    bool GetScreenState() const;
 private:
-    const char *CreateFile(const char *path, const char *content);
-    void InitDefaultSysfs(void);
+    std::string CreateFile(std::string path, std::string content) const;
+    void InitDevicePah(std::string& path) const;
+    void InitDefaultSysfs(void) const;
+    void TraversalBacklightNode();
     bool screenOn_ = false;
 };
 }  // namespace V1_0

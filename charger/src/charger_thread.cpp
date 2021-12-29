@@ -36,33 +36,33 @@ namespace OHOS {
 namespace HDI {
 namespace Battery {
 namespace V1_0 {
-struct keyState {
+struct KeyState {
     bool up;
     bool down;
     int64_t timestamp;
 };
 
-static const int SHUTDOWN_TIME_MS = 2000;
-static const long long MAX_INT64 = 9223372036854775807;
-static const int SEC_TO_MSEC = 1000;
-static const int NSEC_TO_MSEC = 1000000;
-static const int REBOOT_TIME = 2000;
-static const int BACKLIGHT_OFF_TIME_MS = 10000;
-static const uint32_t INIT_DEFAULT_VALUE = 255;
-static const int VIBRATE_TIME_MS = 75;
+constexpr int SHUTDOWN_TIME_MS = 2000;
+constexpr long long MAX_INT64 = 9223372036854775807;
+constexpr int SEC_TO_MSEC = 1000;
+constexpr int NSEC_TO_MSEC = 1000000;
+constexpr int REBOOT_TIME = 2000;
+constexpr int BACKLIGHT_OFF_TIME_MS = 10000;
+constexpr uint32_t INIT_DEFAULT_VALUE = 255;
+constexpr int VIBRATE_TIME_MS = 75;
 constexpr int MAX_IMGS = 62;
 constexpr int MAX_IMGS_NAME_SIZE = 255;
 constexpr int LOOP_TOP_PICTURES = 10;
 
-Frame *g_hosFrame;
-Frame *g_updateFrame;
-AnimationLabel *g_animationLabel;
-TextLabel *g_updateInfoLabel;
-TextLabel *g_logLabel;
-TextLabel *g_logResultLabel;
-IInputInterface *g_inputInterface;
+Frame* g_hosFrame;
+Frame* g_updateFrame;
+AnimationLabel* g_animationLabel;
+TextLabel* g_updateInfoLabel;
+TextLabel* g_logLabel;
+TextLabel* g_logResultLabel;
+IInputInterface* g_inputInterface;
 InputEventCb g_callback;
-struct keyState keys_[KEY_MAX + 1] = {};
+struct KeyState g_keys[KEY_MAX + 1] = {};
 
 int64_t ChargerThread::keyWait_ = -1;
 int64_t ChargerThread::backlightWait_ = -1;
@@ -71,7 +71,7 @@ int32_t ChargerThread::capacity_ = -1;
 static int64_t GetCurrentTime()
 {
     HDF_LOGI("%{public}s enter", __func__);
-    timespec tm;
+    timespec tm {};
     clock_gettime(CLOCK_MONOTONIC, &tm);
 
     HDF_LOGI("%{public}s exit", __func__);
@@ -128,32 +128,18 @@ void ChargerThread::AnimationInit()
     constexpr char alpha = 0xff;
     int screenH = 0;
     int screenW = 0;
-    auto *sfDev = new SurfaceDev(SurfaceDev::DevType::DRM_DEVICE);
+    auto* sfDev = new SurfaceDev(SurfaceDev::DevType::DRM_DEVICE);
     sfDev->GetScreenSize(screenW, screenH);
     View::BRGA888Pixel bgColor {0x00, 0x00, 0x00, alpha};
 
     g_hosFrame = new Frame(screenW, screenH, View::PixelFormat::BGRA888, sfDev);
     g_hosFrame->SetBackgroundColor(&bgColor);
 
-    MenuItemInit(screenH, screenW, bgColor, g_hosFrame);
-
-    g_logLabel = new TextLabel(START_X1, START_Y1, WIDTH1, HEIGHT1, g_hosFrame);
-    struct FocusInfo info {false, false};
-    struct Bold bold {false, false};
-    TextLabelInit(g_logLabel, "", bold, info, bgColor);
-
-    g_logResultLabel = new TextLabel(START_X2, START_Y2, WIDTH2, HEIGHT2, g_hosFrame);
-    TextLabelInit(g_logResultLabel, "", bold, info, bgColor);
-
-    g_updateFrame = new Frame(screenW, screenH, View::PixelFormat::BGRA888, sfDev);
-    g_updateFrame->SetBackgroundColor(&bgColor);
-
-    g_animationLabel = new AnimationLabel(screenW / START_X_SCALE, screenH / START_Y_SCALE,
-            screenW * WIDTH_SCALE1 / WIDTH_SCALE2, screenH >> 1, g_updateFrame);
+    g_animationLabel = new AnimationLabel(90, 240, 360, 960 >> 1, g_hosFrame);
     g_animationLabel->SetBackgroundColor(&bgColor);
     LoadImgs(g_animationLabel);
 
-    g_updateInfoLabel = new TextLabel(START_X5, START_Y5, screenW, HEIGHT5, g_updateFrame);
+    g_updateInfoLabel = new TextLabel(screenW / 3, 340, screenW / 3, HEIGHT5, g_hosFrame);
     g_updateInfoLabel->SetOutLineBold(false, false);
     g_updateInfoLabel->SetBackgroundColor(&bgColor);
 
@@ -161,7 +147,7 @@ void ChargerThread::AnimationInit()
     return;
 }
 
-void ChargerThread::LoadImgs(AnimationLabel *g_animationLabel)
+void ChargerThread::LoadImgs(AnimationLabel* g_animationLabel)
 {
     HDF_LOGD("%{public}s enter", __func__);
     char nameBuf[MAX_IMGS_NAME_SIZE];
@@ -188,16 +174,17 @@ void ChargerThread::LoadImgs(AnimationLabel *g_animationLabel)
     g_animationLabel->AddStaticImg(nameBuf);
 }
 
-void ChargerThread::UpdateAnimation(const int32_t &capacity)
+void ChargerThread::UpdateAnimation(const int32_t& capacity)
 {
     HDF_LOGI("%{public}s enter", __func__);
     AnimationLabel::needStop_ = false;
-    g_animationLabel->UpdateLoop();
 
-    struct FocusInfo info {true, true};
-    struct Bold bold {true, false};
+    struct FocusInfo info {false, false};
+    struct Bold bold {false, false};
     View::BRGA888Pixel bgColor {0x00, 0x00, 0x00, 0xff};
-    TextLabelInit(g_updateInfoLabel, std::to_string(capacity), bold, info, bgColor);
+    std::string displaySoc = "  " + std::to_string(capacity) + "%";
+    TextLabelInit(g_updateInfoLabel, displaySoc, bold, info, bgColor);
+    g_animationLabel->UpdateLoop();
 
     HDF_LOGI("%{public}s exit", __func__);
     return;
@@ -221,7 +208,7 @@ void ChargerThread::CycleMatters()
     return;
 }
 
-void ChargerThread::UpdateBatteryInfo(void *arg, char *msg)
+void ChargerThread::UpdateBatteryInfo(void* arg, char* msg)
 {
     HDF_LOGI("%{public}s enter", __func__);
     std::unique_ptr<BatterydInfo> batteryInfo = std::make_unique<BatterydInfo>();
@@ -247,7 +234,7 @@ void ChargerThread::UpdateBatteryInfo(void *arg, char *msg)
     return;
 }
 
-void ChargerThread::UpdateBatteryInfo(void *arg)
+void ChargerThread::UpdateBatteryInfo(void* arg)
 {
     HDF_LOGI("%{public}s enter", __func__);
     int32_t temperature = 0;
@@ -269,7 +256,7 @@ void ChargerThread::UpdateBatteryInfo(void *arg)
     return;
 }
 
-void ChargerThread::HandleCapacity(const int32_t &capacity)
+void ChargerThread::HandleCapacity(const int32_t& capacity)
 {
     HDF_LOGI("%{public}s enter", __func__);
     auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
@@ -284,7 +271,7 @@ void ChargerThread::HandleCapacity(const int32_t &capacity)
     return;
 }
 
-void ChargerThread::HandleTemperature(const int32_t &temperature)
+void ChargerThread::HandleTemperature(const int32_t& temperature)
 {
     HDF_LOGI("%{public}s enter", __func__);
     auto tempConf = batteryConfig_->GetTempConf();
@@ -302,10 +289,10 @@ void ChargerThread::HandleTemperature(const int32_t &temperature)
     return;
 }
 
-void ChargerThread::SetKeyWait(struct keyState *key, int64_t timeout)
+void ChargerThread::SetKeyWait(struct KeyState& key, int64_t timeout)
 {
     HDF_LOGI("%{public}s enter", __func__);
-    int64_t nextMoment = key->timestamp + timeout;
+    int64_t nextMoment = key.timestamp + timeout;
     if (keyWait_ == -1 || nextMoment < keyWait_) {
         keyWait_ = nextMoment;
     }
@@ -376,16 +363,16 @@ int ChargerThread::SetKeyState(int code, int value, int64_t now)
         return -1;
     }
 
-    if (keys_[code].down == down) {
+    if (g_keys[code].down == down) {
         return 0;
     }
 
     if (down) {
-        keys_[code].timestamp = now;
+        g_keys[code].timestamp = now;
     }
 
-    keys_[code].down = down;
-    keys_[code].up = true;
+    g_keys[code].down = down;
+    g_keys[code].up = true;
 
     HDF_LOGI("%{public}s exit", __func__);
     return 0;
@@ -409,10 +396,10 @@ void ChargerThread::HandlePowerKey(int keycode, int64_t now)
 {
     HDF_LOGI("%{public}s enter", __func__);
     auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
-    keyState *key = &keys_[keycode];
+    KeyState key = g_keys[keycode];
     if (keycode == KEY_POWER) {
-        if (key->down) {
-            int64_t rebootTime = key->timestamp + REBOOT_TIME;
+        if (key.down) {
+            int64_t rebootTime = key.timestamp + REBOOT_TIME;
             if (now >= rebootTime) {
                 HDF_LOGD("%{public}s: reboot machine.", __func__);
                 backlight_->TurnOffScreen();
@@ -429,7 +416,7 @@ void ChargerThread::HandlePowerKey(int keycode, int64_t now)
                 HDF_LOGD("%{public}s: turn on the screen.", __func__);
             }
         } else {
-            if (key->up) {
+            if (key.up) {
                 backlight_->TurnOnScreen();
                 AnimationLabel::needStop_ = true;
                 UpdateAnimation(capacity_);
@@ -437,13 +424,13 @@ void ChargerThread::HandlePowerKey(int keycode, int64_t now)
             }
         }
     }
-    key->up = false;
+    key.up = false;
 
     HDF_LOGI("%{public}s exit", __func__);
     return;
 }
 
-void ChargerThread::HandleInputEvent(const struct input_event *iev)
+void ChargerThread::HandleInputEvent(const struct input_event* iev)
 {
     HDF_LOGD("%{public}s enter", __func__);
     input_event ev {};
@@ -462,7 +449,7 @@ void ChargerThread::HandleInputEvent(const struct input_event *iev)
     return;
 }
 
-void ChargerThread::EventPkgCallback(const EventPackage **pkgs, const uint32_t count, uint32_t devIndex)
+void ChargerThread::EventPkgCallback(const EventPackage** pkgs, const uint32_t count, uint32_t devIndex)
 {
     HDF_LOGD("%{public}s enter", __func__);
     if (pkgs == nullptr || *pkgs == nullptr) {
@@ -533,6 +520,7 @@ void ChargerThread::Init()
         HDF_LOGE("%{public}s: instantiate PowerSupplyProvider error.", __func__);
         return;
     }
+    provider_->InitBatteryPath();
     provider_->InitPowerSupplySysfs();
 
     vibrate_ = std::make_unique<BatteryVibrate>();
@@ -550,6 +538,7 @@ void ChargerThread::Init()
         HDF_LOGE("%{public}s: instantiate BatteryBacklight error.", __func__);
         return;
     }
+    backlight_->InitBacklightSysfs();
     backlight_->TurnOnScreen();
 
     led_ = std::make_unique<BatteryLed>();
@@ -557,13 +546,14 @@ void ChargerThread::Init()
         HDF_LOGE("%{public}s: instantiate BatteryLed error.", __func__);
         return;
     }
+    led_->InitLedsSysfs();
     led_->TurnOffLed();
 
     AnimationInit();
     InputInit();
 }
 
-void ChargerThread::Run(void *service)
+void ChargerThread::Run(void* service)
 {
     HDF_LOGI("%{public}s enter", __func__);
     Init();

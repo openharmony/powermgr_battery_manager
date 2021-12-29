@@ -24,7 +24,7 @@
 
 using namespace OHOS::PowerMgr;
 
-static BatterySrvClient &g_battClient = BatterySrvClient::GetInstance();
+static BatterySrvClient& g_battClient = BatterySrvClient::GetInstance();
 
 static napi_value BatterySOC(napi_env env, napi_callback_info info)
 {
@@ -89,7 +89,7 @@ static napi_value GetTechnology(napi_env env, napi_callback_info info)
 {
     napi_value napiValue = nullptr;
     auto technology = g_battClient.GetTechnology();
-    const char *technologyStr = technology.c_str();
+    const char* technologyStr = technology.c_str();
 
     NAPI_CALL(env, napi_create_string_utf8(env, technologyStr, strlen(technologyStr), &napiValue));
 
@@ -124,7 +124,7 @@ static napi_value GetBatteryPresent(napi_env env, napi_callback_info info)
 static napi_value EnumHealthClassConstructor(napi_env env, napi_callback_info info)
 {
     napi_value thisArg = nullptr;
-    void *data = nullptr;
+    void* data = nullptr;
 
     napi_get_cb_info(env, info, nullptr, nullptr, &thisArg, &data);
 
@@ -170,7 +170,7 @@ static napi_value CreateEnumHealthState(napi_env env, napi_value exports)
 static napi_value EnumChargeClassConstructor(napi_env env, napi_callback_info info)
 {
     napi_value thisArg = nullptr;
-    void *data = nullptr;
+    void* data = nullptr;
 
     napi_get_cb_info(env, info, nullptr, nullptr, &thisArg, &data);
 
@@ -211,7 +211,7 @@ static napi_value CreateEnumChargeState(napi_env env, napi_value exports)
 static napi_value EnumPluggedClassConstructor(napi_env env, napi_callback_info info)
 {
     napi_value thisArg = nullptr;
-    void *data = nullptr;
+    void* data = nullptr;
 
     napi_get_cb_info(env, info, nullptr, nullptr, &thisArg, &data);
 
@@ -288,7 +288,7 @@ static napi_module g_module = {
     .nm_filename = "batteryInfo",
     .nm_register_func = BatteryInit,
     .nm_modname = "batteryInfo",
-    .nm_priv = ((void *)0),
+    .nm_priv = ((void*)0),
     .reserved = {0}
 };
 

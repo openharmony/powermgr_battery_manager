@@ -17,7 +17,7 @@
 
 #include "hdf_log.h"
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     HDF_LOGI("%{public}s enter", __func__);
     using namespace OHOS::HDI::Battery::V1_0;

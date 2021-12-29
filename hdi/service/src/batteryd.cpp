@@ -27,23 +27,23 @@
 using namespace OHOS::HDI::Battery::V1_0;
 
 namespace {
-int32_t BatterydDispatch(struct HdfDeviceIoClient *client, int cmdId,
-    struct HdfSBuf *data, struct HdfSBuf *reply)
+int32_t BatterydDispatch(struct HdfDeviceIoClient* client, int cmdId,
+    struct HdfSBuf* data, struct HdfSBuf* reply)
 {
     HDF_LOGI("%{public}s enter", __func__);
-    struct HdfBatterydService *service =
+    struct HdfBatterydService* service =
         CONTAINER_OF(client->device->service, struct HdfBatterydService, ioService);
 
     HDF_LOGI("%{public}s exit", __func__);
     return BatteryHostServiceOnRemoteRequest(static_cast<char*>(service->instance), cmdId, data, reply);
 }
 
-int32_t BatterydBind(struct HdfDeviceObject *device)
+int32_t BatterydBind(struct HdfDeviceObject* device)
 {
     HDF_LOGI("%{public}s enter", __func__);
 
-    struct HdfBatterydService *service =
-        reinterpret_cast<HdfBatterydService *>(OsalMemAlloc(sizeof(HdfBatterydService)));
+    struct HdfBatterydService* service =
+        reinterpret_cast<HdfBatterydService*>(OsalMemAlloc(sizeof(HdfBatterydService)));
     if (service == nullptr) {
         HDF_LOGE("%{public}s: calloc HdfBatterydService error", __func__);
         return HDF_ERR_MALLOC_FAIL;
@@ -61,21 +61,21 @@ int32_t BatterydBind(struct HdfDeviceObject *device)
     return HDF_SUCCESS;
 }
 
-int32_t BatterydInit(struct HdfDeviceObject *device)
+int32_t BatterydInit(struct HdfDeviceObject* device)
 {
     HDF_LOGI("%{public}s enter", __func__);
 
     return HDF_SUCCESS;
 }
 
-void BatterydRelease(struct HdfDeviceObject *device)
+void BatterydRelease(struct HdfDeviceObject* device)
 {
     HDF_LOGI("%{public}s enter", __func__);
 
     if (device == nullptr) {
         return;
     }
-    struct HdfBatterydService *service = CONTAINER_OF(device->service, struct HdfBatterydService, ioService);
+    struct HdfBatterydService* service = CONTAINER_OF(device->service, struct HdfBatterydService, ioService);
     if (service == nullptr) {
         HDF_LOGW("%{public}s: batteryd service is nullptr, no need to release", __func__);
         return;

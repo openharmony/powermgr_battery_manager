@@ -37,13 +37,13 @@ struct BufferObject {
     uint32_t pitch;
     uint32_t handle;
     uint32_t size;
-    uint8_t *vaddr;
+    uint8_t* vaddr;
     uint32_t fbId;
 };
 
 struct BufferObject g_buff;
 
-void SurfaceDev::Flip(char *buf)
+void SurfaceDev::Flip(char* buf)
 {
     HDF_LOGD("%{public}s enter", __func__);
     if (!buf) {
@@ -56,7 +56,7 @@ void SurfaceDev::Flip(char *buf)
     }
 }
 
-static int ModesetCreateFb(int fd, struct BufferObject *bo)
+static int ModesetCreateFb(int fd, struct BufferObject* bo)
 {
     HDF_LOGD("%{public}s enter", __func__);
     struct drm_mode_create_dumb create = {};
@@ -110,7 +110,7 @@ int DrmInit(void)
 {
     HDF_LOGD("%{public}s enter", __func__);
     int fd = -1;
-    drmModeConnector *conn;
+    drmModeConnector* conn;
     uint32_t connId;
     uint32_t crtcId;
     fd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC);
@@ -119,7 +119,7 @@ int DrmInit(void)
         return -1;
     }
 
-    drmModeRes *res = drmModeGetResources(fd);
+    drmModeRes* res = drmModeGetResources(fd);
     if (res == nullptr) {
         HDF_LOGE("%{public}s, drmModeGetResources.", __func__);
         return -1;
@@ -151,7 +151,7 @@ SurfaceDev::SurfaceDev(SurfaceDev::DevType devType)
     }
 }
 
-void SurfaceDev::GetScreenSize(int &w, int &h)
+void SurfaceDev::GetScreenSize(int& w, int& h)
 {
     HDF_LOGD("%{public}s enter", __func__);
     const int screenSizeW = 480;

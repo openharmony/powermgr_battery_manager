@@ -23,13 +23,13 @@ namespace HDI {
 namespace Battery {
 namespace V1_0 {
 const std::string CONFIG_FILE = "/system/etc/ledconfig/led_config.json";
-static const int DEFAULT_CAPACITY_CONF = 3;
-static const int DEFAULT_UPPER_TEMP_CONF = 600;
-static const int DEFAULT_LOWER_TEMP_CONF = -100;
-static const int DEFAULT_CAPACITY_BEGIN_CONF = 0;
-static const int DEFAULT_CAPACITY_END_CONF = 100;
-static const int DEFAULT_LED_COLOR_CONF = 4;
-static const int DEFAULT_BRIGHTNESS_CONF = 255;
+const int DEFAULT_CAPACITY_CONF = 3;
+const int DEFAULT_UPPER_TEMP_CONF = 600;
+const int DEFAULT_LOWER_TEMP_CONF = -100;
+const int DEFAULT_CAPACITY_BEGIN_CONF = 0;
+const int DEFAULT_CAPACITY_END_CONF = 100;
+const int DEFAULT_LED_COLOR_CONF = 4;
+const int DEFAULT_BRIGHTNESS_CONF = 255;
 
 int32_t BatteryConfig::Init()
 {
@@ -59,7 +59,7 @@ int BatteryConfig::GetCapacityConf()
     return capacityConf_;
 }
 
-int32_t BatteryConfig::ParseLedConf(Json::Value &root)
+int32_t BatteryConfig::ParseLedConf(Json::Value& root)
 {
     HDF_LOGI("%{public}s enter", __func__);
     struct LedConf ledConf;
@@ -91,7 +91,7 @@ int32_t BatteryConfig::ParseLedConf(Json::Value &root)
     return HDF_SUCCESS;
 }
 
-int32_t BatteryConfig::ParseTempConf(Json::Value &root)
+int32_t BatteryConfig::ParseTempConf(Json::Value& root)
 {
     HDF_LOGI("%{public}s enter", __func__);
     int size = root["temperature"]["table"].size();
@@ -111,7 +111,7 @@ int32_t BatteryConfig::ParseTempConf(Json::Value &root)
     return HDF_SUCCESS;
 }
 
-int32_t BatteryConfig::ParseCapacityConf(Json::Value &root)
+int32_t BatteryConfig::ParseCapacityConf(Json::Value& root)
 {
     HDF_LOGI("%{public}s enter", __func__);
     int size = root["soc"]["table"].size();

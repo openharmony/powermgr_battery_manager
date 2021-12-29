@@ -18,8 +18,8 @@
 
 namespace OHOS {
 namespace PowerMgr {
-int BatterydSubscriber::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
-    MessageOption &option)
+int BatterydSubscriber::OnRemoteRequest(uint32_t code, MessageParcel& data, MessageParcel& reply,
+    MessageOption& option)
 {
     switch (code) {
         case CMD_NOTIFY_SUBSCRIBER: {
@@ -33,8 +33,8 @@ int BatterydSubscriber::OnRemoteRequest(uint32_t code, MessageParcel &data, Mess
     }
 }
 
-const BatteryInfo BatterydSubscriber::ParseBatteryInfo(MessageParcel &data, MessageParcel &reply,
-    MessageOption &option)
+const BatteryInfo BatterydSubscriber::ParseBatteryInfo(MessageParcel& data, MessageParcel& reply,
+    MessageOption& option)
 {
     BatteryInfo info;
     info.SetCapacity(data.ReadInt32());

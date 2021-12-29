@@ -17,8 +17,10 @@
 #define POWER_SUPPLY_PROVIDER_H
 
 #include <limits.h>
-#include <stdio.h>
-#include <string>
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <map>
 
 #include "batteryd_api.h"
 
@@ -64,30 +66,31 @@ public:
 
     int32_t InitPowerSupplySysfs(void);
     void InitDefaultSysfs(void);
-    int32_t ParseCapacity(int32_t *capacity) const;
-    int32_t ParseVoltage(int32_t *voltage) const;
-    int32_t ParseTemperature(int32_t *temperature) const;
-    int32_t ParseHealthState(int32_t *healthState) const;
-    int32_t ParsePluggedType(int32_t *pluggedType) const;
-    int32_t ParseChargeState(int32_t *chargeState) const;
-    int32_t ParseChargeCounter(int32_t *chargeCounter) const;
-    int32_t ParsePresent(int8_t *present) const;
+    int32_t ParseCapacity(int32_t* capacity) const;
+    int32_t ParseVoltage(int32_t* voltage) const;
+    int32_t ParseTemperature(int32_t* temperature) const;
+    int32_t ParseHealthState(int32_t* healthState) const;
+    int32_t ParsePluggedType(int32_t* pluggedType) const;
+    int32_t ParseChargeState(int32_t* chargeState) const;
+    int32_t ParseChargeCounter(int32_t* chargeCounter) const;
+    int32_t ParsePresent(int8_t* present) const;
     int32_t ParseTechnology(std::string& technology) const;
-    void ParseUeventToBatterydInfo(const char *msg, struct BatterydInfo *info) const;
-    void UpdateInfoByReadSysFile(struct BatterydInfo *info) const;
+    void ParseUeventToBatterydInfo(const char* msg, struct BatterydInfo* info) const;
+    void UpdateInfoByReadSysFile(struct BatterydInfo* info) const;
     void SetSysFilePath(const std::string& path);
+    void InitBatteryPath();
 
 private:
     struct PowerSupplySysfsInfo {
-        char *name;
+        char* name;
         std::string typePath;
         std::string onlinePath;
         std::string currentMaxPath;
         std::string voltageMaxPath;
-    } powerSupplySysfsInfos_[MAX_SYSFS_SIZE];
+    } powerSupplySysfsInfos_; //[MAX_SYSFS_SIZE];
 
     struct BatterySysfsInfo {
-        char *name;
+        char* name;
         std::string capacityPath;
         std::string voltagePath;
         std::string temperaturePath;
@@ -98,28 +101,32 @@ private:
         std::string chargeCounterPath;
     } batterySysfsInfo_;
 
-    static inline int32_t ParseInt(const char *str);
-    inline void Trim(char *str) const;
-    static inline void CapacityAssigner(const char *str, struct BatterydInfo *info);
-    static inline void VoltageAssigner(const char *str, struct BatterydInfo *info);
-    static inline void TemperatureAssigner(const char *str, struct BatterydInfo *info);
-    static int32_t HealthStateEnumConverter(const char *str);
-    static inline void HealthStateAssigner(const char *str, struct BatterydInfo *info);
-    static int32_t ChargeStateEnumConverter(const char *str);
-    static inline void ChargeStateAssigner(const char *str, struct BatterydInfo *info);
-    static inline void PresentAssigner(const char *str, struct BatterydInfo *info);
-    static inline void TechnologyAssigner(const char *str, struct BatterydInfo *info);
-    static inline void ChargeCounterAssigner(const char *str, struct BatterydInfo *info);
+    static inline int32_t ParseInt(const char* str);
+    inline void Trim(char* str) const;
+    static inline void CapacityAssigner(const char* str, struct BatterydInfo* info);
+    static inline void VoltageAssigner(const char* str, struct BatterydInfo* info);
+    static inline void TemperatureAssigner(const char* str, struct BatterydInfo* info);
+    static int32_t HealthStateEnumConverter(const char* str);
+    static inline void HealthStateAssigner(const char* str, struct BatterydInfo* info);
+    static int32_t ChargeStateEnumConverter(const char* str);
+    static inline void ChargeStateAssigner(const char* str, struct BatterydInfo* info);
+    static inline void PresentAssigner(const char* str, struct BatterydInfo* info);
+    static inline void TechnologyAssigner(const char* str, struct BatterydInfo* info);
+    static inline void ChargeCounterAssigner(const char* str, struct BatterydInfo* info);
 
-    void FormatPath(std::string &path, size_t size, const char *format, const char *basePath, const char *name) const;
-    void FormatSysfsPaths(struct PowerSupplySysfsInfo *info);
-    int32_t ReadSysfsFile(const char *path, char *buf, size_t size) const;
-    int32_t ReadBatterySysfsToBuff(const char *path, char *buf, size_t size) const;
-    void GetPluggedTypeName(char *buf, size_t size) const;
-    int32_t PluggedTypeEnumConverter(const char *str) const;
-    int32_t ParsePluggedMaxCurrent(int32_t *maxCurrent) const;
-    int32_t ParsePluggedMaxVoltage(int32_t *maxVoltage) const;
-    const char *CreateFile(const char *path, const char *content);
+    void TraversalNode();
+    void CheckSubfolderNode(const std::string& path);
+    void FormatPath(std::string& path, size_t size, const char* format, const char* basePath, const char* name) const;
+    void FormatSysfsPaths(struct PowerSupplySysfsInfo* info);
+    int32_t ReadSysfsFile(const char* path, char* buf, size_t size) const;
+    int32_t ReadBatterySysfsToBuff(const char* path, char* buf, size_t size) const;
+    void GetPluggedTypeName(char* buf, size_t size) const;
+    int32_t PluggedTypeEnumConverter(const char* str) const;
+    int32_t ParsePluggedMaxCurrent(int32_t* maxCurrent) const;
+    int32_t ParsePluggedMaxVoltage(int32_t* maxVoltage) const;
+    std::string CreateFile(std::string path, std::string content);
+    std::vector<std::string> filenodeName_;
+    std::map<std::string, std::string> nodeInfo_;
     std::string path_;
     int32_t index_;
 };

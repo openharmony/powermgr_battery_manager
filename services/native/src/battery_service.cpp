@@ -117,13 +117,13 @@ void BatteryService::OnStop()
 
 bool BatteryService::IsCommonEventServiceAbilityExist()
 {
-    sptr<ISystemAbilityManager> sm = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (!sm) {
+    sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (!sysMgr) {
         POWER_HILOGI(MODULE_BATT_SERVICE,
             "IsCommonEventServiceAbilityExist Get ISystemAbilityManager failed, no SystemAbilityManager");
         return false;
     }
-    sptr<IRemoteObject> remote = sm->CheckSystemAbility(COMMON_EVENT_SERVICE_ID);
+    sptr<IRemoteObject> remote = sysMgr->CheckSystemAbility(COMMON_EVENT_SERVICE_ID);
     if (!remote) {
         POWER_HILOGE(MODULE_BATT_SERVICE, "No CesServiceAbility");
         return false;

@@ -33,12 +33,12 @@ ErrCode BatterySrvClient::Connect()
     if (proxy_ != nullptr) {
         return ERR_OK;
     }
-    sptr<ISystemAbilityManager> sm = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (sm == nullptr) {
+    sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (sysMgr == nullptr) {
         POWER_HILOGE(MODULE_BATT_INNERKIT, "%{public}s:fail to get Registry", __func__);
         return E_GET_SYSTEM_ABILITY_MANAGER_FAILED;
     }
-    sptr<IRemoteObject> remoteObject_ = sm->CheckSystemAbility(POWER_MANAGER_BATT_SERVICE_ID);
+    sptr<IRemoteObject> remoteObject_ = sysMgr->CheckSystemAbility(POWER_MANAGER_BATT_SERVICE_ID);
     if (remoteObject_ == nullptr) {
         POWER_HILOGE(MODULE_BATT_INNERKIT, "GetSystemAbility failed.");
         return E_GET_POWER_SERVICE_FAILED;

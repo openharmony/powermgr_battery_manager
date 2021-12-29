@@ -30,17 +30,17 @@
 using namespace testing::ext;
 
 namespace HdiInputTest {
-IInputInterface *g_inputInterface;
+IInputInterface* g_inputInterface;
 InputEventCb g_callback;
 InputHostCb g_hotplugCb;
 
-static const int INIT_DEFAULT_VALUE = 255;
-static const int KEEP_ALIVE_TIME_MS = 10000;
-static const int TOUCH_INDEX = 1;
-static const int INVALID_INDEX = 5;
-static const int NAME_MAX_LEN = 10;
-static const int TEST_RESULT_LEN = 32;
-static const int MAX_DEVICES = 32;
+const int INIT_DEFAULT_VALUE = 255;
+const int KEEP_ALIVE_TIME_MS = 10000;
+const int TOUCH_INDEX = 1;
+const int INVALID_INDEX = 5;
+const int NAME_MAX_LEN = 10;
+const int TEST_RESULT_LEN = 32;
+const int MAX_DEVICES = 32;
 
 void HdiInputTest::SetUpTestCase(void)
 {
@@ -67,7 +67,7 @@ void HdiInputTest::TearDown(void)
 }
 
 template<typename T1, typename T2>
-inline void InputCheckNullPointer(const T1 &pointer, const T2 &ret)
+inline void InputCheckNullPointer(const T1& pointer, const T2& ret)
 {
     do {
         if ((pointer) == NULL) {
@@ -77,7 +77,7 @@ inline void InputCheckNullPointer(const T1 &pointer, const T2 &ret)
     }while (0);
 }
 
-static void ReportEventPkgCallback(const EventPackage **pkgs, uint32_t count, uint32_t devIndex)
+static void ReportEventPkgCallback(const EventPackage** pkgs, uint32_t count, uint32_t devIndex)
 {
     if (pkgs == NULL) {
         return;
@@ -90,7 +90,7 @@ static void ReportEventPkgCallback(const EventPackage **pkgs, uint32_t count, ui
     }
 }
 
-void ReportHotPlugEventPkgCallback(const HotPlugEvent *msg)
+void ReportHotPlugEventPkgCallback(const HotPlugEvent* msg)
 {
     if (msg == NULL) {
         return;
@@ -194,7 +194,7 @@ HWTEST_F (HdiInputTest, CloseInputDevice002, TestSize.Level1)
 HWTEST_F (HdiInputTest, GetInputDevice001, TestSize.Level1)
 {
     HDF_LOGI("%s: [Input] GetInputDevice001 enter", __func__);
-    DeviceInfo *dev = NULL;
+    DeviceInfo* dev = NULL;
     InputCheckNullPointer(g_inputInterface, INPUT_NULL_PTR);
     InputCheckNullPointer(g_inputInterface->iInputManager, INPUT_NULL_PTR);
 
@@ -226,7 +226,7 @@ HWTEST_F (HdiInputTest, GetInputDeviceList001, TestSize.Level1)
     HDF_LOGI("%s: [Input] GetInputDeviceList001 enter", __func__);
     int32_t ret;
     uint32_t num = 0;
-    DeviceInfo *dev[MAX_INPUT_DEV_NUM] = {0};
+    DeviceInfo* dev[MAX_INPUT_DEV_NUM] = {0};
 
     InputCheckNullPointer(g_inputInterface, INPUT_NULL_PTR);
     InputCheckNullPointer(g_inputInterface->iInputManager, INPUT_NULL_PTR);
@@ -297,7 +297,7 @@ HWTEST_F (HdiInputTest, GetInputDevice002, TestSize.Level1)
 {
     HDF_LOGI("%s: [Input] GetInputDevice002 enter", __func__);
     int32_t ret;
-    DeviceInfo *dev = NULL;
+    DeviceInfo* dev = NULL;
 
     InputCheckNullPointer(g_inputInterface, INPUT_NULL_PTR);
     InputCheckNullPointer(g_inputInterface->iInputManager, INPUT_NULL_PTR);

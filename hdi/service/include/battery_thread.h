@@ -37,25 +37,25 @@ class BatteryThread {
 public:
     virtual ~BatteryThread() {}
 
-    void StartThread(void *service);
+    void StartThread(void* service);
 protected:
-    int LoopingThreadEntry(void *arg);
-    virtual void Run(void *service);
-    virtual void UpdateBatteryInfo(void *service, char *msg);
-    virtual void UpdateBatteryInfo(void *service);
+    int LoopingThreadEntry(void* arg);
+    virtual void Run(void* service);
+    virtual void UpdateBatteryInfo(void* service, char* msg);
+    virtual void UpdateBatteryInfo(void* service);
     virtual void HandleStates() {}
     virtual int UpdateWaitInterval();
     void UpdateEpollInterval(const int32_t chargestate);
     virtual void CycleMatters() {}
 private:
     int32_t OpenUeventSocket(void) const;
-    bool IsPowerSupplyEvent(const char *msg) const;
-    int32_t Init(void *service);
+    bool IsPowerSupplyEvent(const char* msg) const;
+    int32_t Init(void* service);
     int32_t InitUevent();
     int32_t InitTimer();
     int32_t InitBacklightTimer();
-    void TimerCallback(void *service);
-    void UeventCallback(void *service);
+    void TimerCallback(void* service);
+    void UeventCallback(void* service);
     void SetTimerInterval(int interval);
     int RegisterCallback(const int fd, const EventType et);
     int timerInterval_ = -1;
