@@ -39,7 +39,7 @@ using namespace std;
  * @tc.desc: Test functions subscriber
  * @tc.type: FUNC
  */
-HWTEST_F (BatterySubscriberTest, BatteryService001, TestSize.Level1)
+static HWTEST_F (BatterySubscriberTest, BatteryService001, TestSize.Level1)
 {
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService001 start.");
     const std::string EVENT = CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED;

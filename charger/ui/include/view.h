@@ -42,13 +42,15 @@ public:
     };
     View() {};
     virtual ~View() {};
-    void *CreateBuffer(int w, int h, View::PixelFormat pixelFormat);
-    virtual void SetBackgroundColor(BRGA888Pixel *color);
-    virtual void DrawSubView(int x, int y, int w, int h, char *buf);
+    void* CreateBuffer(int w, int h, View::PixelFormat pixelFormat);
+    virtual void SetBackgroundColor(BRGA888Pixel* color);
+    virtual void DrawSubView(int x, int y, int w, int h, char* buf);
     virtual void OnDraw();
+    virtual void Hide();
+    virtual void Show();
     virtual void OnFocus(bool foucsed);
-    char *GetBuffer() const;
-    void *GetRawBuffer() const;
+    char* GetBuffer() const;
+    void* GetRawBuffer() const;
     int GetBufferSize() const
     {
         return bufferSize_;
@@ -67,8 +69,8 @@ public:
     int viewHeight_ = 0;
     std::mutex mutex_;
 private:
-    char *viewBuffer_ = nullptr;
-    char *shadowBuffer_ = nullptr;
+    char* viewBuffer_ = nullptr;
+    char* shadowBuffer_ = nullptr;
     int bufferSize_ = 0;
     bool isVisiable_ = true;
     int viewId_ = 0;

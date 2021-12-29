@@ -31,8 +31,8 @@ public:
 
     explicit SurfaceDev(SurfaceDev::DevType devType);
     ~SurfaceDev();
-    void Flip(char *buf);
-    void GetScreenSize(int &w, int &h);
+    void Flip(char* buf);
+    void GetScreenSize(int& w, int& h);
 private:
     std::mutex mMutex;
 };

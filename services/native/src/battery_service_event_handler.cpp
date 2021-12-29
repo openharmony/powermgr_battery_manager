@@ -19,13 +19,13 @@
 
 namespace OHOS {
 namespace PowerMgr {
-BatteryServiceEventHandler::BatteryServiceEventHandler(const std::shared_ptr<AppExecFwk::EventRunner> &runner,
-    const wptr<BatteryService> &service)
+BatteryServiceEventHandler::BatteryServiceEventHandler(const std::shared_ptr<AppExecFwk::EventRunner>& runner,
+    const wptr<BatteryService>& service)
     : AppExecFwk::EventHandler(runner), service_(service)
 {
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryServiceEventHandler::BatteryServiceEventHandler instance created.");
 }
 
-void BatteryServiceEventHandler::ProcessEvent([[maybe_unused]] const AppExecFwk::InnerEvent::Pointer &event) {}
+void BatteryServiceEventHandler::ProcessEvent([[maybe_unused]] const AppExecFwk::InnerEvent::Pointer& event) {}
 } // namespace PowerMgr
 } // namespace OHOS

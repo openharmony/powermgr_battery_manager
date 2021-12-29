@@ -47,21 +47,22 @@ public:
     int32_t DispatchGetChargeState(MessageParcel& reply) const;
     int32_t DispatchGetPresent(MessageParcel& reply) const;
     int32_t DispatchGetTechnology(MessageParcel& reply) const;
-    void UpdateBatterydInfo(const char *msg) const;
+    void UpdateBatterydInfo(const char* msg) const;
     void UpdateBatterydInfo() const;
     std::unique_ptr<PowerSupplyProvider> provider_ = nullptr;
 private:
-    void HandleTemperature(const int32_t &temperature) const;
-    void NotifySubscriber(const struct BatterydInfo *batteryInfo) const;
-    struct HdfRemoteService *subscriber_ =  nullptr;
+    void WakeupDevice(const int32_t& chargestate) const;
+    void HandleTemperature(const int32_t& temperature) const;
+    void NotifySubscriber(const struct BatterydInfo* batteryInfo) const;
+    struct HdfRemoteService* subscriber_ =  nullptr;
     std::unique_ptr<BatteryThread> loop_ = nullptr;
     std::unique_ptr<BatteryConfig> batteryConfig_ = nullptr;
     std::unique_ptr<BatteryLed> batteryLed_ = nullptr;
 };
 
-void *BatteryHostServiceStubInstance();
+void* BatteryHostServiceStubInstance();
 
-int32_t BatteryHostServiceOnRemoteRequest(char *stub, int cmdId, struct HdfSBuf *data, struct HdfSBuf *reply);
+int32_t BatteryHostServiceOnRemoteRequest(char* stub, int cmdId, struct HdfSBuf* data, struct HdfSBuf* reply);
 }  // namespace V1_0
 }  // namespace Battery
 }  // namespace HDI

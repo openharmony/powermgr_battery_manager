@@ -55,19 +55,19 @@ void ModuleTest::TearDown(void)
 {
 }
 
-const char *CreateFile(const char *path, const char *content)
+std::string CreateFile(std::string path, std::string content)
 {
-    std::ofstream stream(path);
+    std::ofstream stream(path.c_str());
     if (!stream.is_open()) {
-        HDF_LOGD("%{public}s: enter, Cannot create file %{public}s", __func__, path);
+        HDF_LOGD("%{public}s: enter, Cannot create file %{public}s", __func__, path.c_str());
         return nullptr;
     }
-    stream << content << std::endl;
+    stream << content.c_str() << std::endl;
     stream.close();
     return path;
 }
 
-void MockFileInit()
+static void MockFileInit()
 {
     std::string path = "/data/local/tmp";
     mkdir("/data/local/tmp/battery", S_IRWXU);
@@ -88,7 +88,7 @@ void MockFileInit()
  * @tc.desc: Test BindBatterydSubscriber return ERR_OK
  * @tc.type: FUNC
  */
-HWTEST_F (ModuleTest, ModuleTest001, TestSize.Level1)
+static HWTEST_F (ModuleTest, ModuleTest001, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. ModuleTest001 start.", __func__);
     sptr<BatteryServiceSubscriber> batterydSubscriber = new BatteryServiceSubscriber();
@@ -244,6 +244,8 @@ HWTEST_F (ModuleTest, ModuleTest009, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. ModuleTest009 start.", __func__);
     CreateFile("/data/local/tmp/bq2560x_charger/type", "USB");
+    CreateFile("/data/local/tmp/battery/type", "USB");
+    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. ModuleTest009::pluggedType=%{public}d.", __func__, pluggedType);

@@ -36,9 +36,9 @@ class BatterySubscriberTest : public testing::Test {
 
 class SubscriberTest : public EventFwk::CommonEventSubscriber {
 public:
-    explicit SubscriberTest(const EventFwk::CommonEventSubscribeInfo &sp) : EventFwk::CommonEventSubscriber(sp)
+    explicit SubscriberTest(const EventFwk::CommonEventSubscribeInfo& sp) : EventFwk::CommonEventSubscriber(sp)
     {}
-    void OnReceiveEventOther(const EventFwk::CommonEventData &data)
+    void OnReceiveEventOther(const EventFwk::CommonEventData& data)
     {
         POWER_HILOGD(MODULE_BATT_SERVICE, "OnReceiveEventOther enter.");
         std::string action = data.GetWant().GetAction();
@@ -82,7 +82,7 @@ public:
             }
         }
     }
-    void OnReceiveEvent(const EventFwk::CommonEventData &data)
+    void OnReceiveEvent(const EventFwk::CommonEventData& data)
     {
         POWER_HILOGD(MODULE_BATT_SERVICE, "OnReceiveEvent enter.");
         std::string action = data.GetWant().GetAction();
