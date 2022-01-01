@@ -477,7 +477,7 @@ ohos_prebuilt_etc("resources_config65") {
 }
 
 ohos_prebuilt_etc("resources_config66") {
-  source = "init.cfg"
+  source = "init.charge.cfg"
   relative_install_dir = "charge"
   part_name = "battery_manager_native"
   subsystem_name = "powermgr"
