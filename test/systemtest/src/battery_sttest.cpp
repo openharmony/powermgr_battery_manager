@@ -89,15 +89,15 @@ static void MockFileInit()
 {
     std::string path = "/data/local/tmp";
     mkdir("/data/local/tmp/battery", S_IRWXU);
-    mkdir("/data/local/tmp/bq2560x_charger", S_IRWXU);
-    mkdir("/data/local/tmp/sc27xx-fgu", S_IRWXU);
+    mkdir("/data/local/tmp/ohos_charger", S_IRWXU);
+    mkdir("/data/local/tmp/ohos-fgu", S_IRWXU);
     HDF_LOGD("%{public}s: enter.", __func__);
 
     sleep(1);
     CreateFile("/data/local/tmp/battery/online", "1");
     CreateFile("/data/local/tmp/battery/type", "Battery");
-    CreateFile("/data/local/tmp/bq2560x_charger/health", "Unknown");
-    CreateFile("/data/local/tmp/sc27xx-fgu/temp", "345");
+    CreateFile("/data/local/tmp/ohos_charger/health", "Unknown");
+    CreateFile("/data/local/tmp/ohos-fgu/temp", "345");
 
     BatterydClient::ChangePath(path);
 }
@@ -543,9 +543,9 @@ HWTEST_F (BatterySttest, BatteryST015, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST016, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST016 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB");
     CreateFile("/data/local/tmp/battery/type", "USB");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "USB");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST016::pluggedType=%{public}d.", __func__, pluggedType);
@@ -562,9 +562,9 @@ HWTEST_F (BatterySttest, BatteryST016, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST017 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_PD_DRP");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB_PD_DRP");
     CreateFile("/data/local/tmp/battery/type", "USB_PD_DRP");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_PD_DRP");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_PD_DRP");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST017::pluggedType=%{public}d.", __func__, pluggedType);
@@ -581,9 +581,9 @@ HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST018 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "Wireless");
+    CreateFile("/data/local/tmp/ohos_charger/type", "Wireless");
     CreateFile("/data/local/tmp/battery/type", "Wireless");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Wireless");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "Wireless");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST018::pluggedType=%{public}d.", __func__, pluggedType);
@@ -600,9 +600,9 @@ HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST019 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "Mains");
+    CreateFile("/data/local/tmp/ohos_charger/type", "Mains");
     CreateFile("/data/local/tmp/battery/type", "Mains");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Mains");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "Mains");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST019::pluggedType=%{public}d.", __func__, pluggedType);
@@ -619,9 +619,9 @@ HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST020 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "UPS");
+    CreateFile("/data/local/tmp/ohos_charger/type", "UPS");
     CreateFile("/data/local/tmp/battery/type", "UPS");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "UPS");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "UPS");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST020::pluggedType=%{public}d.", __func__, pluggedType);
@@ -638,9 +638,9 @@ HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST021 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_ACA");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB_ACA");
     CreateFile("/data/local/tmp/battery/type", "USB_ACA");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_ACA");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_ACA");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST021::pluggedType=%{public}d.", __func__, pluggedType);
@@ -657,9 +657,9 @@ HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST022, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST022 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_C");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB_C");
     CreateFile("/data/local/tmp/battery/type", "USB_C");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_C");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_C");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST022::pluggedType=%{public}d.", __func__, pluggedType);
@@ -676,9 +676,9 @@ HWTEST_F (BatterySttest, BatteryST022, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST023, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST023 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_CDP");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB_CDP");
     CreateFile("/data/local/tmp/battery/type", "USB_CDP");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_CDP");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_CDP");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST023::pluggedType=%{public}d.", __func__, pluggedType);
@@ -695,9 +695,9 @@ HWTEST_F (BatterySttest, BatteryST023, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST024, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST024 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_DCP");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB_DCP");
     CreateFile("/data/local/tmp/battery/type", "USB_DCP");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_DCP");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_DCP");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST024::pluggedType=%{public}d.", __func__, pluggedType);
@@ -714,9 +714,9 @@ HWTEST_F (BatterySttest, BatteryST024, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST025, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST025 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_HVDCP");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB_HVDCP");
     CreateFile("/data/local/tmp/battery/type", "USB_HVDCP");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_HVDCP");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_HVDCP");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST025::pluggedType=%{public}d.", __func__, pluggedType);
@@ -733,9 +733,9 @@ HWTEST_F (BatterySttest, BatteryST025, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST026, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST026 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB_PD");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB_PD");
     CreateFile("/data/local/tmp/battery/type", "USB_PD");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB_PD");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_PD");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST026::pluggedType=%{public}d.", __func__, pluggedType);
@@ -752,9 +752,9 @@ HWTEST_F (BatterySttest, BatteryST026, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST027, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST027 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "Unknown");
+    CreateFile("/data/local/tmp/ohos_charger/type", "Unknown");
     CreateFile("/data/local/tmp/battery/type", "Unknown");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Unknown");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "Unknown");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST027::pluggedType=%{public}d.", __func__, pluggedType);
@@ -771,9 +771,9 @@ HWTEST_F (BatterySttest, BatteryST027, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST028, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST028 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "");
+    CreateFile("/data/local/tmp/ohos_charger/type", "");
     CreateFile("/data/local/tmp/battery/type", "");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST028::pluggedType=%{public}d.", __func__, pluggedType);
@@ -790,9 +790,9 @@ HWTEST_F (BatterySttest, BatteryST028, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST029, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST029 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "other");
+    CreateFile("/data/local/tmp/ohos_charger/type", "other");
     CreateFile("/data/local/tmp/battery/type", "other");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "other");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "other");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST029::pluggedType=%{public}d.", __func__, pluggedType);
@@ -962,7 +962,7 @@ HWTEST_F (BatterySttest, BatteryST038, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST039, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST039 start.", __func__);
-    CreateFile("/data/local/tmp/sc27xx-fgu/technology", "Li");
+    CreateFile("/data/local/tmp/ohos-fgu/technology", "Li");
 
     auto technology = BatterydClient::GetTechnology();
     HDF_LOGD("%{public}s: enter. BatteryST039::technology=%{public}s.", __func__, technology.c_str());
@@ -1306,7 +1306,7 @@ HWTEST_F (BatterySttest, BatteryST057, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST058, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST058 start.", __func__);
-    CreateFile("/data/local/tmp/sc27xx-fgu/technology", "H2");
+    CreateFile("/data/local/tmp/ohos-fgu/technology", "H2");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto technology = BatterySrvClient.GetTechnology();
@@ -1324,8 +1324,8 @@ HWTEST_F (BatterySttest, BatteryST058, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST059, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST059 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "None");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "None");
+    CreateFile("/data/local/tmp/ohos_charger/type", "None");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "None");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1343,9 +1343,9 @@ HWTEST_F (BatterySttest, BatteryST059, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST060, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST060 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "Mains");
+    CreateFile("/data/local/tmp/ohos_charger/type", "Mains");
     CreateFile("/data/local/tmp/battery/type", "Mains");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Mains");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "Mains");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1363,9 +1363,9 @@ HWTEST_F (BatterySttest, BatteryST060, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST061, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST061 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB");
     CreateFile("/data/local/tmp/battery/type", "USB");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "USB");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1383,9 +1383,9 @@ HWTEST_F (BatterySttest, BatteryST061, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST062, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST062 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "Wireless");
+    CreateFile("/data/local/tmp/ohos_charger/type", "Wireless");
     CreateFile("/data/local/tmp/battery/type", "Wireless");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Wireless");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "Wireless");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1404,9 +1404,9 @@ HWTEST_F (BatterySttest, BatteryST062, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST063, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST063 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "Unknown");
+    CreateFile("/data/local/tmp/ohos_charger/type", "Unknown");
     CreateFile("/data/local/tmp/battery/type", "Unknown");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Unknown");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "Unknown");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();

@@ -88,15 +88,15 @@ void MockFileInit()
     HDF_LOGD("%{public}s: enter.", __func__);
     std::string path = "/data/local/tmp";
     mkdir("/data/local/tmp/battery", S_IRWXU);
-    mkdir("/data/local/tmp/bq2560x_charger", S_IRWXU);
-    mkdir("/data/local/tmp/sc27xx-fgu", S_IRWXU);
+    mkdir("/data/local/tmp/ohos_charger", S_IRWXU);
+    mkdir("/data/local/tmp/ohos-fgu", S_IRWXU);
     HDF_LOGD("%{public}s: enter.", __func__);
 
     sleep(1);
     CreateFile("/data/local/tmp/battery/online", "1");
     CreateFile("/data/local/tmp/battery/type", "Battery");
-    CreateFile("/data/local/tmp/bq2560x_charger/health", "Unknown");
-    CreateFile("/data/local/tmp/sc27xx-fgu/temp", "345");
+    CreateFile("/data/local/tmp/ohos_charger/health", "Unknown");
+    CreateFile("/data/local/tmp/ohos-fgu/temp", "345");
     BatterydClient::ChangePath(path);
 
     HDF_LOGD("%{public}s: enter.", __func__);
@@ -904,8 +904,8 @@ HWTEST_F (HdiServiceTest, HdiService005, TestSize.Level1)
         provider->InitPowerSupplySysfs();
         CreateFile("/data/local/tmp/battery/online", "1");
         CreateFile("/data/local/tmp/battery/type", "Wireless");
-        CreateFile("/data/local/tmp/bq2560x_charger/type", "Wireless");
-        CreateFile("/data/local/tmp/sc27xx-fgu/type", "Wireless");
+        CreateFile("/data/local/tmp/ohos_charger/type", "Wireless");
+        CreateFile("/data/local/tmp/ohos-fgu/type", "Wireless");
     }
 
     int32_t pluggedType = PowerSupplyProvider::PLUGGED_TYPE_NONE;
@@ -1065,7 +1065,7 @@ HWTEST_F (HdiServiceTest, HdiService009, TestSize.Level1)
         std::string path = "/data/local/tmp";
         provider->SetSysFilePath(path);
         provider->InitPowerSupplySysfs();
-        CreateFile("/data/local/tmp/sc27xx-fgu/technology", "Li");
+        CreateFile("/data/local/tmp/ohos-fgu/technology", "Li");
     }
 
     std::string technology = "invalid";

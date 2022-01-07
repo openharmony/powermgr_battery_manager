@@ -83,15 +83,15 @@ void MockFileInit()
 {
     std::string path = "/data/local/tmp";
     mkdir("/data/local/tmp/battery", S_IRWXU);
-    mkdir("/data/local/tmp/bq2560x_charger", S_IRWXU);
-    mkdir("/data/local/tmp/sc27xx-fgu", S_IRWXU);
+    mkdir("/data/local/tmp/ohos_charger", S_IRWXU);
+    mkdir("/data/local/tmp/ohos-fgu", S_IRWXU);
     POWER_HILOGI(MODULE_BATT_SERVICE, "MockFileInit enter.");
     sleep(1);
 
     CreateFile("/data/local/tmp/battery/online", "1");
     CreateFile("/data/local/tmp/battery/type", "Battery");
-    CreateFile("/data/local/tmp/bq2560x_charger/health", "Unknown");
-    CreateFile("/data/local/tmp/sc27xx-fgu/temp", "345");
+    CreateFile("/data/local/tmp/ohos_charger/health", "Unknown");
+    CreateFile("/data/local/tmp/ohos-fgu/temp", "345");
     BatterydClient::ChangePath(path);
 }
 
@@ -214,7 +214,7 @@ HWTEST_F (BatteryClientTest, BatteryClient006, TestSize.Level1)
 HWTEST_F (BatteryClientTest, BatteryClient007, TestSize.Level1)
 {
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient007 start.");
-    CreateFile("/data/local/tmp/sc27xx-fgu/technology", "H2");
+    CreateFile("/data/local/tmp/ohos-fgu/technology", "H2");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto technology = BatterySrvClient.GetTechnology();
@@ -232,9 +232,9 @@ HWTEST_F (BatteryClientTest, BatteryClient007, TestSize.Level1)
 HWTEST_F (BatteryClientTest, BatteryClient008, TestSize.Level1)
 {
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient008 start.");
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB");
     CreateFile("/data/local/tmp/battery/type", "USB");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "USB");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
