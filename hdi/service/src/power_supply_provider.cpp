@@ -50,8 +50,8 @@ const std::string BATTERY_KEY_TECHNOLOGY = "POWER_SUPPLY_TECHNOLOGY=";
 const std::string BATTERY_KEY_CHARGE_COUNTER = "POWER_SUPPLY_CHARGE_COUNTER=";
 const std::string INVALID_STRING_VALUE = "invalid";
 const std::string BATTERY_NODE_PATH = "battery";
-const std::string CHARGER_NODE_PATH = "bq2560x_charger";
-const std::string FGU_NODE_PATH = "sc27xx-fgu";
+const std::string CHARGER_NODE_PATH = "ohos_charger";
+const std::string FGU_NODE_PATH = "ohos-fgu";
 
 struct StringEnumMap {
     const char* str;
@@ -826,39 +826,39 @@ void PowerSupplyProvider::InitDefaultSysfs(void)
 {
     HDF_LOGI("%{public}s enter", __func__);
     std::string mockBatteryPath = "/data/local/tmp/battery";
-    std::string mockChargerPath = "/data/local/tmp/bq2560x_charger";
-    std::string mockTechPath = "/data/local/tmp/sc27xx-fgu";
+    std::string mockChargerPath = "/data/local/tmp/ohos_charger";
+    std::string mockTechPath = "/data/local/tmp/ohos-fgu";
     if (access(mockBatteryPath.c_str(), 0) == -1) {
         mkdir("/data/local/tmp/battery", S_IRWXU);
         sleep(MKDIR_WAIT_TIME);
     }
 
     if (access(mockChargerPath.c_str(), 0) == -1) {
-        mkdir("/data/local/tmp/bq2560x_charger", S_IRWXU);
+        mkdir("/data/local/tmp/ohos_charger", S_IRWXU);
         sleep(MKDIR_WAIT_TIME);
     }
 
     if (access(mockTechPath.c_str(), 0) == -1) {
-        mkdir("/data/local/tmp/sc27xx-fgu", S_IRWXU);
+        mkdir("/data/local/tmp/ohos-fgu", S_IRWXU);
         sleep(MKDIR_WAIT_TIME);
     }
 
     HDF_LOGD("%{public}s: create mock path for Hi3516DV300", __func__);
-    CreateFile("/data/local/tmp/sc27xx-fgu/capacity", "1000");
-    CreateFile("/data/local/tmp/sc27xx-fgu/current_avg", "1000");
-    CreateFile("/data/local/tmp/sc27xx-fgu/current_now", "1000");
-    CreateFile("/data/local/tmp/sc27xx-fgu/health", "Over voltage");
-    CreateFile("/data/local/tmp/sc27xx-fgu/present", "0");
-    CreateFile("/data/local/tmp/sc27xx-fgu/status", "Not charging");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Unknown");
-    CreateFile("/data/local/tmp/sc27xx-fgu/temp", "345");
-    CreateFile("/data/local/tmp/sc27xx-fgu/technology", "Li-ion");
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB");
-    CreateFile("/data/local/tmp/bq2560x_charger/constant_charge_current", "0");
-    CreateFile("/data/local/tmp/bq2560x_charger/health", "Good");
-    CreateFile("/data/local/tmp/bq2560x_charger/online", "1");
-    CreateFile("/data/local/tmp/bq2560x_charger/status", "Charging");
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB");
+    CreateFile("/data/local/tmp/ohos-fgu/capacity", "1000");
+    CreateFile("/data/local/tmp/ohos-fgu/current_avg", "1000");
+    CreateFile("/data/local/tmp/ohos-fgu/current_now", "1000");
+    CreateFile("/data/local/tmp/ohos-fgu/health", "Over voltage");
+    CreateFile("/data/local/tmp/ohos-fgu/present", "0");
+    CreateFile("/data/local/tmp/ohos-fgu/status", "Not charging");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "Unknown");
+    CreateFile("/data/local/tmp/ohos-fgu/temp", "345");
+    CreateFile("/data/local/tmp/ohos-fgu/technology", "Li-ion");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB");
+    CreateFile("/data/local/tmp/ohos_charger/constant_charge_current", "0");
+    CreateFile("/data/local/tmp/ohos_charger/health", "Good");
+    CreateFile("/data/local/tmp/ohos_charger/online", "1");
+    CreateFile("/data/local/tmp/ohos_charger/status", "Charging");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB");
     CreateFile("/data/local/tmp/battery/capacity", "11");
     CreateFile("/data/local/tmp/battery/charge_control_limit", "0");
     CreateFile("/data/local/tmp/battery/charge_counter", "4000000");
