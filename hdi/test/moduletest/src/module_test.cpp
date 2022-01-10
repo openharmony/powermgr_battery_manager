@@ -71,15 +71,15 @@ static void MockFileInit()
 {
     std::string path = "/data/local/tmp";
     mkdir("/data/local/tmp/battery", S_IRWXU);
-    mkdir("/data/local/tmp/bq2560x_charger", S_IRWXU);
-    mkdir("/data/local/tmp/sc27xx-fgu", S_IRWXU);
+    mkdir("/data/local/tmp/ohos_charger", S_IRWXU);
+    mkdir("/data/local/tmp/ohos-fgu", S_IRWXU);
     HDF_LOGD("%{public}s: enter.", __func__);
 
     sleep(1);
     CreateFile("/data/local/tmp/battery/online", "1");
     CreateFile("/data/local/tmp/battery/type", "Battery");
-    CreateFile("/data/local/tmp/bq2560x_charger/health", "Unknown");
-    CreateFile("/data/local/tmp/sc27xx-fgu/temp", "345");
+    CreateFile("/data/local/tmp/ohos_charger/health", "Unknown");
+    CreateFile("/data/local/tmp/ohos-fgu/temp", "345");
     BatterydClient::ChangePath(path);
 }
 
@@ -243,9 +243,9 @@ HWTEST_F (ModuleTest, ModuleTest008, TestSize.Level1)
 HWTEST_F (ModuleTest, ModuleTest009, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. ModuleTest009 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "USB");
+    CreateFile("/data/local/tmp/ohos_charger/type", "USB");
     CreateFile("/data/local/tmp/battery/type", "USB");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "USB");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "USB");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. ModuleTest009::pluggedType=%{public}d.", __func__, pluggedType);
@@ -299,7 +299,7 @@ HWTEST_F (ModuleTest, ModuleTest011, TestSize.Level1)
 HWTEST_F (ModuleTest, ModuleTest012, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. ModuleTest012 start.", __func__);
-    CreateFile("/data/local/tmp/sc27xx-fgu/technology", "LiFePO4");
+    CreateFile("/data/local/tmp/ohos-fgu/technology", "LiFePO4");
 
     auto technology = BatterydClient::GetTechnology();
     HDF_LOGD("%{public}s: enter. ModuleTest012::technology=%{public}s.", __func__, technology.c_str());
