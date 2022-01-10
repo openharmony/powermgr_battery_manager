@@ -82,15 +82,15 @@ static void MockFileInit()
 {
     std::string path = "/data/local/tmp";
     mkdir("/data/local/tmp/battery", S_IRWXU);
-    mkdir("/data/local/tmp/bq2560x_charger", S_IRWXU);
-    mkdir("/data/local/tmp/sc27xx-fgu", S_IRWXU);
+    mkdir("/data/local/tmp/ohos_charger", S_IRWXU);
+    mkdir("/data/local/tmp/ohos-fgu", S_IRWXU);
     POWER_HILOGI(MODULE_BATT_SERVICE, "MockFileInit enter.");
     sleep(1);
 
     CreateFile("/data/local/tmp/battery/online", "1");
     CreateFile("/data/local/tmp/battery/type", "Battery");
-    CreateFile("/data/local/tmp/bq2560x_charger/health", "Unknown");
-    CreateFile("/data/local/tmp/sc27xx-fgu/temp", "345");
+    CreateFile("/data/local/tmp/ohos_charger/health", "Unknown");
+    CreateFile("/data/local/tmp/ohos-fgu/temp", "345");
     CreateFile("/data/local/tmp/battery/capacity", "50");
     CreateFile("/data/local/tmp/battery/status", "Charging");
     CreateFile("/data/local/tmp/battery/health", "Good");
@@ -98,8 +98,8 @@ static void MockFileInit()
     CreateFile("/data/local/tmp/battery/voltage_avg", "4123456");
     CreateFile("/data/local/tmp/battery/voltage_now", "4123456");
     CreateFile("/data/local/tmp/battery/temp", "333");
-    CreateFile("/data/local/tmp/sc27xx-fgu/technology", "Li");
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "Wireless");
+    CreateFile("/data/local/tmp/ohos-fgu/technology", "Li");
+    CreateFile("/data/local/tmp/ohos_charger/type", "Wireless");
     BatterydClient::ChangePath(path);
 }
 
@@ -216,7 +216,7 @@ HWTEST_F (BatteryServiceTest, BatteryService006, TestSize.Level1)
 HWTEST_F (BatteryServiceTest, BatteryService007, TestSize.Level1)
 {
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService007 start.");
-    CreateFile("/data/local/tmp/sc27xx-fgu/technology", "Li");
+    CreateFile("/data/local/tmp/ohos-fgu/technology", "Li");
 
     auto technology = g_service->GetTechnology();
     POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryServiceTest::technology=%{public}s", technology.c_str());
@@ -233,9 +233,9 @@ HWTEST_F (BatteryServiceTest, BatteryService007, TestSize.Level1)
 HWTEST_F (BatteryServiceTest, BatteryService008, TestSize.Level1)
 {
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService008 start.");
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "Wireless");
+    CreateFile("/data/local/tmp/ohos_charger/type", "Wireless");
     CreateFile("/data/local/tmp/battery/type", "Wireless");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Wireless");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "Wireless");
 
     auto pluggedType = g_service->GetPluggedType();
     POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryServiceTest::pluggedType=%{public}d", pluggedType);

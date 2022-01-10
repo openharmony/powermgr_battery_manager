@@ -72,15 +72,15 @@ static void MockFileInit()
 {
     std::string path = "/data/local/tmp";
     mkdir("/data/local/tmp/battery", S_IRWXU);
-    mkdir("/data/local/tmp/bq2560x_charger", S_IRWXU);
-    mkdir("/data/local/tmp/sc27xx-fgu", S_IRWXU);
+    mkdir("/data/local/tmp/ohos_charger", S_IRWXU);
+    mkdir("/data/local/tmp/ohos-fgu", S_IRWXU);
     HDF_LOGD("%{public}s: enter.", __func__);
 
     sleep(1);
     CreateFile("/data/local/tmp/battery/online", "1");
     CreateFile("/data/local/tmp/battery/type", "Battery");
-    CreateFile("/data/local/tmp/bq2560x_charger/health", "Unknown");
-    CreateFile("/data/local/tmp/sc27xx-fgu/temp", "345");
+    CreateFile("/data/local/tmp/ohos_charger/health", "Unknown");
+    CreateFile("/data/local/tmp/ohos-fgu/temp", "345");
     BatterydClient::ChangePath(path);
 }
 
@@ -166,9 +166,9 @@ HWTEST_F (HdiClientTest, HdiClient004, TestSize.Level1)
 HWTEST_F (HdiClientTest, HdiClient005, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. HdiClient005 start.", __func__);
-    CreateFile("/data/local/tmp/bq2560x_charger/type", "Mains");
+    CreateFile("/data/local/tmp/ohos_charger/type", "Mains");
     CreateFile("/data/local/tmp/battery/type", "Mains");
-    CreateFile("/data/local/tmp/sc27xx-fgu/type", "Mains");
+    CreateFile("/data/local/tmp/ohos-fgu/type", "Mains");
 
     auto pluggedType = BatterydClient::GetPluggedType();
     HDF_LOGD("%{public}s: enter. HdiClient005::pluggedType=%{public}d.", __func__, pluggedType);
@@ -222,7 +222,7 @@ HWTEST_F (HdiClientTest, HdiClient007, TestSize.Level1)
 HWTEST_F (HdiClientTest, HdiClient008, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. HdiClient008 start.", __func__);
-    CreateFile("/data/local/tmp/sc27xx-fgu/technology", "Li");
+    CreateFile("/data/local/tmp/ohos-fgu/technology", "Li");
 
     auto technology = BatterydClient::GetTechnology();
     HDF_LOGD("%{public}s: enter. HdiClient008::technology=%{public}s.", __func__, technology.c_str());
