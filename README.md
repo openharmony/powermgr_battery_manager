@@ -10,8 +10,9 @@ Battery Manager provides the following functionalities:
 
 1.  Obtaining battery information
 2.  Obtaining the battery charging status and the remaining battery power
+3.  Power off charging
 
-**Figure  1**  Power management subsystem architecture<a name="fig106301571239"></a>  
+**Figure  1**  Battery manager subsystem architecture<a name="fig106301571239"></a> 
 ![](figures/power-management-subsystem-architecture.png "power-management-subsystem-architecture")
 
 ## Directory Structure<a name="section19472752217"></a>
@@ -36,8 +37,16 @@ base/powermgr/battery_manager
 
 Power management subsystem
 
-**powermgr_battery_manager**
+[powermgr_power_manager](https://gitee.com/openharmony/powermgr_power_manager)
 
-powermgr_power_manager
+[powermgr_display_manager](https://gitee.com/openharmony/powermgr_display_manager)
 
-powermgr_display_manager
+[**powermgr_battery_manager**](https://gitee.com/openharmony/powermgr_battery_manager)
+
+[powermgr_thermal_manager](https://gitee.com/openharmony/powermgr_thermal_manager)
+
+[powermgr_battery_statistics](https://gitee.com/openharmony/powermgr_battery_statistics)
+
+[powermgr_battery_lite](https://gitee.com/openharmony/powermgr_battery_lite)
+
+[powermgr_powermgr_lite](https://gitee.com/openharmony/powermgr_powermgr_lite)
