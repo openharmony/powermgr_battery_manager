@@ -35,13 +35,13 @@ base/powermgr/battery_manager
 
 ## Repositories Involved<a name="section63151229062"></a>
 
-Power management subsystem
+[Power management subsystem](https://gitee.com/openharmony/docs/blob/master/en/readme/power-management.md)
 
 [powermgr_power_manager](https://gitee.com/openharmony/powermgr_power_manager)
 
 [powermgr_display_manager](https://gitee.com/openharmony/powermgr_display_manager)
 
-[**powermgr_battery_manager**](https://gitee.com/openharmony/powermgr_battery_manager)
+**powermgr_battery_manager**
 
 [powermgr_thermal_manager](https://gitee.com/openharmony/powermgr_thermal_manager)
 
