@@ -12,6 +12,8 @@
 # limitations under the License.
 
 import("//base/powermgr/battery_manager/batterymgr.gni")
+import("//build/ohos.gni")
+import("//foundation/appexecfwk/standard/appexecfwk.gni")
 
 config("batterysrv_private_config") {
   include_dirs = [ "//utils/system/safwk/native/include" ]
@@ -21,6 +23,11 @@ config("batterysrv_public_config") {
   include_dirs = [
     "native/include",
     "${battery_manager_path}/services/zidl/include",
+    "//drivers/peripheral/powermgr/battery/interfaces/include",
+    "//drivers/peripheral/powermgr/battery/include",
+    "//drivers/peripheral/powermgr/battery/interfaces/hdi_service/include",
+    "//base/powermgr/battery_manager/charger/led",
+    "//base/powermgr/power_manager/interfaces/innerkits/native/include",
   ]
 }
 
@@ -40,8 +47,11 @@ ohos_shared_library("batteryservice") {
   public_configs = [ ":batterysrv_public_config" ]
 
   deps = [
-    "${battery_manager_path}/hdi/client:batteryd_client",
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
+    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
+    "//drivers/peripheral/powermgr/battery/interfaces/hdi/battery/v1_0:libbattery_proxy_1.0",
+    "//drivers/peripheral/powermgr/battery/interfaces/hdi_callback:libbattery_callback",
+    "//drivers/peripheral/powermgr/battery/interfaces/hdi_service:libbattery_interface_service_1.0",
     "//utils/native/base:utils",
   ]
 

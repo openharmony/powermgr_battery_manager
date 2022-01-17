@@ -19,21 +19,29 @@
 #include <iostream>
 #include "utils/hdf_log.h"
 
+#include "battery_service.h"
 #include "power_supply_provider.h"
-#include "battery_host_service_stub.h"
 #include "battery_thread_test.h"
 
 using namespace testing::ext;
+using namespace OHOS;
+using namespace OHOS::PowerMgr;
 using namespace OHOS::HDI::Battery::V1_0;
 using namespace std;
+
+static sptr<BatteryService> g_service;
 
 namespace BatteryUndertemperatureShutdownTest {
 void BatteryUndertemperatureShutdownTest::SetUpTestCase(void)
 {
+    g_service = DelayedSpSingleton<BatteryService>::GetInstance();
+    g_service->OnStart();
 }
 
 void BatteryUndertemperatureShutdownTest::TearDownTestCase(void)
 {
+    g_service->OnStop();
+    DelayedSpSingleton<BatteryService>::DestroyInstance();
 }
 
 void BatteryUndertemperatureShutdownTest::SetUp(void)
@@ -52,10 +60,9 @@ void BatteryUndertemperatureShutdownTest::TearDown(void)
 HWTEST_F (BatteryUndertemperatureShutdownTest, BatteryST_005, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST_005 start.", __func__);
-    BatteryHostServiceStub stub;
-    stub.Init();
+    g_service->InitConfig();
 
-    HandleTemperatureTest(-99, stub);
+    g_service->HandleTemperature(-99);
     HDF_LOGD("%{public}s: enter. BatteryST_005 end.", __func__);
 }
 
@@ -67,10 +74,9 @@ HWTEST_F (BatteryUndertemperatureShutdownTest, BatteryST_005, TestSize.Level1)
 HWTEST_F (BatteryUndertemperatureShutdownTest, BatteryST_006, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST_006 start.", __func__);
-    BatteryHostServiceStub stub;
-    stub.Init();
+    g_service->InitConfig();
 
-    HandleTemperatureTest(-100, stub);
+    g_service->HandleTemperature(-100);
     HDF_LOGD("%{public}s: enter. BatteryST_006 end.", __func__);
 }
 }

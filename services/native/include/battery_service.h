@@ -21,14 +21,19 @@
 #include "iremote_object.h"
 #include "ibattery_srv.h"
 #include "batteryd_api.h"
-#include "batteryd_client.h"
-#include "batteryd_subscriber.h"
 #include "battery_service_subscriber.h"
 #include "battery_srv_stub.h"
 #include "battery_service_event_handler.h"
+#include "battery_callback_service.h"
+#include "types.h"
+#include "battery_service_subscriber.h"
+#include "battery_config.h"
+#include "battery_led.h"
 
 namespace OHOS {
 namespace PowerMgr {
+using namespace hdi::battery::v1_0;
+
 class BatteryService final : public SystemAbility,
     public BatterySrvStub {
 DECLARE_SYSTEM_ABILITY(BatteryService)
@@ -56,16 +61,23 @@ public:
     bool GetPresent() override;
     std::string GetTechnology() override;
     int32_t GetBatteryTemperature() override;
+    void ChangePath(const std::string path);
+    void InitConfig();
+    void WakeupDevice(const int32_t& chargestate);
+    void HandleTemperature(const int32_t& temperature);
 private:
     bool Init();
     bool InitBatteryd();
     bool IsCommonEventServiceAbilityExist();
+    int32_t HandleBatteryCallbackEvent(const CallbackInfo& event);
     bool ready_ {false};
     int32_t commEventRetryTimes_ {0};
     std::mutex mutex_;
     std::shared_ptr<AppExecFwk::EventRunner> eventRunner_;
     std::shared_ptr<BatteryServiceEventHandler> handler_;
     sptr<BatteryServiceSubscriber> batterydSubscriber_;
+    std::unique_ptr<HDI::Battery::V1_0::BatteryConfig> batteryConfig_ = nullptr;
+    std::unique_ptr<HDI::Battery::V1_0::BatteryLed> batteryLed_ = nullptr;
 };
 } // namespace PowerMgr
 } // namespace OHOS
