@@ -30,9 +30,7 @@
 #include <dirent.h>
 
 #include "utils/hdf_log.h"
-#include "batteryd_client.h"
 #include "power_supply_provider.h"
-#include "battery_host_service_stub.h"
 #include "battery_service.h"
 #include "hdf_device_desc.h"
 #include "battery_srv_client.h"
@@ -99,7 +97,7 @@ static void MockFileInit()
     CreateFile("/data/local/tmp/ohos_charger/health", "Unknown");
     CreateFile("/data/local/tmp/ohos-fgu/temp", "345");
 
-    BatterydClient::ChangePath(path);
+    g_service->ChangePath(path);
 }
 
 static void TraversalNode()
@@ -289,7 +287,7 @@ static HWTEST_F (BatterySttest, BatteryST001, TestSize.Level1)
     MockFileInit();
     CreateFile("/data/local/tmp/battery/temp", "567");
 
-    auto temperature = BatterydClient::GetTemperature();
+    auto temperature = g_service->GetBatteryTemperature();
     HDF_LOGD("%{public}s: enter. BatteryST001::temperature=%{public}d.", __func__, temperature);
 
     ASSERT_TRUE(temperature == 567);
@@ -307,7 +305,7 @@ HWTEST_F (BatterySttest, BatteryST002, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/voltage_avg", "4123456");
     CreateFile("/data/local/tmp/battery/voltage_now", "4123456");
 
-    auto voltage = BatterydClient::GetVoltage();
+    auto voltage = g_service->GetVoltage();
     HDF_LOGD("%{public}s: enter. BatteryST002::voltage=%{public}d.", __func__, voltage);
 
     ASSERT_TRUE(voltage == 4123456);
@@ -324,7 +322,7 @@ HWTEST_F (BatterySttest, BatteryST003, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST003 start.", __func__);
     CreateFile("/data/local/tmp/battery/capacity", "11");
 
-    auto capacity = BatterydClient::GetCapacity();
+    auto capacity = g_service->GetCapacity();
     HDF_LOGD("%{public}s: enter. BatteryST003::capacity=%{public}d.", __func__, capacity);
 
     ASSERT_TRUE(capacity == 11);
@@ -341,10 +339,10 @@ HWTEST_F (BatterySttest, BatteryST004, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST004 start.", __func__);
     CreateFile("/data/local/tmp/battery/health", "Good");
 
-    auto healthState = BatterydClient::GetHealthState();
+    auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST004::healthState=%{public}d.", __func__, healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_GOOD);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     HDF_LOGD("%{public}s: enter. BatteryST004 end.", __func__);
 }
 
@@ -358,10 +356,10 @@ HWTEST_F (BatterySttest, BatteryST005, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST005 start.", __func__);
     CreateFile("/data/local/tmp/battery/health", "Cold");
 
-    auto healthState = BatterydClient::GetHealthState();
+    auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST005::healthState=%{public}d.", __func__, healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_COLD);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_COLD);
     HDF_LOGD("%{public}s: enter. BatteryST005 end.", __func__);
 }
 
@@ -375,10 +373,10 @@ HWTEST_F (BatterySttest, BatteryST006, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST006 start.", __func__);
     CreateFile("/data/local/tmp/battery/health", "Warm");
 
-    auto healthState = BatterydClient::GetHealthState();
+    auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST006::healthState=%{public}d.", __func__, healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_GOOD);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     HDF_LOGD("%{public}s: enter. BatteryST006 end.", __func__);
 }
 
@@ -392,10 +390,10 @@ HWTEST_F (BatterySttest, BatteryST007, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST007 start.", __func__);
     CreateFile("/data/local/tmp/battery/health", "Cool");
 
-    auto healthState = BatterydClient::GetHealthState();
+    auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST007::healthState=%{public}d.", __func__, healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_GOOD);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     HDF_LOGD("%{public}s: enter. BatteryST007 end.", __func__);
 }
 
@@ -409,10 +407,10 @@ HWTEST_F (BatterySttest, BatteryST008, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST008 start.", __func__);
     CreateFile("/data/local/tmp/battery/health", "Hot");
 
-    auto healthState = BatterydClient::GetHealthState();
+    auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST008::healthState=%{public}d.", __func__, healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_OVERHEAT);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_OVERHEAT);
     HDF_LOGD("%{public}s: enter. BatteryST008 end.", __func__);
 }
 
@@ -426,10 +424,10 @@ HWTEST_F (BatterySttest, BatteryST009, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST009 start.", __func__);
     CreateFile("/data/local/tmp/battery/health", "Overheat");
 
-    auto healthState = BatterydClient::GetHealthState();
+    auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST009::healthState=%{public}d.", __func__, healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_OVERHEAT);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_OVERHEAT);
     HDF_LOGD("%{public}s: enter. BatteryST009 end.", __func__);
 }
 
@@ -443,10 +441,10 @@ HWTEST_F (BatterySttest, BatteryST010, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST010 start.", __func__);
     CreateFile("/data/local/tmp/battery/health", "Over voltage");
 
-    auto healthState = BatterydClient::GetHealthState();
+    auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST010::healthState=%{public}d.", __func__, healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_OVERVOLTAGE);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_OVERVOLTAGE);
     HDF_LOGD("%{public}s: enter. BatteryST010 end.", __func__);
 }
 
@@ -460,10 +458,10 @@ HWTEST_F (BatterySttest, BatteryST011, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST011 start.", __func__);
     CreateFile("/data/local/tmp/battery/health", "Dead");
 
-    auto healthState = BatterydClient::GetHealthState();
+    auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST011::healthState=%{public}d.", __func__, healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_DEAD);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_DEAD);
     HDF_LOGD("%{public}s: enter. BatteryST011 end.", __func__);
 }
 
@@ -477,10 +475,10 @@ HWTEST_F (BatterySttest, BatteryST012, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST012 start.", __func__);
     CreateFile("/data/local/tmp/battery/health", "Unknown");
 
-    auto healthState = BatterydClient::GetHealthState();
+    auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST012::healthState=%{public}d.", __func__, healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_UNKNOWN);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_UNKNOWN);
     HDF_LOGD("%{public}s: enter. BatteryST012 end.", __func__);
 }
 
@@ -494,10 +492,10 @@ HWTEST_F (BatterySttest, BatteryST013, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST013 start.", __func__);
     CreateFile("/data/local/tmp/battery/health", "Unspecified failure");
 
-    auto healthState = BatterydClient::GetHealthState();
+    auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST013::healthState=%{public}d.", __func__, healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_UNKNOWN);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_UNKNOWN);
     HDF_LOGD("%{public}s: enter. BatteryST013 end.", __func__);
 }
 
@@ -511,10 +509,10 @@ HWTEST_F (BatterySttest, BatteryST014, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST014 start.", __func__);
     CreateFile("/data/local/tmp/battery/health", "");
 
-    auto healthState = BatterydClient::GetHealthState();
+    auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST014::healthState=%{public}d.", __func__, healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_UNKNOWN);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_UNKNOWN);
     HDF_LOGD("%{public}s: enter. BatteryST014 end.", __func__);
 }
 
@@ -528,10 +526,10 @@ HWTEST_F (BatterySttest, BatteryST015, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST015 start.", __func__);
     CreateFile("/data/local/tmp/battery/health", "other");
 
-    auto healthState = BatterydClient::GetHealthState();
+    auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST015::healthState=%{public}d.", __func__, healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_UNKNOWN);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_UNKNOWN);
     HDF_LOGD("%{public}s: enter. BatteryST015 end.", __func__);
 }
 
@@ -546,11 +544,16 @@ HWTEST_F (BatterySttest, BatteryST016, TestSize.Level1)
     CreateFile("/data/local/tmp/ohos_charger/type", "USB");
     CreateFile("/data/local/tmp/battery/type", "USB");
     CreateFile("/data/local/tmp/ohos-fgu/type", "USB");
+    CreateFile("/data/local/tmp/ohos_charger/online", "1");
+    CreateFile("/data/local/tmp/battery/online", "1");
+    CreateFile("/data/local/tmp/ohos-fgu/online", "1");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    std::string path = "/data/local/tmp";
+    g_service->ChangePath(path);
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST016::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_USB);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     HDF_LOGD("%{public}s: enter. BatteryST016 end.", __func__);
 }
 
@@ -566,10 +569,10 @@ HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "USB_PD_DRP");
     CreateFile("/data/local/tmp/ohos-fgu/type", "USB_PD_DRP");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST017::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_USB);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     HDF_LOGD("%{public}s: enter. BatteryST017 end.", __func__);
 }
 
@@ -585,10 +588,10 @@ HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "Wireless");
     CreateFile("/data/local/tmp/ohos-fgu/type", "Wireless");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST018::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_WIRELESS);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_WIRELESS);
     HDF_LOGD("%{public}s: enter. BatteryST018 end.", __func__);
 }
 
@@ -604,10 +607,10 @@ HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "Mains");
     CreateFile("/data/local/tmp/ohos-fgu/type", "Mains");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST019::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_AC);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
     HDF_LOGD("%{public}s: enter. BatteryST019 end.", __func__);
 }
 
@@ -623,10 +626,10 @@ HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "UPS");
     CreateFile("/data/local/tmp/ohos-fgu/type", "UPS");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST020::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_AC);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
     HDF_LOGD("%{public}s: enter. BatteryST020 end.", __func__);
 }
 
@@ -642,10 +645,10 @@ HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "USB_ACA");
     CreateFile("/data/local/tmp/ohos-fgu/type", "USB_ACA");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST021::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_AC);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
     HDF_LOGD("%{public}s: enter. BatteryST021 end.", __func__);
 }
 
@@ -661,10 +664,10 @@ HWTEST_F (BatterySttest, BatteryST022, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "USB_C");
     CreateFile("/data/local/tmp/ohos-fgu/type", "USB_C");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST022::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_AC);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
     HDF_LOGD("%{public}s: enter. BatteryST022 end.", __func__);
 }
 
@@ -680,10 +683,10 @@ HWTEST_F (BatterySttest, BatteryST023, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "USB_CDP");
     CreateFile("/data/local/tmp/ohos-fgu/type", "USB_CDP");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST023::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_AC);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
     HDF_LOGD("%{public}s: enter. BatteryST023 end.", __func__);
 }
 
@@ -699,10 +702,10 @@ HWTEST_F (BatterySttest, BatteryST024, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "USB_DCP");
     CreateFile("/data/local/tmp/ohos-fgu/type", "USB_DCP");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST024::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_AC);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
     HDF_LOGD("%{public}s: enter. BatteryST024 end.", __func__);
 }
 
@@ -718,10 +721,10 @@ HWTEST_F (BatterySttest, BatteryST025, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "USB_HVDCP");
     CreateFile("/data/local/tmp/ohos-fgu/type", "USB_HVDCP");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST025::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_AC);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
     HDF_LOGD("%{public}s: enter. BatteryST025 end.", __func__);
 }
 
@@ -737,10 +740,10 @@ HWTEST_F (BatterySttest, BatteryST026, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "USB_PD");
     CreateFile("/data/local/tmp/ohos-fgu/type", "USB_PD");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST026::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_AC);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
     HDF_LOGD("%{public}s: enter. BatteryST026 end.", __func__);
 }
 
@@ -756,10 +759,10 @@ HWTEST_F (BatterySttest, BatteryST027, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "Unknown");
     CreateFile("/data/local/tmp/ohos-fgu/type", "Unknown");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST027::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_NONE);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_NONE);
     HDF_LOGD("%{public}s: enter. BatteryST027 end.", __func__);
 }
 
@@ -775,10 +778,10 @@ HWTEST_F (BatterySttest, BatteryST028, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "");
     CreateFile("/data/local/tmp/ohos-fgu/type", "");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST028::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_NONE);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_NONE);
     HDF_LOGD("%{public}s: enter. BatteryST028 end.", __func__);
 }
 
@@ -794,16 +797,16 @@ HWTEST_F (BatterySttest, BatteryST029, TestSize.Level1)
     CreateFile("/data/local/tmp/battery/type", "other");
     CreateFile("/data/local/tmp/ohos-fgu/type", "other");
 
-    auto pluggedType = BatterydClient::GetPluggedType();
+    auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST029::pluggedType=%{public}d.", __func__, pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_NONE);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_NONE);
     HDF_LOGD("%{public}s: enter. BatteryST029 end.", __func__);
 }
 
 /**
  * @tc.name: BatteryST030
- * @tc.desc: Test HDI interface GetChargeState when state is "Discharging"
+ * @tc.desc: Test HDI interface GetChargingStatus when state is "Discharging"
  * @tc.type: FUNC
  */
 HWTEST_F (BatterySttest, BatteryST030, TestSize.Level1)
@@ -811,16 +814,16 @@ HWTEST_F (BatterySttest, BatteryST030, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST030 start.", __func__);
     CreateFile("/data/local/tmp/battery/status", "Discharging");
 
-    auto chargeState = BatterydClient::GetChargeState();
+    auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST030::chargeState=%{public}d.", __func__, chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_NONE);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_NONE);
     HDF_LOGD("%{public}s: enter. BatteryST030 end.", __func__);
 }
 
 /**
  * @tc.name: BatteryST031
- * @tc.desc: Test HDI interface GetChargeState when state is "Charging"
+ * @tc.desc: Test HDI interface GetChargingStatus when state is "Charging"
  * @tc.type: FUNC
  */
 HWTEST_F (BatterySttest, BatteryST031, TestSize.Level1)
@@ -828,16 +831,16 @@ HWTEST_F (BatterySttest, BatteryST031, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST031 start.", __func__);
     CreateFile("/data/local/tmp/battery/status", "Charging");
 
-    auto chargeState = BatterydClient::GetChargeState();
+    auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST031::chargeState=%{public}d.", __func__, chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_ENABLE);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE);
     HDF_LOGD("%{public}s: enter. BatteryST031 end.", __func__);
 }
 
 /**
  * @tc.name: BatteryST032
- * @tc.desc: Test HDI interface GetChargeState when state is "Full"
+ * @tc.desc: Test HDI interface GetChargingStatus when state is "Full"
  * @tc.type: FUNC
  */
 HWTEST_F (BatterySttest, BatteryST032, TestSize.Level1)
@@ -845,16 +848,16 @@ HWTEST_F (BatterySttest, BatteryST032, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST032 start.", __func__);
     CreateFile("/data/local/tmp/battery/status", "Full");
 
-    auto chargeState = BatterydClient::GetChargeState();
+    auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST032::chargeState=%{public}d.", __func__, chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_FULL);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     HDF_LOGD("%{public}s: enter. BatteryST032 end.", __func__);
 }
 
 /**
  * @tc.name: BatteryST033
- * @tc.desc: Test HDI interface GetChargeState when state is "Not charging"
+ * @tc.desc: Test HDI interface GetChargingStatus when state is "Not charging"
  * @tc.type: FUNC
  */
 HWTEST_F (BatterySttest, BatteryST033, TestSize.Level1)
@@ -862,16 +865,16 @@ HWTEST_F (BatterySttest, BatteryST033, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST033 start.", __func__);
     CreateFile("/data/local/tmp/battery/status", "Not charging");
 
-    auto chargeState = BatterydClient::GetChargeState();
+    auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST033::chargeState=%{public}d.", __func__, chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_DISABLE);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_DISABLE);
     HDF_LOGD("%{public}s: enter. BatteryST033 end.", __func__);
 }
 
 /**
  * @tc.name: BatteryST034
- * @tc.desc: Test HDI interface GetChargeState when state is "Unknown"
+ * @tc.desc: Test HDI interface GetChargingStatus when state is "Unknown"
  * @tc.type: FUNC
  */
 HWTEST_F (BatterySttest, BatteryST034, TestSize.Level1)
@@ -879,16 +882,16 @@ HWTEST_F (BatterySttest, BatteryST034, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST034 start.", __func__);
     CreateFile("/data/local/tmp/battery/status", "Unknown");
 
-    auto chargeState = BatterydClient::GetChargeState();
+    auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST034::chargeState=%{public}d.", __func__, chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_BUTT);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_BUTT);
     HDF_LOGD("%{public}s: enter. BatteryST034 end.", __func__);
 }
 
 /**
  * @tc.name: BatteryST035
- * @tc.desc: Test HDI interface GetChargeState when state is NULL
+ * @tc.desc: Test HDI interface GetChargingStatus when state is NULL
  * @tc.type: FUNC
  */
 HWTEST_F (BatterySttest, BatteryST035, TestSize.Level1)
@@ -896,16 +899,16 @@ HWTEST_F (BatterySttest, BatteryST035, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST035 start.", __func__);
     CreateFile("/data/local/tmp/battery/status", "");
 
-    auto chargeState = BatterydClient::GetChargeState();
+    auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST035::chargeState=%{public}d.", __func__, chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_BUTT);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_BUTT);
     HDF_LOGD("%{public}s: enter. BatteryST035 end.", __func__);
 }
 
 /**
  * @tc.name: BatteryST036
- * @tc.desc: Test HDI interface GetChargeState when state is not in chargeStateEnumMap
+ * @tc.desc: Test HDI interface GetChargingStatus when state is not in chargeStateEnumMap
  * @tc.type: FUNC
  */
 HWTEST_F (BatterySttest, BatteryST036, TestSize.Level1)
@@ -913,10 +916,10 @@ HWTEST_F (BatterySttest, BatteryST036, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST036 start.", __func__);
     CreateFile("/data/local/tmp/battery/status", "others");
 
-    auto chargeState = BatterydClient::GetChargeState();
+    auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST036::chargeState=%{public}d.", __func__, chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_BUTT);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_BUTT);
     HDF_LOGD("%{public}s: enter. BatteryST036 end.", __func__);
 }
 
@@ -930,7 +933,7 @@ HWTEST_F (BatterySttest, BatteryST037, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST037 start.", __func__);
     CreateFile("/data/local/tmp/battery/present", "1");
 
-    auto present = BatterydClient::GetPresent();
+    auto present = g_service->GetPresent();
     HDF_LOGD("%{public}s: enter. BatteryST037::present=%{public}d.", __func__, present);
 
     ASSERT_TRUE(present);
@@ -947,7 +950,7 @@ HWTEST_F (BatterySttest, BatteryST038, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST038 start.", __func__);
     CreateFile("/data/local/tmp/battery/present", "0");
 
-    auto present = BatterydClient::GetPresent();
+    auto present = g_service->GetPresent();
     HDF_LOGD("%{public}s: enter. BatteryST038::present=%{public}d.", __func__, present);
 
     ASSERT_TRUE(!present);
@@ -964,45 +967,11 @@ HWTEST_F (BatterySttest, BatteryST039, TestSize.Level1)
     HDF_LOGD("%{public}s: enter. BatteryST039 start.", __func__);
     CreateFile("/data/local/tmp/ohos-fgu/technology", "Li");
 
-    auto technology = BatterydClient::GetTechnology();
+    auto technology = g_service->GetTechnology();
     HDF_LOGD("%{public}s: enter. BatteryST039::technology=%{public}s.", __func__, technology.c_str());
 
     ASSERT_TRUE(technology == "Li");
     HDF_LOGD("%{public}s: enter. BatteryST039 end.", __func__);
-}
-
-/**
- * @tc.name: BatteryST040
- * @tc.desc: Test functions of HDI Interface BindBatterydSubscriber
- * @tc.type: FUNC
- */
-HWTEST_F (BatterySttest, BatteryST040, TestSize.Level1)
-{
-    HDF_LOGD("%{public}s: enter. BatteryST040 start.", __func__);
-
-    sptr<BatteryServiceSubscriber> batterydSubscriber = new BatteryServiceSubscriber();
-    auto errCode = BatterydClient::BindBatterydSubscriber(batterydSubscriber);
-    HDF_LOGD("%{public}s: enter. BatteryST040::errCode=%{public}d.", __func__, errCode);
-
-    ASSERT_TRUE(errCode == OHOS::ERR_OK);
-    HDF_LOGD("%{public}s: enter. BatteryST040 end.", __func__);
-}
-
-/**
- * @tc.name: BatteryST041
- * @tc.desc: Test functions of HDI Interface UnbindBatterydSubscriber twice
- * @tc.type: FUNC
- */
-HWTEST_F (BatterySttest, BatteryST041, TestSize.Level1)
-{
-    HDF_LOGD("%{public}s: enter. BatteryST041 start.", __func__);
-
-    auto errCode = BatterydClient::UnbindBatterydSubscriber();
-    errCode = BatterydClient::UnbindBatterydSubscriber();
-    HDF_LOGD("%{public}s: enter. BatteryST041::errCode=%{public}d.", __func__, errCode);
-
-    ASSERT_TRUE(errCode != OHOS::ERR_OK);
-    HDF_LOGD("%{public}s: enter. BatteryST041 end.", __func__);
 }
 
 /**
@@ -1014,9 +983,6 @@ HWTEST_F (BatterySttest, BatteryST042, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST042 start.", __func__);
     CreateFile("/data/local/tmp/battery/capacity", "44");
-    sptr<BatteryServiceSubscriber> batterydSubscriber = new BatteryServiceSubscriber();
-    auto errCode = BatterydClient::BindBatterydSubscriber(batterydSubscriber);
-    HDF_LOGD("%{public}s: enter. BatteryST042::errCode=%{public}d.", __func__, errCode);
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto capacity = BatterySrvClient.GetCapacity();
@@ -1041,7 +1007,7 @@ HWTEST_F (BatterySttest, BatteryST043, TestSize.Level1)
     auto chargeState = BatterySrvClient.GetChargingStatus();
     GTEST_LOG_(INFO) << "BatteryST043 executing, chargeState=" << int(chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_NONE);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_NONE);
     HDF_LOGD("%{public}s: enter. BatteryST043 end.", __func__);
 }
 
@@ -1059,7 +1025,7 @@ HWTEST_F (BatterySttest, BatteryST044, TestSize.Level1)
     auto chargeState = BatterySrvClient.GetChargingStatus();
     GTEST_LOG_(INFO) << "BatteryST044 executing, chargeState=" << int(chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_ENABLE);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE);
     HDF_LOGD("%{public}s: enter. BatteryST044 end.", __func__);
 }
 
@@ -1077,7 +1043,7 @@ HWTEST_F (BatterySttest, BatteryST045, TestSize.Level1)
     auto chargeState = BatterySrvClient.GetChargingStatus();
     GTEST_LOG_(INFO) << "BatteryST045 executing, chargeState=" << int(chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_FULL);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     HDF_LOGD("%{public}s: enter. BatteryST045 end.", __func__);
 }
 
@@ -1095,7 +1061,7 @@ HWTEST_F (BatterySttest, BatteryST046, TestSize.Level1)
     auto chargeState = BatterySrvClient.GetChargingStatus();
     GTEST_LOG_(INFO) << "BatteryST046 executing, chargeState=" << int(chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_DISABLE);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_DISABLE);
     HDF_LOGD("%{public}s: enter. BatteryST046 end.", __func__);
 }
 
@@ -1113,7 +1079,7 @@ HWTEST_F (BatterySttest, BatteryST047, TestSize.Level1)
     auto chargeState = BatterySrvClient.GetChargingStatus();
     GTEST_LOG_(INFO) << "BatteryST047 executing, chargeState=" << int(chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_BUTT);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_BUTT);
     HDF_LOGD("%{public}s: enter. BatteryST047 end.", __func__);
 }
 
@@ -1131,7 +1097,7 @@ HWTEST_F (BatterySttest, BatteryST048, TestSize.Level1)
     auto healthState = BatterySrvClient.GetHealthStatus();
     GTEST_LOG_(INFO) << "BatteryST048 executing, healthState=" << int(healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_GOOD);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     HDF_LOGD("%{public}s: enter. BatteryST048 end.", __func__);
 }
 
@@ -1149,7 +1115,7 @@ HWTEST_F (BatterySttest, BatteryST049, TestSize.Level1)
     auto healthState = BatterySrvClient.GetHealthStatus();
     GTEST_LOG_(INFO) << "BatteryST049 executing, healthState=" << int(healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_COLD);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_COLD);
     HDF_LOGD("%{public}s: enter. BatteryST049 end.", __func__);
 }
 
@@ -1167,7 +1133,7 @@ HWTEST_F (BatterySttest, BatteryST050, TestSize.Level1)
     auto healthState = BatterySrvClient.GetHealthStatus();
     GTEST_LOG_(INFO) << "BatteryST050 executing, healthState=" << int(healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_OVERHEAT);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_OVERHEAT);
     HDF_LOGD("%{public}s: enter. BatteryST050 end.", __func__);
 }
 
@@ -1185,7 +1151,7 @@ HWTEST_F (BatterySttest, BatteryST051, TestSize.Level1)
     auto healthState = BatterySrvClient.GetHealthStatus();
     GTEST_LOG_(INFO) << "BatteryST051 executing, healthState=" << int(healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_OVERVOLTAGE);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_OVERVOLTAGE);
     HDF_LOGD("%{public}s: enter. BatteryST051 end.", __func__);
 }
 
@@ -1203,7 +1169,7 @@ HWTEST_F (BatterySttest, BatteryST052, TestSize.Level1)
     auto healthState = BatterySrvClient.GetHealthStatus();
     GTEST_LOG_(INFO) << "BatteryST052 executing, healthState=" << int(healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_DEAD);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_DEAD);
     HDF_LOGD("%{public}s: enter. BatteryST052 end.", __func__);
 }
 
@@ -1221,7 +1187,7 @@ HWTEST_F (BatterySttest, BatteryST053, TestSize.Level1)
     auto healthState = BatterySrvClient.GetHealthStatus();
     GTEST_LOG_(INFO) << "BatteryST053 executing, healthState=" << int(healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState::HEALTH_STATE_UNKNOWN);
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_UNKNOWN);
     HDF_LOGD("%{public}s: enter. BatteryST053 end.", __func__);
 }
 
@@ -1318,7 +1284,7 @@ HWTEST_F (BatterySttest, BatteryST058, TestSize.Level1)
 /**
  * @tc.name: BatteryST059
  * @tc.desc: Test IBatterySrv interface GetPluggedType when pluggedType value is PLUGGED_TYPE_NONE
- *           ParsePluggedType return HDF_ERR_NOT_SUPPORT, BatterydClient::GetPluggedType FAIL
+ *           ParsePluggedType return HDF_ERR_NOT_SUPPORT, g_service->GetPluggedType FAIL
  * @tc.type: FUNC
  */
 HWTEST_F (BatterySttest, BatteryST059, TestSize.Level1)
@@ -1331,7 +1297,7 @@ HWTEST_F (BatterySttest, BatteryST059, TestSize.Level1)
     auto pluggedType = BatterySrvClient.GetPluggedType();
     GTEST_LOG_(INFO) << "BatteryST059 executing, pluggedType=" << int(pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_NONE);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_NONE);
     HDF_LOGD("%{public}s: enter. BatteryST059 end.", __func__);
 }
 
@@ -1351,7 +1317,7 @@ HWTEST_F (BatterySttest, BatteryST060, TestSize.Level1)
     auto pluggedType = BatterySrvClient.GetPluggedType();
     GTEST_LOG_(INFO) << "BatteryST060 executing, pluggedType=" << int(pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_AC);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
     HDF_LOGD("%{public}s: enter. BatteryST060 end.", __func__);
 }
 
@@ -1371,7 +1337,7 @@ HWTEST_F (BatterySttest, BatteryST061, TestSize.Level1)
     auto pluggedType = BatterySrvClient.GetPluggedType();
     GTEST_LOG_(INFO) << "BatteryST061 executing, pluggedType=" << int(pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_USB);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     HDF_LOGD("%{public}s: enter. BatteryST061 end.", __func__);
 }
 
@@ -1391,14 +1357,14 @@ HWTEST_F (BatterySttest, BatteryST062, TestSize.Level1)
     auto pluggedType = BatterySrvClient.GetPluggedType();
     GTEST_LOG_(INFO) << "BatteryST062 executing, pluggedType=" << int(pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_WIRELESS);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_WIRELESS);
     HDF_LOGD("%{public}s: enter. BatteryST062 end.", __func__);
 }
 
 /**
  * @tc.name: BatteryST063
  * @tc.desc: Test IBatterySrv interface GetPluggedType when pluggedType value is PLUGGED_TYPE_BUTT
- *           ParsePluggedType return HDF_ERR_NOT_SUPPORT, BatterydClient::GetPluggedType FAIL
+ *           ParsePluggedType return HDF_ERR_NOT_SUPPORT, g_service->GetPluggedType FAIL
  * @tc.type: FUNC
  */
 HWTEST_F (BatterySttest, BatteryST063, TestSize.Level1)
@@ -1412,7 +1378,7 @@ HWTEST_F (BatterySttest, BatteryST063, TestSize.Level1)
     auto pluggedType = BatterySrvClient.GetPluggedType();
     GTEST_LOG_(INFO) << "BatteryST063 executing, pluggedType=" << int(pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_NONE);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_NONE);
     HDF_LOGD("%{public}s: enter. BatteryST063 end.", __func__);
 }
 

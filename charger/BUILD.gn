@@ -14,6 +14,7 @@
 import("//base/powermgr/battery_manager/batterymgr.gni")
 import("//build/ohos.gni")
 import("//drivers/adapter/uhdf2/uhdf.gni")
+import("//foundation/appexecfwk/standard/appexecfwk.gni")
 
 config("batteryd_private_config") {
   include_dirs = [
@@ -35,6 +36,8 @@ config("batteryd_public_config") {
     "//base/powermgr/battery_manager/charger/led",
     "//base/powermgr/power_manager/interfaces/innerkits/native/include",
     "//drivers/peripheral/input/interfaces/include",
+    "//drivers/peripheral/powermgr/battery/interfaces/hdi_service/include",
+    "//drivers/peripheral/powermgr/battery/interfaces/include",
     "//third_party/libpng",
   ]
 }
@@ -62,9 +65,10 @@ ohos_executable("charger") {
     "${hdf_uhdf_path}/ipc:libhdf_ipc_adapter",
     "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/battery_manager/charger/ui:libminui",
-    "//base/powermgr/battery_manager/hdi/service:batteryd",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
+    "//drivers/peripheral/powermgr/battery/interfaces/hdi/battery/v1_0:libbattery_proxy_1.0",
+    "//drivers/peripheral/powermgr/battery/interfaces/hdi_service:libbattery_interface_service_1.0",
     "//third_party/jsoncpp:jsoncpp",
     "//utils/native/base:utils",
   ]
