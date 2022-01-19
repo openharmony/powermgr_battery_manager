@@ -18,7 +18,6 @@
 
 #include <gtest/gtest.h>
 #include "power_supply_provider.h"
-#include "battery_host_service_stub.h"
 #include "battery_thread_test.h"
 #include "charger_thread.h"
 
