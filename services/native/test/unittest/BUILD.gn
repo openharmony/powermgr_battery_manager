@@ -54,9 +54,9 @@ ohos_unittest("test_batterysrv") {
   ]
 
   external_deps = [
-    "aafwk_standard:base",
-    "aafwk_standard:intent",
-    "aafwk_standard:want",
+    "ability_runtime:base",
+    "ability_runtime:intent",
+    "ability_runtime:want",
     "appexecfwk_standard:appexecfwk_base",
     "appexecfwk_standard:libeventhandler",
     "ces_standard:cesfwk_innerkits",
@@ -87,9 +87,9 @@ ohos_unittest("test_batterysubscriber") {
   ]
 
   external_deps = [
-    "aafwk_standard:base",
-    "aafwk_standard:intent",
-    "aafwk_standard:want",
+    "ability_runtime:base",
+    "ability_runtime:intent",
+    "ability_runtime:want",
     "appexecfwk_standard:appexecfwk_base",
     "appexecfwk_standard:libeventhandler",
     "ces_standard:cesfwk_innerkits",

@@ -55,8 +55,8 @@ ohos_unittest("test_batteryclient") {
   ]
 
   external_deps = [
-    "aafwk_standard:base",
-    "aafwk_standard:intent",
+    "ability_runtime:base",
+    "ability_runtime:intent",
     "appexecfwk_standard:appexecfwk_base",
     "appexecfwk_standard:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
