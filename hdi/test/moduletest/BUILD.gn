@@ -88,8 +88,8 @@ ohos_unittest("test_module") {
   ]
 
   external_deps = [
-    "aafwk_standard:base",
-    "aafwk_standard:want",
+    "ability_runtime:base",
+    "ability_runtime:want",
     "appexecfwk_standard:appexecfwk_base",
     "appexecfwk_standard:libeventhandler",
     "ces_standard:cesfwk_innerkits",
