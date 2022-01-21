@@ -19,15 +19,14 @@
 #include "common_event_data.h"
 #include "common_event_manager.h"
 #include "common_event_support.h"
-#include "batteryd_subscriber.h"
+#include "ipc_object_stub.h"
+#include "battery_info.h"
 
 namespace OHOS {
 namespace PowerMgr {
-class BatteryServiceSubscriber : public BatterydSubscriber {
+class BatteryServiceSubscriber  : public IPCObjectStub {
 public:
-    BatteryServiceSubscriber();
-    ~BatteryServiceSubscriber() = default;
-    int32_t Update(const BatteryInfo& info) override;
+    static int32_t Update(const BatteryInfo& info);
 
 private:
     static bool HandleCapacityChangedEvent(const BatteryInfo& info);

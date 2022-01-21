@@ -34,7 +34,6 @@
 #include "string_ex.h"
 #include "sys_param.h"
 
-#include "batteryd_client.h"
 #include "battery_srv_client.h"
 #include "battery_service.h"
 #include "battery_client_test.h"
@@ -92,7 +91,7 @@ void MockFileInit()
     CreateFile("/data/local/tmp/battery/type", "Battery");
     CreateFile("/data/local/tmp/ohos_charger/health", "Unknown");
     CreateFile("/data/local/tmp/ohos-fgu/temp", "345");
-    BatterydClient::ChangePath(path);
+    g_service->ChangePath(path);
 }
 
 /**
@@ -129,7 +128,7 @@ HWTEST_F (BatteryClientTest, BatteryClient002, TestSize.Level1)
     auto chargeState = BatterySrvClient.GetChargingStatus();
     GTEST_LOG_(INFO) << "BatteryClient::BatteryClient002 executing, chargeState=" << int(chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_DISABLE);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_DISABLE);
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient002 end.");
 }
 
@@ -147,7 +146,7 @@ HWTEST_F (BatteryClientTest, BatteryClient003, TestSize.Level1)
     auto healthState = BatterySrvClient.GetHealthStatus();
     GTEST_LOG_(INFO) << "BatteryClient::BatteryClient003 executing, healthState=" << int(healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState(4));
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState(4));
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient003 end.");
 }
 
@@ -240,7 +239,7 @@ HWTEST_F (BatteryClientTest, BatteryClient008, TestSize.Level1)
     auto pluggedType = BatterySrvClient.GetPluggedType();
     POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryClientTest::pluggedType=%{public}d", pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_USB);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient008 end.");
 }
 }

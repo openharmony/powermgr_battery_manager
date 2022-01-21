@@ -27,7 +27,6 @@
 #include "ipc_skeleton.h"
 #include "string_ex.h"
 #include "sys_param.h"
-#include "batteryd_client.h"
 
 namespace OHOS {
 namespace PowerMgr {

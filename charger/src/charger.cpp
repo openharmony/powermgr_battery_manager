@@ -16,6 +16,7 @@
 #include "charger_thread.h"
 
 #include "hdf_log.h"
+#include "hdf_base.h"
 
 int main(int argc, char** argv)
 {
