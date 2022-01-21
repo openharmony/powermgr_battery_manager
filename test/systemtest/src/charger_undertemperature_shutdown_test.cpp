@@ -20,7 +20,6 @@
 #include "utils/hdf_log.h"
 
 #include "power_supply_provider.h"
-#include "battery_host_service_stub.h"
 #include "battery_thread_test.h"
 
 using namespace testing::ext;

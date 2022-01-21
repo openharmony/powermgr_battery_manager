@@ -34,12 +34,10 @@ bool g_batteryDisconnectOnce = false;
 BatterydInfo g_batteryInfo;
 const int BATTERY_LOW_CAPACITY = 3;
 
-BatteryServiceSubscriber::BatteryServiceSubscriber() {}
-
 int32_t BatteryServiceSubscriber::Update(const BatteryInfo& info)
 {
     bool isAllSuccess = true;
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryInfo: capacity=%{public}d, voltage=%{public}d, " \
+    POWER_HILOGD(MODULE_BATT_SERVICE, "Subscriber BatteryInfo: capacity=%{public}d, voltage=%{public}d, " \
                                       "temperature=%{public}d, healthState=%{public}d, pluggedType=%{public}d, " \
                                       "pluggedMaxCurrent=%{public}d, pluggedMaxVoltage=%{public}d, " \
                                       "chargeState=%{public}d, chargeCounter=%{public}d, present=%{public}d, " \

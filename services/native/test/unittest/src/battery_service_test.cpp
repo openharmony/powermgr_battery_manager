@@ -36,7 +36,6 @@
 #include "ipc_skeleton.h"
 #include "string_ex.h"
 #include "sys_param.h"
-#include "batteryd_client.h"
 
 using namespace testing::ext;
 using namespace OHOS::PowerMgr;
@@ -100,7 +99,7 @@ static void MockFileInit()
     CreateFile("/data/local/tmp/battery/temp", "333");
     CreateFile("/data/local/tmp/ohos-fgu/technology", "Li");
     CreateFile("/data/local/tmp/ohos_charger/type", "Wireless");
-    BatterydClient::ChangePath(path);
+    g_service->ChangePath(path);
 }
 
 /**
@@ -135,7 +134,7 @@ HWTEST_F (BatteryServiceTest, BatteryService002, TestSize.Level1)
     auto chargeState = g_service->GetChargingStatus();
     GTEST_LOG_(INFO) << "BatteryService::BatteryService002 executing, chargeState=" << int(chargeState);
 
-    ASSERT_TRUE(chargeState == BatteryChargeState::CHARGE_STATE_ENABLE);
+    ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE);
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService002 end.");
 }
 
@@ -152,7 +151,7 @@ HWTEST_F (BatteryServiceTest, BatteryService003, TestSize.Level1)
     auto healthState = g_service->GetHealthStatus();
     GTEST_LOG_(INFO) << "BatteryService::BatteryService003 executing, healthState=" << int(healthState);
 
-    ASSERT_TRUE(healthState == BatteryHealthState(1));
+    ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState(1));
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService003 end.");
 }
 
@@ -240,7 +239,7 @@ HWTEST_F (BatteryServiceTest, BatteryService008, TestSize.Level1)
     auto pluggedType = g_service->GetPluggedType();
     POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryServiceTest::pluggedType=%{public}d", pluggedType);
 
-    ASSERT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_WIRELESS);
+    ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_WIRELESS);
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService008 end.");
 }
 
