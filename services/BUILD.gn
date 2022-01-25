@@ -58,10 +58,10 @@ ohos_shared_library("batteryservice") {
   external_deps = [
     "ability_runtime:base",
     "ability_runtime:want",
-    "appexecfwk_standard:libeventhandler",
     "bundle_framework:appexecfwk_base",
     "ces_standard:cesfwk_core",
     "ces_standard:cesfwk_innerkits",
+    "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
