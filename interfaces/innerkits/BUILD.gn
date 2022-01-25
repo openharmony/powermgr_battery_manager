@@ -41,7 +41,7 @@ ohos_shared_library("batterysrv_client") {
   deps = [ "//utils/native/base:utils" ]
 
   external_deps = [
-    "appexecfwk_standard:libeventhandler",
+    "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
