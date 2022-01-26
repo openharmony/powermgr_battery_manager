@@ -1,60 +1,72 @@
 {
-    "name": "@ohos/powermgr_battery_manager",
-    "version": "",
+    "name": "@ohos/battery_manager",
+    "version": "3.1",
     "description": "电池、充放电状态查询，状态上报",
     "homePage": "https://gitee.com/openharmony",
-    "license": "Apache V2",
+    "license": "Apache License 2.0",
     "repository": "https://gitee.com/openharmony/powermgr_battery_manager",
     "domain": "os",
-    "language": "",
     "publishAs": "code-segment",
-    "private": false,
     "scripts": {},
-    "tags": [
-        "base"
-    ],
-    "keywords": [
-        "powermgr",
-        "battery",
-        "manager"
-    ],
-    "envs": [],
     "dirs": [],
-    "author": {
-        "name": "",
-        "email": "",
-        "url": ""
-    },
-    "contributors": [
-        {
-            "name": "",
-            "email": "",
-            "url": ""
-        }
-    ],
     "segment": {
         "destPath": "base/powermgr/battery_manager"
     },
     "component": {
-        "name": "battery_manger",
+        "name": "battery_manager_native",
         "subsystem": "powermgr",
-        "syscap": [
-            "SystemCapability.PowerMgr.BatteryManager"
-        ],
+        "syscap": [ "SystemCapability.PowerMgr.BatteryManager" ],
         "features": [],
-        "adapted_system_type": [
-            "standard"
-        ],
-        "rom": "",
-        "ram": "",
+        "adapted_system_type": [ "standard" ],
+        "rom": "1024KB",
+        "ram": "2048KB",
         "deps": {
-            "components": [],
-            "third_party": []
+            "components": [
+                "ability_runtime",
+                "appexecfwk_standard",
+                "ces_standard",
+                "hiviewdfx_hilog_native",
+                "ipc",
+                "napi",
+                "safwk",
+                "samgr_standard"
+            ],
+            "third_party": [
+                "libdrm",
+                "libpng",
+                "googletest",
+                "jsoncpp",
+                "node"
+            ]
         },
         "build": {
-            "sub_component": [],
-            "inner_kits": [],
-            "test": []
+            "sub_component": [
+                "//base/powermgr/battery_manager/charger:charger_group",
+                "//base/powermgr/battery_manager/charger:led_service",
+                "//base/powermgr/battery_manager/charger:resources_service",
+                "//base/powermgr/battery_manager/frameworks/js/napi:batteryinfo",
+                "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client",
+                "//base/powermgr/battery_manager/sa_profile:batterymgr_sa_profile",
+                "//base/powermgr/battery_manager/services:batteryservice"
+            ],
+            "inner_kits": [
+                {
+                    "name": "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client",
+                    "header": {
+                      "header_files": [
+                        "battery_info.h",
+                        "battery_srv_client.h",
+                        "ibattery_srv.h"
+                      ],
+                      "header_base": "//base/powermgr/battery_manager/interfaces/innerkits/native/include"
+                    }
+                  }
+            ],
+            "test": [
+                "//base/powermgr/battery_manager/frameworks/native/test:unittest",
+                "//base/powermgr/battery_manager/services/native/test:unittest",
+                "//base/powermgr/battery_manager/test:systemtest"
+            ]
         }
     }
 }
