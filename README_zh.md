@@ -19,18 +19,20 @@
 
 ```
 base/powermgr/battery_manager
-├── hdi                         # HDI层
-│   ├── api                     # HDI接口
-│   └── client                  # HDI客户端
-│   └── service                 # HDI服务端
+├── charger                  	# 关机充电
+├── figures                  	# 架构图
+├── frameworks                  # Framework层
+│   ├── js                  	# NAPI
+│   └── native                  # Native层
 ├── interfaces                  # 接口层
-│   ├── innerkits               # 内部接口
-│   └── kits                    # 外部接口
+│   ├── innerkits               # 内部接口
+│   └── kits                 	# 外部接口
 ├── sa_profile                  # SA配置文件
-└── services                    # 服务层
-│   ├── native                  # native层
-│   └── zidl                    # zidl接口层
-└── utils                       # 工具和通用层
+├── services                    # 服务层
+│   ├── native                  # native层
+│   └── zidl                    # zidl接口层
+├── test                  		# 测试用例
+└── utils                  		# 工具和通用层
 ```
 
 

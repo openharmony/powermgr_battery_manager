@@ -19,17 +19,19 @@ Battery Manager provides the following functionalities:
 
 ```
 base/powermgr/battery_manager
-├── hdi                         # HDI code
-│   ├── api                     # HDI APIs
-│   └── client                  # HDI client
-│   └── service                 # HDI service
+├── charger                  	# Power-off Charging
+├── figures                  	# Architecture figures
+├── frameworks                  # FrameWork Layer
+│   ├── js                  	# NAPI code
+│   └── native                  # Native code
 ├── interfaces                  # APIs
-│   ├── innerkits               # Internal APIs
-│   └── kits                    # External APIs
+│   ├── innerkits               # Internal APIs
+│   └── kits                    # External APIs
 ├── sa_profile                  # SA profile
-└── services                    # Services
-│   ├── native                  # Native services
-│   └── zidl                    # zidl APIs
+├── services                    # Services
+│   ├── native                  # Native services
+│   └── zidl                    # zidl APIs
+├── test                        # Test code
 └── utils                       # Utilities and common code
 ```
 
