@@ -36,7 +36,7 @@ bool g_initConfig = true;
 
 const bool G_REGISTER_RESULT = SystemAbility::MakeAndRegisterAbility(
     DelayedSpSingleton<BatteryService>::GetInstance().GetRefPtr());
-auto ibatteryInterface = hdi::battery::v1_0::IBatteryInterface::Get();
+sptr<IBatteryInterface> ibatteryInterface;
 
 BatteryService::BatteryService()
     : SystemAbility(POWER_MANAGER_BATT_SERVICE_ID, true)
@@ -104,6 +104,7 @@ bool BatteryService::InitBatteryd()
 {
     POWER_HILOGI(MODULE_BATT_SERVICE, "enter.");
     sptr<hdi::battery::v1_0::IBatteryCallback> callback =  new hdi::battery::v1_0::BatteryCallbackService();
+    ibatteryInterface = hdi::battery::v1_0::IBatteryInterface::Get();
     if (ibatteryInterface == nullptr) {
         POWER_HILOGI(MODULE_BATT_SERVICE, "ibatteryInterface is nullptr");
         return false;
