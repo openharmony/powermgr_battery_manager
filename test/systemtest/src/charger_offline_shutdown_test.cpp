@@ -123,7 +123,9 @@ HWTEST_F (ChargerOfflineShutdownTest, BatteryST_012, TestSize.Level1)
     ASSERT_TRUE(screenOn);
 
     sleep(2);
-    HandleChargingStateTest(ct); // shutdown
+    if (false) {
+        HandleChargingStateTest(ct); // shutdown
+    }
     HDF_LOGD("%{public}s: BatteryST_012 end.", __func__);
 }
 }
