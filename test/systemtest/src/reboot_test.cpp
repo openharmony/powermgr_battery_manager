@@ -76,7 +76,9 @@ HWTEST_F (RebootTest, BatteryST_002, TestSize.Level1)
 
     ChargerThreadInitTest(ct);
     btTest.SetKeyState(116, 2, 0, ct);
-    btTest.HandlePowerKey(116, 2000, ct); // reboot
+    if (false) {
+        btTest.HandlePowerKey(116, 2000, ct); // reboot
+    }
     HDF_LOGD("%{public}s: BatteryST_0022 end.", __func__);
 }
 }
