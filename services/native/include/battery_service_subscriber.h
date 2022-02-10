@@ -24,22 +24,14 @@
 
 namespace OHOS {
 namespace PowerMgr {
-class BatteryServiceSubscriber  : public IPCObjectStub {
+class BatteryServiceSubscriber : public IPCObjectStub {
 public:
     static int32_t Update(const BatteryInfo& info);
 
 private:
-    static bool HandleCapacityChangedEvent(const BatteryInfo& info);
-    static bool HandleVoltageChangedEvent(const BatteryInfo& info);
-    static bool HandleTemperatureChangedEvent(const BatteryInfo& info);
-    static bool HandleHealthStateChangedEvent(const BatteryInfo& info);
-    static bool HandlePluggedTypeChangedEvent(const BatteryInfo& info);
-    static bool HandleMaxCurrentChangedEvent(const BatteryInfo& info);
-    static bool HandleMaxVoltageChangedEvent(const BatteryInfo& info);
-    static bool HandleChargeStateChangedEvent(const BatteryInfo& info);
-    static bool HandleChargeCounterChangedEvent(const BatteryInfo& info);
-    static bool HandlePresentChangedEvent(const BatteryInfo& info);
-    static bool HandleTechnologyChangedEvent(const BatteryInfo& info);
+    static bool HandleBatteryChangedEvent(const BatteryInfo& info);
+    static bool CmpBatteryInfo(const BatteryInfo& info);
+    static void SwaptBatteryInfo(const BatteryInfo& info);
     static bool HandleBatteryLowEvent(const BatteryInfo& info);
     static bool HandleBatteryOkayEvent(const BatteryInfo& info);
     static bool HandleBatteryPowerConnectedEvent(const BatteryInfo& info);
