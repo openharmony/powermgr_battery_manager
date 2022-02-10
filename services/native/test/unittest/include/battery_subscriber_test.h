@@ -33,91 +33,72 @@ namespace PowerMgr {
 class BatterySubscriberTest : public testing::Test {
 };
 
+const std::string KEY_CAPACITY = ToString(BatteryInfo::COMMON_EVENT_CODE_CAPACITY);
+const std::string KEY_VOLTAGE = ToString(BatteryInfo::COMMON_EVENT_CODE_VOLTAGE);
+const std::string KEY_TEMPERATURE = ToString(BatteryInfo::COMMON_EVENT_CODE_TEMPERATURE);
+const std::string KEY_HEALTH_STATE = ToString(BatteryInfo::COMMON_EVENT_CODE_HEALTH_STATE);
+const std::string KEY_PLUGGED_TYPE = ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_TYPE);
+const std::string KEY_PLUGGED_MAX_CURRENT = ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_CURRENT);
+const std::string KEY_PLUGGED_MAX_VOLTAGE = ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_VOLTAGE);
+const std::string KEY_CHARGE_STATE = ToString(BatteryInfo::COMMON_EVENT_CODE_CHARGE_STATE);
+const std::string KEY_CHARGE_COUNTER = ToString(BatteryInfo::COMMON_EVENT_CODE_CHARGE_COUNTER);
+const std::string KEY_PRESENT = ToString(BatteryInfo::COMMON_EVENT_CODE_PRESENT);
+const std::string KEY_TECHNOLOGY = ToString(BatteryInfo::COMMON_EVENT_CODE_TECHNOLOGY);
+
 class SubscriberTest : public EventFwk::CommonEventSubscriber {
 public:
     explicit SubscriberTest(const EventFwk::CommonEventSubscribeInfo& sp) : EventFwk::CommonEventSubscriber(sp)
     {}
-    void OnReceiveEventOther(const EventFwk::CommonEventData& data)
-    {
-        POWER_HILOGD(MODULE_BATT_SERVICE, "OnReceiveEventOther enter.");
-        std::string action = data.GetWant().GetAction();
-        POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService=== start. action=%{public}s", action.c_str());
-        if (action == EventFwk::CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED) {
-            switch (data.GetCode()) {
-                case BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_CURRENT: {
-                    std::string maxcurrent = data.GetData();
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "maxcurrent=%{public}s", maxcurrent.c_str());
-                    break;
-                }
-                case BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_VOLTAGE: {
-                    std::string maxvoltage = data.GetData();
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "maxvoltage=%{public}s", maxvoltage.c_str());
-                    break;
-                }
-                case BatteryInfo::COMMON_EVENT_CODE_CHARGE_STATE: {
-                    std::string chargestate = data.GetData();
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "chargestate=%{public}s", chargestate.c_str());
-                    break;
-                }
-                case BatteryInfo::COMMON_EVENT_CODE_CHARGE_COUNTER: {
-                    std::string chargecounter = data.GetData();
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "chargecounter=%{public}s", chargecounter.c_str());
-                    break;
-                }
-                case BatteryInfo::COMMON_EVENT_CODE_PRESENT: {
-                    std::string present = data.GetData();
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "present=%{public}s", present.c_str());
-                    break;
-                }
-                case BatteryInfo::COMMON_EVENT_CODE_TECHNOLOGY: {
-                    std::string technology = data.GetData();
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "technology=%{public}s", technology.c_str());
-                    break;
-                }
-                default: {
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "default case enter");
-                    break;
-                }
-            }
-        }
-    }
+
     void OnReceiveEvent(const EventFwk::CommonEventData& data)
     {
         POWER_HILOGD(MODULE_BATT_SERVICE, "OnReceiveEvent enter.");
         std::string action = data.GetWant().GetAction();
         POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService=== start. action=%{public}s", action.c_str());
         if (action == EventFwk::CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED) {
-            switch (data.GetCode()) {
-                case BatteryInfo::COMMON_EVENT_CODE_CAPACITY: {
-                    std::string capacity = data.GetData();
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "capacity=%{public}s", capacity.c_str());
-                    break;
-                }
-                case BatteryInfo::COMMON_EVENT_CODE_VOLTAGE: {
-                    std::string voltage = data.GetData();
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "voltage=%{public}s", voltage.c_str());
-                    break;
-                }
-                case BatteryInfo::COMMON_EVENT_CODE_TEMPERATURE: {
-                    std::string temperature = data.GetData();
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "temperature=%{public}s", temperature.c_str());
-                    break;
-                }
-                case BatteryInfo::COMMON_EVENT_CODE_HEALTH_STATE: {
-                    std::string healthstate = data.GetData();
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "healthstate=%{public}s", healthstate.c_str());
-                    break;
-                }
-                case BatteryInfo::COMMON_EVENT_CODE_PLUGGED_TYPE: {
-                    std::string pluggedtype = data.GetData();
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "pluggedtype=%{public}s", pluggedtype.c_str());
-                    break;
-                }
-                default: {
-                    POWER_HILOGD(MODULE_BATT_SERVICE, "default case enter");
-                    break;
-                }
-            }
+            int defaultCapacity = -1;
+            int capacity = data.GetWant().GetIntParam(KEY_CAPACITY, defaultCapacity);
+            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest capacity = %{public}d", capacity);
+
+            int defaultVoltage = -1;
+            int voltage = data.GetWant().GetIntParam(KEY_VOLTAGE, defaultVoltage);
+            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest voltage = %{public}d", voltage);
+
+            int defaultTemperature = -1;
+            int temperature = data.GetWant().GetIntParam(KEY_TEMPERATURE, defaultTemperature);
+            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest temperature = %{public}d", temperature);
+
+            int defaultHealthState = -1;
+            int healthState = data.GetWant().GetIntParam(KEY_HEALTH_STATE, defaultHealthState);
+            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest healthState = %{public}d", healthState);
+
+            int defaultPluggedType = -1;
+            int pluggedType = data.GetWant().GetIntParam(KEY_PLUGGED_TYPE, defaultPluggedType);
+            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest pluggedType = %{public}d", pluggedType);
+
+            int defaultMaxCurrent = -1;
+            int maxCurrent = data.GetWant().GetIntParam(KEY_PLUGGED_MAX_CURRENT, defaultMaxCurrent);
+            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest maxCurrent = %{public}d", maxCurrent);
+
+            int defaultMaxVoltage = -1;
+            int maxVoltage = data.GetWant().GetIntParam(KEY_PLUGGED_MAX_VOLTAGE, defaultMaxVoltage);
+            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest maxVoltage = %{public}d", maxVoltage);
+
+            int defaultChargeState = -1;
+            int chargeState = data.GetWant().GetIntParam(KEY_CHARGE_STATE, defaultChargeState);
+            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest chargeState = %{public}d", chargeState);
+
+            int defaultChargeCounter = -1;
+            int chargeCounter = data.GetWant().GetIntParam(KEY_CHARGE_COUNTER, defaultChargeCounter);
+            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest chargeCounter = %{public}d", chargeCounter);
+
+            bool defaultPresent = false;
+            bool isPresent = data.GetWant().GetBoolParam(KEY_PRESENT, defaultPresent);
+            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest isPresent = %{public}d", isPresent);
+
+            std::string defaultTechnology = "";
+            std::string technology = data.GetWant().GetStringParam(KEY_TECHNOLOGY);
+            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest technology = %{public}s", technology.c_str());
         }
     }
 };
