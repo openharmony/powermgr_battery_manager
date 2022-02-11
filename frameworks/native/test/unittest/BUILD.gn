@@ -56,7 +56,7 @@ ohos_unittest("test_batteryclient") {
   ]
 
   external_deps = [
-    "ability_runtime:base",
+    "ability_base:base",
     "ability_runtime:intent",
     "bundle_framework:appexecfwk_base",
     "eventhandler:libeventhandler",
