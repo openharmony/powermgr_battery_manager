@@ -24,7 +24,7 @@
 #include "battery_service_subscriber.h"
 #include "battery_srv_stub.h"
 #include "battery_service_event_handler.h"
-#include "battery_callback_service.h"
+#include "battery_callback_impl.h"
 #include "types.h"
 #include "battery_service_subscriber.h"
 #include "battery_config.h"
@@ -32,7 +32,7 @@
 
 namespace OHOS {
 namespace PowerMgr {
-using namespace hdi::battery::v1_0;
+using namespace OHOS::HDI::Battery::V1_0;
 
 class BatteryService final : public SystemAbility,
     public BatterySrvStub {
