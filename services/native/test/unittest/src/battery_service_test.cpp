@@ -232,6 +232,7 @@ HWTEST_F (BatteryServiceTest, BatteryService007, TestSize.Level1)
 HWTEST_F (BatteryServiceTest, BatteryService008, TestSize.Level1)
 {
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService008 start.");
+    CreateFile("/data/local/tmp/ohos_charger/online", "1");
     CreateFile("/data/local/tmp/ohos_charger/type", "Wireless");
     CreateFile("/data/local/tmp/battery/type", "Wireless");
     CreateFile("/data/local/tmp/ohos-fgu/type", "Wireless");

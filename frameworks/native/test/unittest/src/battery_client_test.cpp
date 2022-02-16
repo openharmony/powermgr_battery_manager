@@ -231,6 +231,7 @@ HWTEST_F (BatteryClientTest, BatteryClient007, TestSize.Level1)
 HWTEST_F (BatteryClientTest, BatteryClient008, TestSize.Level1)
 {
     POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient008 start.");
+    CreateFile("/data/local/tmp/ohos_charger/online", "1");
     CreateFile("/data/local/tmp/ohos_charger/type", "USB");
     CreateFile("/data/local/tmp/battery/type", "USB");
     CreateFile("/data/local/tmp/ohos-fgu/type", "USB");
