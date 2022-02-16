@@ -15,7 +15,7 @@
     "component": {
         "name": "battery_manager_native",
         "subsystem": "powermgr",
-        "syscap": [ "SystemCapability.PowerMgr.BatteryManager" ],
+        "syscap": [ "SystemCapability.PowerManager.BatteryManager" ],
         "features": [],
         "adapted_system_type": [ "standard" ],
         "rom": "1024KB",
