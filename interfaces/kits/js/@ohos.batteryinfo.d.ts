@@ -24,7 +24,7 @@
  */
 declare namespace batteryInfo {
     /**
-     * Battery state of charge (SoC) of the current device.
+     * Battery state of charge (SoC) of the current device, in percent.
      * @since 6
      */
     const batterySOC: number;
@@ -48,7 +48,7 @@ declare namespace batteryInfo {
     const pluggedType: BatteryPluggedType;
 
     /**
-     * Battery voltage of the current device.
+     * Battery voltage of the current device, in µV.
      * @since 6
      */
     const voltage: number;
@@ -60,7 +60,7 @@ declare namespace batteryInfo {
     const technology: string;
 
     /**
-     * Battery temperature of the current device.
+     * Battery temperature of the current device, in 0.1℃.
      * @since 6
      */
     const batteryTemperature: number;
