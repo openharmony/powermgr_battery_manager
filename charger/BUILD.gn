@@ -67,7 +67,7 @@ ohos_executable("charger") {
     "//base/powermgr/battery_manager/charger/ui:libminui",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
-    "//drivers/peripheral/powermgr/battery/interfaces/hdi/battery/v1_0:libbattery_proxy_1.0",
+    "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
     "//drivers/peripheral/powermgr/battery/interfaces/hdi_service:libbattery_interface_service_1.0",
     "//third_party/jsoncpp:jsoncpp",
     "//utils/native/base:utils",
