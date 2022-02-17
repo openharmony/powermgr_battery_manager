@@ -103,17 +103,17 @@ bool BatteryService::Init()
 bool BatteryService::InitBatteryd()
 {
     POWER_HILOGI(MODULE_BATT_SERVICE, "enter.");
-    sptr<hdi::battery::v1_0::IBatteryCallback> callback =  new hdi::battery::v1_0::BatteryCallbackService();
-    ibatteryInterface = hdi::battery::v1_0::IBatteryInterface::Get();
+    sptr<OHOS::HDI::Battery::V1_0::IBatteryCallback> callback =  new OHOS::HDI::Battery::V1_0::BatteryCallbackImpl();
+    ibatteryInterface = OHOS::HDI::Battery::V1_0::IBatteryInterface::Get();
     if (ibatteryInterface == nullptr) {
         POWER_HILOGI(MODULE_BATT_SERVICE, "ibatteryInterface is nullptr");
         return false;
     }
     ErrCode ret = ibatteryInterface->Register(callback);
 
-    BatteryCallbackService::BatteryEventCallback eventCb =
+    BatteryCallbackImpl::BatteryEventCallback eventCb =
         std::bind(&BatteryService::HandleBatteryCallbackEvent, this, std::placeholders::_1);
-    BatteryCallbackService::RegisterBatteryEvent(eventCb);
+    BatteryCallbackImpl::RegisterBatteryEvent(eventCb);
 
     POWER_HILOGD(MODULE_BATT_SERVICE, "InitBatteryd ret: %{public}d", ret);
     return SUCCEEDED(ret);
@@ -264,7 +264,7 @@ void BatteryService::ChangePath(const std::string path)
 BatteryChargeState BatteryService::GetChargingStatus()
 {
     POWER_HILOGE(MODULE_BATT_SERVICE, "enter");
-    hdi::battery::v1_0::BatteryChargeState chargeState = hdi::battery::v1_0::BatteryChargeState(0);
+    OHOS::HDI::Battery::V1_0::BatteryChargeState chargeState = OHOS::HDI::Battery::V1_0::BatteryChargeState(0);
 
     if (ibatteryInterface == nullptr) {
         POWER_HILOGE(MODULE_BATT_SERVICE, "ibatteryInterface is nullptr");
@@ -278,7 +278,7 @@ BatteryChargeState BatteryService::GetChargingStatus()
 BatteryHealthState BatteryService::GetHealthStatus()
 {
     POWER_HILOGE(MODULE_BATT_SERVICE, "enter");
-    hdi::battery::v1_0::BatteryHealthState healthState = hdi::battery::v1_0::BatteryHealthState(0);
+    OHOS::HDI::Battery::V1_0::BatteryHealthState healthState = OHOS::HDI::Battery::V1_0::BatteryHealthState(0);
 
     if (ibatteryInterface == nullptr) {
         POWER_HILOGE(MODULE_BATT_SERVICE, "ibatteryInterface is nullptr");
@@ -292,7 +292,7 @@ BatteryHealthState BatteryService::GetHealthStatus()
 BatteryPluggedType BatteryService::GetPluggedType()
 {
     POWER_HILOGE(MODULE_BATT_SERVICE, "enter");
-    hdi::battery::v1_0::BatteryPluggedType pluggedType = hdi::battery::v1_0::BatteryPluggedType(0);
+    OHOS::HDI::Battery::V1_0::BatteryPluggedType pluggedType = OHOS::HDI::Battery::V1_0::BatteryPluggedType(0);
 
     if (ibatteryInterface == nullptr) {
         POWER_HILOGE(MODULE_BATT_SERVICE, "ibatteryInterface is nullptr");

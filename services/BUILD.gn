@@ -49,7 +49,7 @@ ohos_shared_library("batteryservice") {
   deps = [
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
-    "//drivers/peripheral/powermgr/battery/interfaces/hdi/battery/v1_0:libbattery_proxy_1.0",
+    "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
     "//drivers/peripheral/powermgr/battery/interfaces/hdi_callback:libbattery_callback",
     "//drivers/peripheral/powermgr/battery/interfaces/hdi_service:libbattery_interface_service_1.0",
     "//utils/native/base:utils",
