@@ -19,7 +19,7 @@
 #include <cstdint>
 #include <type_traits>
 
-#include "hilog_wrapper.h"
+#include "battery_log.h"
 #include "power_mgr_errors.h"
 
 namespace OHOS {
@@ -29,7 +29,7 @@ namespace PowerMgr {
 #define RETURN_IF_WITH_LOG(cond, loginfo)                                                   \
     do {                                                                                \
         if (cond) {                                                                     \
-            POWER_HILOGE(MODULE_COMMON, "%{public}s "#loginfo" ", __func__);                                     \
+            BATTERY_HILOGW(COMP_FWK, #loginfo);                                        \
             return;                                                                     \
         }                                                                               \
     } while (0)                                                                         \
@@ -37,7 +37,7 @@ namespace PowerMgr {
 #define READ_PARCEL_NO_RET(parcel, type, out)                                           \
     do {                                                                                \
         if (!(parcel).Read##type(out)) {                                                \
-            POWER_HILOGE(MODULE_COMMON, "%{public}s read "#out" failed", __func__);                          \
+            BATTERY_HILOGW(COMP_FWK, "read "#out" failed");                             \
             return;                                                                     \
         }                                                                               \
     } while (0)                                                                         \
@@ -45,7 +45,7 @@ namespace PowerMgr {
 #define WRITE_PARCEL_NO_RET(parcel, type, data)                                         \
     do {                                                                                \
         if (!(parcel).Write##type(data)) {                                              \
-            POWER_HILOGE(MODULE_COMMON, "%{public}s write "#data" failed", __func__);                        \
+            BATTERY_HILOGW(COMP_FWK, "write "#data" failed");                           \
             return;                                                                     \
         }                                                                               \
     } while (0)                                                                         \
@@ -53,7 +53,7 @@ namespace PowerMgr {
 #define READ_PARCEL_WITH_RET(parcel, type, out, retval)                                \
     do {                                                                               \
         if (!(parcel).Read##type(out)) {                                               \
-            POWER_HILOGE(MODULE_COMMON, "%{public}s read "#out" failed", __func__);                         \
+            BATTERY_HILOGW(COMP_FWK, "read "#out" failed");                            \
             return (retval);                                                           \
         }                                                                              \
     } while (0)                                                                        \
@@ -61,7 +61,7 @@ namespace PowerMgr {
 #define WRITE_PARCEL_WITH_RET(parcel, type, data, retval)                              \
     do {                                                                               \
         if (!(parcel).Write##type(data)) {                                             \
-            POWER_HILOGE(MODULE_COMMON, "%{public}s write "#data" failed", __func__);                       \
+            BATTERY_HILOGW(COMP_FWK, "write "#data" failed");                          \
             return (retval);                                                           \
         }                                                                              \
     } while (0)

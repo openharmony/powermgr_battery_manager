@@ -14,7 +14,7 @@
  */
 
 #include "battery_service_event_handler.h"
-#include "power_common.h"
+#include "battery_log.h"
 #include "battery_service.h"
 
 namespace OHOS {
@@ -23,7 +23,7 @@ BatteryServiceEventHandler::BatteryServiceEventHandler(const std::shared_ptr<App
     const wptr<BatteryService>& service)
     : AppExecFwk::EventHandler(runner), service_(service)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryServiceEventHandler::BatteryServiceEventHandler instance created.");
+    BATTERY_HILOGD(COMP_SVC, "Instance created");
 }
 
 void BatteryServiceEventHandler::ProcessEvent([[maybe_unused]] const AppExecFwk::InnerEvent::Pointer& event) {}

@@ -26,7 +26,7 @@
 #include <vector>
 #include <sys/stat.h>
 
-#include "power_common.h"
+#include "battery_log.h"
 #include "iservice_registry.h"
 #include "if_system_ability_manager.h"
 #include "system_ability_definition.h"
@@ -70,7 +70,7 @@ std::string CreateFile(std::string path, std::string content)
 {
     std::ofstream stream(path.c_str());
     if (!stream.is_open()) {
-        POWER_HILOGI(MODULE_BATT_SERVICE, "Cannot create file %{public}s", path.c_str());
+        BATTERY_HILOGI(LABEL_TEST, "Cannot create file %{public}s", path.c_str());
         return nullptr;
     }
     stream << content.c_str() << std::endl;
@@ -84,7 +84,7 @@ void MockFileInit()
     mkdir("/data/local/tmp/battery", S_IRWXU);
     mkdir("/data/local/tmp/ohos_charger", S_IRWXU);
     mkdir("/data/local/tmp/ohos-fgu", S_IRWXU);
-    POWER_HILOGI(MODULE_BATT_SERVICE, "MockFileInit enter.");
+    BATTERY_HILOGI(LABEL_TEST, "MockFileInit enter.");
     sleep(1);
 
     CreateFile("/data/local/tmp/battery/online", "1");
@@ -101,17 +101,17 @@ void MockFileInit()
  */
 HWTEST_F (BatteryClientTest, BatteryClient001, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient001 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient001 start.");
     MockFileInit();
     CreateFile("/data/local/tmp/battery/capacity", "22");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto capacity = BatterySrvClient.GetCapacity();
-    POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryClientTest::capacity=%{public}d", capacity);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::capacity=%{public}d", capacity);
     GTEST_LOG_(INFO) << "BatteryClient::BatteryClient001 executing, capacity=" << capacity;
 
     ASSERT_TRUE(capacity == 22);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient001 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient001 end.");
 }
 
 /**
@@ -121,7 +121,7 @@ HWTEST_F (BatteryClientTest, BatteryClient001, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient002, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient002 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient002 start.");
     CreateFile("/data/local/tmp/battery/status", "Not charging");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
@@ -129,7 +129,7 @@ HWTEST_F (BatteryClientTest, BatteryClient002, TestSize.Level1)
     GTEST_LOG_(INFO) << "BatteryClient::BatteryClient002 executing, chargeState=" << int(chargeState);
 
     ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_DISABLE);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient002 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient002 end.");
 }
 
 /**
@@ -139,7 +139,7 @@ HWTEST_F (BatteryClientTest, BatteryClient002, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient003, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient003 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient003 start.");
     CreateFile("/data/local/tmp/battery/health", "Cold");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
@@ -147,7 +147,7 @@ HWTEST_F (BatteryClientTest, BatteryClient003, TestSize.Level1)
     GTEST_LOG_(INFO) << "BatteryClient::BatteryClient003 executing, healthState=" << int(healthState);
 
     ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState(4));
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient003 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient003 end.");
 }
 
 /**
@@ -157,7 +157,7 @@ HWTEST_F (BatteryClientTest, BatteryClient003, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient004, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient004 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient004 start.");
     CreateFile("/data/local/tmp/battery/present", "0");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
@@ -165,7 +165,7 @@ HWTEST_F (BatteryClientTest, BatteryClient004, TestSize.Level1)
     GTEST_LOG_(INFO) << "BatteryClient::BatteryClient004 executing, present=" << present;
 
     ASSERT_FALSE(present);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient004 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient004 end.");
 }
 
 /**
@@ -175,16 +175,16 @@ HWTEST_F (BatteryClientTest, BatteryClient004, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient005, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient005 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient005 start.");
     CreateFile("/data/local/tmp/battery/voltage_avg", "4654321");
     CreateFile("/data/local/tmp/battery/voltage_now", "4654321");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto voltage = BatterySrvClient.GetVoltage();
-    POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryClientTest::voltage=%{public}d", voltage);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::voltage=%{public}d", voltage);
 
     ASSERT_TRUE(voltage == 4654321);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient005 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient005 end.");
 }
 
 /**
@@ -194,15 +194,15 @@ HWTEST_F (BatteryClientTest, BatteryClient005, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient006, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient006 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient006 start.");
     CreateFile("/data/local/tmp/battery/temp", "222");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto temperature = BatterySrvClient.GetBatteryTemperature();
-    POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryClientTest::voltage=%{public}d", temperature);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::voltage=%{public}d", temperature);
 
     ASSERT_TRUE(temperature == 222);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient006 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient006 end.");
 }
 
 /**
@@ -212,15 +212,15 @@ HWTEST_F (BatteryClientTest, BatteryClient006, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient007, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient007 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient007 start.");
     CreateFile("/data/local/tmp/ohos-fgu/technology", "H2");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto technology = BatterySrvClient.GetTechnology();
-    POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryClientTest::technology=%{public}s", technology.c_str());
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::technology=%{public}s", technology.c_str());
 
     ASSERT_TRUE(technology == "H2");
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient007 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient007 end.");
 }
 
 /**
@@ -230,7 +230,7 @@ HWTEST_F (BatteryClientTest, BatteryClient007, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient008, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient008 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient008 start.");
     CreateFile("/data/local/tmp/ohos_charger/online", "1");
     CreateFile("/data/local/tmp/ohos_charger/type", "USB");
     CreateFile("/data/local/tmp/battery/type", "USB");
@@ -238,9 +238,9 @@ HWTEST_F (BatteryClientTest, BatteryClient008, TestSize.Level1)
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
-    POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryClientTest::pluggedType=%{public}d", pluggedType);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::pluggedType=%{public}d", pluggedType);
 
     ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryClient::BatteryClient008 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient008 end.");
 }
 }
