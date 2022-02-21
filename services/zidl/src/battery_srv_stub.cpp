@@ -22,11 +22,11 @@ namespace OHOS {
 namespace PowerMgr {
 int BatterySrvStub::OnRemoteRequest(uint32_t code, MessageParcel& data, MessageParcel& reply, MessageOption& option)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatterySrvStub::OnRemoteRequest, cmd = %d, flags = %d", code, option.GetFlags());
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "cmd = %{public}d, flags = %{public}d", code, option.GetFlags());
     std::u16string descriptor = BatterySrvStub::GetDescriptor();
     std::u16string remoteDescriptor = data.ReadInterfaceToken();
     if (descriptor != remoteDescriptor) {
-        POWER_HILOGE(MODULE_SERVICE, "BatterySrvStub::OnRemoteRequest failed, descriptor is not matched!");
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "Descriptor is not matched");
         return E_GET_POWER_SERVICE_FAILED;
     }
 

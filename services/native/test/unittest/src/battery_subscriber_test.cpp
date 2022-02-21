@@ -41,15 +41,15 @@ using namespace std;
  */
 static HWTEST_F (BatterySubscriberTest, BatteryService001, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService001 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService001 start.");
     const std::string EVENT = CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED;
     MatchingSkills matchingSkills;
     matchingSkills.AddEvent(EVENT);
     CommonEventSubscribeInfo subscriberInfo(matchingSkills);
     std::shared_ptr<SubscriberTest> subscriber = std::make_shared<SubscriberTest>(subscriberInfo);
     bool subscribeResult = CommonEventManager::SubscribeCommonEvent(subscriber);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "subscribeResult=%{public}d", subscribeResult);
+    BATTERY_HILOGD(LABEL_TEST, "subscribeResult=%{public}d", subscribeResult);
 
     sleep(100);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService001 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService001 end.");
 }

@@ -17,7 +17,7 @@
 
 #include <typeinfo>
 #include "ohos/aafwk/content/want.h"
-#include "power_common.h"
+#include "battery_log.h"
 #include "string_ex.h"
 #include "batteryd_api.h"
 
@@ -37,14 +37,6 @@ const int BATTERY_LOW_CAPACITY = 20;
 int32_t BatteryServiceSubscriber::Update(const BatteryInfo& info)
 {
     bool isAllSuccess = true;
-    POWER_HILOGD(MODULE_BATT_SERVICE, "Subscriber BatteryInfo: capacity=%{public}d, voltage=%{public}d, " \
-                                      "temperature=%{public}d, healthState=%{public}d, pluggedType=%{public}d, " \
-                                      "pluggedMaxCurrent=%{public}d, pluggedMaxVoltage=%{public}d, " \
-                                      "chargeState=%{public}d, chargeCounter=%{public}d, present=%{public}d, " \
-                                      "technology=%{public}s",
-        info.GetCapacity(), info.GetVoltage(), info.GetTemperature(), info.GetHealthState(),
-        info.GetPluggedType(), info.GetPluggedMaxCurrent(), info.GetPluggedMaxVoltage(), info.GetChargeState(),
-        info.GetChargeCounter(), info.IsPresent(), info.GetTechnology().c_str());
     bool ret = HandleBatteryChangedEvent(info);
     isAllSuccess &= ret;
     ret = HandleBatteryLowEvent(info);
@@ -62,7 +54,7 @@ int32_t BatteryServiceSubscriber::Update(const BatteryInfo& info)
 
 bool BatteryServiceSubscriber::HandleBatteryChangedEvent(const BatteryInfo& info)
 {
-    POWER_HILOGI(MODULE_BATT_SERVICE, "enter");
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "enter");
     Want want;
     want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CAPACITY), info.GetCapacity());
     want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_VOLTAGE), info.GetVoltage());
@@ -88,12 +80,15 @@ bool BatteryServiceSubscriber::HandleBatteryChangedEvent(const BatteryInfo& info
         SwaptBatteryInfo(info);
     }
 
+    if (!isSuccess) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "failed to publish CAPACITY_CHANGED event");
+    }
     return isSuccess;
 }
 
 bool BatteryServiceSubscriber::CmpBatteryInfo(const BatteryInfo& info)
 {
-    POWER_HILOGI(MODULE_BATT_SERVICE, "enter");
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "enter");
     return ((g_batteryInfo.capacity_ == info.GetCapacity()) &&
             (g_batteryInfo.voltage_ == info.GetVoltage()) &&
             (g_batteryInfo.temperature_ == info.GetTemperature()) &&
@@ -108,7 +103,7 @@ bool BatteryServiceSubscriber::CmpBatteryInfo(const BatteryInfo& info)
 
 void BatteryServiceSubscriber::SwaptBatteryInfo(const BatteryInfo& info)
 {
-    POWER_HILOGI(MODULE_BATT_SERVICE, "enter");
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "enter");
     g_batteryInfo.capacity_ = info.GetCapacity();
     g_batteryInfo.voltage_ = info.GetVoltage();
     g_batteryInfo.temperature_ = info.GetTemperature();
@@ -142,10 +137,10 @@ bool BatteryServiceSubscriber::HandleBatteryLowEvent(const BatteryInfo& info)
 
     data.SetCode(BatteryInfo::COMMON_EVENT_CODE_CAPACITY);
     data.SetData(ToString(info.GetCapacity()));
-    POWER_HILOGD(MODULE_BATT_SERVICE, "publisher capacity=%{public}d", info.GetCapacity());
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher capacity=%{public}d", info.GetCapacity());
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
-        POWER_HILOGD(MODULE_BATT_SERVICE, "failed to publish battery_low event");
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "failed to publish battery_low event");
     }
     g_batteryLowOnce = true;
     return isSuccess;
@@ -172,10 +167,10 @@ bool BatteryServiceSubscriber::HandleBatteryOkayEvent(const BatteryInfo& info)
 
     data.SetCode(BatteryInfo::COMMON_EVENT_CODE_CAPACITY);
     data.SetData(ToString(info.GetCapacity()));
-    POWER_HILOGD(MODULE_BATT_SERVICE, "publisher capacity=%{public}d", info.GetCapacity());
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher capacity=%{public}d", info.GetCapacity());
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
-        POWER_HILOGD(MODULE_BATT_SERVICE, "failed to publish battery_okay event");
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "failed to publish battery_okay event");
     }
     g_batteryOkOnce = true;
     return isSuccess;
@@ -203,11 +198,11 @@ bool BatteryServiceSubscriber::HandleBatteryPowerConnectedEvent(const BatteryInf
 
     data.SetCode(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_TYPE);
     data.SetData(ToString(static_cast<uint32_t>(info.GetPluggedType())));
-    POWER_HILOGD(MODULE_BATT_SERVICE, "publisher pluggedtype=%{public}d",
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher pluggedtype=%{public}d",
         static_cast<uint32_t>(info.GetPluggedType()));
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
-        POWER_HILOGD(MODULE_BATT_SERVICE, "failed to publish power_connected event");
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "failed to publish power_connected event");
     }
 
     g_batteryConnectOnce = true;
@@ -236,11 +231,11 @@ bool BatteryServiceSubscriber::HandleBatteryPowerDisconnectedEvent(const Battery
 
     data.SetCode(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_TYPE);
     data.SetData(ToString(static_cast<uint32_t>(info.GetPluggedType())));
-    POWER_HILOGD(MODULE_BATT_SERVICE, "publisher pluggedtype=%{public}d",
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher pluggedtype=%{public}d",
         static_cast<uint32_t>(info.GetPluggedType()));
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
-        POWER_HILOGD(MODULE_BATT_SERVICE, "failed to publish power_disconnected event");
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "failed to publish power_disconnected event");
     }
 
     g_batteryDisconnectOnce = true;

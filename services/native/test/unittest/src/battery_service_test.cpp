@@ -29,7 +29,7 @@
 #include <sys/stat.h>
 
 #include "battery_service.h"
-#include "power_common.h"
+#include "battery_log.h"
 #include "iservice_registry.h"
 #include "if_system_ability_manager.h"
 #include "system_ability_definition.h"
@@ -69,7 +69,7 @@ std::string CreateFile(std::string path, std::string content)
 {
     std::ofstream stream(path.c_str());
     if (!stream.is_open()) {
-        POWER_HILOGI(MODULE_BATT_SERVICE, "Cannot create file %{public}s", path.c_str());
+        BATTERY_HILOGI(LABEL_TEST, "Cannot create file %{public}s", path.c_str());
         return nullptr;
     }
     stream << content.c_str() << std::endl;
@@ -83,7 +83,7 @@ static void MockFileInit()
     mkdir("/data/local/tmp/battery", S_IRWXU);
     mkdir("/data/local/tmp/ohos_charger", S_IRWXU);
     mkdir("/data/local/tmp/ohos-fgu", S_IRWXU);
-    POWER_HILOGI(MODULE_BATT_SERVICE, "MockFileInit enter.");
+    BATTERY_HILOGI(LABEL_TEST, "MockFileInit enter.");
     sleep(1);
 
     CreateFile("/data/local/tmp/battery/online", "1");
@@ -109,16 +109,16 @@ static void MockFileInit()
  */
 static HWTEST_F (BatteryServiceTest, BatteryService001, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService001 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService001 start.");
     MockFileInit();
     CreateFile("/data/local/tmp/battery/capacity", "50");
 
     auto capacity = g_service->GetCapacity();
-    POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryServiceTest::capacity=%{public}d", capacity);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryServiceTest::capacity=%{public}d", capacity);
     GTEST_LOG_(INFO) << "BatteryService::BatteryService001 executing, capacity=" << capacity;
 
     ASSERT_TRUE(capacity == 50);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService001 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService001 end.");
 }
 
 /**
@@ -128,14 +128,14 @@ static HWTEST_F (BatteryServiceTest, BatteryService001, TestSize.Level1)
  */
 HWTEST_F (BatteryServiceTest, BatteryService002, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService002 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService002 start.");
     CreateFile("/data/local/tmp/battery/status", "Charging");
 
     auto chargeState = g_service->GetChargingStatus();
     GTEST_LOG_(INFO) << "BatteryService::BatteryService002 executing, chargeState=" << int(chargeState);
 
     ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService002 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService002 end.");
 }
 
 /**
@@ -145,14 +145,14 @@ HWTEST_F (BatteryServiceTest, BatteryService002, TestSize.Level1)
  */
 HWTEST_F (BatteryServiceTest, BatteryService003, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService003 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService003 start.");
     CreateFile("/data/local/tmp/battery/health", "Good");
 
     auto healthState = g_service->GetHealthStatus();
     GTEST_LOG_(INFO) << "BatteryService::BatteryService003 executing, healthState=" << int(healthState);
 
     ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState(1));
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService003 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService003 end.");
 }
 
 /**
@@ -162,14 +162,14 @@ HWTEST_F (BatteryServiceTest, BatteryService003, TestSize.Level1)
  */
 HWTEST_F (BatteryServiceTest, BatteryService004, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService004 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService004 start.");
     CreateFile("/data/local/tmp/battery/present", "1");
 
     auto present = g_service->GetPresent();
     GTEST_LOG_(INFO) << "BatteryService::BatteryService004 executing, present=" << present;
 
     ASSERT_TRUE(present);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService004 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService004 end.");
 }
 
 /**
@@ -179,15 +179,15 @@ HWTEST_F (BatteryServiceTest, BatteryService004, TestSize.Level1)
  */
 HWTEST_F (BatteryServiceTest, BatteryService005, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService005 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService005 start.");
     CreateFile("/data/local/tmp/battery/voltage_avg", "4123456");
     CreateFile("/data/local/tmp/battery/voltage_now", "4123456");
 
     auto voltage = g_service->GetVoltage();
-    POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryServiceTest::voltage=%{public}d", voltage);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryServiceTest::voltage=%{public}d", voltage);
 
     ASSERT_TRUE(voltage == 4123456);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService005 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService005 end.");
 }
 
 /**
@@ -197,14 +197,14 @@ HWTEST_F (BatteryServiceTest, BatteryService005, TestSize.Level1)
  */
 HWTEST_F (BatteryServiceTest, BatteryService006, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService006 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService006 start.");
     CreateFile("/data/local/tmp/battery/temp", "333");
 
     auto temperature = g_service->GetBatteryTemperature();
-    POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryServiceTest::voltage=%{public}d", temperature);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryServiceTest::voltage=%{public}d", temperature);
 
     ASSERT_TRUE(temperature == 333);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService006 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService006 end.");
 }
 
 /**
@@ -214,14 +214,14 @@ HWTEST_F (BatteryServiceTest, BatteryService006, TestSize.Level1)
  */
 HWTEST_F (BatteryServiceTest, BatteryService007, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService007 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService007 start.");
     CreateFile("/data/local/tmp/ohos-fgu/technology", "Li");
 
     auto technology = g_service->GetTechnology();
-    POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryServiceTest::technology=%{public}s", technology.c_str());
+    BATTERY_HILOGI(LABEL_TEST, "BatteryServiceTest::technology=%{public}s", technology.c_str());
 
     ASSERT_TRUE(technology == "Li");
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService007 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService007 end.");
 }
 
 /**
@@ -231,17 +231,17 @@ HWTEST_F (BatteryServiceTest, BatteryService007, TestSize.Level1)
  */
 HWTEST_F (BatteryServiceTest, BatteryService008, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService008 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService008 start.");
     CreateFile("/data/local/tmp/ohos_charger/online", "1");
     CreateFile("/data/local/tmp/ohos_charger/type", "Wireless");
     CreateFile("/data/local/tmp/battery/type", "Wireless");
     CreateFile("/data/local/tmp/ohos-fgu/type", "Wireless");
 
     auto pluggedType = g_service->GetPluggedType();
-    POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryServiceTest::pluggedType=%{public}d", pluggedType);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryServiceTest::pluggedType=%{public}d", pluggedType);
 
     ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_WIRELESS);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService008 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService008 end.");
 }
 
 /**
@@ -251,14 +251,14 @@ HWTEST_F (BatteryServiceTest, BatteryService008, TestSize.Level1)
  */
 HWTEST_F (BatteryServiceTest, BatteryService009, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService009 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService009 start.");
 
     g_service->OnStart();
     bool ready = g_service->IsServiceReady();
-    POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryServiceTest::ready=%{public}d", ready);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryServiceTest::ready=%{public}d", ready);
 
     ASSERT_TRUE(ready);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService009 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService009 end.");
 }
 
 /**
@@ -268,12 +268,12 @@ HWTEST_F (BatteryServiceTest, BatteryService009, TestSize.Level1)
  */
 HWTEST_F (BatteryServiceTest, BatteryService010, TestSize.Level1)
 {
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService010 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService010 start.");
 
     g_service->OnStop();
     bool ready = g_service->IsServiceReady();
-    POWER_HILOGI(MODULE_BATT_SERVICE, "BatteryServiceTest::ready=%{public}d", ready);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryServiceTest::ready=%{public}d", ready);
 
     ASSERT_FALSE(ready);
-    POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService::BatteryService010 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService010 end.");
 }
