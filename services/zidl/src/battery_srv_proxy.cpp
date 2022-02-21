@@ -29,15 +29,14 @@ int32_t BatterySrvProxy::GetCapacity()
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
-        POWER_HILOGE(MODULE_INNERKIT, "BatterySrvProxy::%{public}s write descriptor failed!", __func__);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
         return INVALID_BATT_INT_VALUE;
     }
 
     int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_CAPACITY),
         data, reply, option);
     if (ret != ERR_OK) {
-        POWER_HILOGE(MODULE_BATT_INNERKIT, "BatterySrvProxy::%{public}s SendRequest is failed, error code: %d",
-            __func__, ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
         return INVALID_BATT_INT_VALUE;
     }
     int32_t capacity = INVALID_BATT_INT_VALUE;
@@ -54,15 +53,14 @@ BatteryChargeState BatterySrvProxy::GetChargingStatus()
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
-        POWER_HILOGE(MODULE_INNERKIT, "BatterySrvProxy::%{public}s write descriptor failed!", __func__);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
         return BatteryChargeState::CHARGE_STATE_BUTT;
     }
 
     int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_CHARGING_STATUS),
         data, reply, option);
     if (ret != ERR_OK) {
-        POWER_HILOGE(MODULE_BATT_INNERKIT, "BatterySrvProxy::%{public}s SendRequest is failed, error code: %d",
-            __func__, ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
         return BatteryChargeState::CHARGE_STATE_BUTT;
     }
     uint32_t chargingState = static_cast<uint32_t>(BatteryChargeState::CHARGE_STATE_BUTT);
@@ -79,15 +77,14 @@ BatteryHealthState BatterySrvProxy::GetHealthStatus()
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
-        POWER_HILOGE(MODULE_INNERKIT, "BatterySrvProxy::%{public}s write descriptor failed!", __func__);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
         return BatteryHealthState::HEALTH_STATE_BUTT;
     }
 
     int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_HEALTH_STATUS),
         data, reply, option);
     if (ret != ERR_OK) {
-        POWER_HILOGE(MODULE_BATT_INNERKIT, "BatterySrvProxy::%{public}s SendRequest is failed, error code: %d",
-            __func__, ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
         return BatteryHealthState::HEALTH_STATE_BUTT;
     }
     uint32_t healthStatus = static_cast<uint32_t>(BatteryHealthState::HEALTH_STATE_BUTT);
@@ -104,15 +101,14 @@ BatteryPluggedType BatterySrvProxy::GetPluggedType()
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
-        POWER_HILOGE(MODULE_INNERKIT, "BatterySrvProxy::%{public}s write descriptor failed!", __func__);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
         return BatteryPluggedType::PLUGGED_TYPE_BUTT;
     }
 
     int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_PLUG_TYPE),
         data, reply, option);
     if (ret != ERR_OK) {
-        POWER_HILOGE(MODULE_BATT_INNERKIT, "BatterySrvProxy::%{public}s SendRequest is failed, error code: %d",
-            __func__, ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
         return BatteryPluggedType::PLUGGED_TYPE_BUTT;
     }
     uint32_t pluggedType = static_cast<uint32_t>(BatteryPluggedType::PLUGGED_TYPE_BUTT);
@@ -129,15 +125,14 @@ int32_t BatterySrvProxy::GetVoltage()
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
-        POWER_HILOGE(MODULE_INNERKIT, "BatterySrvProxy::%{public}s write descriptor failed!", __func__);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
         return INVALID_BATT_INT_VALUE;
     }
 
     int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_VOLTAGE),
         data, reply, option);
     if (ret != ERR_OK) {
-        POWER_HILOGE(MODULE_BATT_INNERKIT, "BatterySrvProxy::%{public}s SendRequest is failed, error code: %d",
-            __func__, ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
         return INVALID_BATT_INT_VALUE;
     }
     int32_t voltage = INVALID_BATT_INT_VALUE;
@@ -154,15 +149,14 @@ bool BatterySrvProxy::GetPresent()
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
-        POWER_HILOGE(MODULE_INNERKIT, "BatterySrvProxy::%{public}s write descriptor failed!", __func__);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
         return INVALID_BATT_BOOL_VALUE;
     }
 
     int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_PRESENT),
         data, reply, option);
     if (ret != ERR_OK) {
-        POWER_HILOGE(MODULE_BATT_INNERKIT, "BatterySrvProxy::%{public}s SendRequest is failed, error code: %d",
-            __func__, ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
         return INVALID_BATT_BOOL_VALUE;
     }
     bool present = INVALID_BATT_BOOL_VALUE;
@@ -180,15 +174,14 @@ std::string BatterySrvProxy::GetTechnology()
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
-        POWER_HILOGE(MODULE_INNERKIT, "BatterySrvProxy::%{public}s write descriptor failed!", __func__);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
         return INVALID_STRING_VALUE;
     }
 
     int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_TECHNOLOGY),
         data, reply, option);
     if (ret != ERR_OK) {
-        POWER_HILOGE(MODULE_BATT_INNERKIT, "BatterySrvProxy::%{public}s SendRequest is failed, error code: %d",
-            __func__, ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
         return INVALID_STRING_VALUE;
     }
     READ_PARCEL_WITH_RET(reply, String, technology, INVALID_STRING_VALUE);
@@ -204,15 +197,14 @@ int32_t BatterySrvProxy::GetBatteryTemperature()
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
-        POWER_HILOGE(MODULE_INNERKIT, "BatterySrvProxy::%{public}s write descriptor failed!", __func__);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
         return INVALID_BATT_TEMP_VALUE;
     }
 
     int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_TEMPERATURE),
         data, reply, option);
     if (ret != ERR_OK) {
-        POWER_HILOGE(MODULE_BATT_INNERKIT, "BatterySrvProxy::%{public}s SendRequest is failed, error code: %d",
-            __func__, ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
         return INVALID_BATT_TEMP_VALUE;
     }
     int32_t temperature = INVALID_BATT_TEMP_VALUE;

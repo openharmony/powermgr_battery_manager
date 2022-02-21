@@ -18,7 +18,7 @@
 #include <string>
 #include "battery_info.h"
 #include "battery_srv_client.h"
-#include "hilog_wrapper.h"
+#include "battery_log.h"
 #include "napi/native_api.h"
 #include "napi/native_node_api.h"
 
@@ -33,18 +33,18 @@ static napi_value BatterySOC(napi_env env, napi_callback_info info)
 
     NAPI_CALL(env, napi_create_int32(env, capacity, &napiValue));
 
-    POWER_HILOGD(MODULE_JS_NAPI, "capacity %{public}d", capacity);
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "capacity %{public}d", capacity);
     return napiValue;
 }
 
 static napi_value GetChargingState(napi_env env, napi_callback_info info)
 {
     napi_value napiValue = nullptr;
-    int32_t chargeState = (int32_t)g_battClient.GetChargingStatus();
+    int32_t chargingState = (int32_t)g_battClient.GetChargingStatus();
 
-    NAPI_CALL(env, napi_create_int32(env, chargeState, &napiValue));
+    NAPI_CALL(env, napi_create_int32(env, chargingState, &napiValue));
 
-    POWER_HILOGD(MODULE_JS_NAPI, "chargeState %{public}d", chargeState);
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "chargingState %{public}d", chargingState);
 
     return napiValue;
 }
@@ -56,7 +56,7 @@ static napi_value GetHealthState(napi_env env, napi_callback_info info)
 
     NAPI_CALL(env, napi_create_int32(env, healthStatus, &napiValue));
 
-    POWER_HILOGD(MODULE_JS_NAPI, "healthStatus %{public}d", healthStatus);
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "healthStatus %{public}d", healthStatus);
 
     return napiValue;
 }
@@ -68,7 +68,7 @@ static napi_value GetPluggedType(napi_env env, napi_callback_info info)
 
     NAPI_CALL(env, napi_create_int32(env, pluggedType, &napiValue));
 
-    POWER_HILOGD(MODULE_JS_NAPI, "pluggedType %{public}d", pluggedType);
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "pluggedType %{public}d", pluggedType);
 
     return napiValue;
 }
@@ -80,7 +80,7 @@ static napi_value GetVoltage(napi_env env, napi_callback_info info)
 
     NAPI_CALL(env, napi_create_int32(env, voltage, &napiValue));
 
-    POWER_HILOGD(MODULE_JS_NAPI, "%{public}d", voltage);
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "voltage %{public}d", voltage);
 
     return napiValue;
 }
@@ -93,7 +93,7 @@ static napi_value GetTechnology(napi_env env, napi_callback_info info)
 
     NAPI_CALL(env, napi_create_string_utf8(env, technologyStr, strlen(technologyStr), &napiValue));
 
-    POWER_HILOGD(MODULE_JS_NAPI, "technology %{public}s", technologyStr);
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "technology %{public}s", technologyStr);
     return napiValue;
 }
 
@@ -104,7 +104,7 @@ static napi_value GetBatteryTemperature(napi_env env, napi_callback_info info)
 
     NAPI_CALL(env, napi_create_int32(env, temperature, &napiValue));
 
-    POWER_HILOGD(MODULE_JS_NAPI, "%{public}d", temperature);
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "temperature %{public}d", temperature);
 
     return napiValue;
 }
@@ -116,7 +116,7 @@ static napi_value GetBatteryPresent(napi_env env, napi_callback_info info)
 
     NAPI_CALL(env, napi_get_boolean(env, present, &napiValue));
 
-    POWER_HILOGD(MODULE_JS_NAPI, "%{public}d", present);
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "present %{public}d", present);
 
     return napiValue;
 }
@@ -255,7 +255,7 @@ EXTERN_C_START
  */
 static napi_value BatteryInit(napi_env env, napi_value exports)
 {
-    POWER_HILOGD(MODULE_JS_NAPI, "enter");
+    BATTERY_HILOGD(COMP_FWK, "Enter");
 
     napi_property_descriptor desc[] = {
         DECLARE_NAPI_GETTER("batterySOC", BatterySOC),
@@ -273,7 +273,7 @@ static napi_value BatteryInit(napi_env env, napi_value exports)
     CreateEnumChargeState(env, exports);
     CreateEnumHealthState(env, exports);
 
-    POWER_HILOGD(MODULE_JS_NAPI, "return");
+    BATTERY_HILOGD(COMP_FWK, "Success");
 
     return exports;
 }
