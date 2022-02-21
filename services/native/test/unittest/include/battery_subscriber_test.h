@@ -20,7 +20,7 @@
 #include <ipc_skeleton.h>
 
 #include "battery_service.h"
-#include "power_common.h"
+#include "battery_log.h"
 #include "iservice_registry.h"
 #include "if_system_ability_manager.h"
 #include "system_ability_definition.h"
@@ -52,53 +52,53 @@ public:
 
     void OnReceiveEvent(const EventFwk::CommonEventData& data)
     {
-        POWER_HILOGD(MODULE_BATT_SERVICE, "OnReceiveEvent enter.");
+        BATTERY_HILOGD(LABEL_TEST, "OnReceiveEvent enter.");
         std::string action = data.GetWant().GetAction();
-        POWER_HILOGD(MODULE_BATT_SERVICE, "BatteryService=== start. action=%{public}s", action.c_str());
+        BATTERY_HILOGD(LABEL_TEST, "BatteryService=== start. action=%{public}s", action.c_str());
         if (action == EventFwk::CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED) {
             int defaultCapacity = -1;
             int capacity = data.GetWant().GetIntParam(KEY_CAPACITY, defaultCapacity);
-            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest capacity = %{public}d", capacity);
+            BATTERY_HILOGD(LABEL_TEST, "SubscriberTest capacity = %{public}d", capacity);
 
             int defaultVoltage = -1;
             int voltage = data.GetWant().GetIntParam(KEY_VOLTAGE, defaultVoltage);
-            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest voltage = %{public}d", voltage);
+            BATTERY_HILOGD(LABEL_TEST, "SubscriberTest voltage = %{public}d", voltage);
 
             int defaultTemperature = -1;
             int temperature = data.GetWant().GetIntParam(KEY_TEMPERATURE, defaultTemperature);
-            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest temperature = %{public}d", temperature);
+            BATTERY_HILOGD(LABEL_TEST, "SubscriberTest temperature = %{public}d", temperature);
 
             int defaultHealthState = -1;
             int healthState = data.GetWant().GetIntParam(KEY_HEALTH_STATE, defaultHealthState);
-            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest healthState = %{public}d", healthState);
+            BATTERY_HILOGD(LABEL_TEST, "SubscriberTest healthState = %{public}d", healthState);
 
             int defaultPluggedType = -1;
             int pluggedType = data.GetWant().GetIntParam(KEY_PLUGGED_TYPE, defaultPluggedType);
-            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest pluggedType = %{public}d", pluggedType);
+            BATTERY_HILOGD(LABEL_TEST, "SubscriberTest pluggedType = %{public}d", pluggedType);
 
             int defaultMaxCurrent = -1;
             int maxCurrent = data.GetWant().GetIntParam(KEY_PLUGGED_MAX_CURRENT, defaultMaxCurrent);
-            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest maxCurrent = %{public}d", maxCurrent);
+            BATTERY_HILOGD(LABEL_TEST, "SubscriberTest maxCurrent = %{public}d", maxCurrent);
 
             int defaultMaxVoltage = -1;
             int maxVoltage = data.GetWant().GetIntParam(KEY_PLUGGED_MAX_VOLTAGE, defaultMaxVoltage);
-            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest maxVoltage = %{public}d", maxVoltage);
+            BATTERY_HILOGD(LABEL_TEST, "SubscriberTest maxVoltage = %{public}d", maxVoltage);
 
             int defaultChargeState = -1;
             int chargeState = data.GetWant().GetIntParam(KEY_CHARGE_STATE, defaultChargeState);
-            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest chargeState = %{public}d", chargeState);
+            BATTERY_HILOGD(LABEL_TEST, "SubscriberTest chargeState = %{public}d", chargeState);
 
             int defaultChargeCounter = -1;
             int chargeCounter = data.GetWant().GetIntParam(KEY_CHARGE_COUNTER, defaultChargeCounter);
-            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest chargeCounter = %{public}d", chargeCounter);
+            BATTERY_HILOGD(LABEL_TEST, "SubscriberTest chargeCounter = %{public}d", chargeCounter);
 
             bool defaultPresent = false;
             bool isPresent = data.GetWant().GetBoolParam(KEY_PRESENT, defaultPresent);
-            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest isPresent = %{public}d", isPresent);
+            BATTERY_HILOGD(LABEL_TEST, "SubscriberTest isPresent = %{public}d", isPresent);
 
             std::string defaultTechnology = "";
             std::string technology = data.GetWant().GetStringParam(KEY_TECHNOLOGY);
-            POWER_HILOGD(MODULE_BATT_SERVICE, "SubscriberTest technology = %{public}s", technology.c_str());
+            BATTERY_HILOGD(LABEL_TEST, "SubscriberTest technology = %{public}s", technology.c_str());
         }
     }
 };
