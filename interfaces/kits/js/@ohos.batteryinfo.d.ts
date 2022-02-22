@@ -19,7 +19,7 @@
  * <p>Battery information includes the remaining battery power,
  * voltage, temperature, model, and charger type.
  *
- * @SysCap SystemCapability.PowerMgr.BatteryManager
+ * @sysCap SystemCapability.PowerManager.BatteryManage.Core
  * @since 6
  */
 declare namespace batteryInfo {
@@ -74,7 +74,7 @@ declare namespace batteryInfo {
     /**
      * Indicates the charger type of a device.
      *
-     * @SysCap SystemCapability.PowerMgr.BatteryManager
+     * @sysCap SystemCapability.PowerManager.BatteryManage.Core
      * @since 6
      */
     export enum BatteryPluggedType {
@@ -103,7 +103,7 @@ declare namespace batteryInfo {
     /**
      * Indicates the battery charging status of a device.
      *
-     * @SysCap SystemCapability.PowerMgr.BatteryManager
+     * @sysCap SystemCapability.PowerManager.BatteryManage.Core
      * @since 6
      */
     export enum BatteryChargeState {
@@ -132,7 +132,7 @@ declare namespace batteryInfo {
     /**
      * Indicates the battery health status of a device.
      *
-     * @SysCap SystemCapability.PowerMgr.BatteryManager
+     * @sysCap SystemCapability.PowerManager.BatteryManage.Core
      * @since 6
      */
     export enum BatteryHealthState {
