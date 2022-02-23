@@ -14,8 +14,8 @@
  */
 
 #include "battery_service.h"
-
 #include <unistd.h>
+#include "battery_dump.h"
 #include "file_ex.h"
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
@@ -30,6 +30,8 @@ namespace {
 const std::string BATTERY_SERVICE_NAME = "BatteryService";
 constexpr int32_t COMMEVENT_REGISTER_RETRY_TIMES = 10;
 constexpr int32_t COMMEVENT_REGISTER_WAIT_DELAY_US = 20000;
+constexpr int32_t HELP_DMUP_PARAM = 2;
+sptr<BatteryService> g_service;
 int32_t g_lastChargeState = 0;
 bool g_initConfig = true;
 }
@@ -44,6 +46,11 @@ BatteryService::BatteryService()
 }
 
 BatteryService::~BatteryService() {}
+
+void BatteryService::OnDump()
+{
+    BATTERY_HILOGD(COMP_SVC, "OnDump");
+}
 
 void BatteryService::OnStart()
 {
@@ -354,6 +361,31 @@ int32_t BatteryService::GetBatteryTemperature()
     }
     ibatteryInterface->GetTemperature(temperature);
     return temperature;
+}
+
+int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args)
+{
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    g_service = DelayedSpSingleton<BatteryService>::GetInstance();
+    BatteryDump& batteryDump = BatteryDump::GetInstance();
+    if ((args.empty()) || (args[0].size() != HELP_DMUP_PARAM)) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "param cannot be empty or the length is not 2");
+        dprintf(fd, "cmd param number is not equal to 2\n");
+        batteryDump.DumpHelp(fd);
+        return ERR_NO_INIT;
+    }
+
+    bool helpRet = batteryDump.DumpBatteryHelp(fd, args);
+    bool getBatteryInfo = batteryDump.GetBatteryInfo(fd, g_service, args);
+    bool total = helpRet + getBatteryInfo;
+    if (!total) {
+        dprintf(fd, "cmd param is error\n");
+        batteryDump.DumpHelp(fd);
+        return ERR_NO_INIT;
+    }
+
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    return ERR_OK;
 }
 } // namespace PowerMgr
 } // namespace OHOS
