@@ -50,6 +50,6 @@ static HWTEST_F (BatterySubscriberTest, BatteryService001, TestSize.Level1)
     bool subscribeResult = CommonEventManager::SubscribeCommonEvent(subscriber);
     BATTERY_HILOGD(LABEL_TEST, "subscribeResult=%{public}d", subscribeResult);
 
-    sleep(100);
+    sleep(5);
     BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService001 end.");
 }
