@@ -31,6 +31,8 @@ bool g_batteryLowOnce = false;
 bool g_batteryOkOnce = false;
 bool g_batteryConnectOnce = false;
 bool g_batteryDisconnectOnce = false;
+bool g_batteryChargingOnce = false;
+bool g_batteryDischargingOnce = false;
 BatterydInfo g_batteryInfo;
 const int BATTERY_LOW_CAPACITY = 20;
 
@@ -46,6 +48,10 @@ int32_t BatteryServiceSubscriber::Update(const BatteryInfo& info)
     ret = HandleBatteryPowerConnectedEvent(info);
     isAllSuccess &= ret;
     ret = HandleBatteryPowerDisconnectedEvent(info);
+    isAllSuccess &= ret;
+    ret = HandleBatteryChargingEvent(info);
+    isAllSuccess &= ret;
+    ret = HandleBatteryDischargingEvent(info);
     isAllSuccess &= ret;
     g_firstPublish = false;
 
@@ -124,6 +130,7 @@ bool BatteryServiceSubscriber::HandleBatteryLowEvent(const BatteryInfo& info)
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
+    publishInfo.SetSticky(true);
     bool isSuccess = true;
 
     if (info.GetCapacity() > BATTERY_LOW_CAPACITY) {
@@ -154,6 +161,7 @@ bool BatteryServiceSubscriber::HandleBatteryOkayEvent(const BatteryInfo& info)
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
+    publishInfo.SetSticky(true);
     bool isSuccess = true;
 
     if (info.GetCapacity() <= BATTERY_LOW_CAPACITY) {
@@ -184,6 +192,7 @@ bool BatteryServiceSubscriber::HandleBatteryPowerConnectedEvent(const BatteryInf
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
+    publishInfo.SetSticky(true);
     bool isSuccess = true;
 
     if ((static_cast<uint32_t>(info.GetPluggedType()) == PLUGGED_TYPE_NONE) ||
@@ -217,6 +226,7 @@ bool BatteryServiceSubscriber::HandleBatteryPowerDisconnectedEvent(const Battery
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
+    publishInfo.SetSticky(true);
     bool isSuccess = true;
 
     if ((static_cast<uint32_t>(info.GetPluggedType()) != PLUGGED_TYPE_NONE) &&
@@ -239,6 +249,73 @@ bool BatteryServiceSubscriber::HandleBatteryPowerDisconnectedEvent(const Battery
     }
 
     g_batteryDisconnectOnce = true;
+    return isSuccess;
+}
+
+bool BatteryServiceSubscriber::HandleBatteryChargingEvent(const BatteryInfo& info)
+{
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_CHARGING);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(false);
+    publishInfo.SetSticky(true);
+    bool isSuccess = true;
+
+    if (static_cast<uint32_t>(info.GetChargeState()) !=
+        static_cast<uint32_t>(BatteryChargeState::CHARGE_STATE_ENABLE)) {
+        g_batteryChargingOnce = false;
+        return isSuccess;
+    }
+
+    if (g_batteryChargingOnce) {
+        return isSuccess;
+    }
+
+    data.SetCode(BatteryInfo::COMMON_EVENT_CODE_CHARGE_STATE);
+    data.SetData(ToString(static_cast<uint32_t>(info.GetChargeState())));
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher chargeState=%{public}d",
+        static_cast<uint32_t>(info.GetChargeState()));
+    isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
+    if (!isSuccess) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "failed to publish battery charing event");
+    }
+
+    g_batteryChargingOnce = true;
+    return isSuccess;
+}
+
+bool BatteryServiceSubscriber::HandleBatteryDischargingEvent(const BatteryInfo& info)
+{
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_DISCHARGING);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(false);
+    publishInfo.SetSticky(true);
+    bool isSuccess = true;
+
+    if (static_cast<uint32_t>(info.GetChargeState()) != static_cast<uint32_t>(BatteryChargeState::CHARGE_STATE_NONE)) {
+        g_batteryDischargingOnce = false;
+        return isSuccess;
+    }
+
+    if (g_batteryDischargingOnce) {
+        return isSuccess;
+    }
+
+    data.SetCode(BatteryInfo::COMMON_EVENT_CODE_CHARGE_STATE);
+    data.SetData(ToString(static_cast<uint32_t>(info.GetChargeState())));
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher chargeState=%{public}d",
+        static_cast<uint32_t>(info.GetChargeState()));
+    isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
+    if (!isSuccess) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "failed to publish battery charing event");
+    }
+
+    g_batteryDischargingOnce = true;
     return isSuccess;
 }
 } // namespace PowerMgr
