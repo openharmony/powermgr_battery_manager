@@ -37,7 +37,10 @@ config("module_private_config") {
 ohos_unittest("test_batterysrv") {
   module_out_path = module_output_path
 
-  sources = [ "src/battery_service_test.cpp" ]
+  sources = [
+    "//base/powermgr/battery_manager/utils/native/src/test_utils.cpp",
+    "src/battery_service_test.cpp",
+  ]
 
   configs = [
     "${utils_path}:utils_config",
