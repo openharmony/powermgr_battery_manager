@@ -21,8 +21,8 @@
 #include "iservice_registry.h"
 #include "system_ability_definition.h"
 #include "battery_log.h"
-#include "battery_interface_proxy.h"
 #include "power_mgr_client.h"
+#include "v1_0/battery_interface_proxy.h"
 
 namespace OHOS {
 namespace PowerMgr {
