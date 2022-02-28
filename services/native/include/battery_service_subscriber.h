@@ -36,6 +36,8 @@ private:
     static bool HandleBatteryOkayEvent(const BatteryInfo& info);
     static bool HandleBatteryPowerConnectedEvent(const BatteryInfo& info);
     static bool HandleBatteryPowerDisconnectedEvent(const BatteryInfo& info);
+    static bool HandleBatteryChargingEvent(const BatteryInfo& info);
+    static bool HandleBatteryDischargingEvent(const BatteryInfo& info);
 };
 } // namespace PowerMgr
 } // namespace OHOS
