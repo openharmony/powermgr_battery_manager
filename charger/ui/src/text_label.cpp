@@ -311,11 +311,11 @@ void TextLabel::DrawText()
 {
     HDF_LOGD("%{public}s enter", __func__);
     void* tmpBuf = GetBuffer();
-    int textSx = 0;
-    int textSy = 0;
+    uint32_t textSx = 0;
+    uint32_t textSy = 0;
     switch (fontAligMethodUpright_) {
         case AlignmentMethod::ALIGN_CENTER:
-            textSy = (viewHeight_ - fontHeight_) >> 1;
+            textSy = (static_cast<uint32_t>(viewHeight_) - fontHeight_) >> 1;
             break;
         case AlignmentMethod::ALIGN_TO_TOP:
             textSy = 0;
@@ -324,11 +324,11 @@ void TextLabel::DrawText()
             break;
     }
 
-    const int minPosition = 10;
-    const int average = 2;
+    const uint32_t minPosition = 10;
+    const uint32_t average = 2;
     switch (fontAligMethodLevel_) {
         case AlignmentMethod::ALIGN_CENTER:
-            textSx = (viewWidth_ - (strlen(textBuf_) * fontWidth_)) / average;
+            textSx = (static_cast<uint32_t>(viewWidth_) - (strlen(textBuf_) * fontWidth_)) / average;
             if (textSx < minPosition) {
                 textSx = minPosition;
             }

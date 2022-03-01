@@ -92,9 +92,11 @@ void View::DrawSubView(int x, int y, int w, int h, char* buf)
     HDF_LOGD("%{public}s, x = %{public}d, y = %{public}d, w = %{public}d, h = %{public}d", __func__, x, y, w, h);
     HDF_LOGD("%{public}s, minWidth = %{public}d, minHeight = %{public}d", __func__, minWidth, minHeight);
     for (int i = 0; i < minHeight; i++) {
-        char* src = buf + i * w * sizeof(BRGA888Pixel);
-        char* dst = shadowBuffer_ + (i + y) * viewWidth_ * sizeof(BRGA888Pixel) + x * sizeof(BRGA888Pixel);
-        if (memcpy_s(dst, minWidth * sizeof(BRGA888Pixel) + 1, src, minWidth * sizeof(BRGA888Pixel)) != EOK) {
+        char* src = buf + i * w * static_cast<int32_t>(sizeof(BRGA888Pixel));
+        char* dst = shadowBuffer_ + (i + y) * viewWidth_ * static_cast<int32_t>(sizeof(BRGA888Pixel)) +
+            x * static_cast<int32_t>(sizeof(BRGA888Pixel));
+        if (memcpy_s(dst, minWidth * static_cast<int32_t>(sizeof(BRGA888Pixel)) + 1, src,
+            minWidth * static_cast<int32_t>(sizeof(BRGA888Pixel))) != EOK) {
             return;
         }
     }
