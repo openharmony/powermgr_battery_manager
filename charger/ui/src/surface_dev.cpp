@@ -93,7 +93,7 @@ static int ModesetCreateFb(int fd, struct BufferObject* bo)
     map.handle = create.handle;
     drmIoctl(fd, DRM_IOCTL_MODE_MAP_DUMB, &map);
     bo->vaddr = static_cast<uint8_t*>(mmap(0, create.size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, map.offset));
-    const int newColor = 0xff00ff00;
+    const uint32_t newColor = 0xff00ff00;
     uint32_t i = 0;
     uint32_t color = newColor;
     while (i < bo->size) {
