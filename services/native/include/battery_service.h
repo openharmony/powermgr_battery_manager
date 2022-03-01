@@ -70,7 +70,6 @@ public:
 private:
     bool Init();
     bool InitBatteryd();
-    bool IsCommonEventServiceAbilityExist();
     int32_t HandleBatteryCallbackEvent(const CallbackInfo& event);
     bool ready_ {false};
     int32_t commEventRetryTimes_ {0};
