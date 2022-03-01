@@ -17,6 +17,7 @@
 #include "message_parcel.h"
 #include "power_common.h"
 #include "battery_srv_proxy.h"
+#include "xcollie.h"
 
 namespace OHOS {
 namespace PowerMgr {
@@ -30,35 +31,41 @@ int BatterySrvStub::OnRemoteRequest(uint32_t code, MessageParcel& data, MessageP
         return E_GET_POWER_SERVICE_FAILED;
     }
 
+    const int DFX_DELAY_MS = 10000;
+    int id = HiviewDFX::XCollie::GetInstance().SetTimer("BatteryManagerCallbackStub", DFX_DELAY_MS, nullptr, nullptr,
+        HiviewDFX::XCOLLIE_FLAG_NOOP);
+    int32_t ret = ERR_OK;
     switch (code) {
         case static_cast<int>(IBatterySrv::BATT_GET_CAPACITY): {
-            return GetCapacityStub(reply);
+            ret = GetCapacityStub(reply);
         }
         case static_cast<int>(IBatterySrv::BATT_GET_CHARGING_STATUS): {
-            return GetChargingStatusStub(reply);
+            ret = GetChargingStatusStub(reply);
         }
         case static_cast<int>(IBatterySrv::BATT_GET_HEALTH_STATUS): {
-            return GetHealthStatusStub(reply);
+            ret = GetHealthStatusStub(reply);
         }
         case static_cast<int>(IBatterySrv::BATT_GET_PLUG_TYPE): {
-            return GetPluggedTypeStub(reply);
+            ret = GetPluggedTypeStub(reply);
         }
         case static_cast<int>(IBatterySrv::BATT_GET_VOLTAGE): {
-            return GetVoltageStub(reply);
+            ret = GetVoltageStub(reply);
         }
         case static_cast<int>(IBatterySrv::BATT_GET_PRESENT): {
-            return GetPresentStub(reply);
+            ret = GetPresentStub(reply);
         }
         case static_cast<int>(IBatterySrv::BATT_GET_TEMPERATURE): {
-            return GetBatteryTemperatureStub(reply);
+            ret = GetBatteryTemperatureStub(reply);
         }
         case static_cast<int>(IBatterySrv::BATT_GET_TECHNOLOGY): {
-            return GetTechnologyStub(reply);
+            ret = GetTechnologyStub(reply);
         }
         default: {
-            return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
+            ret = IPCObjectStub::OnRemoteRequest(code, data, reply, option);
         }
     }
+    HiviewDFX::XCollie::GetInstance().CancelTimer(id);
+    return ret;
 }
 
 int32_t BatterySrvStub::GetCapacityStub(MessageParcel& reply)
