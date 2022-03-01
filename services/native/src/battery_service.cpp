@@ -23,17 +23,30 @@
 #include "battery_log.h"
 #include "power_mgr_client.h"
 #include "v1_0/battery_interface_proxy.h"
+#include "display_manager.h"
+#include "ui_service_mgr_client.h"
+#include "wm_common.h"
 
 namespace OHOS {
 namespace PowerMgr {
 namespace {
 const std::string BATTERY_SERVICE_NAME = "BatteryService";
+const std::string BATTERY_LOW_CAPACITY_PARAMS = "{\"cancelButton\":\"LowCapacity\"}";
 constexpr int32_t COMMEVENT_REGISTER_RETRY_TIMES = 10;
 constexpr int32_t COMMEVENT_REGISTER_WAIT_DELAY_US = 20000;
 constexpr int32_t HELP_DMUP_PARAM = 2;
+constexpr int32_t BATTERY_LOW_CAPACITY = 10;
+constexpr int32_t UI_DIALOG_POWER_WIDTH_NARROW = 400;
+constexpr int32_t UI_DIALOG_POWER_HEIGHT_NARROW = 240;
+constexpr int32_t UI_DEFAULT_WIDTH = 2560;
+constexpr int32_t UI_DEFAULT_HEIGHT = 1600;
+constexpr int32_t UI_DEFAULT_BUTTOM_CLIP = 50 * 2;
+constexpr int32_t UI_WIDTH_780DP = 780 * 2;
+constexpr int32_t UI_HALF = 2;
 sptr<BatteryService> g_service;
 int32_t g_lastChargeState = 0;
 bool g_initConfig = true;
+bool g_lastLowCapacity = false;
 }
 
 const bool G_REGISTER_RESULT = SystemAbility::MakeAndRegisterAbility(
@@ -177,6 +190,7 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const CallbackInfo& event)
     HandleTemperature(event.temperature);
     batteryLed_->UpdateLedColor(event.chargeState, event.capacity);
     WakeupDevice(event.chargeState);
+    HandlePopupEvent(event.capacity);
 
     BatteryServiceSubscriber::Update(batteryInfo);
     return ERR_OK;
@@ -228,6 +242,82 @@ void BatteryService::WakeupDevice(const int32_t& chargestate)
 
     BATTERY_HILOGD(COMP_SVC, "Exit");
     return;
+}
+
+void BatteryService::HandlePopupEvent(const int32_t capacity)
+{
+    BATTERY_HILOGD(COMP_SVC, "Enter");
+    bool ret = false;
+    if ((capacity < BATTERY_LOW_CAPACITY) && (g_lastLowCapacity == false)) {
+        ret = ShowDialog(BATTERY_LOW_CAPACITY_PARAMS);
+        if (!ret) {
+            BATTERY_HILOGI(COMP_SVC, "failed to popup");
+            return;
+        }
+        g_lastLowCapacity = true;
+    }
+
+    if (capacity >= BATTERY_LOW_CAPACITY) {
+        g_lastLowCapacity = false;
+    }
+}
+
+bool BatteryService::ShowDialog(const std::string &params)
+{
+    BATTERY_HILOGD(COMP_SVC, "Enter");
+    int pos_x;
+    int pos_y;
+    int width;
+    int height;
+    bool wideScreen;
+
+    GetDisplayPosition(pos_x, pos_y, width, height, wideScreen);
+
+    if (params.empty()) {
+        return false;
+    }
+
+    Ace::UIServiceMgrClient::GetInstance()->ShowDialog(
+        "battery_dialog",
+        params,
+        OHOS::Rosen::WindowType::WINDOW_TYPE_SYSTEM_ALARM_WINDOW,
+        pos_x,
+        pos_y,
+        width,
+        height,
+        [this](int32_t id, const std::string& event, const std::string& params) {
+            BATTERY_HILOGI(COMP_SVC, "Dialog callback: %{public}s, %{public}s", event.c_str(), params.c_str());
+            if (event == "EVENT_CANCEL") {
+                Ace::UIServiceMgrClient::GetInstance()->CancelDialog(id);
+            }
+        });
+    return true;
+}
+
+void BatteryService::GetDisplayPosition(
+    int32_t& offsetX, int32_t& offsetY, int32_t& width, int32_t& height, bool& wideScreen)
+{
+    wideScreen = true;
+    auto display = Rosen::DisplayManager::GetInstance().GetDefaultDisplay();
+    if (display == nullptr) {
+        BATTERY_HILOGI(COMP_SVC, "dialog GetDefaultDisplay fail, try again.");
+        display = Rosen::DisplayManager::GetInstance().GetDefaultDisplay();
+    }
+
+    if (display != nullptr) {
+        if (display->GetWidth() < UI_WIDTH_780DP) {
+            BATTERY_HILOGI(COMP_SVC, "share dialog narrow.");
+            wideScreen = false;
+            width = UI_DIALOG_POWER_WIDTH_NARROW;
+            height = UI_DIALOG_POWER_HEIGHT_NARROW;
+        }
+        offsetX = (display->GetWidth() - width) / UI_HALF;
+        offsetY = display->GetHeight() - height - UI_DEFAULT_BUTTOM_CLIP;
+    } else {
+        BATTERY_HILOGI(COMP_SVC, "dialog get display fail, use default wide.");
+        offsetX = (UI_DEFAULT_WIDTH - width) / UI_HALF;
+        offsetY = UI_DEFAULT_HEIGHT - height - UI_DEFAULT_BUTTOM_CLIP;
+    }
 }
 
 void BatteryService::HandleTemperature(const int32_t& temperature)
