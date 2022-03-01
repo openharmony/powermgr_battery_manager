@@ -29,6 +29,7 @@
 #include "battery_service_subscriber.h"
 #include "battery_config.h"
 #include "battery_led.h"
+#include "window_manager.h"
 
 namespace OHOS {
 namespace PowerMgr {
@@ -72,6 +73,9 @@ private:
     bool InitBatteryd();
     bool IsCommonEventServiceAbilityExist();
     int32_t HandleBatteryCallbackEvent(const CallbackInfo& event);
+    void HandlePopupEvent(const int32_t capacity);
+    bool ShowDialog(const std::string &params);
+    void GetDisplayPosition(int32_t& offsetX, int32_t& offsetY, int32_t& width, int32_t& height, bool& wideScreen);
     bool ready_ {false};
     int32_t commEventRetryTimes_ {0};
     std::mutex mutex_;
