@@ -20,6 +20,9 @@
 #include "battery_log.h"
 #include "string_ex.h"
 #include "batteryd_api.h"
+#include "iservice_registry.h"
+#include "if_system_ability_manager.h"
+#include "system_ability_definition.h"
 
 using namespace OHOS::AAFwk;
 using namespace OHOS::EventFwk;
@@ -33,11 +36,20 @@ bool g_batteryConnectOnce = false;
 bool g_batteryDisconnectOnce = false;
 bool g_batteryChargingOnce = false;
 bool g_batteryDischargingOnce = false;
+bool g_commonEventInitSuccess = false;
 BatterydInfo g_batteryInfo;
 const int BATTERY_LOW_CAPACITY = 20;
 
 int32_t BatteryServiceSubscriber::Update(const BatteryInfo& info)
 {
+    if (g_commonEventInitSuccess) {
+        BATTERY_HILOGE(COMP_SVC, "common event service ability init success");
+    } else {
+        if (!IsCommonEventServiceAbilityExist()) {
+            return ERR_NO_INIT;
+        }
+    }
+
     bool isAllSuccess = true;
     bool ret = HandleBatteryChangedEvent(info);
     isAllSuccess &= ret;
@@ -56,6 +68,24 @@ int32_t BatteryServiceSubscriber::Update(const BatteryInfo& info)
     g_firstPublish = false;
 
     return isAllSuccess ? ERR_OK : ERR_NO_INIT;
+}
+
+bool BatteryServiceSubscriber::IsCommonEventServiceAbilityExist()
+{
+    sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (!sysMgr) {
+        BATTERY_HILOGI(COMP_SVC,
+            "IsCommonEventServiceAbilityExist Get ISystemAbilityManager failed, no SystemAbilityManager");
+        return false;
+    }
+    sptr<IRemoteObject> remote = sysMgr->CheckSystemAbility(COMMON_EVENT_SERVICE_ID);
+    if (!remote) {
+        BATTERY_HILOGE(COMP_SVC, "No CesServiceAbility");
+        return false;
+    }
+
+    g_commonEventInitSuccess = true;
+    return true;
 }
 
 bool BatteryServiceSubscriber::HandleBatteryChangedEvent(const BatteryInfo& info)
