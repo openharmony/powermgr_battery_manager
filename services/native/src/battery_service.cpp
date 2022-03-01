@@ -17,8 +17,6 @@
 #include <unistd.h>
 #include "battery_dump.h"
 #include "file_ex.h"
-#include "if_system_ability_manager.h"
-#include "iservice_registry.h"
 #include "system_ability_definition.h"
 #include "battery_log.h"
 #include "power_mgr_client.h"
@@ -28,8 +26,6 @@ namespace OHOS {
 namespace PowerMgr {
 namespace {
 const std::string BATTERY_SERVICE_NAME = "BatteryService";
-constexpr int32_t COMMEVENT_REGISTER_RETRY_TIMES = 10;
-constexpr int32_t COMMEVENT_REGISTER_WAIT_DELAY_US = 20000;
 constexpr int32_t HELP_DMUP_PARAM = 2;
 sptr<BatteryService> g_service;
 int32_t g_lastChargeState = 0;
@@ -94,15 +90,6 @@ bool BatteryService::Init()
         }
     }
 
-    while (commEventRetryTimes_ <= COMMEVENT_REGISTER_RETRY_TIMES) {
-        if (!IsCommonEventServiceAbilityExist()) {
-            commEventRetryTimes_++;
-            usleep(COMMEVENT_REGISTER_WAIT_DELAY_US);
-        } else {
-            commEventRetryTimes_ = 0;
-            break;
-        }
-    }
     BATTERY_HILOGI(COMP_SVC, "Success");
     return true;
 }
@@ -200,22 +187,6 @@ void BatteryService::OnStop()
     BATTERY_HILOGW(COMP_SVC, "Success");
 }
 
-bool BatteryService::IsCommonEventServiceAbilityExist()
-{
-    sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (!sysMgr) {
-        BATTERY_HILOGI(COMP_SVC,
-            "IsCommonEventServiceAbilityExist Get ISystemAbilityManager failed, no SystemAbilityManager");
-        return false;
-    }
-    sptr<IRemoteObject> remote = sysMgr->CheckSystemAbility(COMMON_EVENT_SERVICE_ID);
-    if (!remote) {
-        BATTERY_HILOGE(COMP_SVC, "No CesServiceAbility");
-        return false;
-    }
-
-    return true;
-}
 void BatteryService::WakeupDevice(const int32_t& chargestate)
 {
     BATTERY_HILOGD(COMP_SVC, "Enter");

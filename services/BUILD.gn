@@ -23,6 +23,7 @@ config("batterysrv_public_config") {
   include_dirs = [
     "native/include",
     "${battery_manager_path}/services/zidl/include",
+    "//base/hiviewdfx/hicollie/interfaces/native/innerkits/include/xcollie",
     "//drivers/peripheral/powermgr/battery/interfaces/include",
     "//drivers/peripheral/powermgr/battery/include",
     "//drivers/peripheral/powermgr/battery/interfaces/hdi_service/include",
@@ -62,6 +63,7 @@ ohos_shared_library("batteryservice") {
     "ces_standard:cesfwk_core",
     "ces_standard:cesfwk_innerkits",
     "eventhandler:libeventhandler",
+    "hicollie_native:libhicollie",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
