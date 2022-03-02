@@ -38,6 +38,7 @@ private:
     static bool HandleBatteryPowerDisconnectedEvent(const BatteryInfo& info);
     static bool HandleBatteryChargingEvent(const BatteryInfo& info);
     static bool HandleBatteryDischargingEvent(const BatteryInfo& info);
+    static bool IsCommonEventServiceAbilityExist();
 };
 } // namespace PowerMgr
 } // namespace OHOS

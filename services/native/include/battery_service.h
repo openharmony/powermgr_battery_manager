@@ -71,7 +71,6 @@ public:
 private:
     bool Init();
     bool InitBatteryd();
-    bool IsCommonEventServiceAbilityExist();
     int32_t HandleBatteryCallbackEvent(const CallbackInfo& event);
     void HandlePopupEvent(const int32_t capacity);
     bool ShowDialog(const std::string &params);
