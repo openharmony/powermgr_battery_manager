@@ -37,6 +37,8 @@ public:
     virtual bool GetPresent() override;
     virtual std::string GetTechnology() override;
     virtual int32_t GetBatteryTemperature() override;
+    virtual int32_t GetBatteryLevel() override;
+    virtual int64_t GetRemainingChargeTime() override;
 private:
     static inline BrokerDelegator<BatterySrvProxy> delegator_;
 };
