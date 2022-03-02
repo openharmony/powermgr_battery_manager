@@ -57,6 +57,12 @@ int BatterySrvStub::OnRemoteRequest(uint32_t code, MessageParcel& data, MessageP
         case static_cast<int>(IBatterySrv::BATT_GET_TEMPERATURE): {
             ret = GetBatteryTemperatureStub(reply);
         }
+        case static_cast<int>(IBatterySrv::BATT_GET_BATTERY_LEVEL): {
+            ret = GetBatteryLevelStub(reply);
+        }
+        case static_cast<int>(IBatterySrv::BATT_GET_REMAINING_CHARGE_TIME): {
+            ret = GetRemainingChargeTimeStub(reply);
+        }
         case static_cast<int>(IBatterySrv::BATT_GET_TECHNOLOGY): {
             ret = GetTechnologyStub(reply);
         }
@@ -121,6 +127,20 @@ int32_t BatterySrvStub::GetBatteryTemperatureStub(MessageParcel& reply)
 {
     int32_t ret = GetBatteryTemperature();
     WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    return ERR_OK;
+}
+
+int32_t BatterySrvStub::GetBatteryLevelStub(MessageParcel& reply)
+{
+    int32_t ret = GetBatteryLevel();
+    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    return ERR_OK;
+}
+
+int64_t BatterySrvStub::GetRemainingChargeTimeStub(MessageParcel& reply)
+{
+    int64_t ret = GetRemainingChargeTime();
+    WRITE_PARCEL_WITH_RET(reply, Int64, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 } // namespace PowerMgr

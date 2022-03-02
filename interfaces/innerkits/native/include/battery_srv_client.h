@@ -65,6 +65,14 @@ public:
      * Return the temperature of the battery, in 0.1℃.
      */
     int32_t GetBatteryTemperature();
+    /**
+     * Return the level of the battery
+     */
+    int32_t GetBatteryLevel();
+    /**
+     * Return the remaining charge time
+     */
+    int64_t GetRemainingChargeTime();
 
 private:
     class BatterySrvDeathRecipient : public IRemoteObject::DeathRecipient {
