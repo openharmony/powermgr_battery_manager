@@ -61,4 +61,7 @@ ohos_static_library("libminui") {
     "//third_party/libdrm:libdrm",
     "//third_party/libpng:libpng",
   ]
+
+  subsystem_name = "powermgr"
+  part_name = "battery_manager_native"
 }
