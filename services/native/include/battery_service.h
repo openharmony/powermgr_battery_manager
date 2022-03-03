@@ -64,6 +64,8 @@ public:
     bool GetPresent() override;
     std::string GetTechnology() override;
     int32_t GetBatteryTemperature() override;
+    int32_t GetBatteryLevel() override;
+    int64_t GetRemainingChargeTime() override;
     void ChangePath(const std::string path);
     void InitConfig();
     void WakeupDevice(const int32_t& chargestate);
@@ -72,6 +74,7 @@ private:
     bool Init();
     bool InitBatteryd();
     int32_t HandleBatteryCallbackEvent(const CallbackInfo& event);
+    void CalculateRemainingChargeTime(int32_t capacity);
     void HandlePopupEvent(const int32_t capacity);
     bool ShowDialog(const std::string &params);
     void GetDisplayPosition(int32_t& offsetX, int32_t& offsetY, int32_t& width, int32_t& height, bool& wideScreen);
@@ -83,6 +86,9 @@ private:
     sptr<BatteryServiceSubscriber> batterydSubscriber_;
     std::unique_ptr<HDI::Battery::V1_0::BatteryConfig> batteryConfig_ = nullptr;
     std::unique_ptr<HDI::Battery::V1_0::BatteryLed> batteryLed_ = nullptr;
+    int32_t lastCapacity_ = 0;
+    int64_t lastTime_ = 0;
+    int64_t remainTime_ = 0;
 };
 } // namespace PowerMgr
 } // namespace OHOS
