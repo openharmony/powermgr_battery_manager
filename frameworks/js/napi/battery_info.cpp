@@ -24,7 +24,7 @@
 
 using namespace OHOS::PowerMgr;
 
-static BatterySrvClient& g_battClient = BatterySrvClient::GetInstance();
+thread_local static BatterySrvClient& g_battClient = BatterySrvClient::GetInstance();
 
 static napi_value BatterySOC(napi_env env, napi_callback_info info)
 {
