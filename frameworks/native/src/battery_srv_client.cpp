@@ -153,5 +153,21 @@ int32_t BatterySrvClient::GetBatteryTemperature()
     BATTERY_HILOGD(FEATURE_BATT_INFO, "temperature %{public}d", temperature);
     return temperature;
 }
+
+int32_t BatterySrvClient::GetBatteryLevel()
+{
+    int32_t level = INVALID_BATT_LEVEL_VALUE;
+    RETURN_IF_WITH_RET(Connect() != ERR_OK, level);
+    level = proxy_->GetBatteryLevel();
+    return level;
+}
+
+int64_t BatterySrvClient::GetRemainingChargeTime()
+{
+    int64_t time = INVALID_REMAINING_CHARGE_TIME_VALUE;
+    RETURN_IF_WITH_RET(Connect() != ERR_OK, time);
+    time = proxy_->GetRemainingChargeTime();
+    return time;
+}
 }  // namespace PowerMgr
 }  // namespace OHOS

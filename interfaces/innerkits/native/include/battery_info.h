@@ -22,6 +22,8 @@ namespace OHOS {
 namespace PowerMgr {
 static constexpr int32_t INVALID_BATT_INT_VALUE = -1;
 static constexpr int32_t INVALID_BATT_TEMP_VALUE = 100;
+static constexpr int32_t INVALID_BATT_LEVEL_VALUE = -1;
+static constexpr int64_t INVALID_REMAINING_CHARGE_TIME_VALUE = -1;
 static const std::string INVALID_STRING_VALUE = "Invalid";
 static constexpr bool INVALID_BATT_BOOL_VALUE = true;
 
@@ -123,6 +125,41 @@ enum class BatteryPluggedType : uint32_t {
     * The bottom of the enum.
     */
     PLUGGED_TYPE_BUTT
+};
+
+/**
+ * Battery charge level of a device
+ */
+enum class BatteryLevel : uint32_t {
+    /**
+     * Unknown level
+     */
+    LEVEL_NONE,
+
+    /**
+     * High level
+     */
+    LEVEL_HIGH,
+
+    /**
+     * Normal level
+     */
+    LEVEL_NORMAL,
+
+    /**
+     * Low level
+     */
+    LEVEL_LOW,
+
+    /**
+     * Emergency level
+     */
+    LEVEL_EMERGENCY,
+
+    /**
+    * Reserved
+    */
+    LEVEL_RESERVED
 };
 
 class BatteryInfo {
