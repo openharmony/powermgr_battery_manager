@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import("//base/powermgr/battery_manager/batterymgr.gni")
+import("//base/powermgr/display_manager/displaymgr.gni")
 import("//build/ohos.gni")
 import("//foundation/appexecfwk/standard/appexecfwk.gni")
 
@@ -23,6 +24,15 @@ config("batterysrv_public_config") {
   include_dirs = [
     "native/include",
     "${battery_manager_path}/services/zidl/include",
+    "${displaymgr_native_innerkits_path}/native/src",
+    "//base/hiviewdfx/hicollie/interfaces/native/innerkits/include/xcollie",
+    "//base/startup/appspawn_standard/include/",
+    "//foundation/aafwk/standard/services/abilitymgr/include/",
+    "//foundation/aafwk/standard/services/appmgr/include",
+    "//foundation/aafwk/standard/interfaces/innerkits/app_manager/include/appmgr",
+    "//foundation/windowmanager/interfaces/innerkits/wm/",
+    "//foundation/windowmanager/utils/include",
+    "//foundation/windowmanager/interfaces/innerkits/dm",
     "//drivers/peripheral/powermgr/battery/interfaces/include",
     "//drivers/peripheral/powermgr/battery/include",
     "//drivers/peripheral/powermgr/battery/interfaces/hdi_service/include",
@@ -49,10 +59,16 @@ ohos_shared_library("batteryservice") {
 
   deps = [
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
+    "${displaymgr_native_innerkits_path}:displaymgr",
+    "//base/powermgr/battery_manager/frameworks/dialog/dialog_ui/js:dialog_js_files_etc",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
     "//drivers/peripheral/powermgr/battery/interfaces/hdi_callback:libbattery_callback",
     "//drivers/peripheral/powermgr/battery/interfaces/hdi_service:libbattery_interface_service_1.0",
+    "//foundation/aafwk/standard/services/appmgr:libams",
+    "//foundation/ace/ace_engine/interfaces/innerkits/ui_service_manager:ui_service_mgr",
+    "//foundation/graphic/standard:libwmclient",
+    "//foundation/windowmanager/utils:libwmutil",
     "//utils/native/base:utils",
   ]
 
@@ -62,10 +78,13 @@ ohos_shared_library("batteryservice") {
     "ces_standard:cesfwk_core",
     "ces_standard:cesfwk_innerkits",
     "eventhandler:libeventhandler",
+    "hicollie_native:libhicollie",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
+    "multimedia_image_standard:image_native",
     "safwk:system_ability_fwk",
     "samgr_standard:samgr_proxy",
+    "window_manager:libdm",
   ]
 
   part_name = "battery_manager_native"

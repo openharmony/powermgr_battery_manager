@@ -121,7 +121,41 @@ static napi_value GetBatteryPresent(napi_env env, napi_callback_info info)
     return napiValue;
 }
 
+static napi_value GetRemainingChargeTime(napi_env env, napi_callback_info info)
+{
+    napi_value napiValue = nullptr;
+    int64_t time = g_battClient.GetRemainingChargeTime();
+
+    NAPI_CALL(env, napi_create_int64(env, time, &napiValue));
+
+    return napiValue;
+}
+
+static napi_value GetBatteryLevel(napi_env env, napi_callback_info info)
+{
+    napi_value napiValue = nullptr;
+    int32_t batteryLevel = g_battClient.GetBatteryLevel();
+
+    NAPI_CALL(env, napi_create_int32(env, batteryLevel, &napiValue));
+
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "batteryLevel %{public}d", batteryLevel);
+    return napiValue;
+}
+
 static napi_value EnumHealthClassConstructor(napi_env env, napi_callback_info info)
+{
+    napi_value thisArg = nullptr;
+    void* data = nullptr;
+
+    napi_get_cb_info(env, info, nullptr, nullptr, &thisArg, &data);
+
+    napi_value global = nullptr;
+    napi_get_global(env, &global);
+
+    return thisArg;
+}
+
+static napi_value EnumLevelClassConstructor(napi_env env, napi_callback_info info)
 {
     napi_value thisArg = nullptr;
     void* data = nullptr;
@@ -163,6 +197,39 @@ static napi_value CreateEnumHealthState(napi_env env, napi_value exports)
         sizeof(desc) / sizeof(*desc), desc, &result);
 
     napi_set_named_property(env, exports, "BatteryHealthState", result);
+
+    return exports;
+}
+
+static napi_value CreateEnumLevelState(napi_env env, napi_value exports)
+{
+    napi_value none = nullptr;
+    napi_value high = nullptr;
+    napi_value normal = nullptr;
+    napi_value low = nullptr;
+    napi_value emergency = nullptr;
+    napi_value reserved = nullptr;
+
+    napi_create_int32(env, (int32_t)BatteryLevel::LEVEL_NONE, &none);
+    napi_create_int32(env, (int32_t)BatteryLevel::LEVEL_HIGH, &high);
+    napi_create_int32(env, (int32_t)BatteryLevel::LEVEL_NORMAL, &normal);
+    napi_create_int32(env, (int32_t)BatteryLevel::LEVEL_LOW, &low);
+    napi_create_int32(env, (int32_t)BatteryLevel::LEVEL_EMERGENCY, &emergency);
+    napi_create_int32(env, (int32_t)BatteryLevel::LEVEL_RESERVED, &reserved);
+
+    napi_property_descriptor desc[] = {
+        DECLARE_NAPI_STATIC_PROPERTY("NONE", none),
+        DECLARE_NAPI_STATIC_PROPERTY("HIGH", high),
+        DECLARE_NAPI_STATIC_PROPERTY("NORMAL", normal),
+        DECLARE_NAPI_STATIC_PROPERTY("LOW", low),
+        DECLARE_NAPI_STATIC_PROPERTY("EMERGENCY", emergency),
+        DECLARE_NAPI_STATIC_PROPERTY("RESERVED", reserved),
+    };
+    napi_value result = nullptr;
+    napi_define_class(env, "BatteryLevel", NAPI_AUTO_LENGTH, EnumLevelClassConstructor, nullptr,
+        sizeof(desc) / sizeof(*desc), desc, &result);
+
+    napi_set_named_property(env, exports, "BatteryLevel", result);
 
     return exports;
 }
@@ -266,12 +333,15 @@ static napi_value BatteryInit(napi_env env, napi_value exports)
         DECLARE_NAPI_GETTER("technology", GetTechnology),
         DECLARE_NAPI_GETTER("batteryTemperature", GetBatteryTemperature),
         DECLARE_NAPI_GETTER("isBatteryPresent", GetBatteryPresent),
+        DECLARE_NAPI_GETTER("batteryLevel", GetBatteryLevel),
+        DECLARE_NAPI_GETTER("estimateRemainingChargeTime", GetRemainingChargeTime),
     };
     NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc));
 
     CreateEnumPluggedType(env, exports);
     CreateEnumChargeState(env, exports);
     CreateEnumHealthState(env, exports);
+    CreateEnumLevelState(env, exports);
 
     BATTERY_HILOGD(COMP_FWK, "Success");
 

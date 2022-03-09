@@ -1,0 +1,5 @@
+<div class="container" onswipe="touchMove">
+    <button class="btn" onclick="onCancel">
+        {{ cancelButton }}
+    </button>
+</div>
