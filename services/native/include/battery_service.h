@@ -76,6 +76,7 @@ private:
     int32_t HandleBatteryCallbackEvent(const CallbackInfo& event);
     void CalculateRemainingChargeTime(int32_t capacity);
     void HandlePopupEvent(const int32_t capacity);
+    void HandleCapacity(const int32_t& capacity, const int32_t& chargeState);
     bool ShowDialog(const std::string &params);
     void GetDisplayPosition(int32_t& offsetX, int32_t& offsetY, int32_t& width, int32_t& height, bool& wideScreen);
     bool ready_ {false};
