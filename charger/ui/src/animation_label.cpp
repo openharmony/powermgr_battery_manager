@@ -51,9 +51,9 @@ AnimationLabel::~AnimationLabel()
 {
     needStop_ = true;
     FreeBuffer();
-    int imgSize = imgList_.size();
+    size_t imgSize = imgList_.size();
 
-    for (int i = 0; i < imgSize; i++) {
+    for (size_t i = 0; i < imgSize; i++) {
         free(imgList_[i]);
     }
     imgList_.clear();
