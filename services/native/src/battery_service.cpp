@@ -37,7 +37,6 @@ constexpr int32_t UI_DIALOG_POWER_HEIGHT_NARROW = 240;
 constexpr int32_t UI_DEFAULT_WIDTH = 2560;
 constexpr int32_t UI_DEFAULT_HEIGHT = 1600;
 constexpr int32_t UI_DEFAULT_BUTTOM_CLIP = 50 * 2;
-constexpr int32_t UI_WIDTH_780DP = 780 * 2;
 constexpr int32_t UI_HALF = 2;
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
 constexpr int32_t SEC_TO_MSEC = 1000;
@@ -292,19 +291,37 @@ void BatteryService::GetDisplayPosition(
     }
 
     if (display != nullptr) {
-        if (display->GetWidth() < UI_WIDTH_780DP) {
+        BATTERY_HILOGI(COMP_SVC, "display size: %{public}d x %{public}d",
+            display->GetWidth(), display->GetHeight());
+        if (display->GetWidth() < display->GetHeight()) {
             BATTERY_HILOGI(COMP_SVC, "share dialog narrow.");
+            const int NARROW_WIDTH_N = 3;
+            const int NARROW_WIDTH_D = 4;
+            const int NARROW_HEIGHT_RATE = 8;
             wideScreen = false;
-            width = UI_DIALOG_POWER_WIDTH_NARROW;
-            height = UI_DIALOG_POWER_HEIGHT_NARROW;
+            width = display->GetWidth() * NARROW_WIDTH_N / NARROW_WIDTH_D;
+            height = display->GetHeight() / NARROW_HEIGHT_RATE;
+        } else {
+            BATTERY_HILOGI(COMP_SVC, "share dialog wide.");
+            const int NARROW_WIDTH_N = 1;
+            const int NARROW_WIDTH_D = 3;
+            const int NARROW_HEIGHT_RATE = 6;
+            wideScreen = true;
+            width = display->GetWidth() * NARROW_WIDTH_N / NARROW_WIDTH_D;
+            height = display->GetHeight() / NARROW_HEIGHT_RATE;
         }
         offsetX = (display->GetWidth() - width) / UI_HALF;
         offsetY = display->GetHeight() - height - UI_DEFAULT_BUTTOM_CLIP;
     } else {
         BATTERY_HILOGI(COMP_SVC, "dialog get display fail, use default wide.");
+        wideScreen = false;
+        width = UI_DIALOG_POWER_WIDTH_NARROW;
+        height = UI_DIALOG_POWER_HEIGHT_NARROW;
         offsetX = (UI_DEFAULT_WIDTH - width) / UI_HALF;
         offsetY = UI_DEFAULT_HEIGHT - height - UI_DEFAULT_BUTTOM_CLIP;
     }
+    BATTERY_HILOGI(COMP_SVC, "GetDisplayPosition: %{public}d, %{public}d (%{public}d x %{public}d)",
+        offsetX, offsetY, width, height);
 }
 
 void BatteryService::HandleTemperature(const int32_t& temperature)
