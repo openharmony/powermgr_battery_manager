@@ -73,7 +73,7 @@ public:
 private:
     bool Init();
     bool InitBatteryd();
-    int32_t HandleBatteryCallbackEvent(const CallbackInfo& event);
+    int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_0::BatteryInfo& event);
     void CalculateRemainingChargeTime(int32_t capacity);
     void HandlePopupEvent(const int32_t capacity);
     void HandleCapacity(const int32_t& capacity, const int32_t& chargeState);
