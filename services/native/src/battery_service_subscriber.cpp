@@ -160,7 +160,6 @@ bool BatteryServiceSubscriber::HandleBatteryLowEvent(const BatteryInfo& info)
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
-    publishInfo.SetSticky(true);
     bool isSuccess = true;
 
     if (info.GetCapacity() > BATTERY_LOW_CAPACITY) {
@@ -191,7 +190,6 @@ bool BatteryServiceSubscriber::HandleBatteryOkayEvent(const BatteryInfo& info)
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
-    publishInfo.SetSticky(true);
     bool isSuccess = true;
 
     if (info.GetCapacity() <= BATTERY_LOW_CAPACITY) {
@@ -222,7 +220,6 @@ bool BatteryServiceSubscriber::HandleBatteryPowerConnectedEvent(const BatteryInf
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
-    publishInfo.SetSticky(true);
     bool isSuccess = true;
 
     if ((static_cast<uint32_t>(info.GetPluggedType()) == PLUGGED_TYPE_NONE) ||
@@ -256,7 +253,6 @@ bool BatteryServiceSubscriber::HandleBatteryPowerDisconnectedEvent(const Battery
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
-    publishInfo.SetSticky(true);
     bool isSuccess = true;
 
     if ((static_cast<uint32_t>(info.GetPluggedType()) != PLUGGED_TYPE_NONE) &&
@@ -290,7 +286,6 @@ bool BatteryServiceSubscriber::HandleBatteryChargingEvent(const BatteryInfo& inf
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
-    publishInfo.SetSticky(true);
     bool isSuccess = true;
 
     if (static_cast<uint32_t>(info.GetChargeState()) !=
@@ -324,7 +319,6 @@ bool BatteryServiceSubscriber::HandleBatteryDischargingEvent(const BatteryInfo& 
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
-    publishInfo.SetSticky(true);
     bool isSuccess = true;
 
     if (static_cast<uint32_t>(info.GetChargeState()) != static_cast<uint32_t>(BatteryChargeState::CHARGE_STATE_NONE)) {

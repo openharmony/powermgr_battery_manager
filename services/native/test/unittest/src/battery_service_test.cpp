@@ -135,9 +135,9 @@ HWTEST_F (BatteryServiceTest, BatteryService004, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService004 start.");
     bool present = false;
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/present", "1");
+        TestUtils::WriteMock("/data/local/tmp/battery/present", "0");
         present = g_service->GetPresent();
-        ASSERT_TRUE(present);
+        ASSERT_FALSE(present);
     } else {
         present = g_service->GetPresent();
         ASSERT_TRUE(present);
