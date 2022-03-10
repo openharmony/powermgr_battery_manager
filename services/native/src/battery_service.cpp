@@ -188,13 +188,14 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const CallbackInfo& event)
         InitConfig();
         g_initConfig = false;
     }
-    HandleTemperature(event.temperature);
     batteryLed_->UpdateLedColor(event.chargeState, event.capacity);
     WakeupDevice(event.chargeState);
     HandlePopupEvent(event.capacity);
     CalculateRemainingChargeTime(event.capacity);
 
     BatteryServiceSubscriber::Update(batteryInfo);
+    HandleTemperature(event.temperature);
+    HandleCapacity(event.capacity, event.chargeState);
     return ERR_OK;
 }
 
@@ -334,6 +335,20 @@ void BatteryService::HandleTemperature(const int32_t& temperature)
     auto& powerMgrClient = PowerMgrClient::GetInstance();
     if (((temperature <= tempConf.lower) || (temperature >= tempConf.upper)) && (tempConf.lower != tempConf.upper)) {
         std::string reason = "TemperatureOutOfRange";
+        powerMgrClient.ShutDownDevice(reason);
+    }
+
+    BATTERY_HILOGD(COMP_SVC, "Exit");
+    return;
+}
+
+void BatteryService::HandleCapacity(const int32_t& capacity, const int32_t& chargeState)
+{
+    BATTERY_HILOGD(COMP_SVC, "Enter");
+    auto& powerMgrClient = PowerMgrClient::GetInstance();
+    if ((capacity <= batteryConfig_->GetCapacityConf()) &&
+        ((chargeState == CHARGE_STATE_NONE) || (chargeState == CHARGE_STATE_RESERVED))) {
+        std::string reason = "LowCapacity";
         powerMgrClient.ShutDownDevice(reason);
     }
 
