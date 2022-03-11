@@ -159,7 +159,7 @@ void BatteryService::InitConfig()
     BATTERY_HILOGI(COMP_SVC, "Success");
 }
 
-int32_t BatteryService::HandleBatteryCallbackEvent(const CallbackInfo& event)
+int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_0::BatteryInfo& event)
 {
     BATTERY_HILOGD(COMP_SVC, "Enter");
     BatteryInfo batteryInfo;
