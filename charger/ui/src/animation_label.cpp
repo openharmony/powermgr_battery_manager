@@ -308,7 +308,7 @@ View::BRGA888Pixel* AnimationLabel::HandleLoadPng(FILE** fp, char** pictureBuffe
 void AnimationLabel::SetInterval(int ms)
 {
     HDF_LOGD("%{public}s enter", __func__);
-    intervalMs_ = ms;
+    intervalMs_ = static_cast<uint32_t>(ms);
 }
 }  // namespace V1_0
 }  // namespace Battery
