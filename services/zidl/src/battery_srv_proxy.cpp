@@ -211,5 +211,54 @@ int32_t BatterySrvProxy::GetBatteryTemperature()
     READ_PARCEL_WITH_RET(reply, Int32, temperature, INVALID_BATT_TEMP_VALUE);
     return temperature;
 }
+
+int32_t BatterySrvProxy::GetBatteryLevel()
+{
+    sptr<IRemoteObject> remote = Remote();
+    RETURN_IF_WITH_RET(remote == nullptr, INVALID_BATT_LEVEL_VALUE);
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
+        return INVALID_BATT_LEVEL_VALUE;
+    }
+
+    int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_BATTERY_LEVEL),
+        data, reply, option);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        return INVALID_BATT_LEVEL_VALUE;
+    }
+    int32_t level = INVALID_BATT_LEVEL_VALUE;
+    READ_PARCEL_WITH_RET(reply, Int32, level, INVALID_BATT_LEVEL_VALUE);
+    return level;
+}
+
+int64_t BatterySrvProxy::GetRemainingChargeTime()
+{
+    sptr<IRemoteObject> remote = Remote();
+    RETURN_IF_WITH_RET(remote == nullptr, INVALID_REMAINING_CHARGE_TIME_VALUE);
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "BatterySrvProxy::%{public}s write descriptor failed!", __func__);
+        return INVALID_REMAINING_CHARGE_TIME_VALUE;
+    }
+
+    int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_REMAINING_CHARGE_TIME),
+        data, reply, option);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "BatterySrvProxy::%{public}s SendRequest is failed, error code: %d",
+            __func__, ret);
+        return INVALID_REMAINING_CHARGE_TIME_VALUE;
+    }
+    int64_t time = INVALID_REMAINING_CHARGE_TIME_VALUE;
+    READ_PARCEL_WITH_RET(reply, Int64, time, INVALID_REMAINING_CHARGE_TIME_VALUE);
+    return time;
+}
 } // namespace PowerMgr
 } // namespace OHOS

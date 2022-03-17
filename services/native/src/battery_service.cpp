@@ -37,8 +37,14 @@ constexpr int32_t UI_DIALOG_POWER_HEIGHT_NARROW = 240;
 constexpr int32_t UI_DEFAULT_WIDTH = 2560;
 constexpr int32_t UI_DEFAULT_HEIGHT = 1600;
 constexpr int32_t UI_DEFAULT_BUTTOM_CLIP = 50 * 2;
-constexpr int32_t UI_WIDTH_780DP = 780 * 2;
 constexpr int32_t UI_HALF = 2;
+constexpr int32_t BATTERY_FULL_CAPACITY = 100;
+constexpr int32_t SEC_TO_MSEC = 1000;
+constexpr int32_t NSEC_TO_MSEC = 1000000;
+constexpr int32_t BATTERY_EMERGENCY_THRESHOLD = 5;
+constexpr int32_t BATTERY_LOW_THRESHOLD = 20;
+constexpr int32_t BATTERY_NORMAL_THRESHOLD = 90;
+constexpr int32_t BATTERY_HIGH_THRESHOLD = 95;
 sptr<BatteryService> g_service;
 int32_t g_lastChargeState = 0;
 bool g_initConfig = true;
@@ -55,6 +61,14 @@ BatteryService::BatteryService()
 }
 
 BatteryService::~BatteryService() {}
+
+static int64_t GetCurrentTime()
+{
+    timespec tm {};
+    clock_gettime(CLOCK_MONOTONIC, &tm);
+
+    return tm.tv_sec * SEC_TO_MSEC + (tm.tv_nsec / NSEC_TO_MSEC);
+}
 
 void BatteryService::OnDump()
 {
@@ -145,7 +159,7 @@ void BatteryService::InitConfig()
     BATTERY_HILOGI(COMP_SVC, "Success");
 }
 
-int32_t BatteryService::HandleBatteryCallbackEvent(const CallbackInfo& event)
+int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_0::BatteryInfo& event)
 {
     BATTERY_HILOGD(COMP_SVC, "Enter");
     BatteryInfo batteryInfo;
@@ -174,12 +188,14 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const CallbackInfo& event)
         InitConfig();
         g_initConfig = false;
     }
-    HandleTemperature(event.temperature);
     batteryLed_->UpdateLedColor(event.chargeState, event.capacity);
     WakeupDevice(event.chargeState);
     HandlePopupEvent(event.capacity);
+    CalculateRemainingChargeTime(event.capacity);
 
     BatteryServiceSubscriber::Update(batteryInfo);
+    HandleTemperature(event.temperature);
+    HandleCapacity(event.capacity, event.chargeState);
     return ERR_OK;
 }
 
@@ -276,19 +292,37 @@ void BatteryService::GetDisplayPosition(
     }
 
     if (display != nullptr) {
-        if (display->GetWidth() < UI_WIDTH_780DP) {
+        BATTERY_HILOGI(COMP_SVC, "display size: %{public}d x %{public}d",
+            display->GetWidth(), display->GetHeight());
+        if (display->GetWidth() < display->GetHeight()) {
             BATTERY_HILOGI(COMP_SVC, "share dialog narrow.");
+            const int NARROW_WIDTH_N = 3;
+            const int NARROW_WIDTH_D = 4;
+            const int NARROW_HEIGHT_RATE = 8;
             wideScreen = false;
-            width = UI_DIALOG_POWER_WIDTH_NARROW;
-            height = UI_DIALOG_POWER_HEIGHT_NARROW;
+            width = display->GetWidth() * NARROW_WIDTH_N / NARROW_WIDTH_D;
+            height = display->GetHeight() / NARROW_HEIGHT_RATE;
+        } else {
+            BATTERY_HILOGI(COMP_SVC, "share dialog wide.");
+            const int NARROW_WIDTH_N = 1;
+            const int NARROW_WIDTH_D = 3;
+            const int NARROW_HEIGHT_RATE = 6;
+            wideScreen = true;
+            width = display->GetWidth() * NARROW_WIDTH_N / NARROW_WIDTH_D;
+            height = display->GetHeight() / NARROW_HEIGHT_RATE;
         }
         offsetX = (display->GetWidth() - width) / UI_HALF;
         offsetY = display->GetHeight() - height - UI_DEFAULT_BUTTOM_CLIP;
     } else {
         BATTERY_HILOGI(COMP_SVC, "dialog get display fail, use default wide.");
+        wideScreen = false;
+        width = UI_DIALOG_POWER_WIDTH_NARROW;
+        height = UI_DIALOG_POWER_HEIGHT_NARROW;
         offsetX = (UI_DEFAULT_WIDTH - width) / UI_HALF;
         offsetY = UI_DEFAULT_HEIGHT - height - UI_DEFAULT_BUTTOM_CLIP;
     }
+    BATTERY_HILOGI(COMP_SVC, "GetDisplayPosition: %{public}d, %{public}d (%{public}d x %{public}d)",
+        offsetX, offsetY, width, height);
 }
 
 void BatteryService::HandleTemperature(const int32_t& temperature)
@@ -301,6 +335,20 @@ void BatteryService::HandleTemperature(const int32_t& temperature)
     auto& powerMgrClient = PowerMgrClient::GetInstance();
     if (((temperature <= tempConf.lower) || (temperature >= tempConf.upper)) && (tempConf.lower != tempConf.upper)) {
         std::string reason = "TemperatureOutOfRange";
+        powerMgrClient.ShutDownDevice(reason);
+    }
+
+    BATTERY_HILOGD(COMP_SVC, "Exit");
+    return;
+}
+
+void BatteryService::HandleCapacity(const int32_t& capacity, const int32_t& chargeState)
+{
+    BATTERY_HILOGD(COMP_SVC, "Enter");
+    auto& powerMgrClient = PowerMgrClient::GetInstance();
+    if ((capacity <= batteryConfig_->GetCapacityConf()) &&
+        ((chargeState == CHARGE_STATE_NONE) || (chargeState == CHARGE_STATE_RESERVED))) {
+        std::string reason = "LowCapacity";
         powerMgrClient.ShutDownDevice(reason);
     }
 
@@ -422,6 +470,50 @@ int32_t BatteryService::GetBatteryTemperature()
     }
     ibatteryInterface->GetTemperature(temperature);
     return temperature;
+}
+
+void BatteryService::CalculateRemainingChargeTime(int32_t capacity)
+{
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    if (capacity > BATTERY_FULL_CAPACITY) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "capacity error");
+        return;
+    }
+
+    int64_t onceTime = 0;
+    if (((capacity - lastCapacity_) >= 1) && (lastCapacity_ != 0)) {
+        onceTime = (GetCurrentTime() - lastTime_) / (capacity - lastCapacity_);
+        remainTime_ = (BATTERY_FULL_CAPACITY - capacity) * onceTime;
+    }
+
+    lastCapacity_ = capacity;
+    lastTime_ = GetCurrentTime();
+}
+
+int64_t BatteryService::GetRemainingChargeTime()
+{
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    return remainTime_;
+}
+
+int32_t BatteryService::GetBatteryLevel()
+{
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    int32_t batteryLevel;
+    int32_t capacity = GetCapacity();
+    if (capacity < BATTERY_EMERGENCY_THRESHOLD) {
+        batteryLevel = static_cast<int32_t>(BatteryLevel::LEVEL_EMERGENCY);
+    } else if (capacity <= BATTERY_LOW_THRESHOLD) {
+        batteryLevel = static_cast<int32_t>(BatteryLevel::LEVEL_LOW);
+    } else if (capacity <= BATTERY_NORMAL_THRESHOLD) {
+        batteryLevel = static_cast<int32_t>(BatteryLevel::LEVEL_NORMAL);
+    } else if (capacity <= BATTERY_HIGH_THRESHOLD) {
+        batteryLevel = static_cast<int32_t>(BatteryLevel::LEVEL_HIGH);
+    } else {
+        batteryLevel = static_cast<int32_t>(BatteryLevel::LEVEL_NONE);
+    }
+
+    return batteryLevel;
 }
 
 int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args)

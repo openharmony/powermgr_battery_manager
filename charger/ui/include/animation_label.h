@@ -60,7 +60,7 @@ private:
     int LoadPngInternalWithFile(FILE* fp, png_structpp pngPtr, png_infopp pngInfoPtr, struct PictureAttr& attr);
     void CopyPictureBuffer(struct PictureAttr& attr, char* pictureBufferTmp, BRGA888Pixel* pictureBuffer) const;
     Frame* parent_ {};
-    int intervalMs_ = 50;
+    uint32_t intervalMs_ = 50;
     std::vector<char*> imgList_ {};
     char* staticImgList_[255] {};
     int staticShowId_ = 0;

@@ -41,6 +41,9 @@ private:
     int32_t GetPresentStub(MessageParcel& reply);
     int32_t GetTechnologyStub(MessageParcel& reply);
     int32_t GetBatteryTemperatureStub(MessageParcel& reply);
+    int32_t GetBatteryLevelStub(MessageParcel& reply);
+    int64_t GetRemainingChargeTimeStub(MessageParcel& reply);
+    int32_t CheckRequestCode(const uint32_t code, MessageParcel& data, MessageParcel& reply, MessageOption& option);
 };
 } // namespace PowerMgr
 } // namespace OHOS
