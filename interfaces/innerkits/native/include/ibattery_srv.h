@@ -34,16 +34,20 @@ public:
         BATT_GET_PRESENT,
         BATT_GET_TEMPERATURE,
         BATT_GET_TECHNOLOGY,
+        BATT_GET_BATTERY_LEVEL,
+        BATT_GET_REMAINING_CHARGE_TIME,
     };
 
     virtual int32_t GetCapacity() = 0;
-    virtual BatteryChargeState GetChargingStatus()  = 0;
-    virtual BatteryHealthState GetHealthStatus()  = 0;
-    virtual BatteryPluggedType GetPluggedType()  = 0;
-    virtual int32_t GetVoltage()  = 0;
-    virtual bool GetPresent()  = 0;
-    virtual std::string GetTechnology()  = 0;
-    virtual int32_t GetBatteryTemperature()  = 0;
+    virtual BatteryChargeState GetChargingStatus() = 0;
+    virtual BatteryHealthState GetHealthStatus() = 0;
+    virtual BatteryPluggedType GetPluggedType() = 0;
+    virtual int32_t GetVoltage() = 0;
+    virtual bool GetPresent() = 0;
+    virtual std::string GetTechnology() = 0;
+    virtual int32_t GetBatteryTemperature() = 0;
+    virtual int32_t GetBatteryLevel() = 0;
+    virtual int64_t GetRemainingChargeTime() = 0;
 public:
     DECLARE_INTERFACE_DESCRIPTOR(u"ohos.powermgr.IBatterySrv");
 };
