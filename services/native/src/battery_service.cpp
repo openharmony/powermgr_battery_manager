@@ -25,6 +25,8 @@
 #include "ui_service_mgr_client.h"
 #include "wm_common.h"
 
+using namespace OHOS::HDI::Battery;
+
 namespace OHOS {
 namespace PowerMgr {
 namespace {

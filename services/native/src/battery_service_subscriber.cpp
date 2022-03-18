@@ -26,6 +26,7 @@
 
 using namespace OHOS::AAFwk;
 using namespace OHOS::EventFwk;
+using namespace OHOS::HDI::Battery;
 
 namespace OHOS {
 namespace PowerMgr {

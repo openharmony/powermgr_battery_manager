@@ -24,6 +24,7 @@
 
 using namespace testing::ext;
 using namespace OHOS::PowerMgr;
+using namespace OHOS::HDI::Battery;
 using namespace OHOS::EventFwk;
 using namespace OHOS;
 using namespace std;
