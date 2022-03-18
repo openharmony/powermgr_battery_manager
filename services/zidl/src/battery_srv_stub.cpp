@@ -19,6 +19,8 @@
 #include "battery_srv_proxy.h"
 #include "xcollie.h"
 
+using namespace OHOS::HDI::Battery;
+
 namespace OHOS {
 namespace PowerMgr {
 int BatterySrvStub::OnRemoteRequest(uint32_t code, MessageParcel& data, MessageParcel& reply, MessageOption& option)
