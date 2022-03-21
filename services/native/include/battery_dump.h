@@ -22,7 +22,6 @@
 #include <queue>
 
 #include "singleton.h"
-#include "battery_log.h"
 #include "battery_service.h"
 
 namespace OHOS {
