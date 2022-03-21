@@ -18,6 +18,8 @@
 #include "message_parcel.h"
 #include "power_common.h"
 
+using namespace OHOS::HDI::Battery;
+
 namespace OHOS {
 namespace PowerMgr {
 int32_t BatterySrvProxy::GetCapacity()

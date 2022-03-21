@@ -26,6 +26,7 @@
 #include "test_utils.h"
 
 using namespace testing::ext;
+using namespace OHOS::HDI::Battery;
 using namespace OHOS::PowerMgr;
 using namespace OHOS;
 using namespace std;

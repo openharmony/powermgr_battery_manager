@@ -22,6 +22,8 @@
 #include "system_ability_definition.h"
 #include "power_common.h"
 
+using namespace OHOS::HDI::Battery;
+
 namespace OHOS {
 namespace PowerMgr {
 BatterySrvClient::BatterySrvClient() {}

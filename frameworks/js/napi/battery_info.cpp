@@ -23,6 +23,7 @@
 #include "napi/native_node_api.h"
 
 using namespace OHOS::PowerMgr;
+using namespace OHOS::HDI::Battery;
 
 thread_local static BatterySrvClient& g_battClient = BatterySrvClient::GetInstance();
 
