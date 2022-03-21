@@ -16,7 +16,7 @@ import("//base/powermgr/battery_manager/batterymgr.gni")
 config("utils_config") {
   include_dirs = [
     "native/include",
-    "//drivers/peripheral/powermgr/battery/utils/include",
+    "//drivers/peripheral/battery/utils/include",
     "//utils/native/base/include",
   ]
 }
