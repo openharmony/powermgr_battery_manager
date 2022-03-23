@@ -36,7 +36,7 @@ config("batterysrv_public_config") {
     "//drivers/peripheral/battery/interfaces/include",
     "//drivers/peripheral/battery/include",
     "//drivers/peripheral/battery/interfaces/hdi_service/include",
-    "//base/powermgr/battery_manager/charger/led",
+    "//drivers/peripheral/battery/charger/led",
     "//base/powermgr/power_manager/interfaces/innerkits/native/include",
   ]
 }
