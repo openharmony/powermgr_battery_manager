@@ -29,12 +29,12 @@ public:
 
 struct BatteryLedUnitTest {};
 
-void UpdateLedColorTest(const int32_t& chargestate, const int32_t& capacity,
+void UpdateLedColorTest(int32_t chargestate, int32_t capacity,
     OHOS::HDI::Battery::V1_0::BatteryLed& batteryled);
 
 template<typename Tag, typename PrivateFun, PrivateFun privateFun>
 class UpdateLedColorImplement {
-    friend void UpdateLedColorTest(const int32_t& chargestate, const int32_t& capacity,
+    friend void UpdateLedColorTest(int32_t chargestate, int32_t capacity,
         OHOS::HDI::Battery::V1_0::BatteryLed& batteryled)
     {
         (batteryled.*privateFun)(chargestate, capacity);
