@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -44,7 +44,7 @@ const int BATTERY_LOW_CAPACITY = 20;
 int32_t BatteryServiceSubscriber::Update(const BatteryInfo& info)
 {
     if (g_commonEventInitSuccess) {
-        BATTERY_HILOGE(COMP_SVC, "common event service ability init success");
+        BATTERY_HILOGI(COMP_SVC, "common event service ability init success");
     } else {
         if (!IsCommonEventServiceAbilityExist()) {
             return ERR_NO_INIT;
