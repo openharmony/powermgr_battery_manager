@@ -45,9 +45,9 @@
         },
         "build": {
             "sub_component": [
-                "//base/powermgr/battery_manager/charger:charger_group",
-                "//base/powermgr/battery_manager/charger:led_service",
-                "//base/powermgr/battery_manager/charger:resources_service",
+                "//drivers/peripheral/battery/charger:charger_group",
+                "//drivers/peripheral/battery/charger:led_service",
+                "//drivers/peripheral/battery/charger:resources_service",
                 "//base/powermgr/battery_manager/frameworks/js/napi:batteryinfo",
                 "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client",
                 "//base/powermgr/battery_manager/sa_profile:batterymgr_sa_profile",
