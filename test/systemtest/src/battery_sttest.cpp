@@ -183,7 +183,7 @@ static int32_t ReadRedLedSysfs()
     int strlen = 10;
     char buf[128] = {0};
     int32_t readSize;
-    std::string redLedPath = "/data/local/tmp/leds/sc27xx:red/brightness";
+    std::string redLedPath = "/data/local/tmp/leds/mock_led:red/brightness";
     std::string sysRedLedPath = LEDS_BASE_PATH + "/" + g_redLedsNode + "/" + "brightness";
 
     int fd = open(sysRedLedPath.c_str(), O_RDWR);
@@ -216,7 +216,7 @@ static int32_t ReadGreenLedSysfs()
     int strlen = 10;
     char buf[128] = {0};
     int32_t readSize;
-    std::string greenLedPath = "/data/local/tmp/leds/sc27xx:green/brightness";
+    std::string greenLedPath = "/data/local/tmp/leds/mock_led:green/brightness";
     std::string sysGreenLedPath = LEDS_BASE_PATH + "/" + g_greenLedsNode + "/" + "brightness";
 
     int fd = open(sysGreenLedPath.c_str(), O_RDWR);
@@ -249,7 +249,7 @@ static int32_t ReadBlueLedSysfs()
     int strlen = 10;
     char buf[128] = {0};
     int32_t readSize;
-    std::string blueLedPath = "/data/local/tmp/leds/sc27xx:blue/brightness";
+    std::string blueLedPath = "/data/local/tmp/leds/mock_led:blue/brightness";
     std::string sysBlueLedPath = LEDS_BASE_PATH + "/" + g_blueLedsNode + "/" + "brightness";
 
     int fd = open(sysBlueLedPath.c_str(), O_RDWR);
