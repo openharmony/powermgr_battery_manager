@@ -174,6 +174,10 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_
         event.pluggedMaxCurrent, event.pluggedMaxVoltage, event.chargeState,
         event.chargeCounter, event.present, event.technology.c_str());
 
+    BATTERY_HILOGD(COMP_SVC,
+        "totalEnergy=%{public}d,curAverage=%{public}d,curNow=%{public}d,remainEngery=%{public}d", \
+        event.totalEnergy, event.curAverage, event.curNow, event.remainEnergy);
+
     batteryInfo.SetCapacity(event.capacity);
     batteryInfo.SetVoltage(event.voltage);
     batteryInfo.SetTemperature(event.temperature);
@@ -183,6 +187,10 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_
     batteryInfo.SetPluggedMaxVoltage(event.pluggedMaxVoltage);
     batteryInfo.SetChargeState(BatteryChargeState(event.chargeState));
     batteryInfo.SetChargeCounter(event.chargeCounter);
+    batteryInfo.SetTotalEnergy(event.totalEnergy);
+    batteryInfo.SetCurAverage(event.curAverage);
+    batteryInfo.SetCurNow(event.curNow);
+    batteryInfo.SetRemainEnergy(event.remainEnergy);
     batteryInfo.SetPresent(event.present);
     batteryInfo.SetTechnology(event.technology);
 
@@ -431,6 +439,7 @@ int32_t BatteryService::GetVoltage()
         BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
         return ERR_NO_INIT;
     }
+
     ibatteryInterface->GetVoltage(voltage);
     return voltage;
 }
@@ -472,6 +481,54 @@ int32_t BatteryService::GetBatteryTemperature()
     }
     ibatteryInterface->GetTemperature(temperature);
     return temperature;
+}
+
+int32_t BatteryService::GetTotalEnergy()
+{
+    int totalEnergy;
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    if (ibatteryInterface == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+        return ERR_NO_INIT;
+    }
+    ibatteryInterface->GetTotalEnergy(totalEnergy);
+    return totalEnergy;
+}
+
+int32_t BatteryService::GetCurrentAverage()
+{
+    int curAverage;
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    if (ibatteryInterface == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+        return ERR_NO_INIT;
+    }
+    ibatteryInterface->GetCurrentAverage(curAverage);
+    return curAverage;
+}
+
+int32_t BatteryService::GetCurrentNow()
+{
+    int curNow;
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    if (ibatteryInterface == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+        return ERR_NO_INIT;
+    }
+    ibatteryInterface->GetCurrentNow(curNow);
+    return curNow;
+}
+
+int32_t BatteryService::GetRemainEnergy()
+{
+    int remainEnergy;
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    if (ibatteryInterface == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+        return ERR_NO_INIT;
+    }
+    ibatteryInterface->GetRemainEnergy(remainEnergy);
+    return remainEnergy;
 }
 
 void BatteryService::CalculateRemainingChargeTime(int32_t capacity)

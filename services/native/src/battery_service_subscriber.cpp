@@ -23,10 +23,12 @@
 #include "iservice_registry.h"
 #include "if_system_ability_manager.h"
 #include "system_ability_definition.h"
+#include "hisysevent.h"
 
 using namespace OHOS::AAFwk;
 using namespace OHOS::EventFwk;
 using namespace OHOS::HDI::Battery;
+using namespace OHOS::HiviewDFX;
 
 namespace OHOS {
 namespace PowerMgr {
@@ -113,6 +115,10 @@ bool BatteryServiceSubscriber::HandleBatteryChangedEvent(const BatteryInfo& info
     bool isSuccess = true;
 
     if ((g_firstPublish == true) || (CmpBatteryInfo(info) == false)) {
+        HiSysEvent::Write(HiSysEvent::Domain::POWERMGR, "BATTERY_CHANGED", HiSysEvent::EventType::STATISTIC,
+            "level", info.GetCapacity(), "charger", static_cast<int>(info.GetPluggedType()),
+            "voltage", info.GetVoltage(), "temp", info.GetTemperature(),
+            "health", static_cast<int>(info.GetHealthState()), "current", info.GetCurNow());
         isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
         SwaptBatteryInfo(info);
     }

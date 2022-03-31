@@ -36,6 +36,10 @@ public:
         BATT_GET_TECHNOLOGY,
         BATT_GET_BATTERY_LEVEL,
         BATT_GET_REMAINING_CHARGE_TIME,
+        BATT_GET_BATTERY_TOTAL_ENERGY,
+        BATT_GET_BATTERY_CURRENT_AVERAGE,
+        BATT_GET_BATTERY_CURRENT_NOW,
+        BATT_GET_BATTERY_REMAIN_ENERGY
     };
 
     virtual int32_t GetCapacity() = 0;
@@ -45,6 +49,10 @@ public:
     virtual int32_t GetVoltage() = 0;
     virtual bool GetPresent() = 0;
     virtual std::string GetTechnology() = 0;
+    virtual int32_t GetTotalEnergy() = 0;
+    virtual int32_t GetCurrentAverage() = 0;
+    virtual int32_t GetCurrentNow() = 0;
+    virtual int32_t GetRemainEnergy() = 0;
     virtual int32_t GetBatteryTemperature() = 0;
     virtual int32_t GetBatteryLevel() = 0;
     virtual int64_t GetRemainingChargeTime() = 0;

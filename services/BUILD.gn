@@ -60,6 +60,7 @@ ohos_shared_library("batteryservice") {
   deps = [
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
     "${displaymgr_native_innerkits_path}:displaymgr",
+    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent_manager:libhisyseventmanager",
     "//base/powermgr/battery_manager/frameworks/dialog/dialog_ui/js:dialog_js_files_etc",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
@@ -79,6 +80,7 @@ ohos_shared_library("batteryservice") {
     "ces_standard:cesfwk_innerkits",
     "eventhandler:libeventhandler",
     "hicollie_native:libhicollie",
+    "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "multimedia_image_standard:image_native",
