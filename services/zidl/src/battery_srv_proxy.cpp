@@ -262,5 +262,101 @@ int64_t BatterySrvProxy::GetRemainingChargeTime()
     READ_PARCEL_WITH_RET(reply, Int64, time, INVALID_REMAINING_CHARGE_TIME_VALUE);
     return time;
 }
+
+int32_t BatterySrvProxy::GetTotalEnergy()
+{
+    sptr<IRemoteObject> remote = Remote();
+    RETURN_IF_WITH_RET(remote == nullptr, INVALID_BATT_INT_VALUE);
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
+        return INVALID_BATT_INT_VALUE;
+    }
+
+    int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_BATTERY_TOTAL_ENERGY),
+        data, reply, option);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        return INVALID_BATT_INT_VALUE;
+    }
+    int32_t totalEnergy = INVALID_BATT_INT_VALUE;
+    READ_PARCEL_WITH_RET(reply, Int32, totalEnergy, INVALID_BATT_INT_VALUE);
+    return totalEnergy;
+}
+
+int32_t BatterySrvProxy::GetCurrentAverage()
+{
+    sptr<IRemoteObject> remote = Remote();
+    RETURN_IF_WITH_RET(remote == nullptr, INVALID_BATT_INT_VALUE);
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
+        return INVALID_BATT_INT_VALUE;
+    }
+
+    int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_BATTERY_CURRENT_AVERAGE),
+        data, reply, option);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        return INVALID_BATT_INT_VALUE;
+    }
+    int32_t curAverage = INVALID_BATT_INT_VALUE;
+    READ_PARCEL_WITH_RET(reply, Int32, curAverage, INVALID_BATT_INT_VALUE);
+    return curAverage;
+}
+
+int32_t BatterySrvProxy::GetCurrentNow()
+{
+    sptr<IRemoteObject> remote = Remote();
+    RETURN_IF_WITH_RET(remote == nullptr, INVALID_BATT_INT_VALUE);
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
+        return INVALID_BATT_INT_VALUE;
+    }
+
+    int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_BATTERY_CURRENT_NOW),
+        data, reply, option);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        return INVALID_BATT_INT_VALUE;
+    }
+    int32_t curNow = INVALID_BATT_INT_VALUE;
+    READ_PARCEL_WITH_RET(reply, Int32, curNow, INVALID_BATT_INT_VALUE);
+    return curNow;
+}
+
+int32_t BatterySrvProxy::GetRemainEnergy()
+{
+    sptr<IRemoteObject> remote = Remote();
+    RETURN_IF_WITH_RET(remote == nullptr, INVALID_BATT_INT_VALUE);
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
+        return INVALID_BATT_INT_VALUE;
+    }
+
+    int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_BATTERY_REMAIN_ENERGY),
+        data, reply, option);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        return INVALID_BATT_INT_VALUE;
+    }
+    int32_t remainEnergy = INVALID_BATT_INT_VALUE;
+    READ_PARCEL_WITH_RET(reply, Int32, remainEnergy, INVALID_BATT_INT_VALUE);
+    return remainEnergy;
+}
 } // namespace PowerMgr
 } // namespace OHOS
