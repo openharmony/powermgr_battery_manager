@@ -79,7 +79,6 @@ bool BatteryDump::GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, cons
     dprintf(fd, "technology: %s \n", technology.c_str());
     int32_t temperature = service->GetBatteryTemperature();
     dprintf(fd, "temperature: %d \n", temperature);
-
     return true;
 }
 }  // namespace PowerMgr
