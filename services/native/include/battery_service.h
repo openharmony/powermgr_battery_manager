@@ -63,6 +63,10 @@ public:
     int32_t GetVoltage() override;
     bool GetPresent() override;
     std::string GetTechnology() override;
+    int32_t GetTotalEnergy() override;
+    int32_t GetCurrentAverage() override;
+    int32_t GetCurrentNow() override;
+    int32_t GetRemainEnergy() override;
     int32_t GetBatteryTemperature() override;
     int32_t GetBatteryLevel() override;
     int64_t GetRemainingChargeTime() override;

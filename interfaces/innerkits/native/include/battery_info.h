@@ -225,6 +225,26 @@ public:
         chargeCounter_ = chargeCounter;
     }
 
+    void SetTotalEnergy(const int32_t totalEnergy)
+    {
+        totalEnergy_ = totalEnergy;
+    }
+
+    void SetCurAverage(const int32_t curAverage)
+    {
+        curAverage_ = curAverage;
+    }
+
+    void SetCurNow(const int32_t curNow)
+    {
+        curNow_ = curNow;
+    }
+
+    void SetRemainEnergy(const int32_t remainEnergy)
+    {
+        remainEnergy_ = remainEnergy;
+    }
+
     void SetPresent(const bool present)
     {
         present_ = present;
@@ -275,6 +295,26 @@ public:
         return chargeState_;
     }
 
+    const int32_t& GetTotalEnergy() const
+    {
+        return totalEnergy_;
+    }
+
+    const int32_t& GetCurAverage() const
+    {
+        return curAverage_;
+    }
+
+    const int32_t& GetCurNow() const
+    {
+        return curNow_;
+    }
+
+    const int32_t& GetRemainEnergy() const
+    {
+        return remainEnergy_;
+    }
+
     const int32_t& GetChargeCounter() const
     {
         return chargeCounter_;
@@ -294,6 +334,10 @@ private:
     int32_t capacity_ = INVALID_BATT_INT_VALUE;
     int32_t voltage_ = INVALID_BATT_INT_VALUE;
     int32_t temperature_ = INVALID_BATT_TEMP_VALUE;
+    int32_t totalEnergy_ = INVALID_BATT_INT_VALUE;
+    int32_t curAverage_ = INVALID_BATT_INT_VALUE;
+    int32_t curNow_ = INVALID_BATT_INT_VALUE;
+    int32_t remainEnergy_ = INVALID_BATT_INT_VALUE;
     BatteryHealthState healthState_ = BatteryHealthState::HEALTH_STATE_BUTT;
     BatteryPluggedType pluggedType_ = BatteryPluggedType::PLUGGED_TYPE_BUTT;
     int32_t pluggedMaxCurrent_ = INVALID_BATT_INT_VALUE;
