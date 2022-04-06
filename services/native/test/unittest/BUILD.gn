@@ -60,7 +60,6 @@ ohos_unittest("test_batterysrv") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
-    "ability_runtime:intent",
     "ces_standard:cesfwk_innerkits",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
@@ -93,7 +92,6 @@ ohos_unittest("test_batterysubscriber") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
-    "ability_runtime:intent",
     "ces_standard:cesfwk_innerkits",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
