@@ -156,9 +156,36 @@ int32_t BatterySrvClient::GetBatteryTemperature()
     return temperature;
 }
 
-int32_t BatterySrvClient::GetBatteryLevel()
+int32_t BatterySrvClient::GetNowCurrent()
 {
-    int32_t level = INVALID_BATT_LEVEL_VALUE;
+    int32_t nowCurrent = INVALID_BATT_INT_VALUE;
+    RETURN_IF_WITH_RET(Connect() != ERR_OK, nowCurrent);
+    nowCurrent = proxy_->GetNowCurrent();
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "nowCurrent %{public}d", nowCurrent);
+    return nowCurrent;
+}
+
+int32_t BatterySrvClient::GetRemainEnergy()
+{
+    int32_t remainEnergy = INVALID_BATT_INT_VALUE;
+    RETURN_IF_WITH_RET(Connect() != ERR_OK, remainEnergy);
+    remainEnergy = proxy_->GetRemainEnergy();
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "remainEnergy %{public}d", remainEnergy);
+    return remainEnergy;
+}
+
+int32_t BatterySrvClient::GetTotalEnergy()
+{
+    int32_t totalEnergy = INVALID_BATT_INT_VALUE;
+    RETURN_IF_WITH_RET(Connect() != ERR_OK, totalEnergy);
+    totalEnergy = proxy_->GetTotalEnergy();
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "totalEnergy %{public}d", totalEnergy);
+    return totalEnergy;
+}
+
+BatteryLevel BatterySrvClient::GetBatteryLevel()
+{
+    BatteryLevel level = BatteryLevel::LEVEL_RESERVED;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, level);
     level = proxy_->GetBatteryLevel();
     return level;

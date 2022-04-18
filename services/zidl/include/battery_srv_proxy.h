@@ -38,10 +38,10 @@ public:
     virtual std::string GetTechnology() override;
     virtual int32_t GetTotalEnergy() override;
     virtual int32_t GetCurrentAverage() override;
-    virtual int32_t GetCurrentNow() override;
+    virtual int32_t GetNowCurrent() override;
     virtual int32_t GetRemainEnergy() override;
     virtual int32_t GetBatteryTemperature() override;
-    virtual int32_t GetBatteryLevel() override;
+    virtual BatteryLevel GetBatteryLevel() override;
     virtual int64_t GetRemainingChargeTime() override;
 private:
     static inline BrokerDelegator<BatterySrvProxy> delegator_;
