@@ -51,10 +51,10 @@ public:
     virtual std::string GetTechnology() = 0;
     virtual int32_t GetTotalEnergy() = 0;
     virtual int32_t GetCurrentAverage() = 0;
-    virtual int32_t GetCurrentNow() = 0;
+    virtual int32_t GetNowCurrent() = 0;
     virtual int32_t GetRemainEnergy() = 0;
     virtual int32_t GetBatteryTemperature() = 0;
-    virtual int32_t GetBatteryLevel() = 0;
+    virtual BatteryLevel GetBatteryLevel() = 0;
     virtual int64_t GetRemainingChargeTime() = 0;
 public:
     DECLARE_INTERFACE_DESCRIPTOR(u"ohos.powermgr.IBatterySrv");

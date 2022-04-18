@@ -72,6 +72,40 @@ declare namespace batteryInfo {
     const isBatteryPresent: boolean;
 
     /**
+     * Obtain the battery capacity level of a device.
+     * @since 9
+     */
+    const batteryCapacityLevel: BatteryCapacityLevel;
+
+    /**
+     * Estimate the remaining time to fully charge, in ms.
+     * @since 9
+     */
+    const estimatedRemainingChargeTime: number;
+
+    /**
+     * Battery total energy of the current device, in mAh.
+     * @since 9
+     * @systemapi
+     */
+    const totalEnergy: number;
+
+    /**
+     * Battery immediate current of the current device, in mA.
+     * @since 9
+     * @systemapi
+     */
+
+    const nowCurrent: number;
+
+    /**
+     * Battery remaining energy of the current device, in mAh.
+     * @since 9
+     * @systemapi
+     */
+    const remainingEnergy: number;
+
+    /**
      * Indicates the charger type of a device.
      *
      * @syscap SystemCapability.PowerManager.BatteryManager.Core
@@ -166,6 +200,109 @@ declare namespace batteryInfo {
          * @since 6
          */
         DEAD
+    }
+
+    /**
+     * Indicates the battery capacity level a device.
+     *
+     * @syscap SystemCapability.PowerManager.BatteryManager.Core
+     * @since 9
+     */
+    export enum BatteryCapacityLevel {
+        /**
+         * The battery is in unknow capacity level.
+         * @since 9
+         */
+        LEVEL_NONE,
+        /**
+         * The battery is in full capacity level.
+         * @since 9
+         */
+        LEVEL_FULL,
+        /**
+         * The battery is in high capacity level.
+         * @since 9
+         */
+        LEVEL_HIGH,
+        /**
+         * The battery is in normal capacity level.
+         * @since 9
+         */
+        LEVEL_NORMAL,
+        /**
+         * The battery is in low capacity level.
+         * @since 9
+         */
+        LEVEL_LOW,
+        /**
+         * The battery is in critical low capacity level.
+         * @since 9
+         */
+        LEVEL_CRITICAL
+    }
+
+    /**
+     * Etra key code of common event COMMON_EVENT_BATTERY_CHANGED.
+     *
+     * @syscap SystemCapability.PowerManager.BatteryManager.Core
+     * @since 9
+     */
+    export enum CommonEventBatteryChangedCode {
+        /**
+         * Extra code of state of charge (SoC).
+         * @since 9
+         */
+        EXTRA_SOC = 0,
+        /**
+         * Extra code of voltage.
+         * @since 9
+         */
+        EXTRA_VOLTAGE,
+        /**
+         * Extra code of temperature.
+         * @since 9
+         */
+        EXTRA_TEMPERATURE,
+        /**
+         * Extra code of healthState.
+         * @since 9
+         */
+        EXTRA_HEALTH_STATE,
+        /**
+         * Extra code of pluggedType.
+         * @since 9
+         */
+        EXTRA_PLUGGED_TYPE,
+        /**
+         * Extra code of maxCurrent.
+         * @since 9
+         */
+        EXTRA_MAX_CURRENT,
+        /**
+         * Extra code of maxVoltage.
+         * @since 9
+         */
+        EXTRA_MAX_VOLTAGE,
+        /**
+         * Extra code of chargeState.
+         * @since 9
+         */
+        EXTRA_CHARGE_STATE,
+        /**
+         * Extra code of chargeCounter.
+         * @since 9
+         */
+        EXTRA_CHARGE_COUNTER,
+        /**
+         * Extra code of if battery is present.
+         * @since 9
+         */
+        EXTRA_PRESENT,
+        /**
+         * Extra code of technology.
+         * @since 9
+         */
+        EXTRA_TECHNOLOGY
     }
 }
 export default batteryInfo;

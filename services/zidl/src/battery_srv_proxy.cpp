@@ -214,28 +214,28 @@ int32_t BatterySrvProxy::GetBatteryTemperature()
     return temperature;
 }
 
-int32_t BatterySrvProxy::GetBatteryLevel()
+BatteryLevel BatterySrvProxy::GetBatteryLevel()
 {
     sptr<IRemoteObject> remote = Remote();
-    RETURN_IF_WITH_RET(remote == nullptr, INVALID_BATT_LEVEL_VALUE);
+    RETURN_IF_WITH_RET(remote == nullptr, BatteryLevel::LEVEL_RESERVED);
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
-        return INVALID_BATT_LEVEL_VALUE;
+        return BatteryLevel::LEVEL_RESERVED;
     }
 
     int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_BATTERY_LEVEL),
         data, reply, option);
     if (ret != ERR_OK) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
-        return INVALID_BATT_LEVEL_VALUE;
+        return BatteryLevel::LEVEL_RESERVED;
     }
-    int32_t level = INVALID_BATT_LEVEL_VALUE;
-    READ_PARCEL_WITH_RET(reply, Int32, level, INVALID_BATT_LEVEL_VALUE);
-    return level;
+    int32_t level = static_cast<uint32_t>(BatteryLevel::LEVEL_RESERVED);
+    READ_PARCEL_WITH_RET(reply, Int32, level, BatteryLevel::LEVEL_RESERVED);
+    return static_cast<BatteryLevel>(level);
 }
 
 int64_t BatterySrvProxy::GetRemainingChargeTime()
@@ -311,7 +311,7 @@ int32_t BatterySrvProxy::GetCurrentAverage()
     return curAverage;
 }
 
-int32_t BatterySrvProxy::GetCurrentNow()
+int32_t BatterySrvProxy::GetNowCurrent()
 {
     sptr<IRemoteObject> remote = Remote();
     RETURN_IF_WITH_RET(remote == nullptr, INVALID_BATT_INT_VALUE);
@@ -330,9 +330,9 @@ int32_t BatterySrvProxy::GetCurrentNow()
         BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
         return INVALID_BATT_INT_VALUE;
     }
-    int32_t curNow = INVALID_BATT_INT_VALUE;
-    READ_PARCEL_WITH_RET(reply, Int32, curNow, INVALID_BATT_INT_VALUE);
-    return curNow;
+    int32_t nowCurr = INVALID_BATT_INT_VALUE;
+    READ_PARCEL_WITH_RET(reply, Int32, nowCurr, INVALID_BATT_INT_VALUE);
+    return nowCurr;
 }
 
 int32_t BatterySrvProxy::GetRemainEnergy()
