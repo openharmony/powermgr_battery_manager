@@ -1,6 +1,6 @@
 {
     "app": {
-      "bundleName": "com.ohos.PowerMgrPowerUnitTest",
+      "bundleName": "com.ohos.PowerBatteryUnitTest",
       "vendor": "ohos",
       "version": {
         "code": 1,
@@ -13,7 +13,7 @@
     },
     "deviceConfig": {},
     "module": {
-      "package": "com.ohos.PowerMgrPowerUnitTest",
+      "package": "com.ohos.PowerBatteryUnitTest",
       "name": ".MyApplication",
       "deviceType": [
         "phone"
@@ -36,7 +36,7 @@
               ]
             }
           ],
-          "name": "com.ohos.PowerMgrPowerUnitTest.MainAbility",
+          "name": "com.ohos.PowerBatteryUnitTest.MainAbility",
           "icon": "$media:icon",
           "description": "$string:mainability_description",
           "label": "MyApplication",
