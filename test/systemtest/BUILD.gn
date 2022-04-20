@@ -101,7 +101,7 @@ ohos_systemtest("test_systemtest") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
-    "ces_standard:cesfwk_innerkits",
+    "common_event_service:cesfwk_innerkits",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
@@ -284,8 +284,8 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
-    "ces_standard:cesfwk_core",
-    "ces_standard:cesfwk_innerkits",
+    "common_event_service:cesfwk_core",
+    "common_event_service:cesfwk_innerkits",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
@@ -339,8 +339,8 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
-    "ces_standard:cesfwk_core",
-    "ces_standard:cesfwk_innerkits",
+    "common_event_service:cesfwk_core",
+    "common_event_service:cesfwk_innerkits",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
