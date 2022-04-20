@@ -51,8 +51,7 @@ private:
 
     class BatteryInfo {
     public:
-        void GetBatteryInfo(Error& error);
-        bool DataValid();
+        bool GetBatteryInfo();
         double GetLevel();
         uint32_t IsCharging();
 
