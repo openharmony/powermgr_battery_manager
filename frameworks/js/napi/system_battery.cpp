@@ -157,7 +157,7 @@ void SystemBattery::CompleteCallback(napi_env env, napi_value options)
     }
 }
 
-void SystemBattery::Error::SetErrorMsg(int32_t code, std::string& msg)
+void SystemBattery::Error::SetErrorMsg(int32_t code, const std::string& msg)
 {
     code_ = code;
     msg_ = msg;
