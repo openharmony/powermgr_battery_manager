@@ -31,7 +31,7 @@ public:
 private:
     class Error {
     public:
-        void SetErrorMsg(int32_t code, std::string& msg);
+        void SetErrorMsg(int32_t code, const std::string& msg);
         inline bool IsError()
         {
             return !msg_.empty() && (code_ != ERR_OK);
