@@ -65,10 +65,22 @@ public:
      * Return the temperature of the battery, in 0.1℃.
      */
     int32_t GetBatteryTemperature();
+     /**
+     * Return the Current of the battery, in mA.
+     */
+    int32_t GetNowCurrent();
+    /**
+     * Return the RemainEnergy of the battery, in mAh.
+     */
+    int32_t GetRemainEnergy();
+    /**
+     * Return the GetTotalEnergy of the battery, in mAh.
+     */
+    int32_t GetTotalEnergy();
     /**
      * Return the level of the battery
      */
-    int32_t GetBatteryLevel();
+    BatteryLevel GetBatteryLevel();
     /**
      * Return the remaining charge time
      */

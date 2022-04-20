@@ -75,6 +75,15 @@ int32_t BatterySrvStub::CheckRequestCode(const uint32_t code, MessageParcel& dat
         case static_cast<int>(IBatterySrv::BATT_GET_TECHNOLOGY): {
             return GetTechnologyStub(reply);
         }
+        case static_cast<int>(IBatterySrv::BATT_GET_BATTERY_CURRENT_NOW): {
+            return GetNowCurrentStub(reply);
+        }
+        case static_cast<int>(IBatterySrv::BATT_GET_BATTERY_REMAIN_ENERGY): {
+            return GetRemainEnergyStub(reply);
+        }
+        case static_cast<int>(IBatterySrv::BATT_GET_BATTERY_TOTAL_ENERGY): {
+            return GetTotalEnergyStub(reply);
+        }
         default: {
             return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
         }
@@ -139,8 +148,8 @@ int32_t BatterySrvStub::GetBatteryTemperatureStub(MessageParcel& reply)
 
 int32_t BatterySrvStub::GetBatteryLevelStub(MessageParcel& reply)
 {
-    int32_t ret = GetBatteryLevel();
-    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    BatteryLevel ret = GetBatteryLevel();
+    WRITE_PARCEL_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
@@ -148,6 +157,24 @@ int64_t BatterySrvStub::GetRemainingChargeTimeStub(MessageParcel& reply)
 {
     int64_t ret = GetRemainingChargeTime();
     WRITE_PARCEL_WITH_RET(reply, Int64, ret, E_WRITE_PARCEL_ERROR);
+    return ERR_OK;
+}
+int32_t BatterySrvStub::GetNowCurrentStub(MessageParcel& reply)
+{
+    int32_t ret = GetNowCurrent();
+    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    return ERR_OK;
+}
+int32_t BatterySrvStub::GetRemainEnergyStub(MessageParcel& reply)
+{
+    int32_t ret = GetRemainEnergy();
+    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    return ERR_OK;
+}
+int32_t BatterySrvStub::GetTotalEnergyStub(MessageParcel& reply)
+{
+    int32_t ret = GetTotalEnergy();
+    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 } // namespace PowerMgr

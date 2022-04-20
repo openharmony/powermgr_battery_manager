@@ -137,6 +137,11 @@ enum class BatteryLevel : uint32_t {
     LEVEL_NONE,
 
     /**
+     * full level
+     */
+    LEVEL_FULL,
+
+    /**
      * High level
      */
     LEVEL_HIGH,
@@ -154,7 +159,7 @@ enum class BatteryLevel : uint32_t {
     /**
      * Emergency level
      */
-    LEVEL_EMERGENCY,
+    LEVEL_CRITICAL,
 
     /**
     * Reserved
@@ -176,6 +181,7 @@ public:
         COMMON_EVENT_CODE_CHARGE_COUNTER = 8,
         COMMON_EVENT_CODE_PRESENT = 9,
         COMMON_EVENT_CODE_TECHNOLOGY = 10,
+        COMMON_EVENT_CODE_PLUGGED_NOW_CURRENT = 11,
     };
 
     BatteryInfo() = default;
@@ -235,9 +241,9 @@ public:
         curAverage_ = curAverage;
     }
 
-    void SetCurNow(const int32_t curNow)
+    void SetNowCurrent(const int32_t nowCurr)
     {
-        curNow_ = curNow;
+        nowCurr_ = nowCurr;
     }
 
     void SetRemainEnergy(const int32_t remainEnergy)
@@ -305,9 +311,9 @@ public:
         return curAverage_;
     }
 
-    const int32_t& GetCurNow() const
+    const int32_t& GetNowCurrent() const
     {
-        return curNow_;
+        return nowCurr_;
     }
 
     const int32_t& GetRemainEnergy() const
@@ -336,7 +342,7 @@ private:
     int32_t temperature_ = INVALID_BATT_TEMP_VALUE;
     int32_t totalEnergy_ = INVALID_BATT_INT_VALUE;
     int32_t curAverage_ = INVALID_BATT_INT_VALUE;
-    int32_t curNow_ = INVALID_BATT_INT_VALUE;
+    int32_t nowCurr_ = INVALID_BATT_INT_VALUE;
     int32_t remainEnergy_ = INVALID_BATT_INT_VALUE;
     BatteryHealthState healthState_ = BatteryHealthState::HEALTH_STATE_BUTT;
     BatteryPluggedType pluggedType_ = BatteryPluggedType::PLUGGED_TYPE_BUTT;

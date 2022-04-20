@@ -106,6 +106,7 @@ bool BatteryServiceSubscriber::HandleBatteryChangedEvent(const BatteryInfo& info
     want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CHARGE_COUNTER), info.GetChargeCounter());
     want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PRESENT), info.IsPresent());
     want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_TECHNOLOGY), info.GetTechnology());
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_NOW_CURRENT), info.GetNowCurrent());
 
     want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED);
     CommonEventData data;
@@ -118,7 +119,7 @@ bool BatteryServiceSubscriber::HandleBatteryChangedEvent(const BatteryInfo& info
         HiSysEvent::Write(HiSysEvent::Domain::POWERMGR, "BATTERY_CHANGED", HiSysEvent::EventType::STATISTIC,
             "level", info.GetCapacity(), "charger", static_cast<int>(info.GetPluggedType()),
             "voltage", info.GetVoltage(), "temp", info.GetTemperature(),
-            "health", static_cast<int>(info.GetHealthState()), "current", info.GetCurNow());
+            "health", static_cast<int>(info.GetHealthState()), "current", info.GetNowCurrent());
         isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
         SwaptBatteryInfo(info);
     }
@@ -141,7 +142,8 @@ bool BatteryServiceSubscriber::CmpBatteryInfo(const BatteryInfo& info)
             (g_batteryInfo.pluggedMaxVoltage_ == info.GetPluggedMaxVoltage()) &&
             (g_batteryInfo.chargeState_ == static_cast<int32_t>(info.GetChargeState())) &&
             (g_batteryInfo.chargeCounter_ == info.GetChargeCounter()) &&
-            (g_batteryInfo.present_ == info.IsPresent()));
+            (g_batteryInfo.present_ == info.IsPresent()) &&
+            (g_batteryInfo.curNow_) == info.GetNowCurrent());
 }
 
 void BatteryServiceSubscriber::SwaptBatteryInfo(const BatteryInfo& info)
@@ -157,6 +159,7 @@ void BatteryServiceSubscriber::SwaptBatteryInfo(const BatteryInfo& info)
     g_batteryInfo.chargeState_ = static_cast<int32_t>(info.GetChargeState());
     g_batteryInfo.chargeCounter_ = info.GetChargeCounter();
     g_batteryInfo.present_ = info.IsPresent();
+    g_batteryInfo.curNow_ = info.GetNowCurrent();
 }
 
 bool BatteryServiceSubscriber::HandleBatteryLowEvent(const BatteryInfo& info)

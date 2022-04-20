@@ -47,6 +47,7 @@ constexpr int32_t BATTERY_EMERGENCY_THRESHOLD = 5;
 constexpr int32_t BATTERY_LOW_THRESHOLD = 20;
 constexpr int32_t BATTERY_NORMAL_THRESHOLD = 90;
 constexpr int32_t BATTERY_HIGH_THRESHOLD = 95;
+constexpr int32_t BATTERY_HIGH_FULL = 100;
 sptr<BatteryService> g_service;
 int32_t g_lastChargeState = 0;
 bool g_initConfig = true;
@@ -169,14 +170,14 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_
         "capacity=%{public}d, voltage=%{public}d, temperature=%{public}d, " \
         "healthState=%{public}d, pluggedType=%{public}d, pluggedMaxCurrent=%{public}d, " \
         "pluggedMaxVoltage=%{public}d, chargeState=%{public}d, chargeCounter=%{public}d, present=%{public}d, " \
-        "technology=%{public}s", event.capacity, event.voltage,
+        "technology=%{public}s, currnow=%{public}d", event.capacity, event.voltage,
         event.temperature, event.healthState, event.pluggedType,
         event.pluggedMaxCurrent, event.pluggedMaxVoltage, event.chargeState,
-        event.chargeCounter, event.present, event.technology.c_str());
+        event.chargeCounter, event.present, event.technology.c_str(), event.curNow);
 
     BATTERY_HILOGD(COMP_SVC,
-        "totalEnergy=%{public}d,curAverage=%{public}d,curNow=%{public}d,remainEngery=%{public}d", \
-        event.totalEnergy, event.curAverage, event.curNow, event.remainEnergy);
+        "totalEnergy=%{public}d,curAverage=%{public}d,remainEngery=%{public}d", \
+        event.totalEnergy, event.curAverage, event.remainEnergy);
 
     batteryInfo.SetCapacity(event.capacity);
     batteryInfo.SetVoltage(event.voltage);
@@ -189,10 +190,10 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_
     batteryInfo.SetChargeCounter(event.chargeCounter);
     batteryInfo.SetTotalEnergy(event.totalEnergy);
     batteryInfo.SetCurAverage(event.curAverage);
-    batteryInfo.SetCurNow(event.curNow);
     batteryInfo.SetRemainEnergy(event.remainEnergy);
     batteryInfo.SetPresent(event.present);
     batteryInfo.SetTechnology(event.technology);
+    batteryInfo.SetNowCurrent(event.curNow);
 
     if (g_initConfig) {
         InitConfig();
@@ -507,16 +508,16 @@ int32_t BatteryService::GetCurrentAverage()
     return curAverage;
 }
 
-int32_t BatteryService::GetCurrentNow()
+int32_t BatteryService::GetNowCurrent()
 {
-    int curNow;
+    int nowCurr;
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     if (ibatteryInterface == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
         return ERR_NO_INIT;
     }
-    ibatteryInterface->GetCurrentNow(curNow);
-    return curNow;
+    ibatteryInterface->GetCurrentNow(nowCurr);
+    return nowCurr;
 }
 
 int32_t BatteryService::GetRemainEnergy()
@@ -555,21 +556,23 @@ int64_t BatteryService::GetRemainingChargeTime()
     return remainTime_;
 }
 
-int32_t BatteryService::GetBatteryLevel()
+BatteryLevel BatteryService::GetBatteryLevel()
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    int32_t batteryLevel;
+    BatteryLevel batteryLevel;
     int32_t capacity = GetCapacity();
     if (capacity < BATTERY_EMERGENCY_THRESHOLD) {
-        batteryLevel = static_cast<int32_t>(BatteryLevel::LEVEL_EMERGENCY);
+        batteryLevel = BatteryLevel::LEVEL_CRITICAL;
     } else if (capacity <= BATTERY_LOW_THRESHOLD) {
-        batteryLevel = static_cast<int32_t>(BatteryLevel::LEVEL_LOW);
+        batteryLevel = BatteryLevel::LEVEL_LOW;
     } else if (capacity <= BATTERY_NORMAL_THRESHOLD) {
-        batteryLevel = static_cast<int32_t>(BatteryLevel::LEVEL_NORMAL);
+        batteryLevel = BatteryLevel::LEVEL_NORMAL;
     } else if (capacity <= BATTERY_HIGH_THRESHOLD) {
-        batteryLevel = static_cast<int32_t>(BatteryLevel::LEVEL_HIGH);
+        batteryLevel = BatteryLevel::LEVEL_HIGH;
+    } else if (capacity == BATTERY_HIGH_FULL) {
+        batteryLevel = BatteryLevel::LEVEL_FULL;
     } else {
-        batteryLevel = static_cast<int32_t>(BatteryLevel::LEVEL_NONE);
+        batteryLevel = BatteryLevel::LEVEL_NONE;
     }
 
     return batteryLevel;
