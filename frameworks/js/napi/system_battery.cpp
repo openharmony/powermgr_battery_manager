@@ -29,28 +29,27 @@ const uint32_t MAX_ARGC = 1;
 const uint32_t ARGC_ONE = 0;
 const double LEVEL_RANGES = 0.01;
 
-const int32_t GET_ERROR_CODE = -1;
-const int32_t CALLBACK_ERROR_CODE = -2;
-const int32_t RESPONSE_ERROR_CODE = -3;
-const int32_t OPTIONS_ERROR_CODE = -4;
-
 const std::string RESPONSE_CHARGING = "charging";
 const std::string RESPONSE_LEVEL = "level";
 const std::string FUNC_SUCEESS_NAME = "success";
 const std::string FUNC_FAIL_NAME = "fail";
 const std::string FUNC_COMPLETE_NAME = "complete";
+
+const uint32_t COMMON_ERROR_COED = 200;
+const std::string GET_BATTERY_ERROR_MSG = "Battery level is not available";
 }
 
 void SystemBattery::GetBatteryStats(napi_env env, napi_value options)
 {
     RETURN_IF(!CheckValueType(env, options, napi_object));
 
-    batteryInfo_.GetBatteryInfo(error_);
-    if (batteryInfo_.DataValid()) {
+    if (!batteryInfo_.GetBatteryInfo()) {
+        error_.SetErrorMsg(COMMON_ERROR_COED, GET_BATTERY_ERROR_MSG);
+    }
+    if (!error_.IsError()) {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "Call the js success method");
         SuccessCallback(env, options);
-    }
-    if (error_.IsError()) {
+    } else {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "Call the js fail method");
         FailCallback(env, options);
     }
@@ -88,13 +87,11 @@ napi_value SystemBattery::GetOptionsFunc(napi_env env, napi_value options, const
     napi_value property = nullptr;
     napi_status status = napi_get_named_property(env, options, name.c_str(), &property);
     if (status != napi_ok) {
-        std::string msg = "Failed to obtain " + name;
-        error_.SetErrorMsg(OPTIONS_ERROR_CODE, msg);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Failed to obtain %{public}s", name.c_str());
         return nullptr;
     }
     if (!CheckValueType(env, property, napi_function)) {
-        std::string msg = "The " + name + " argument is not a function";
-        error_.SetErrorMsg(OPTIONS_ERROR_CODE, msg);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "The %{public}s argument is not a function", name.c_str());
         return nullptr;
     }
     return property;
@@ -108,8 +105,7 @@ void SystemBattery::SuccessCallback(napi_env env, napi_value options)
 
     argv = CreateResponse(env);
     if (argv == nullptr) {
-        std::string msg = "Failed to create BatteryResponse";
-        error_.SetErrorMsg(RESPONSE_ERROR_CODE, msg);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Failed to create BatteryResponse");
         return;
     }
 
@@ -117,8 +113,7 @@ void SystemBattery::SuccessCallback(napi_env env, napi_value options)
     const size_t argc = 1;
     napi_status status = napi_call_function(env, nullptr, success, argc, &argv, &callResult);
     if (status != napi_ok) {
-        std::string msg = "Failed to execute the callback function SUCCESS";
-        error_.SetErrorMsg(CALLBACK_ERROR_CODE, msg);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Failed to execute the callback function SUCCESS");
         return;
     }
     BATTERY_HILOGI(FEATURE_BATT_INFO, "Callbacks to incoming parameters, level: %{public}f, isCharging: %{public}d",
@@ -162,7 +157,7 @@ void SystemBattery::CompleteCallback(napi_env env, napi_value options)
     }
 }
 
-void SystemBattery::Error::SetErrorMsg(int32_t code, std::string& msg)
+void SystemBattery::Error::SetErrorMsg(int32_t code, const std::string& msg)
 {
     code_ = code;
     msg_ = msg;
@@ -170,22 +165,13 @@ void SystemBattery::Error::SetErrorMsg(int32_t code, std::string& msg)
         code_, msg_.c_str());
 }
 
-void SystemBattery::BatteryInfo::GetBatteryInfo(Error& error)
+bool SystemBattery::BatteryInfo::GetBatteryInfo()
 {
     BatterySrvClient& g_battClient = BatterySrvClient::GetInstance();
     capacity_ = g_battClient.GetCapacity();
     chargingState_ = g_battClient.GetChargingStatus();
     BATTERY_HILOGI(FEATURE_BATT_INFO, "Get battery info, capacity: %{public}d, charging: %{public}d",
         capacity_, static_cast<int32_t>(chargingState_));
-
-    if (!DataValid()) {
-        std::string msg = "The current charging status and quantity information cannot be obtained";
-        error.SetErrorMsg(GET_ERROR_CODE, msg);
-    }
-}
-
-bool SystemBattery::BatteryInfo::DataValid()
-{
     return (capacity_ != INVALID_BATT_INT_VALUE) && (chargingState_ != BatteryChargeState::CHARGE_STATE_BUTT);
 }
 
@@ -197,7 +183,8 @@ double SystemBattery::BatteryInfo::GetLevel()
 
 uint32_t SystemBattery::BatteryInfo::IsCharging()
 {
-    return static_cast<uint32_t>(chargingState_ == BatteryChargeState::CHARGE_STATE_ENABLE);
+    return static_cast<uint32_t>(chargingState_ == BatteryChargeState::CHARGE_STATE_ENABLE ||
+        chargingState_ == BatteryChargeState::CHARGE_STATE_FULL);
 }
 
 static napi_value GetStatus(napi_env env, napi_callback_info info)
