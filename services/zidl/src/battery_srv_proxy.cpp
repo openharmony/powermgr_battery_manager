@@ -233,8 +233,8 @@ BatteryLevel BatterySrvProxy::GetBatteryLevel()
         BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
         return BatteryLevel::LEVEL_RESERVED;
     }
-    int32_t level = static_cast<uint32_t>(BatteryLevel::LEVEL_RESERVED);
-    READ_PARCEL_WITH_RET(reply, Int32, level, BatteryLevel::LEVEL_RESERVED);
+    uint32_t level = static_cast<uint32_t>(BatteryLevel::LEVEL_RESERVED);
+    READ_PARCEL_WITH_RET(reply, Uint32, level, BatteryLevel::LEVEL_RESERVED);
     return static_cast<BatteryLevel>(level);
 }
 
