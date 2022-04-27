@@ -25,6 +25,11 @@ class BatteryService;
 
 class BatteryServiceEventHandler : public AppExecFwk::EventHandler {
 public:
+    enum {
+        EVENT_RETRY_REGISTER_HDI_STATUS_LISTENER,
+        EVENT_REGISTER_BATTERY_HDI_CALLBACK
+    };
+
     BatteryServiceEventHandler(const std::shared_ptr<AppExecFwk::EventRunner>& runner,
         const wptr<BatteryService>& service);
     ~BatteryServiceEventHandler() = default;
