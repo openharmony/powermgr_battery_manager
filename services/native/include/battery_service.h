@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,20 +16,22 @@
 #ifndef POWERMGR_BATTERY_SERVICE_H
 #define POWERMGR_BATTERY_SERVICE_H
 
+#include "iremote_object.h"
 #include "sp_singleton.h"
 #include "system_ability.h"
-#include "iremote_object.h"
-#include "ibattery_srv.h"
-#include "batteryd_api.h"
-#include "battery_service_subscriber.h"
-#include "battery_srv_stub.h"
-#include "battery_service_event_handler.h"
-#include "battery_callback_impl.h"
 #include "types.h"
-#include "battery_service_subscriber.h"
+#include "v1_0/battery_interface_proxy.h"
+#include "window_manager.h"
+
+#include "batteryd_api.h"
+#include "battery_callback_impl.h"
 #include "battery_config.h"
 #include "battery_led.h"
-#include "window_manager.h"
+#include "battery_service_event_handler.h"
+#include "battery_service_subscriber.h"
+#include "battery_srv_stub.h"
+#include "hdi_service_status_listener.h"
+#include "ibattery_srv.h"
 
 namespace OHOS {
 namespace PowerMgr {
@@ -74,10 +76,12 @@ public:
     void InitConfig();
     void WakeupDevice(const int32_t& chargestate);
     void HandleTemperature(const int32_t& temperature);
+    void RegisterHdiStatusListener();
+    void RegisterBatteryHdiCallback();
 private:
     bool Init();
-    bool InitBatteryd();
     int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_0::BatteryInfo& event);
+    void SendEvent(int32_t event, int64_t delayTime);
     void CalculateRemainingChargeTime(int32_t capacity);
     void HandlePopupEvent(const int32_t capacity);
     void HandleCapacity(const int32_t& capacity, const int32_t& chargeState);
@@ -91,6 +95,9 @@ private:
     sptr<BatteryServiceSubscriber> batterydSubscriber_;
     std::unique_ptr<HDI::Battery::V1_0::BatteryConfig> batteryConfig_ = nullptr;
     std::unique_ptr<HDI::Battery::V1_0::BatteryLed> batteryLed_ = nullptr;
+    sptr<IBatteryInterface> iBatteryInterface_ = nullptr;
+    sptr<OHOS::HDI::ServiceManager::V1_0::IServiceManager> hdiServiceMgr_ { nullptr };
+    sptr<HdiServiceStatusListener::IServStatListener> hdiServStatListener_ { nullptr };
     int32_t lastCapacity_ = 0;
     int64_t lastTime_ = 0;
     int64_t remainTime_ = 0;
