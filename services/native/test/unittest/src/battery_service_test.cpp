@@ -32,6 +32,7 @@ using namespace std;
 namespace {
 bool g_isMock = false;
 static sptr<BatteryService> g_service;
+constexpr uint32_t WAITING = 3;
 }
 
 void BatteryServiceTest::SetUpTestCase(void)
@@ -67,6 +68,7 @@ void BatteryServiceTest::TearDown(void)
  */
 static HWTEST_F (BatteryServiceTest, BatteryService001, TestSize.Level1)
 {
+    sleep(WAITING);
     BATTERY_HILOGD(LABEL_TEST, "BatteryService::BatteryService001 start.");
     int32_t capacity = -1;
     if (g_isMock) {
