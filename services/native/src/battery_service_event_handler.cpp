@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,6 +28,26 @@ BatteryServiceEventHandler::BatteryServiceEventHandler(const std::shared_ptr<App
     BATTERY_HILOGD(COMP_SVC, "Instance created");
 }
 
-void BatteryServiceEventHandler::ProcessEvent([[maybe_unused]] const AppExecFwk::InnerEvent::Pointer& event) {}
+void BatteryServiceEventHandler::ProcessEvent(const AppExecFwk::InnerEvent::Pointer& event)
+{
+    auto bmsptr = service_.promote();
+    if (bmsptr == nullptr) {
+        BATTERY_HILOGE(COMP_SVC, "Battery service is nullptr");
+        return;
+    }
+    BATTERY_HILOGI(COMP_SVC, "Start to process, eventId: %{public}d", event->GetInnerEventId());
+    switch (event->GetInnerEventId()) {
+        case EVENT_RETRY_REGISTER_HDI_STATUS_LISTENER: {
+            bmsptr->RegisterHdiStatusListener();
+            break;
+        }
+        case EVENT_REGISTER_BATTERY_HDI_CALLBACK: {
+            bmsptr->RegisterBatteryHdiCallback();
+            break;
+        }
+        default:
+            BATTERY_HILOGW(COMP_SVC, "No matched event id");
+    }
+}
 } // namespace PowerMgr
 } // namespace OHOS

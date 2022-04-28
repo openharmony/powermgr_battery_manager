@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,16 +14,19 @@
  */
 
 #include "battery_service.h"
+
 #include <unistd.h>
-#include "battery_dump.h"
-#include "file_ex.h"
-#include "system_ability_definition.h"
-#include "battery_log.h"
-#include "power_mgr_client.h"
-#include "v1_0/battery_interface_proxy.h"
+
 #include "display_manager.h"
+#include "file_ex.h"
+#include "power_mgr_client.h"
+#include "system_ability_definition.h"
 #include "ui_service_mgr_client.h"
 #include "wm_common.h"
+
+#include "battery_dump.h"
+#include "battery_log.h"
+#include "power_common.h"
 
 using namespace OHOS::HDI::Battery;
 
@@ -31,6 +34,7 @@ namespace OHOS {
 namespace PowerMgr {
 namespace {
 const std::string BATTERY_SERVICE_NAME = "BatteryService";
+const std::string HDI_SERVICE_NAME = "battery_interface_service";
 const std::string BATTERY_LOW_CAPACITY_PARAMS = "{\"cancelButton\":\"LowCapacity\"}";
 constexpr int32_t HELP_DMUP_PARAM = 2;
 constexpr int32_t BATTERY_LOW_CAPACITY = 10;
@@ -48,6 +52,7 @@ constexpr int32_t BATTERY_LOW_THRESHOLD = 20;
 constexpr int32_t BATTERY_NORMAL_THRESHOLD = 90;
 constexpr int32_t BATTERY_HIGH_THRESHOLD = 95;
 constexpr int32_t BATTERY_HIGH_FULL = 100;
+constexpr uint32_t RETRY_TIME = 1000;
 sptr<BatteryService> g_service;
 int32_t g_lastChargeState = 0;
 bool g_initConfig = true;
@@ -56,7 +61,6 @@ bool g_lastLowCapacity = false;
 
 const bool G_REGISTER_RESULT = SystemAbility::MakeAndRegisterAbility(
     DelayedSpSingleton<BatteryService>::GetInstance().GetRefPtr());
-sptr<IBatteryInterface> ibatteryInterface;
 
 BatteryService::BatteryService()
     : SystemAbility(POWER_MANAGER_BATT_SERVICE_ID, true)
@@ -89,10 +93,7 @@ void BatteryService::OnStart()
         BATTERY_HILOGE(COMP_SVC, "Call init failed");
         return;
     }
-    if (!(InitBatteryd())) {
-        BATTERY_HILOGE(COMP_SVC, "Call initBatteryd failed");
-        return;
-    }
+    RegisterHdiStatusListener();
     if (!Publish(this)) {
         BATTERY_HILOGE(COMP_SVC, "Register to system ability manager failed");
         return;
@@ -124,23 +125,21 @@ bool BatteryService::Init()
     return true;
 }
 
-bool BatteryService::InitBatteryd()
+void BatteryService::RegisterBatteryHdiCallback()
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
-    sptr<OHOS::HDI::Battery::V1_0::IBatteryCallback> callback =  new OHOS::HDI::Battery::V1_0::BatteryCallbackImpl();
-    ibatteryInterface = OHOS::HDI::Battery::V1_0::IBatteryInterface::Get();
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(COMP_SVC, "ibatteryInterface is nullptr");
-        return false;
+    BATTERY_HILOGD(COMP_SVC, "register battery hdi callback");
+    if (iBatteryInterface_ == nullptr) {
+        iBatteryInterface_ = IBatteryInterface::Get();
+        RETURN_IF_WITH_LOG(iBatteryInterface_ == nullptr, "failed to get battery hdi interface");
     }
-    ErrCode ret = ibatteryInterface->Register(callback);
+    sptr<V1_0::IBatteryCallback> callback = new V1_0::BatteryCallbackImpl();
+    ErrCode ret = iBatteryInterface_->Register(callback);
 
     BatteryCallbackImpl::BatteryEventCallback eventCb =
         std::bind(&BatteryService::HandleBatteryCallbackEvent, this, std::placeholders::_1);
     BatteryCallbackImpl::RegisterBatteryEvent(eventCb);
 
-    BATTERY_HILOGD(COMP_SVC, "InitBatteryd ret: %{public}d", ret);
-    return SUCCEEDED(ret);
+    BATTERY_HILOGD(COMP_SVC, "register battery hdi callback end ret: %{public}d", ret);
 }
 
 void BatteryService::InitConfig()
@@ -210,6 +209,45 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_
     return ERR_OK;
 }
 
+void BatteryService::RegisterHdiStatusListener()
+{
+    BATTERY_HILOGD(COMP_SVC, "battery rigister Hdi status listener");
+    hdiServiceMgr_ = OHOS::HDI::ServiceManager::V1_0::IServiceManager::Get();
+    if (hdiServiceMgr_ == nullptr) {
+        BATTERY_HILOGW(COMP_SVC, "hdi service manager is nullptr, Try again after %{public}u second", RETRY_TIME);
+        SendEvent(BatteryServiceEventHandler::EVENT_RETRY_REGISTER_HDI_STATUS_LISTENER, RETRY_TIME);
+        return;
+    }
+
+    hdiServStatListener_ = new HdiServiceStatusListener(HdiServiceStatusListener::StatusCallback(
+        [&](const OHOS::HDI::ServiceManager::V1_0::ServiceStatus &status) {
+            RETURN_IF(status.serviceName != HDI_SERVICE_NAME || status.deviceClass != DEVICE_CLASS_DEFAULT);
+
+            if (status.status == SERVIE_STATUS_START) {
+                SendEvent(BatteryServiceEventHandler::EVENT_REGISTER_BATTERY_HDI_CALLBACK, 0);        
+                BATTERY_HILOGD(COMP_SVC, "battery interface service start");
+            } else if (status.status == SERVIE_STATUS_STOP && iBatteryInterface_) {
+                iBatteryInterface_->UnRegister();
+                iBatteryInterface_ = nullptr;
+                BATTERY_HILOGW(COMP_SVC, "battery interface service stop, unregister interface");
+            }
+        }
+    ));
+
+    int32_t status = hdiServiceMgr_->RegisterServiceStatusListener(hdiServStatListener_, DEVICE_CLASS_DEFAULT);
+    if (status != ERR_OK) {
+        BATTERY_HILOGW(COMP_SVC, "Register hdi failed, Try again after %{public}u second", RETRY_TIME);
+        SendEvent(BatteryServiceEventHandler::EVENT_RETRY_REGISTER_HDI_STATUS_LISTENER, RETRY_TIME);
+    }
+}
+
+void BatteryService::SendEvent(int32_t event, int64_t delayTime)
+{
+    RETURN_IF_WITH_LOG(handler_ == nullptr, "handler is nullptr");
+    handler_->RemoveEvent(event);
+    handler_->SendEvent(event, 0, delayTime);
+}
+
 void BatteryService::OnStop()
 {
     BATTERY_HILOGW(COMP_SVC, "Enter");
@@ -220,11 +258,14 @@ void BatteryService::OnStop()
     handler_.reset();
     ready_ = false;
 
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(COMP_SVC, "ibatteryInterface is nullptr");
-        return;
+    if (iBatteryInterface_ != nullptr) {
+        iBatteryInterface_->UnRegister();
+        iBatteryInterface_ = nullptr;    
     }
-    ibatteryInterface->UnRegister();
+    if (hdiServiceMgr_ != nullptr) {
+        hdiServiceMgr_->UnregisterServiceStatusListener(hdiServStatListener_);
+        hdiServiceMgr_ = nullptr;
+    }
     BATTERY_HILOGW(COMP_SVC, "Success");
 }
 
@@ -371,22 +412,22 @@ int32_t BatteryService::GetCapacity()
 {
     int capacity;
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
     }
-    ibatteryInterface->GetCapacity(capacity);
+    iBatteryInterface_->GetCapacity(capacity);
     return capacity;
 }
 
 void BatteryService::ChangePath(const std::string path)
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
     }
-    ibatteryInterface->ChangePath(path);
+    iBatteryInterface_->ChangePath(path);
     return;
 }
 
@@ -395,12 +436,12 @@ BatteryChargeState BatteryService::GetChargingStatus()
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     OHOS::HDI::Battery::V1_0::BatteryChargeState chargeState = OHOS::HDI::Battery::V1_0::BatteryChargeState(0);
 
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return OHOS::PowerMgr::BatteryChargeState(chargeState);
     }
 
-    ibatteryInterface->GetChargeState(chargeState);
+    iBatteryInterface_->GetChargeState(chargeState);
     return OHOS::PowerMgr::BatteryChargeState(chargeState);
 }
 
@@ -409,12 +450,12 @@ BatteryHealthState BatteryService::GetHealthStatus()
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     OHOS::HDI::Battery::V1_0::BatteryHealthState healthState = OHOS::HDI::Battery::V1_0::BatteryHealthState(0);
 
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return OHOS::PowerMgr::BatteryHealthState(healthState);
     }
 
-    ibatteryInterface->GetHealthState(healthState);
+    iBatteryInterface_->GetHealthState(healthState);
     return OHOS::PowerMgr::BatteryHealthState(healthState);
 }
 
@@ -423,12 +464,12 @@ BatteryPluggedType BatteryService::GetPluggedType()
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     OHOS::HDI::Battery::V1_0::BatteryPluggedType pluggedType = OHOS::HDI::Battery::V1_0::BatteryPluggedType(0);
 
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return OHOS::PowerMgr::BatteryPluggedType(pluggedType);
     }
 
-    ibatteryInterface->GetPluggedType(pluggedType);
+    iBatteryInterface_->GetPluggedType(pluggedType);
     return OHOS::PowerMgr::BatteryPluggedType(pluggedType);
 }
 
@@ -436,12 +477,12 @@ int32_t BatteryService::GetVoltage()
 {
     int voltage;
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
     }
 
-    ibatteryInterface->GetVoltage(voltage);
+    iBatteryInterface_->GetVoltage(voltage);
     return voltage;
 }
 
@@ -450,25 +491,25 @@ bool BatteryService::GetPresent()
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     bool present = false;
 
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return present;
     }
 
-    ibatteryInterface->GetPresent(present);
+    iBatteryInterface_->GetPresent(present);
     return present;
 }
 
 std::string BatteryService::GetTechnology()
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return "";
     }
 
     std::string technology;
-    ibatteryInterface->GetTechnology(technology);
+    iBatteryInterface_->GetTechnology(technology);
     return technology;
 }
 
@@ -476,11 +517,11 @@ int32_t BatteryService::GetBatteryTemperature()
 {
     int temperature;
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
     }
-    ibatteryInterface->GetTemperature(temperature);
+    iBatteryInterface_->GetTemperature(temperature);
     return temperature;
 }
 
@@ -488,11 +529,11 @@ int32_t BatteryService::GetTotalEnergy()
 {
     int totalEnergy;
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
     }
-    ibatteryInterface->GetTotalEnergy(totalEnergy);
+    iBatteryInterface_->GetTotalEnergy(totalEnergy);
     return totalEnergy;
 }
 
@@ -500,11 +541,11 @@ int32_t BatteryService::GetCurrentAverage()
 {
     int curAverage;
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
     }
-    ibatteryInterface->GetCurrentAverage(curAverage);
+    iBatteryInterface_->GetCurrentAverage(curAverage);
     return curAverage;
 }
 
@@ -512,11 +553,11 @@ int32_t BatteryService::GetNowCurrent()
 {
     int nowCurr;
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
     }
-    ibatteryInterface->GetCurrentNow(nowCurr);
+    iBatteryInterface_->GetCurrentNow(nowCurr);
     return nowCurr;
 }
 
@@ -524,11 +565,11 @@ int32_t BatteryService::GetRemainEnergy()
 {
     int remainEnergy;
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    if (ibatteryInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
     }
-    ibatteryInterface->GetRemainEnergy(remainEnergy);
+    iBatteryInterface_->GetRemainEnergy(remainEnergy);
     return remainEnergy;
 }
 
