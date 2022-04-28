@@ -63,6 +63,8 @@ ohos_unittest("test_batteryclient") {
     "ability_base:base",
     "ability_base:zuri",
     "bundle_framework:appexecfwk_base",
+    "device_driver_framework:libhdf_utils",
+    "device_driver_framework:libhdi",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
