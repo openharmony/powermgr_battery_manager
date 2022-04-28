@@ -17,3 +17,8 @@ group("systemtest") {
   testonly = true
   deps = [ "systemtest/:systemtest" ]
 }
+
+group("battery_fuzzertest") {
+  testonly = true
+  deps = [ "fuzztest/battery_fuzzer:fuzztest" ]
+}
