@@ -67,7 +67,7 @@ ohos_shared_library("batteryservice") {
     "//drivers/peripheral/battery/interfaces/hdi_service:libbattery_interface_service_1.0",
     "//foundation/aafwk/standard/services/appmgr:libappms",
     "//foundation/arkui/ace_engine/interfaces/inner_api/ui_service_manager:ui_service_mgr",
-    "//foundation/graphic/standard:libwmclient",
+    "//foundation/graphic/graphic:libwmclient",
     "//foundation/windowmanager/utils:libwmutil",
     "//utils/native/base:utils",
   ]
