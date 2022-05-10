@@ -15,7 +15,7 @@
     "component": {
         "name": "battery_manager_native",
         "subsystem": "powermgr",
-        "syscap": [ 
+        "syscap": [
             "SystemCapability.PowerManager.BatteryManager.Core",
             "SystemCapability.PowerManager.BatteryManager.Extension"
         ],
@@ -69,6 +69,7 @@
             ],
             "test": [
                 "//base/powermgr/battery_manager/frameworks/js/test:batterymgr_js_test",
+                "//base/powermgr/battery_manager/interfaces/kits/js/test:batterymgr_js_interface_test",
                 "//base/powermgr/battery_manager/frameworks/native/test:unittest",
                 "//base/powermgr/battery_manager/services/native/test:unittest",
                 "//base/powermgr/battery_manager/test:systemtest",
