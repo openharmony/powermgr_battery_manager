@@ -49,7 +49,6 @@ ohos_unittest("test_batteryclient") {
   deps = [
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
     "${battery_manager_path}/services:batteryservice",
-    "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
     "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
@@ -60,6 +59,7 @@ ohos_unittest("test_batteryclient") {
   external_deps = [
     "ability_base:base",
     "ability_base:zuri",
+    "battery_device_driver_interface:libbattery_proxy_1.0",
     "bundle_framework:appexecfwk_base",
     "common_event_service:cesfwk_innerkits",
     "device_driver_framework:libhdf_utils",
