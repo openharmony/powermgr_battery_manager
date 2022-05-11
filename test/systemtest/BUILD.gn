@@ -85,8 +85,6 @@ ohos_systemtest("test_systemtest") {
     "//base/powermgr/battery_manager/services:batteryservice",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
-    "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
-    "//drivers/interface/battery/v1_0:libbattery_stub_1.0",
     "//drivers/peripheral/battery/charger/ui:libminui",
     "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//drivers/peripheral/input/hal:hdi_input",
@@ -101,6 +99,7 @@ ohos_systemtest("test_systemtest") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
+    "battery_device_driver_interface:libbattery_proxy_1.0",
     "common_event_service:cesfwk_innerkits",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
@@ -138,8 +137,6 @@ ohos_systemtest("test_reboot") {
     "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
-    "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
-    "//drivers/interface/battery/v1_0:libbattery_stub_1.0",
     "//drivers/peripheral/battery/charger/ui:libminui",
     "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//drivers/peripheral/input/hal:hdi_input",
@@ -150,6 +147,7 @@ ohos_systemtest("test_reboot") {
   ]
 
   external_deps = [
+    "battery_device_driver_interface:libbattery_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
   ]
@@ -181,8 +179,6 @@ ohos_systemtest("test_charger_overtemperature_shutdown") {
     "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
-    "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
-    "//drivers/interface/battery/v1_0:libbattery_stub_1.0",
     "//drivers/peripheral/battery/charger/ui:libminui",
     "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//drivers/peripheral/input/hal:hdi_input",
@@ -193,6 +189,7 @@ ohos_systemtest("test_charger_overtemperature_shutdown") {
   ]
 
   external_deps = [
+    "battery_device_driver_interface:libbattery_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
   ]
@@ -224,8 +221,6 @@ ohos_systemtest("test_charger_undertemperature_shutdown") {
     "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
-    "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
-    "//drivers/interface/battery/v1_0:libbattery_stub_1.0",
     "//drivers/peripheral/battery/charger/ui:libminui",
     "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//drivers/peripheral/input/hal:hdi_input",
@@ -236,6 +231,7 @@ ohos_systemtest("test_charger_undertemperature_shutdown") {
   ]
 
   external_deps = [
+    "battery_device_driver_interface:libbattery_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
   ]
@@ -270,8 +266,6 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
-    "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
-    "//drivers/interface/battery/v1_0:libbattery_stub_1.0",
     "//drivers/peripheral/battery/charger/ui:libminui",
     "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//drivers/peripheral/input/hal:hdi_input",
@@ -284,6 +278,7 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
+    "battery_device_driver_interface:libbattery_proxy_1.0",
     "common_event_service:cesfwk_innerkits",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
@@ -324,8 +319,6 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
-    "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
-    "//drivers/interface/battery/v1_0:libbattery_stub_1.0",
     "//drivers/peripheral/battery/charger/ui:libminui",
     "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//drivers/peripheral/input/hal:hdi_input",
@@ -338,6 +331,7 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
+    "battery_device_driver_interface:libbattery_proxy_1.0",
     "common_event_service:cesfwk_innerkits",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
@@ -375,8 +369,6 @@ ohos_systemtest("test_charger_offline_shutdown") {
     "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
-    "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
-    "//drivers/interface/battery/v1_0:libbattery_stub_1.0",
     "//drivers/peripheral/battery/charger/ui:libminui",
     "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//drivers/peripheral/input/hal:hdi_input",
@@ -387,6 +379,7 @@ ohos_systemtest("test_charger_offline_shutdown") {
   ]
 
   external_deps = [
+    "battery_device_driver_interface:libbattery_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
   ]
