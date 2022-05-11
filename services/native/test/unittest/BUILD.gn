@@ -49,7 +49,6 @@ ohos_unittest("test_batterysrv") {
   deps = [
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
     "${battery_manager_path}/services:batteryservice",
-    "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
     "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
@@ -59,6 +58,7 @@ ohos_unittest("test_batterysrv") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
+    "battery_device_driver_interface:libbattery_proxy_1.0",
     "common_event_service:cesfwk_innerkits",
     "device_driver_framework:libhdf_utils",
     "device_driver_framework:libhdi",
@@ -83,7 +83,6 @@ ohos_unittest("test_batterysubscriber") {
   deps = [
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
     "${battery_manager_path}/services:batteryservice",
-    "//drivers/interface/battery/v1_0:libbattery_proxy_1.0",
     "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
@@ -93,6 +92,7 @@ ohos_unittest("test_batterysubscriber") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
+    "battery_device_driver_interface:libbattery_proxy_1.0",
     "common_event_service:cesfwk_innerkits",
     "device_driver_framework:libhdf_utils",
     "device_driver_framework:libhdi",
