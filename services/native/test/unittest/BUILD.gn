@@ -28,7 +28,6 @@ config("module_private_config") {
     "//base/powermgr/battery_manager/hdi/client/include",
     "//base/powermgr/power_manager/utils/native/include",
     "//base/powermgr/battery_manager/hdi/api/include",
-    "//foundation/aafwk/standard/interfaces/innerkits/want/include/ohos/aafwk/content",
   ]
 }
 
