@@ -16,7 +16,6 @@
 #include "battery_service_subscriber.h"
 
 #include <typeinfo>
-#include "ohos/aafwk/content/want.h"
 #include "battery_log.h"
 #include "string_ex.h"
 #include "batteryd_api.h"
@@ -24,6 +23,7 @@
 #include "if_system_ability_manager.h"
 #include "system_ability_definition.h"
 #include "hisysevent.h"
+#include "want.h"
 
 using namespace OHOS::AAFwk;
 using namespace OHOS::EventFwk;

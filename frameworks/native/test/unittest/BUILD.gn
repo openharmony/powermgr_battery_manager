@@ -28,7 +28,6 @@ config("module_private_config") {
     "//base/powermgr/battery_manager/hdi/client/include",
     "//base/powermgr/power_manager/utils/native/include",
     "//base/powermgr/battery_manager/hdi/api/include",
-    "//foundation/aafwk/standard/interfaces/innerkits/want/include/ohos/aafwk/content",
   ]
 }
 
@@ -58,6 +57,7 @@ ohos_unittest("test_batteryclient") {
 
   external_deps = [
     "ability_base:base",
+    "ability_base:want",
     "ability_base:zuri",
     "battery_device_driver_interface:libbattery_proxy_1.0",
     "bundle_framework:appexecfwk_base",
