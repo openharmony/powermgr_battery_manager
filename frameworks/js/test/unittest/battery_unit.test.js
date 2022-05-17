@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Huawei Device Co., Ltd.
+ * Copyright (C) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -172,6 +172,12 @@ describe('appInfoTest', function () {
       let totalEnergy = batteryInfo.totalEnergy;
       console.info('totalenergy = ' + totalEnergy);
       expect(totalEnergy >= 0).assertTrue();
+    })
+
+    it('remainingChargeTime_test', 0, function () {
+      let remainingChargeTime = batteryInfo.estimatedRemainingChargeTime;
+      console.info('remainingChargeTime = ' + remainingChargeTime);
+      expect(remainingChargeTime >= 0).assertTrue();
     })
 
     it('batterylevel_test', 0, function () {
