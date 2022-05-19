@@ -104,7 +104,7 @@ ohos_systemtest("test_systemtest") {
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_core",
+    "init:libbegetutil",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr_standard:samgr_proxy",
@@ -149,6 +149,7 @@ ohos_systemtest("test_reboot") {
   external_deps = [
     "battery_device_driver_interface:libbattery_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
+    "init:libbegetutil",
     "ipc:ipc_core",
   ]
 }
@@ -191,6 +192,7 @@ ohos_systemtest("test_charger_overtemperature_shutdown") {
   external_deps = [
     "battery_device_driver_interface:libbattery_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
+    "init:libbegetutil",
     "ipc:ipc_core",
   ]
 }
@@ -233,6 +235,7 @@ ohos_systemtest("test_charger_undertemperature_shutdown") {
   external_deps = [
     "battery_device_driver_interface:libbattery_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
+    "init:libbegetutil",
     "ipc:ipc_core",
   ]
 }
@@ -283,7 +286,7 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_core",
+    "init:libbegetutil",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr_standard:samgr_proxy",
@@ -336,7 +339,7 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_core",
+    "init:libbegetutil",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr_standard:samgr_proxy",
@@ -381,6 +384,7 @@ ohos_systemtest("test_charger_offline_shutdown") {
   external_deps = [
     "battery_device_driver_interface:libbattery_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
+    "init:libbegetutil",
     "ipc:ipc_core",
   ]
 }
