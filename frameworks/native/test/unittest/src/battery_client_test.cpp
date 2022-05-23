@@ -281,7 +281,7 @@ HWTEST_F (BatteryClientTest, BatteryClient009, TestSize.Level1)
         auto currnow = BatterySrvClient.GetNowCurrent();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::currnow=%{public}d", currnow);
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient009 executing, currnow=" << currnow;
-        ASSERT_TRUE(currnow >= 0);
+        ASSERT_TRUE(currnow >= -20000 && currnow <= 20000);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient009 end.");
 }
