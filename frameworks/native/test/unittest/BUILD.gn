@@ -48,7 +48,6 @@ ohos_unittest("test_batteryclient") {
   deps = [
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
     "${battery_manager_path}/services:batteryservice",
-    "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
