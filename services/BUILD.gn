@@ -26,9 +26,9 @@ config("batterysrv_public_config") {
     "${displaymgr_native_innerkits_path}/native/src",
     "//base/hiviewdfx/hicollie/interfaces/native/innerkits/include/xcollie",
     "//base/startup/appspawn_standard/include/",
-    "//foundation/aafwk/standard/services/abilitymgr/include/",
-    "//foundation/aafwk/standard/services/appmgr/include",
-    "//foundation/aafwk/standard/interfaces/innerkits/app_manager/include/appmgr",
+    "${aafwk_services_path}/abilitymgr/include/",
+    "${aafwk_services_path}/appmgr/include",
+    "${aafwk_inner_api_path}/app_manager/include/appmgr",
     "//foundation/windowmanager/interfaces/innerkits/wm/",
     "//foundation/windowmanager/utils/include",
     "//foundation/windowmanager/interfaces/innerkits/dm",
@@ -57,6 +57,7 @@ ohos_shared_library("batteryservice") {
   public_configs = [ ":batterysrv_public_config" ]
 
   deps = [
+    "${aafwk_services_path}/appmgr:libappms",
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
     "${displaymgr_native_innerkits_path}:displaymgr",
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent_manager:libhisyseventmanager",
@@ -64,7 +65,6 @@ ohos_shared_library("batteryservice") {
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//drivers/peripheral/battery/interfaces/hdi_service:libbattery_interface_service_1.0",
-    "//foundation/aafwk/standard/services/appmgr:libappms",
     "//foundation/arkui/ace_engine/interfaces/inner_api/ui_service_manager:ui_service_mgr",
     "//foundation/graphic/graphic:libwmclient",
     "//foundation/windowmanager/utils:libwmutil",
