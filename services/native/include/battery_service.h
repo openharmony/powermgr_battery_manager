@@ -101,6 +101,7 @@ private:
     int32_t lastCapacity_ = 0;
     int64_t lastTime_ = 0;
     int64_t remainTime_ = 0;
+    bool chargeFlag_ {false};
 };
 } // namespace PowerMgr
 } // namespace OHOS
