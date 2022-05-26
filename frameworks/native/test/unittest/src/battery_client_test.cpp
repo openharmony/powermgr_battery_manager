@@ -348,7 +348,11 @@ HWTEST_F (BatteryClientTest, BatteryClient012, TestSize.Level1)
         auto batterylevel = BatterySrvClient.GetBatteryLevel();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d", int(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient012 executing, batterylevel=" << int(batterylevel);
-        ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_NORMAL);
+        ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_HIGH ||
+            batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_NORMAL ||
+            batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_LOW ||
+            batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_CRITICAL ||
+            batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_FULL);
     } else {
         auto batterylevel = BatterySrvClient.GetBatteryLevel();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d", int(batterylevel));
@@ -356,7 +360,8 @@ HWTEST_F (BatteryClientTest, BatteryClient012, TestSize.Level1)
         ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_HIGH ||
             batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_NORMAL ||
             batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_LOW ||
-            batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_CRITICAL);
+            batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_CRITICAL ||
+            batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_FULL);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient012 end.");
 }
