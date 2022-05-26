@@ -581,14 +581,31 @@ void BatteryService::CalculateRemainingChargeTime(int32_t capacity)
         return;
     }
 
-    int64_t onceTime = 0;
-    if (((capacity - lastCapacity_) >= 1) && (lastCapacity_ != 0)) {
-        onceTime = (GetCurrentTime() - lastTime_) / (capacity - lastCapacity_);
-        remainTime_ = (BATTERY_FULL_CAPACITY - capacity) * onceTime;
+    BatteryChargeState chargeStatus = GetChargingStatus();
+    if (chargeStatus != BatteryChargeState::CHARGE_STATE_ENABLE) {
+        remainTime_ = 0;
+        chargeFlag_ = false;
+        return;
     }
 
-    lastCapacity_ = capacity;
-    lastTime_ = GetCurrentTime();
+    if (chargeStatus == BatteryChargeState::CHARGE_STATE_ENABLE
+        && !chargeFlag_) {
+        lastCapacity_ = capacity;
+        lastTime_ = GetCurrentTime();
+        chargeFlag_ = true;
+    }
+
+    if (capacity < lastCapacity_) {
+        lastCapacity_ = capacity;
+    }
+
+    int64_t onceTime = 0;
+    if (((capacity - lastCapacity_) >= 1) && (lastCapacity_ >= 0) && chargeFlag_) {
+        onceTime = (GetCurrentTime() - lastTime_) / (capacity - lastCapacity_);
+        remainTime_ = (BATTERY_FULL_CAPACITY - capacity) * onceTime;
+        lastCapacity_ = capacity;
+        lastTime_ = GetCurrentTime();
+    }
 }
 
 int64_t BatteryService::GetRemainingChargeTime()

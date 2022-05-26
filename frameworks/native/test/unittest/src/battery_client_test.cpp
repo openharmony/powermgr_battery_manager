@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -364,5 +364,26 @@ HWTEST_F (BatteryClientTest, BatteryClient012, TestSize.Level1)
             batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_FULL);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient012 end.");
+}
+
+/**
+ * @tc.name: BatteryClient013
+ * @tc.desc: Test IBatterySrv interface GetRemainingChargeTime
+ * @tc.type: FUNC
+ */
+HWTEST_F (BatteryClientTest, BatteryClient013, TestSize.Level1)
+{
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient013 start.");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    if (g_isMock) {
+        auto remainingChargeTime = BatterySrvClient.GetRemainingChargeTime();
+        GTEST_LOG_(INFO) << "BatteryClient::BatteryClient013 executing, remainingChargeTime=" << remainingChargeTime;
+        ASSERT_TRUE(remainingChargeTime >= 0);
+    } else {
+        auto remainingChargeTime = BatterySrvClient.GetRemainingChargeTime();
+        GTEST_LOG_(INFO) << "BatteryClient::BatteryClient013 executing, remainingChargeTime=" << remainingChargeTime;
+        ASSERT_TRUE(remainingChargeTime >= 0);
+    }
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient013 end.");
 }
 }
