@@ -23,12 +23,13 @@
 #include "system_ability_definition.h"
 #include "ui_service_mgr_client.h"
 #include "wm_common.h"
-
+#include "battery_callback.h"
 #include "battery_dump.h"
 #include "battery_log.h"
 #include "power_common.h"
 
 using namespace OHOS::HDI::Battery;
+using namespace OHOS::HDI::Battery::V1_0;
 
 namespace OHOS {
 namespace PowerMgr {
@@ -132,12 +133,12 @@ void BatteryService::RegisterBatteryHdiCallback()
         iBatteryInterface_ = IBatteryInterface::Get();
         RETURN_IF_WITH_LOG(iBatteryInterface_ == nullptr, "failed to get battery hdi interface");
     }
-    sptr<V1_0::IBatteryCallback> callback = new V1_0::BatteryCallbackImpl();
+    sptr<IBatteryCallback> callback = new BatteryCallback();
     ErrCode ret = iBatteryInterface_->Register(callback);
 
-    BatteryCallbackImpl::BatteryEventCallback eventCb =
+    BatteryCallback::BatteryEventCallback eventCb =
         std::bind(&BatteryService::HandleBatteryCallbackEvent, this, std::placeholders::_1);
-    BatteryCallbackImpl::RegisterBatteryEvent(eventCb);
+    BatteryCallback::RegisterBatteryEvent(eventCb);
 
     BATTERY_HILOGD(COMP_SVC, "register battery hdi callback end ret: %{public}d", ret);
 }

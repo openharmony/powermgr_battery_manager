@@ -232,8 +232,8 @@ bool BatteryServiceSubscriber::HandleBatteryPowerConnectedEvent(const BatteryInf
     publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
-    if ((static_cast<uint32_t>(info.GetPluggedType()) == PLUGGED_TYPE_NONE) ||
-        (static_cast<uint32_t>(info.GetPluggedType()) == PLUGGED_TYPE_BUTT)) {
+    if ((info.GetPluggedType() == BatteryPluggedType::PLUGGED_TYPE_NONE) ||
+        (info.GetPluggedType() == BatteryPluggedType::PLUGGED_TYPE_BUTT)) {
         g_batteryConnectOnce = false;
         return isSuccess;
     }
@@ -265,8 +265,8 @@ bool BatteryServiceSubscriber::HandleBatteryPowerDisconnectedEvent(const Battery
     publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
-    if ((static_cast<uint32_t>(info.GetPluggedType()) != PLUGGED_TYPE_NONE) &&
-        (static_cast<uint32_t>(info.GetPluggedType()) != PLUGGED_TYPE_BUTT)) {
+    if ((info.GetPluggedType() == BatteryPluggedType::PLUGGED_TYPE_NONE) &&
+        (info.GetPluggedType() == BatteryPluggedType::PLUGGED_TYPE_BUTT)) {
         g_batteryDisconnectOnce = false;
         return isSuccess;
     }
