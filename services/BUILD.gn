@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -32,9 +32,8 @@ config("batterysrv_public_config") {
     "//foundation/windowmanager/interfaces/innerkits/wm/",
     "//foundation/windowmanager/utils/include",
     "//foundation/windowmanager/interfaces/innerkits/dm",
-    "//drivers/peripheral/battery/interfaces/include",
-    "//drivers/peripheral/battery/include",
     "//drivers/peripheral/battery/interfaces/hdi_service/include",
+    "//drivers/peripheral/battery/interfaces/include",
     "//drivers/peripheral/battery/charger/led",
     "//base/powermgr/power_manager/interfaces/innerkits/native/include",
   ]
@@ -43,6 +42,7 @@ config("batterysrv_public_config") {
 ohos_shared_library("batteryservice") {
   sources = [
     "${battery_manager_path}/services/zidl/src/battery_srv_stub.cpp",
+    "native/src/battery_callback.cpp",
     "native/src/battery_dump.cpp",
     "native/src/battery_service.cpp",
     "native/src/battery_service_event_handler.cpp",
@@ -63,7 +63,6 @@ ohos_shared_library("batteryservice") {
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent_manager:libhisyseventmanager",
     "//base/powermgr/battery_manager/frameworks/dialog/dialog_ui/js:dialog_js_files_etc",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
-    "//drivers/peripheral/battery/interfaces/hdi_callback:libbattery_callback",
     "//drivers/peripheral/battery/interfaces/hdi_service:libbattery_interface_service_1.0",
     "//foundation/arkui/ace_engine/interfaces/inner_api/ui_service_manager:ui_service_mgr",
     "//foundation/graphic/graphic_2d:libwmclient",

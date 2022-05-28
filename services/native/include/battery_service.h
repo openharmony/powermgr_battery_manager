@@ -19,12 +19,10 @@
 #include "iremote_object.h"
 #include "sp_singleton.h"
 #include "system_ability.h"
-#include "types.h"
 #include "v1_0/battery_interface_proxy.h"
 #include "window_manager.h"
 
 #include "batteryd_api.h"
-#include "battery_callback_impl.h"
 #include "battery_config.h"
 #include "battery_led.h"
 #include "battery_service_event_handler.h"
@@ -36,7 +34,6 @@
 namespace OHOS {
 namespace PowerMgr {
 using namespace OHOS::HDI::Battery::V1_0;
-
 class BatteryService final : public SystemAbility,
     public BatterySrvStub {
 DECLARE_SYSTEM_ABILITY(BatteryService)
