@@ -31,7 +31,7 @@ public:
     DISALLOW_COPY_AND_MOVE(BatterySrvClient);
 
     /**
-     * Return the capacity of the battery, in mAh.
+     * Return the capacity of the battery, in percent.
      */
     int32_t GetCapacity();
     /**
