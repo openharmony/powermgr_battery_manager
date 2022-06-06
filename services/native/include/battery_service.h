@@ -83,7 +83,7 @@ private:
     void HandlePopupEvent(const int32_t capacity);
     void HandleCapacity(const int32_t& capacity, const int32_t& chargeState);
     bool ShowDialog(const std::string &params);
-    void GetDisplayPosition(int32_t& offsetX, int32_t& offsetY, int32_t& width, int32_t& height, bool& wideScreen);
+    void GetDisplayPosition(int32_t& width, int32_t& height);
     bool ready_ {false};
     int32_t commEventRetryTimes_ {0};
     std::mutex mutex_;
@@ -99,6 +99,8 @@ private:
     int64_t lastTime_ = 0;
     int64_t remainTime_ = 0;
     bool chargeFlag_ {false};
+    int32_t dialogId_ = -1;
+    bool isLowPower_ = false;
 };
 } // namespace PowerMgr
 } // namespace OHOS
