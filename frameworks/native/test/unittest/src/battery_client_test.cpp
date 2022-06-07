@@ -34,20 +34,12 @@ using namespace std;
 
 namespace {
 bool g_isMock = false;
-static sptr<BatteryService> g_service;
 }
 
 void BatteryClientTest::SetUpTestCase(void)
 {
-    g_service = DelayedSpSingleton<BatteryService>::GetInstance();
-    g_service->OnStart();
-    auto& client = BatterySrvClient::GetInstance();
-    GTEST_LOG_(INFO) << "is mock: " << client.GetPresent() << " g_isMock: " << g_isMock;
-    if (!client.GetPresent()) {
-        g_isMock = true;
-        TestUtils::InitTest();
-        g_service->ChangePath("/data/local/tmp");
-    }
+    g_isMock = TestUtils::IsMock();
+    GTEST_LOG_(INFO) << " g_isMock: " << g_isMock;
 }
 
 void BatteryClientTest::TearDownTestCase(void)
