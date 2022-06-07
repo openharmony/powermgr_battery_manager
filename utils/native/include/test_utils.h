@@ -25,6 +25,7 @@ public:
     static void WriteMock(const std::string& path, const std::string content);
     static void InitTest();
     static void ResetOnline();
+    static bool IsMock();
 };
 } // namespace PowerMgr
 } // namespace OHOS
