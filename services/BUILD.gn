@@ -25,7 +25,7 @@ config("batterysrv_public_config") {
     "${battery_manager_path}/services/zidl/include",
     "${displaymgr_native_innerkits_path}/native/src",
     "//base/hiviewdfx/hicollie/interfaces/native/innerkits/include/xcollie",
-    "//base/startup/appspawn_standard/include/",
+    "//base/startup/appspawn/include/",
     "${aafwk_services_path}/abilitymgr/include/",
     "${aafwk_services_path}/appmgr/include",
     "${aafwk_inner_api_path}/app_manager/include/appmgr",
