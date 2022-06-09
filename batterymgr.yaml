@@ -13,11 +13,6 @@
 
 domain: BATTERY
 
-POWER_BATTERY:
-  __BASE: {type: STATISTIC, level: MINOR, tag: PowerStats, desc: battery info}
-  BATTERY_LEVEL: {type: INT32, desc: battery level}
-  CURRENT_NOW: {type: INT32, desc: battery current}
-
 BATTERY_CHANGED:
     __BASE: {type: STATISTIC, level: MINOR, tag: PowerStats, desc: battery changed}
     LEVEL: {type: INT32, desc: level}
