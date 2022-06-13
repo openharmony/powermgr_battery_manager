@@ -116,9 +116,10 @@ bool BatteryServiceSubscriber::HandleBatteryChangedEvent(const BatteryInfo& info
     bool isSuccess = true;
 
     if ((g_firstPublish == true) || (CmpBatteryInfo(info) == false)) {
-        HiSysEvent::Write(HiSysEvent::Domain::POWERMGR, "BATTERY_CHANGED", HiSysEvent::EventType::STATISTIC,
+        // HiSysEvent::Write(HiSysEvent::Domain::POWERMGR, "BATTERY_CHANGED", HiSysEvent::EventType::STATISTIC,
+        HiSysEvent::Write("BATTERY", "BATTERY_CHANGED", HiSysEvent::EventType::STATISTIC,
             "LEVEL", info.GetCapacity(), "CHARGER", static_cast<int>(info.GetPluggedType()),
-            "VOLTAGE", info.GetVoltage(), "TEMP", info.GetTemperature(),
+            "VOLTAGE", info.GetVoltage(), "TEMPERATURE", info.GetTemperature(),
             "HEALTH", static_cast<int>(info.GetHealthState()), "CURRENT", info.GetNowCurrent());
         isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
         SwaptBatteryInfo(info);
