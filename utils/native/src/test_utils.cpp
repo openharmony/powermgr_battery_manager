@@ -15,10 +15,15 @@
 
 #include "test_utils.h"
 
+#include <dirent.h>
+#include <fcntl.h>
 #include <fstream>
-#include <vector>
 #include <sys/stat.h>
+#include <unistd.h>
+#include <vector>
+
 #include "battery_log.h"
+
 
 using namespace std;
 using namespace OHOS::HDI::Battery;
@@ -27,6 +32,7 @@ namespace OHOS {
 namespace PowerMgr {
 namespace {
 string MOCK_PATH = "/data/local/tmp";
+string POWER_SUPPLY_PATH = "/sys/class/power_supply";
 vector<string> MOCK_DIR_NAME = {
     "battery",
     "USB",
@@ -44,6 +50,7 @@ vector<vector<string>> MOCK_FILE_NAME = {
     { "type", "online" }
 };
 }
+
 
 void TestUtils::WriteMock(const std::string& path, const std::string content)
 {
@@ -74,6 +81,20 @@ void TestUtils::ResetOnline()
             }
         }
     }
+}
+bool TestUtils::IsMock()
+{
+    DIR* dir = opendir(POWER_SUPPLY_PATH.c_str());
+    if (dir == NULL) {
+        return true;
+    }
+    struct dirent* ptr = NULL;
+    while ((ptr = readdir(dir)) != NULL) {
+        if (strcmp(".", ptr->d_name) != 0 && strcmp("..", ptr->d_name) != 0) {
+            return false;
+        }
+    }
+    return true;
 }
 } // namespace PowerMgr
 } // namespace OHOS
