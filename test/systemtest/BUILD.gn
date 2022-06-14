@@ -86,7 +86,6 @@ ohos_systemtest("test_systemtest") {
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//drivers/peripheral/input/hal:hdi_input",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
@@ -104,6 +103,7 @@ ohos_systemtest("test_systemtest") {
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
+    "input_device_driver_interface:hdi_input",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr_standard:samgr_proxy",
@@ -137,7 +137,6 @@ ohos_systemtest("test_reboot") {
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//drivers/peripheral/input/hal:hdi_input",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
@@ -148,6 +147,7 @@ ohos_systemtest("test_reboot") {
     "battery_device_driver_interface:libbattery_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
+    "input_device_driver_interface:hdi_input",
     "ipc:ipc_core",
   ]
 }
@@ -179,7 +179,6 @@ ohos_systemtest("test_charger_overtemperature_shutdown") {
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//drivers/peripheral/input/hal:hdi_input",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
@@ -190,6 +189,7 @@ ohos_systemtest("test_charger_overtemperature_shutdown") {
     "battery_device_driver_interface:libbattery_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
+    "input_device_driver_interface:hdi_input",
     "ipc:ipc_core",
   ]
 }
@@ -221,7 +221,6 @@ ohos_systemtest("test_charger_undertemperature_shutdown") {
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//drivers/peripheral/input/hal:hdi_input",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
@@ -232,6 +231,7 @@ ohos_systemtest("test_charger_undertemperature_shutdown") {
     "battery_device_driver_interface:libbattery_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
+    "input_device_driver_interface:hdi_input",
     "ipc:ipc_core",
   ]
 }
@@ -266,7 +266,6 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//drivers/peripheral/input/hal:hdi_input",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
@@ -282,6 +281,7 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
+    "input_device_driver_interface:hdi_input",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr_standard:samgr_proxy",
@@ -318,7 +318,6 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//drivers/peripheral/input/hal:hdi_input",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
@@ -334,6 +333,7 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
+    "input_device_driver_interface:hdi_input",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr_standard:samgr_proxy",
@@ -367,7 +367,6 @@ ohos_systemtest("test_charger_offline_shutdown") {
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//drivers/peripheral/input/hal:hdi_input",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
@@ -378,6 +377,7 @@ ohos_systemtest("test_charger_offline_shutdown") {
     "battery_device_driver_interface:libbattery_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
+    "input_device_driver_interface:hdi_input",
     "ipc:ipc_core",
   ]
 }
