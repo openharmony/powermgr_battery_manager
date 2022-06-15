@@ -1,5 +1,6 @@
 {
   "message": {
-    "cancelButton": "取消"
+    "lowPower": "电量低",
+    "cancelButton": "知道了"
   }
 }
