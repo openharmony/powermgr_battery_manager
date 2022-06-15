@@ -36,15 +36,11 @@ namespace PowerMgr {
 namespace {
 const std::string BATTERY_SERVICE_NAME = "BatteryService";
 const std::string HDI_SERVICE_NAME = "battery_interface_service";
-const std::string BATTERY_LOW_CAPACITY_PARAMS = "{\"cancelButton\":\"LowCapacity\"}";
+const std::string BATTERY_LOW_CAPACITY_PARAMS = "{\"lowPower\":\"Low Power\", \"cancelButton\":\"Cancel\"}";
 constexpr int32_t HELP_DMUP_PARAM = 2;
 constexpr int32_t BATTERY_LOW_CAPACITY = 10;
 constexpr int32_t UI_DIALOG_POWER_WIDTH_NARROW = 400;
 constexpr int32_t UI_DIALOG_POWER_HEIGHT_NARROW = 240;
-constexpr int32_t UI_DEFAULT_WIDTH = 2560;
-constexpr int32_t UI_DEFAULT_HEIGHT = 1600;
-constexpr int32_t UI_DEFAULT_BUTTOM_CLIP = 50 * 2;
-constexpr int32_t UI_HALF = 2;
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
 constexpr int32_t SEC_TO_MSEC = 1000;
 constexpr int32_t NSEC_TO_MSEC = 1000000;
@@ -57,7 +53,6 @@ constexpr uint32_t RETRY_TIME = 1000;
 sptr<BatteryService> g_service;
 int32_t g_lastChargeState = 0;
 bool g_initConfig = true;
-bool g_lastLowCapacity = false;
 }
 
 const bool G_REGISTER_RESULT = SystemAbility::MakeAndRegisterAbility(
@@ -286,58 +281,55 @@ void BatteryService::WakeupDevice(const int32_t& chargestate)
 
 void BatteryService::HandlePopupEvent(const int32_t capacity)
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
     bool ret = false;
-    if ((capacity < BATTERY_LOW_CAPACITY) && (g_lastLowCapacity == false)) {
+    if ((capacity < BATTERY_LOW_CAPACITY) && !isLowPower_) {
         ret = ShowDialog(BATTERY_LOW_CAPACITY_PARAMS);
         if (!ret) {
             BATTERY_HILOGI(COMP_SVC, "failed to popup");
             return;
         }
-        g_lastLowCapacity = true;
+        isLowPower_ = true;
     }
 
-    if (capacity >= BATTERY_LOW_CAPACITY) {
-        g_lastLowCapacity = false;
+    if (capacity >= BATTERY_LOW_CAPACITY && isLowPower_) {
+        Ace::UIServiceMgrClient::GetInstance()->CancelDialog(dialogId_);
+        dialogId_ = -1;
+        isLowPower_ = false;
     }
 }
 
 bool BatteryService::ShowDialog(const std::string &params)
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
-    int pos_x;
-    int pos_y;
     int width;
     int height;
-    bool wideScreen;
 
-    GetDisplayPosition(pos_x, pos_y, width, height, wideScreen);
+    GetDisplayPosition(width, height);
 
     if (params.empty()) {
         return false;
     }
 
-    Ace::UIServiceMgrClient::GetInstance()->ShowDialog(
+    int32_t errCode = Ace::UIServiceMgrClient::GetInstance()->ShowDialog(
         "battery_dialog",
         params,
         OHOS::Rosen::WindowType::WINDOW_TYPE_SYSTEM_ALARM_WINDOW,
-        pos_x,
-        pos_y,
+        0,
+        0,
         width,
         height,
         [this](int32_t id, const std::string& event, const std::string& params) {
             BATTERY_HILOGI(COMP_SVC, "Dialog callback: %{public}s, %{public}s", event.c_str(), params.c_str());
             if (event == "EVENT_CANCEL") {
                 Ace::UIServiceMgrClient::GetInstance()->CancelDialog(id);
+                dialogId_ = -1;
             }
-        });
-    return true;
+        }, &dialogId_);
+    BATTERY_HILOGI(COMP_SVC, "Show dialog errCode %{public}d, dialogId=%{public}d", errCode, dialogId_);
+    return !errCode;
 }
 
-void BatteryService::GetDisplayPosition(
-    int32_t& offsetX, int32_t& offsetY, int32_t& width, int32_t& height, bool& wideScreen)
+void BatteryService::GetDisplayPosition(int32_t& width, int32_t& height)
 {
-    wideScreen = true;
     auto display = Rosen::DisplayManager::GetInstance().GetDefaultDisplay();
     if (display == nullptr) {
         BATTERY_HILOGI(COMP_SVC, "dialog GetDefaultDisplay fail, try again.");
@@ -347,35 +339,13 @@ void BatteryService::GetDisplayPosition(
     if (display != nullptr) {
         BATTERY_HILOGI(COMP_SVC, "display size: %{public}d x %{public}d",
             display->GetWidth(), display->GetHeight());
-        if (display->GetWidth() < display->GetHeight()) {
-            BATTERY_HILOGI(COMP_SVC, "share dialog narrow.");
-            const int NARROW_WIDTH_N = 3;
-            const int NARROW_WIDTH_D = 4;
-            const int NARROW_HEIGHT_RATE = 8;
-            wideScreen = false;
-            width = display->GetWidth() * NARROW_WIDTH_N / NARROW_WIDTH_D;
-            height = display->GetHeight() / NARROW_HEIGHT_RATE;
-        } else {
-            BATTERY_HILOGI(COMP_SVC, "share dialog wide.");
-            const int NARROW_WIDTH_N = 1;
-            const int NARROW_WIDTH_D = 3;
-            const int NARROW_HEIGHT_RATE = 6;
-            wideScreen = true;
-            width = display->GetWidth() * NARROW_WIDTH_N / NARROW_WIDTH_D;
-            height = display->GetHeight() / NARROW_HEIGHT_RATE;
-        }
-        offsetX = (display->GetWidth() - width) / UI_HALF;
-        offsetY = display->GetHeight() - height - UI_DEFAULT_BUTTOM_CLIP;
+        width = display->GetWidth();
+        height = display->GetHeight();
     } else {
         BATTERY_HILOGI(COMP_SVC, "dialog get display fail, use default wide.");
-        wideScreen = false;
         width = UI_DIALOG_POWER_WIDTH_NARROW;
         height = UI_DIALOG_POWER_HEIGHT_NARROW;
-        offsetX = (UI_DEFAULT_WIDTH - width) / UI_HALF;
-        offsetY = UI_DEFAULT_HEIGHT - height - UI_DEFAULT_BUTTOM_CLIP;
     }
-    BATTERY_HILOGI(COMP_SVC, "GetDisplayPosition: %{public}d, %{public}d (%{public}d x %{public}d)",
-        offsetX, offsetY, width, height);
 }
 
 void BatteryService::HandleTemperature(const int32_t& temperature)
