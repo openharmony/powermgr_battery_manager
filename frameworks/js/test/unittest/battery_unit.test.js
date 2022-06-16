@@ -159,7 +159,7 @@ describe('appInfoTest', function () {
     it('nowCurrent_test', 0, function () {
       let nowCurrent = batteryInfo.nowCurrent;
       console.info('nowCurrent = ' + nowCurrent);
-      expect(nowCurrent >= 0).assertTrue();
+      expect(nowCurrent >= -20000 && nowCurrent <= 20000).assertTrue();
     })
 
     it('remainingEnergy_test', 0, function () {
