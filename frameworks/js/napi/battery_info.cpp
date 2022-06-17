@@ -393,7 +393,7 @@ static napi_module g_module = {
     .nm_flags = 0,
     .nm_filename = "batteryInfo",
     .nm_register_func = BatteryInit,
-    .nm_modname = "batteryInfo",
+    .nm_modname = "batteryinfo",
     .nm_priv = ((void*)0),
     .reserved = {0}
 };
