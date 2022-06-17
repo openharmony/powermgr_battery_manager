@@ -13,7 +13,7 @@
 
 import("//base/powermgr/battery_manager/batterymgr.gni")
 import("//build/test.gni")
-import("//drivers/adapter/uhdf2/uhdf.gni")
+import("//drivers/hdf_core/adapter/uhdf2/uhdf.gni")
 
 module_output_path = "battery_manager_native/batterysrv"
 
