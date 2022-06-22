@@ -26,6 +26,7 @@
 #include "battery_callback.h"
 #include "battery_dump.h"
 #include "battery_log.h"
+#include "permission.h"
 #include "power_common.h"
 
 using namespace OHOS::HDI::Battery;
@@ -498,11 +499,15 @@ int32_t BatteryService::GetBatteryTemperature()
 
 int32_t BatteryService::GetTotalEnergy()
 {
-    int totalEnergy;
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    int32_t totalEnergy = -1;
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
+    }
+
+    if (!Permission::IsSystem()) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "GetTotalEnergy totalEnergy: %{public}d", totalEnergy);
+        return totalEnergy;
     }
     iBatteryInterface_->GetTotalEnergy(totalEnergy);
     return totalEnergy;
@@ -522,11 +527,15 @@ int32_t BatteryService::GetCurrentAverage()
 
 int32_t BatteryService::GetNowCurrent()
 {
-    int nowCurr;
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    int32_t nowCurr = -1;
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
+    }
+
+    if (!Permission::IsSystem()) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "GetNowCurrent nowCurr: %{public}d", nowCurr);
+        return nowCurr;
     }
     iBatteryInterface_->GetCurrentNow(nowCurr);
     return nowCurr;
@@ -534,11 +543,15 @@ int32_t BatteryService::GetNowCurrent()
 
 int32_t BatteryService::GetRemainEnergy()
 {
-    int remainEnergy;
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    int32_t remainEnergy = -1;
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
+    }
+
+    if (!Permission::IsSystem()) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "GetRemainEnergy remainEnergy: %{public}d", remainEnergy);
+        return remainEnergy;
     }
     iBatteryInterface_->GetRemainEnergy(remainEnergy);
     return remainEnergy;
