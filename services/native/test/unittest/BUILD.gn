@@ -53,8 +53,8 @@ ohos_unittest("test_batterysubscriber") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
-    "battery_device_driver_interface:libbattery_proxy_1.0",
     "common_event_service:cesfwk_innerkits",
+    "drivers_interface_battery:libbattery_proxy_1.0",
     "eventhandler:libeventhandler",
     "hdf_core:libhdf_utils",
     "hdf_core:libhdi",
