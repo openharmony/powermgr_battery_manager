@@ -14,6 +14,7 @@
  */
 
 import battery from '@system.battery';
+import batteryInfo from "@ohos.batteryinfo";
 import {describe, it, expect} from 'deccjsunit/index';
 
 function successFunc(data, tag) {
