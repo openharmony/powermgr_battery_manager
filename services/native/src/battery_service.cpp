@@ -38,7 +38,7 @@ namespace {
 const std::string BATTERY_SERVICE_NAME = "BatteryService";
 const std::string HDI_SERVICE_NAME = "battery_interface_service";
 const std::string BATTERY_LOW_CAPACITY_PARAMS = "{\"lowPower\":\"Low Power\", \"cancelButton\":\"Cancel\"}";
-constexpr int32_t HELP_DMUP_PARAM = 2;
+constexpr int32_t HELP_DUMP_PARAM = 2;
 constexpr int32_t BATTERY_LOW_CAPACITY = 10;
 constexpr int32_t UI_DIALOG_POWER_WIDTH_NARROW = 400;
 constexpr int32_t UI_DIALOG_POWER_HEIGHT_NARROW = 240;
@@ -52,8 +52,8 @@ constexpr int32_t BATTERY_HIGH_THRESHOLD = 99;
 constexpr int32_t BATTERY_HIGH_FULL = 100;
 constexpr uint32_t RETRY_TIME = 1000;
 sptr<BatteryService> g_service;
-int32_t g_lastChargeState = 0;
-bool g_initConfig = true;
+BatteryChargeState g_lastChargeState = BatteryChargeState::CHARGE_STATE_NONE;
+bool g_initConfig = false;
 }
 
 const bool G_REGISTER_RESULT = SystemAbility::MakeAndRegisterAbility(
@@ -161,49 +161,59 @@ void BatteryService::InitConfig()
 int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_0::BatteryInfo& event)
 {
     BATTERY_HILOGD(COMP_SVC, "Enter");
-    BatteryInfo batteryInfo;
-    BATTERY_HILOGD(COMP_SVC,
-        "capacity=%{public}d, voltage=%{public}d, temperature=%{public}d, " \
-        "healthState=%{public}d, pluggedType=%{public}d, pluggedMaxCurrent=%{public}d, " \
-        "pluggedMaxVoltage=%{public}d, chargeState=%{public}d, chargeCounter=%{public}d, present=%{public}d, " \
-        "technology=%{public}s, currnow=%{public}d", event.capacity, event.voltage,
-        event.temperature, event.healthState, event.pluggedType,
-        event.pluggedMaxCurrent, event.pluggedMaxVoltage, event.chargeState,
-        event.chargeCounter, event.present, event.technology.c_str(), event.curNow);
-
-    BATTERY_HILOGD(COMP_SVC,
-        "totalEnergy=%{public}d,curAverage=%{public}d,remainEngery=%{public}d", \
-        event.totalEnergy, event.curAverage, event.remainEnergy);
-
-    batteryInfo.SetCapacity(event.capacity);
-    batteryInfo.SetVoltage(event.voltage);
-    batteryInfo.SetTemperature(event.temperature);
-    batteryInfo.SetHealthState(BatteryHealthState(event.healthState));
-    batteryInfo.SetPluggedType(BatteryPluggedType(event.pluggedType));
-    batteryInfo.SetPluggedMaxCurrent(event.pluggedMaxCurrent);
-    batteryInfo.SetPluggedMaxVoltage(event.pluggedMaxVoltage);
-    batteryInfo.SetChargeState(BatteryChargeState(event.chargeState));
-    batteryInfo.SetChargeCounter(event.chargeCounter);
-    batteryInfo.SetTotalEnergy(event.totalEnergy);
-    batteryInfo.SetCurAverage(event.curAverage);
-    batteryInfo.SetRemainEnergy(event.remainEnergy);
-    batteryInfo.SetPresent(event.present);
-    batteryInfo.SetTechnology(event.technology);
-    batteryInfo.SetNowCurrent(event.curNow);
-
-    if (g_initConfig) {
-        InitConfig();
-        g_initConfig = false;
+    if (isMockUnplugged_) {
+        return ERR_OK;
     }
-    batteryLed_->UpdateLedColor(event.chargeState, event.capacity);
-    WakeupDevice(event.chargeState);
-    HandlePopupEvent(event.capacity);
-    CalculateRemainingChargeTime(event.capacity);
 
-    BatteryServiceSubscriber::Update(batteryInfo);
-    HandleTemperature(event.temperature);
-    HandleCapacity(event.capacity, event.chargeState);
+    if (!g_initConfig) {
+        InitConfig();
+        g_initConfig = true;
+    }
+
+    UpdateBatteryInfo(event);
+    HandleBatteryInfo();
     return ERR_OK;
+}
+
+void BatteryService::UpdateBatteryInfo(const OHOS::HDI::Battery::V1_0::BatteryInfo& event)
+{
+    batteryInfo_.SetCapacity(event.capacity);
+    batteryInfo_.SetVoltage(event.voltage);
+    batteryInfo_.SetTemperature(event.temperature);
+    batteryInfo_.SetHealthState(BatteryHealthState(event.healthState));
+    batteryInfo_.SetPluggedType(BatteryPluggedType(event.pluggedType));
+    batteryInfo_.SetPluggedMaxCurrent(event.pluggedMaxCurrent);
+    batteryInfo_.SetPluggedMaxVoltage(event.pluggedMaxVoltage);
+    batteryInfo_.SetChargeState(BatteryChargeState(event.chargeState));
+    batteryInfo_.SetChargeCounter(event.chargeCounter);
+    batteryInfo_.SetTotalEnergy(event.totalEnergy);
+    batteryInfo_.SetCurAverage(event.curAverage);
+    batteryInfo_.SetRemainEnergy(event.remainEnergy);
+    batteryInfo_.SetPresent(event.present);
+    batteryInfo_.SetTechnology(event.technology);
+    batteryInfo_.SetNowCurrent(event.curNow);
+}
+
+void BatteryService::HandleBatteryInfo()
+{
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "capacity=%{public}d, voltage=%{public}d, temperature=%{public}d, "
+        "healthState=%{public}d, pluggedType=%{public}d, pluggedMaxCurrent=%{public}d, "
+        "pluggedMaxVoltage=%{public}d, chargeState=%{public}d, chargeCounter=%{public}d, present=%{public}d, "
+        "technology=%{public}s, currNow=%{public}d, totalEnergy=%{public}d, curAverage=%{public}d, "
+        "remainEnergy=%{public}d", batteryInfo_.GetCapacity(), batteryInfo_.GetVoltage(), batteryInfo_.GetTemperature(),
+        batteryInfo_.GetHealthState(), batteryInfo_.GetPluggedType(), batteryInfo_.GetPluggedMaxCurrent(),
+        batteryInfo_.GetPluggedMaxVoltage(), batteryInfo_.GetChargeState(), batteryInfo_.GetChargeCounter(),
+        batteryInfo_.IsPresent(), batteryInfo_.GetTechnology().c_str(), batteryInfo_.GetNowCurrent(),
+        batteryInfo_.GetTotalEnergy(), batteryInfo_.GetCurAverage(), batteryInfo_.GetRemainEnergy());
+
+    batteryLed_->UpdateLedColor(static_cast<int32_t>(batteryInfo_.GetChargeState()), batteryInfo_.GetCapacity());
+    WakeupDevice(batteryInfo_.GetChargeState());
+    HandlePopupEvent(batteryInfo_.GetCapacity());
+    CalculateRemainingChargeTime(batteryInfo_.GetCapacity(), batteryInfo_.GetChargeState());
+
+    BatteryServiceSubscriber::Update(batteryInfo_);
+    HandleTemperature(batteryInfo_.GetTemperature());
+    HandleCapacity(batteryInfo_.GetCapacity(), batteryInfo_.GetChargeState());
 }
 
 void BatteryService::RegisterHdiStatusListener()
@@ -221,7 +231,7 @@ void BatteryService::RegisterHdiStatusListener()
             RETURN_IF(status.serviceName != HDI_SERVICE_NAME || status.deviceClass != DEVICE_CLASS_DEFAULT);
 
             if (status.status == SERVIE_STATUS_START) {
-                SendEvent(BatteryServiceEventHandler::EVENT_REGISTER_BATTERY_HDI_CALLBACK, 0);        
+                SendEvent(BatteryServiceEventHandler::EVENT_REGISTER_BATTERY_HDI_CALLBACK, 0);
                 BATTERY_HILOGD(COMP_SVC, "battery interface service start");
             } else if (status.status == SERVIE_STATUS_STOP && iBatteryInterface_) {
                 iBatteryInterface_->UnRegister();
@@ -257,7 +267,7 @@ void BatteryService::OnStop()
 
     if (iBatteryInterface_ != nullptr) {
         iBatteryInterface_->UnRegister();
-        iBatteryInterface_ = nullptr;    
+        iBatteryInterface_ = nullptr;
     }
     if (hdiServiceMgr_ != nullptr) {
         hdiServiceMgr_->UnregisterServiceStatusListener(hdiServStatListener_);
@@ -266,21 +276,21 @@ void BatteryService::OnStop()
     BATTERY_HILOGW(COMP_SVC, "Success");
 }
 
-void BatteryService::WakeupDevice(const int32_t& chargestate)
+void BatteryService::WakeupDevice(BatteryChargeState chargeState)
 {
     BATTERY_HILOGD(COMP_SVC, "Enter");
-    if ((g_lastChargeState == CHARGE_STATE_NONE || g_lastChargeState == CHARGE_STATE_RESERVED) &&
-        (chargestate != CHARGE_STATE_NONE && chargestate !=CHARGE_STATE_RESERVED)) {
-        auto& powerMgrClient = PowerMgrClient::GetInstance();
-        powerMgrClient.WakeupDevice();
+    if ((g_lastChargeState == BatteryChargeState::CHARGE_STATE_NONE ||
+         g_lastChargeState == BatteryChargeState::CHARGE_STATE_BUTT) &&
+        (chargeState != BatteryChargeState::CHARGE_STATE_NONE &&
+         chargeState != BatteryChargeState::CHARGE_STATE_BUTT)) {
+        PowerMgrClient::GetInstance().WakeupDevice();
     }
-    g_lastChargeState = chargestate;
+    g_lastChargeState = chargeState;
 
     BATTERY_HILOGD(COMP_SVC, "Exit");
-    return;
 }
 
-void BatteryService::HandlePopupEvent(const int32_t capacity)
+void BatteryService::HandlePopupEvent(int32_t capacity)
 {
     bool ret = false;
     if ((capacity < BATTERY_LOW_CAPACITY) && !isLowPower_) {
@@ -349,7 +359,7 @@ void BatteryService::GetDisplayPosition(int32_t& width, int32_t& height)
     }
 }
 
-void BatteryService::HandleTemperature(const int32_t& temperature)
+void BatteryService::HandleTemperature(int32_t temperature)
 {
     BATTERY_HILOGD(COMP_SVC, "Enter");
     auto tempConf = batteryConfig_->GetTempConf();
@@ -363,21 +373,20 @@ void BatteryService::HandleTemperature(const int32_t& temperature)
     }
 
     BATTERY_HILOGD(COMP_SVC, "Exit");
-    return;
 }
 
-void BatteryService::HandleCapacity(const int32_t& capacity, const int32_t& chargeState)
+void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeState)
 {
     BATTERY_HILOGD(COMP_SVC, "Enter");
     auto& powerMgrClient = PowerMgrClient::GetInstance();
     if ((capacity <= batteryConfig_->GetCapacityConf()) &&
-        ((chargeState == CHARGE_STATE_NONE) || (chargeState == CHARGE_STATE_RESERVED))) {
+        ((chargeState == BatteryChargeState::CHARGE_STATE_NONE) ||
+         (chargeState == BatteryChargeState::CHARGE_STATE_BUTT))) {
         std::string reason = "LowCapacity";
         powerMgrClient.ShutDownDevice(reason);
     }
 
     BATTERY_HILOGD(COMP_SVC, "Exit");
-    return;
 }
 
 int32_t BatteryService::GetCapacity()
@@ -557,7 +566,7 @@ int32_t BatteryService::GetRemainEnergy()
     return remainEnergy;
 }
 
-void BatteryService::CalculateRemainingChargeTime(int32_t capacity)
+void BatteryService::CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState)
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     if (capacity > BATTERY_FULL_CAPACITY) {
@@ -565,15 +574,13 @@ void BatteryService::CalculateRemainingChargeTime(int32_t capacity)
         return;
     }
 
-    BatteryChargeState chargeStatus = GetChargingStatus();
-    if (chargeStatus != BatteryChargeState::CHARGE_STATE_ENABLE) {
+    if (chargeState != BatteryChargeState::CHARGE_STATE_ENABLE) {
         remainTime_ = 0;
         chargeFlag_ = false;
         return;
     }
 
-    if (chargeStatus == BatteryChargeState::CHARGE_STATE_ENABLE
-        && !chargeFlag_) {
+    if (!chargeFlag_) {
         lastCapacity_ = capacity;
         lastTime_ = GetCurrentTime();
         chargeFlag_ = true;
@@ -625,7 +632,7 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     g_service = DelayedSpSingleton<BatteryService>::GetInstance();
     BatteryDump& batteryDump = BatteryDump::GetInstance();
-    if ((args.empty()) || (args[0].size() != HELP_DMUP_PARAM)) {
+    if ((args.empty()) || (args[0].size() != HELP_DUMP_PARAM)) {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "param cannot be empty or the length is not 2");
         dprintf(fd, "cmd param number is not equal to 2\n");
         batteryDump.DumpHelp(fd);
@@ -634,7 +641,9 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
 
     bool helpRet = batteryDump.DumpBatteryHelp(fd, args);
     bool getBatteryInfo = batteryDump.GetBatteryInfo(fd, g_service, args);
-    bool total = helpRet + getBatteryInfo;
+    bool unplugged = batteryDump.MockUnplugged(fd, g_service, args);
+    bool reset = batteryDump.ResetPlugged(fd, g_service, args);
+    bool total = helpRet + getBatteryInfo + unplugged + reset;
     if (!total) {
         dprintf(fd, "cmd param is error\n");
         batteryDump.DumpHelp(fd);
@@ -643,6 +652,23 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
 
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     return ERR_OK;
+}
+
+void BatteryService::MockUnplugged(bool isUnplugged)
+{
+    if (isUnplugged) {
+        batteryInfo_.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_NONE);
+        batteryInfo_.SetPluggedMaxCurrent(0);
+        batteryInfo_.SetPluggedMaxVoltage(0);
+        batteryInfo_.SetChargeState(BatteryChargeState::CHARGE_STATE_NONE);
+        HandleBatteryInfo();
+        isMockUnplugged_ = true;
+    } else {
+        isMockUnplugged_ = false;
+        OHOS::HDI::Battery::V1_0::BatteryInfo event;
+        iBatteryInterface_->GetBatteryInfo(event);
+        HandleBatteryCallbackEvent(event);
+    }
 }
 } // namespace PowerMgr
 } // namespace OHOS

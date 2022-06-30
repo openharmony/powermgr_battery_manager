@@ -38,7 +38,9 @@ void BatteryDump::DumpHelp(int32_t fd)
 {
     dprintf(fd, "Usage:\n");
     dprintf(fd, "      -h: dump help\n");
-    dprintf(fd, "      -i: get battery info\n");
+    dprintf(fd, "      -i: dump battery info\n");
+    dprintf(fd, "      -u: unplug battery charging state\n");
+    dprintf(fd, "      -r: reset battery charging state\n");
 }
 
 void BatteryDump::DumpCurrentTime(int32_t fd)
@@ -91,6 +93,28 @@ bool BatteryDump::GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, cons
     dprintf(fd, "remainingChargeTime: %ld \n", remainingChargeTime);
     int32_t temperature = service->GetBatteryTemperature();
     dprintf(fd, "temperature: %d \n", temperature);
+    return true;
+}
+
+bool BatteryDump::MockUnplugged(int32_t fd, sptr<BatteryService>& service, const std::vector<std::u16string>& args)
+{
+    if ((args.empty()) || (args[0].compare(u"-u") != 0)) {
+        BATTERY_HILOGE(FEATURE_CHARGING, "args cannot be empty or invalid");
+        return false;
+    }
+    service->MockUnplugged(true);
+    dprintf(fd, "unplugged battery charging state \n");
+    return true;
+}
+
+bool BatteryDump::ResetPlugged(int32_t fd, sptr<BatteryService>& service, const std::vector<std::u16string>& args)
+{
+    if ((args.empty()) || (args[0].compare(u"-r") != 0)) {
+        BATTERY_HILOGE(FEATURE_CHARGING, "args cannot be empty or invalid");
+        return false;
+    }
+    service->MockUnplugged(false);
+    dprintf(fd, "reset battery charging state \n");
     return true;
 }
 }  // namespace PowerMgr
