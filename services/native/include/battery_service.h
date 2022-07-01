@@ -71,17 +71,20 @@ public:
     int64_t GetRemainingChargeTime() override;
     void ChangePath(const std::string path);
     void InitConfig();
-    void WakeupDevice(const int32_t& chargestate);
-    void HandleTemperature(const int32_t& temperature);
+    void WakeupDevice(BatteryChargeState chargeState);
+    void HandleTemperature(int32_t temperature);
     void RegisterHdiStatusListener();
     void RegisterBatteryHdiCallback();
+    void MockUnplugged(bool isPlugged);
 private:
     bool Init();
     int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_0::BatteryInfo& event);
+    void UpdateBatteryInfo(const OHOS::HDI::Battery::V1_0::BatteryInfo &event);
+    void HandleBatteryInfo();
     void SendEvent(int32_t event, int64_t delayTime);
-    void CalculateRemainingChargeTime(int32_t capacity);
-    void HandlePopupEvent(const int32_t capacity);
-    void HandleCapacity(const int32_t& capacity, const int32_t& chargeState);
+    void CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState);
+    void HandlePopupEvent(int32_t capacity);
+    void HandleCapacity(int32_t capacity, BatteryChargeState chargeState);
     bool ShowDialog(const std::string &params);
     void GetDisplayPosition(int32_t& width, int32_t& height);
     bool ready_ {false};
@@ -101,6 +104,8 @@ private:
     bool chargeFlag_ {false};
     int32_t dialogId_ = -1;
     bool isLowPower_ = false;
+    BatteryInfo batteryInfo_;
+    bool isMockUnplugged_ = false;
 };
 } // namespace PowerMgr
 } // namespace OHOS
