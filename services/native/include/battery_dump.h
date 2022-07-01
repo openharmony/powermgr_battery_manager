@@ -33,6 +33,8 @@ public:
     bool DumpBatteryHelp(int32_t fd, const std::vector<std::u16string> &args);
     void DumpHelp(int32_t fd);
     bool GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
+    bool MockUnplugged(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
+    bool ResetPlugged(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
 
 private:
     void DumpCurrentTime(int32_t fd);

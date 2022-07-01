@@ -38,7 +38,9 @@ void BatteryDump::DumpHelp(int32_t fd)
 {
     dprintf(fd, "Usage:\n");
     dprintf(fd, "      -h: dump help\n");
-    dprintf(fd, "      -i: get battery info\n");
+    dprintf(fd, "      -i: dump battery info\n");
+    dprintf(fd, "      -u: unplug battery charging state\n");
+    dprintf(fd, "      -r: reset battery charging state\n");
 }
 
 void BatteryDump::DumpCurrentTime(int32_t fd)
@@ -64,21 +66,55 @@ bool BatteryDump::GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, cons
     }
     DumpCurrentTime(fd);
     int32_t capacity = service->GetCapacity();
-    dprintf(fd, "capacity: %d \n", capacity);
+    dprintf(fd, "capacity: %u \n", capacity);
+    BatteryLevel batteryLevel = service->GetBatteryLevel();
+    dprintf(fd, "batteryLevel: %u \n", batteryLevel);
     BatteryChargeState chargingStatus = service->GetChargingStatus();
-    dprintf(fd, "chargingStatus: %d \n", chargingStatus);
+    dprintf(fd, "chargingStatus: %u \n", chargingStatus);
     BatteryHealthState healthState = service->GetHealthStatus();
-    dprintf(fd, "healthState: %d \n", healthState);
+    dprintf(fd, "healthState: %u \n", healthState);
     BatteryPluggedType pluggedType = service->GetPluggedType();
-    dprintf(fd, "pluggedType: %d \n", pluggedType);
+    dprintf(fd, "pluggedType: %u \n", pluggedType);
     int32_t voltage = service->GetVoltage();
     dprintf(fd, "voltage: %d \n", voltage);
     bool present = service->GetPresent();
     dprintf(fd, "present: %d \n", present);
     std::string technology = service->GetTechnology();
     dprintf(fd, "technology: %s \n", technology.c_str());
+    int32_t nowCurrent = service->GetNowCurrent();
+    dprintf(fd, "nowCurrent: %d \n", nowCurrent);
+    int32_t currentAverage = service->GetCurrentAverage();
+    dprintf(fd, "currentAverage: %d \n", currentAverage);
+    int32_t totalEnergy = service->GetTotalEnergy();
+    dprintf(fd, "totalEnergy: %d \n", totalEnergy);
+    int32_t remainEnergy = service->GetRemainEnergy();
+    dprintf(fd, "remainingEnergy: %d \n", remainEnergy);
+    int64_t remainingChargeTime = service->GetRemainingChargeTime();
+    dprintf(fd, "remainingChargeTime: %ld \n", remainingChargeTime);
     int32_t temperature = service->GetBatteryTemperature();
     dprintf(fd, "temperature: %d \n", temperature);
+    return true;
+}
+
+bool BatteryDump::MockUnplugged(int32_t fd, sptr<BatteryService>& service, const std::vector<std::u16string>& args)
+{
+    if ((args.empty()) || (args[0].compare(u"-u") != 0)) {
+        BATTERY_HILOGE(FEATURE_CHARGING, "args cannot be empty or invalid");
+        return false;
+    }
+    service->MockUnplugged(true);
+    dprintf(fd, "unplugged battery charging state \n");
+    return true;
+}
+
+bool BatteryDump::ResetPlugged(int32_t fd, sptr<BatteryService>& service, const std::vector<std::u16string>& args)
+{
+    if ((args.empty()) || (args[0].compare(u"-r") != 0)) {
+        BATTERY_HILOGE(FEATURE_CHARGING, "args cannot be empty or invalid");
+        return false;
+    }
+    service->MockUnplugged(false);
+    dprintf(fd, "reset battery charging state \n");
     return true;
 }
 }  // namespace PowerMgr
