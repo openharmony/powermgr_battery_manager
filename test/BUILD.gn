@@ -13,7 +13,7 @@
 
 import("//build/test.gni")
 
-group("systemtest") {
+group("battery_systemtest") {
   testonly = true
   deps = [ "systemtest/:systemtest" ]
 }

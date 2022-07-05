@@ -21,7 +21,6 @@
 #include <ipc_skeleton.h>
 #include "errors.h"
 #include "new"
-#include "wm_common.h"
 #include "permission.h"
 #include "system_ability_definition.h"
 #include "iremote_object.h"

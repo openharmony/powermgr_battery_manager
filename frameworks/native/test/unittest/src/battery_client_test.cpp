@@ -18,11 +18,7 @@
 #include <iostream>
 #include <string>
 #include <gtest/gtest.h>
-#include "if_system_ability_manager.h"
-#include "iservice_registry.h"
-#include "system_ability_definition.h"
 #include "battery_log.h"
-#include "battery_service.h"
 #include "battery_srv_client.h"
 #include "test_utils.h"
 

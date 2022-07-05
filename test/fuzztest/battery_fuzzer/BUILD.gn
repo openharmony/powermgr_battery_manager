@@ -15,18 +15,14 @@
 import("//base/powermgr/battery_manager/batterymgr.gni")
 import("//build/config/features.gni")
 import("//build/test.gni")
-module_output_path = "${batterymgr_native_part_name}/batterysrv"
 
 ##############################fuzztest##########################################
 ohos_fuzztest("BatteryFuzzTest") {
-  module_out_path = module_output_path
+  module_out_path = "${module_output_path}"
   fuzz_config_file =
       "//base/powermgr/battery_manager/test/fuzztest/battery_fuzzer"
 
-  include_dirs = [
-    "./",
-    "${battery_manager_path}/utils/native/include",
-  ]
+  include_dirs = [ "./" ]
   cflags = [
     "-g",
     "-O0",
@@ -34,7 +30,7 @@ ohos_fuzztest("BatteryFuzzTest") {
     "-fno-omit-frame-pointer",
   ]
   sources = [ "./battery_fuzzer_test.cpp" ]
-  deps = [ "${battery_manager_path}/interfaces/innerkits:batterysrv_client" ]
+  deps = [ "${battery_innerkits}:batterysrv_client" ]
 
   external_deps = [
     "c_utils:utils",
