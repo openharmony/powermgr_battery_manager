@@ -14,10 +14,8 @@
 import("//base/powermgr/battery_manager/batterymgr.gni")
 import("//build/test.gni")
 
-module_output_path = "${batterymgr_native_part_name}/batterysrv"
-
 ohos_js_unittest("batterymgr_js_interface_test") {
-  module_out_path = module_output_path
+  module_out_path = "${module_output_path}"
   hap_profile = "./config.json"
   certificate_profile = "//test/developertest/signature/openharmony_sx.p7b"
 }
