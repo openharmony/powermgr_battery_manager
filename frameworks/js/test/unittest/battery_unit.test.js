@@ -222,4 +222,70 @@ describe('appInfoTest', function () {
       console.info('batteryLevelState = ' + batteryLevelState);
       expect(batteryLevelState == 5).assertTrue();
     })
+    
+    it('CommonEventBatteryChangedCode_EXTRA_SOC_test', 0, function () {
+      console.info('CommonEventBatteryChangedCode_EXTRA_SOC = '
+          + batteryInfo.CommonEventBatteryChangedCode.EXTRA_SOC);
+      expect(batteryInfo.CommonEventBatteryChangedCode.EXTRA_SOC == 0).assertTrue();
+    })
+
+    it('CommonEventBatteryChangedCode_EXTRA_VOLTAGE_test', 0, function () {
+        console.info('CommonEventBatteryChangedCode_EXTRA_VOLTAGE = '
+            + batteryInfo.CommonEventBatteryChangedCode.EXTRA_VOLTAGE);
+        expect(batteryInfo.CommonEventBatteryChangedCode.EXTRA_VOLTAGE == 1).assertTrue();
+    })
+
+    it('CommonEventBatteryChangedCode_EXTRA_TEMPERATURE_test', 0, function () {
+        console.info('CommonEventBatteryChangedCode_EXTRA_TEMPERATURE = '
+            + batteryInfo.CommonEventBatteryChangedCode.EXTRA_TEMPERATURE);
+        expect(batteryInfo.CommonEventBatteryChangedCode.EXTRA_TEMPERATURE == 2).assertTrue();
+    })
+
+    it('CommonEventBatteryChangedCode_EXTRA_HEALTH_STATE_test', 0, function () {
+        console.info('CommonEventBatteryChangedCode_EXTRA_HEALTH_STATE = '
+            + batteryInfo.CommonEventBatteryChangedCode.EXTRA_HEALTH_STATE);
+        expect(batteryInfo.CommonEventBatteryChangedCode.EXTRA_HEALTH_STATE == 3).assertTrue();
+    })
+
+    it('CommonEventBatteryChangedCode_EXTRA_PLUGGED_TYPE_test', 0, function () {
+        console.info('CommonEventBatteryChangedCode_EXTRA_PLUGGED_TYPE = '
+            + batteryInfo.CommonEventBatteryChangedCode.EXTRA_PLUGGED_TYPE);
+        expect(batteryInfo.CommonEventBatteryChangedCode.EXTRA_PLUGGED_TYPE == 4).assertTrue();
+    })
+
+    it('CommonEventBatteryChangedCode_EXTRA_MAX_CURRENT_test', 0, function () {
+        console.info('CommonEventBatteryChangedCode_EXTRA_MAX_CURRENT = '
+            + batteryInfo.CommonEventBatteryChangedCode.EXTRA_MAX_CURRENT);
+        expect(batteryInfo.CommonEventBatteryChangedCode.EXTRA_MAX_CURRENT == 5).assertTrue();
+    })
+
+    it('CommonEventBatteryChangedCode_EXTRA_MAX_VOLTAGE_test', 0, function () {
+        console.info('CommonEventBatteryChangedCode_EXTRA_MAX_VOLTAGE = '
+            + batteryInfo.CommonEventBatteryChangedCode.EXTRA_MAX_VOLTAGE);
+        expect(batteryInfo.CommonEventBatteryChangedCode.EXTRA_MAX_VOLTAGE == 6).assertTrue();
+    })
+
+    it('CommonEventBatteryChangedCode_EXTRA_CHARGE_STATE_test', 0, function () {
+        console.info('CommonEventBatteryChangedCode_EXTRA_CHARGE_STATE = '
+            + batteryInfo.CommonEventBatteryChangedCode.EXTRA_CHARGE_STATE);
+        expect(batteryInfo.CommonEventBatteryChangedCode.EXTRA_CHARGE_STATE == 7).assertTrue();
+    })
+
+    it('CommonEventBatteryChangedCode_EXTRA_CHARGE_COUNTER_test', 0, function () {
+        console.info('CommonEventBatteryChangedCode_EXTRA_CHARGE_COUNTER = '
+            + batteryInfo.CommonEventBatteryChangedCode.EXTRA_CHARGE_COUNTER);
+        expect(batteryInfo.CommonEventBatteryChangedCode.EXTRA_CHARGE_COUNTER == 8).assertTrue();
+    })
+
+    it('CommonEventBatteryChangedCode_EXTRA_PRESENT_test', 0, function () {
+        console.info('CommonEventBatteryChangedCode_EXTRA_PRESENT = '
+            + batteryInfo.CommonEventBatteryChangedCode.EXTRA_PRESENT);
+        expect(batteryInfo.CommonEventBatteryChangedCode.EXTRA_PRESENT == 9).assertTrue();
+    })
+
+    it('CommonEventBatteryChangedCode_EXTRA_TECHNOLOGY_test', 0, function () {
+        console.info('CommonEventBatteryChangedCode_EXTRA_TECHNOLOGY = '
+            + batteryInfo.CommonEventBatteryChangedCode.EXTRA_TECHNOLOGY);
+        expect(batteryInfo.CommonEventBatteryChangedCode.EXTRA_TECHNOLOGY == 10).assertTrue();
+    })
   })
