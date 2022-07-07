@@ -39,6 +39,7 @@ constexpr int32_t BATTERY_LOW_THRESHOLD = 20;
 constexpr int32_t BATTERY_NORMAL_THRESHOLD = 90;
 constexpr int32_t BATTERY_HIGH_THRESHOLD = 99;
 constexpr int32_t BATTERY_HIGH_FULL = 100;
+const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";
 }
 
 void BatteryClientTest::SetUpTestCase(void)
@@ -73,7 +74,7 @@ HWTEST_F (BatteryClientTest, BatteryClient001, TestSize.Level1)
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/capacity", "22");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "22");
         auto capacity = BatterySrvClient.GetCapacity();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::capacity=%{public}d", capacity);
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient001 executing, capacity=" << capacity;
@@ -97,7 +98,7 @@ HWTEST_F (BatteryClientTest, BatteryClient002, TestSize.Level1)
 {
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/status", "Not charging");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/status", "Not charging");
         auto chargeState = BatterySrvClient.GetChargingStatus();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::chargeState=%{public}d", int(chargeState));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient002 executing, chargeState=" << int(chargeState);
@@ -122,7 +123,7 @@ HWTEST_F (BatteryClientTest, BatteryClient003, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient003 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/health", "Cold");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/health", "Cold");
         auto healthState = BatterySrvClient.GetHealthStatus();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::healthState=%{public}d", int(healthState));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient003 executing, healthState=" << int(healthState);
@@ -146,7 +147,7 @@ HWTEST_F (BatteryClientTest, BatteryClient004, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient004 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/present", "0");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/present", "0");
         auto present = BatterySrvClient.GetPresent();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::present=%{public}d", present);
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient004 executing, present=" << present;
@@ -170,8 +171,8 @@ HWTEST_F (BatteryClientTest, BatteryClient005, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient005 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/voltage_avg", "4654321");
-        TestUtils::WriteMock("/data/local/tmp/battery/voltage_now", "4654321");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/voltage_avg", "4654321");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/voltage_now", "4654321");
         auto voltage = BatterySrvClient.GetVoltage();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::voltage=%{public}d", voltage);
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient005 executing, voltage=" << voltage;
@@ -195,7 +196,7 @@ HWTEST_F (BatteryClientTest, BatteryClient006, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient006 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/temp", "222");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/temp", "222");
         auto temperature = BatterySrvClient.GetBatteryTemperature();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::temperature=%{public}d", temperature);
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient006 executing, temperature=" << temperature;
@@ -219,7 +220,7 @@ HWTEST_F (BatteryClientTest, BatteryClient007, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient007 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/ohos-fgu/technology", "H2");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos-fgu/technology", "H2");
         auto technology = BatterySrvClient.GetTechnology();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::technology=%{public}s", technology.c_str());
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient007 executing, technology=" << technology;
@@ -244,8 +245,8 @@ HWTEST_F (BatteryClientTest, BatteryClient008, TestSize.Level1)
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         TestUtils::ResetOnline();
-        TestUtils::WriteMock("/data/local/tmp/ohos_charger/online", "1");
-        TestUtils::WriteMock("/data/local/tmp/ohos_charger/type", "USB");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB");
         auto pluggedType = BatterySrvClient.GetPluggedType();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::pluggedType=%{public}d", int(pluggedType));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient008 executing, pluggedType=" << int(pluggedType);
@@ -269,7 +270,7 @@ HWTEST_F (BatteryClientTest, BatteryClient009, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient009 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/current_now", "4654321");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/current_now", "4654321");
         auto currnow = BatterySrvClient.GetNowCurrent();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::current=%{public}d", currnow);
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient009 executing, currnow=" << currnow;
@@ -293,7 +294,7 @@ HWTEST_F (BatteryClientTest, BatteryClient010, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient010 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/charge_now", "4654321");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/charge_now", "4654321");
         auto chargenow = BatterySrvClient.GetRemainEnergy();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::chargenow=%{public}d", chargenow);
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient010 executing, chargenow=" << chargenow;
@@ -317,7 +318,7 @@ HWTEST_F (BatteryClientTest, BatteryClient011, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient011 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/charge_full", "4654321");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/charge_full", "4654321");
         auto totalenergy = BatterySrvClient.GetTotalEnergy();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::totalenergy=%{public}d", totalenergy);
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient011 executing, totalenergy=" << totalenergy;
@@ -341,7 +342,7 @@ HWTEST_F (BatteryClientTest, BatteryClient012, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient012 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/capacity", "3");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "3");
         auto batterylevel = BatterySrvClient.GetBatteryLevel();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d", int(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient012 executing, batterylevel=" << int(batterylevel);
@@ -368,7 +369,7 @@ HWTEST_F (BatteryClientTest, BatteryClient013, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient013 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/capacity", "11");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "11");
         auto batterylevel = BatterySrvClient.GetBatteryLevel();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d", int(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient013 executing, batterylevel=" << int(batterylevel);
@@ -395,7 +396,7 @@ HWTEST_F (BatteryClientTest, BatteryClient014, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient014 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/capacity", "80");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "80");
         auto batterylevel = BatterySrvClient.GetBatteryLevel();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d", int(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient014 executing, batterylevel=" << int(batterylevel);
@@ -422,7 +423,7 @@ HWTEST_F (BatteryClientTest, BatteryClient015, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient015 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/capacity", "94");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "94");
         auto batterylevel = BatterySrvClient.GetBatteryLevel();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d", int(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient015 executing, batterylevel=" << int(batterylevel);
@@ -449,7 +450,7 @@ HWTEST_F (BatteryClientTest, BatteryClient016, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient016 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
-        TestUtils::WriteMock("/data/local/tmp/battery/capacity", "100");
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "100");
         auto batterylevel = BatterySrvClient.GetBatteryLevel();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d", int(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient016 executing, batterylevel=" << int(batterylevel);

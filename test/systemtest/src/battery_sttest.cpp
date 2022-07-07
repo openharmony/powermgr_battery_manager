@@ -49,6 +49,7 @@ static const std::string LEDS_BASE_PATH = "/sys/class/leds";
 static std::string g_redLedsNode = "red";
 static std::string g_greenLedsNode = "green";
 static std::string g_blueLedsNode = "blue";
+const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";
 
 void BatterySttest::SetUpTestCase(void)
 {
@@ -85,19 +86,18 @@ std::string CreateFile(std::string path, std::string content)
 
 static void MockFileInit()
 {
-    std::string path = "/data/local/tmp";
-    mkdir("/data/local/tmp/battery", S_IRWXU);
-    mkdir("/data/local/tmp/ohos_charger", S_IRWXU);
-    mkdir("/data/local/tmp/ohos-fgu", S_IRWXU);
+    mkdir((MOCK_BATTERY_PATH + "/battery").c_str(), S_IRWXU);
+    mkdir((MOCK_BATTERY_PATH + "/ohos_charger").c_str(), S_IRWXU);
+    mkdir((MOCK_BATTERY_PATH + "/ohos-fgu").c_str(), S_IRWXU);
     HDF_LOGD("%{public}s: enter.", __func__);
 
     sleep(1);
-    CreateFile("/data/local/tmp/battery/online", "1");
-    CreateFile("/data/local/tmp/battery/type", "Battery");
-    CreateFile("/data/local/tmp/ohos_charger/health", "Unknown");
-    CreateFile("/data/local/tmp/ohos-fgu/temp", "345");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/online", "1");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "Battery");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/health", "Unknown");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/temp", "345");
 
-    g_service->ChangePath(path);
+    g_service->ChangePath(MOCK_BATTERY_PATH);
 }
 
 static void TraversalNode()
@@ -183,22 +183,17 @@ static int32_t ReadRedLedSysfs()
     int strlen = 10;
     char buf[128] = {0};
     int32_t readSize;
-    std::string redLedPath = "/data/local/tmp/leds/mock_led:red/brightness";
     std::string sysRedLedPath = LEDS_BASE_PATH + "/" + g_redLedsNode + "/" + "brightness";
 
     int fd = open(sysRedLedPath.c_str(), O_RDWR);
     if (fd < HDF_SUCCESS) {
         HDF_LOGE("%{public}s: failed to open sys red led path %{public}s", __func__, g_redLedsNode.c_str());
-        fd = open(redLedPath.c_str(), O_RDWR);
-        if (fd < HDF_SUCCESS) {
-            HDF_LOGE("%{public}s: failed to open created red led path %{public}s", __func__, redLedPath.c_str());
-            return -1;
-        }
+        return -1;
     }
 
     readSize = read(fd, buf, sizeof(buf) - 1);
     if (readSize < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, redLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, sysRedLedPath.c_str());
         close(fd);
     }
 
@@ -216,22 +211,17 @@ static int32_t ReadGreenLedSysfs()
     int strlen = 10;
     char buf[128] = {0};
     int32_t readSize;
-    std::string greenLedPath = "/data/local/tmp/leds/mock_led:green/brightness";
     std::string sysGreenLedPath = LEDS_BASE_PATH + "/" + g_greenLedsNode + "/" + "brightness";
 
     int fd = open(sysGreenLedPath.c_str(), O_RDWR);
     if (fd < HDF_SUCCESS) {
         HDF_LOGE("%{public}s: failed to open sys green led path %{public}s", __func__, g_greenLedsNode.c_str());
-        fd = open(greenLedPath.c_str(), O_RDWR);
-        if (fd < HDF_SUCCESS) {
-            HDF_LOGE("%{public}s: failed to open created green led path %{public}s", __func__, greenLedPath.c_str());
-            return -1;
-        }
+        return -1;
     }
 
     readSize = read(fd, buf, sizeof(buf) - 1);
     if (readSize < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, greenLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, sysGreenLedPath.c_str());
         close(fd);
     }
 
@@ -249,22 +239,17 @@ static int32_t ReadBlueLedSysfs()
     int strlen = 10;
     char buf[128] = {0};
     int32_t readSize;
-    std::string blueLedPath = "/data/local/tmp/leds/mock_led:blue/brightness";
     std::string sysBlueLedPath = LEDS_BASE_PATH + "/" + g_blueLedsNode + "/" + "brightness";
 
     int fd = open(sysBlueLedPath.c_str(), O_RDWR);
     if (fd < HDF_SUCCESS) {
         HDF_LOGE("%{public}s: failed to open sys blue led path %{public}s", __func__, g_blueLedsNode.c_str());
-        fd = open(blueLedPath.c_str(), O_RDWR);
-        if (fd < HDF_SUCCESS) {
-            HDF_LOGE("%{public}s: failed to open created blue led path %{public}s", __func__, blueLedPath.c_str());
-            return -1;
-        }
+        return -1;
     }
 
     readSize = read(fd, buf, sizeof(buf) - 1);
     if (readSize < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, blueLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, sysBlueLedPath.c_str());
         close(fd);
     }
 
@@ -285,7 +270,7 @@ static HWTEST_F (BatterySttest, BatteryST001, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST001 start.", __func__);
     MockFileInit();
-    CreateFile("/data/local/tmp/battery/temp", "567");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/temp", "567");
 
     auto temperature = g_service->GetBatteryTemperature();
     HDF_LOGD("%{public}s: enter. BatteryST001::temperature=%{public}d.", __func__, temperature);
@@ -302,8 +287,8 @@ static HWTEST_F (BatterySttest, BatteryST001, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST002, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST002 start.", __func__);
-    CreateFile("/data/local/tmp/battery/voltage_avg", "4123456");
-    CreateFile("/data/local/tmp/battery/voltage_now", "4123456");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/voltage_avg", "4123456");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/voltage_now", "4123456");
 
     auto voltage = g_service->GetVoltage();
     HDF_LOGD("%{public}s: enter. BatteryST002::voltage=%{public}d.", __func__, voltage);
@@ -320,7 +305,7 @@ HWTEST_F (BatterySttest, BatteryST002, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST003, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST003 start.", __func__);
-    CreateFile("/data/local/tmp/battery/capacity", "11");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/capacity", "11");
 
     auto capacity = g_service->GetCapacity();
     HDF_LOGD("%{public}s: enter. BatteryST003::capacity=%{public}d.", __func__, capacity);
@@ -337,7 +322,7 @@ HWTEST_F (BatterySttest, BatteryST003, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST004, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST004 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Good");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Good");
 
     auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST004::healthState=%{public}d.", __func__, healthState);
@@ -354,7 +339,7 @@ HWTEST_F (BatterySttest, BatteryST004, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST005, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST005 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Cold");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Cold");
 
     auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST005::healthState=%{public}d.", __func__, healthState);
@@ -371,7 +356,7 @@ HWTEST_F (BatterySttest, BatteryST005, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST006, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST006 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Warm");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Warm");
 
     auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST006::healthState=%{public}d.", __func__, healthState);
@@ -388,7 +373,7 @@ HWTEST_F (BatterySttest, BatteryST006, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST007, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST007 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Cool");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Cool");
 
     auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST007::healthState=%{public}d.", __func__, healthState);
@@ -405,7 +390,7 @@ HWTEST_F (BatterySttest, BatteryST007, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST008, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST008 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Hot");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Hot");
 
     auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST008::healthState=%{public}d.", __func__, healthState);
@@ -422,7 +407,7 @@ HWTEST_F (BatterySttest, BatteryST008, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST009, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST009 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Overheat");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Overheat");
 
     auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST009::healthState=%{public}d.", __func__, healthState);
@@ -439,7 +424,7 @@ HWTEST_F (BatterySttest, BatteryST009, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST010, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST010 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Over voltage");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Over voltage");
 
     auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST010::healthState=%{public}d.", __func__, healthState);
@@ -456,7 +441,7 @@ HWTEST_F (BatterySttest, BatteryST010, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST011, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST011 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Dead");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Dead");
 
     auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST011::healthState=%{public}d.", __func__, healthState);
@@ -473,7 +458,7 @@ HWTEST_F (BatterySttest, BatteryST011, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST012, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST012 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Unknown");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Unknown");
 
     auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST012::healthState=%{public}d.", __func__, healthState);
@@ -490,7 +475,7 @@ HWTEST_F (BatterySttest, BatteryST012, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST013, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST013 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Unspecified failure");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Unspecified failure");
 
     auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST013::healthState=%{public}d.", __func__, healthState);
@@ -507,7 +492,7 @@ HWTEST_F (BatterySttest, BatteryST013, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST014, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST014 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "");
 
     auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST014::healthState=%{public}d.", __func__, healthState);
@@ -524,7 +509,7 @@ HWTEST_F (BatterySttest, BatteryST014, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST015, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST015 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "other");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "other");
 
     auto healthState = g_service->GetHealthStatus();
     HDF_LOGD("%{public}s: enter. BatteryST015::healthState=%{public}d.", __func__, healthState);
@@ -541,14 +526,14 @@ HWTEST_F (BatterySttest, BatteryST015, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST016, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST016 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "USB");
-    CreateFile("/data/local/tmp/battery/type", "USB");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "USB");
-    CreateFile("/data/local/tmp/ohos_charger/online", "1");
-    CreateFile("/data/local/tmp/battery/online", "1");
-    CreateFile("/data/local/tmp/ohos-fgu/online", "1");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "USB");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "USB");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/online", "1");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/online", "1");
 
-    std::string path = "/data/local/tmp";
+    std::string path = MOCK_BATTERY_PATH + "";
     g_service->ChangePath(path);
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST016::pluggedType=%{public}d.", __func__, pluggedType);
@@ -565,9 +550,9 @@ HWTEST_F (BatterySttest, BatteryST016, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST017 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "USB_PD_DRP");
-    CreateFile("/data/local/tmp/battery/type", "USB_PD_DRP");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_PD_DRP");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB_PD_DRP");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "USB_PD_DRP");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "USB_PD_DRP");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST017::pluggedType=%{public}d.", __func__, pluggedType);
@@ -584,9 +569,9 @@ HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST018 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "Wireless");
-    CreateFile("/data/local/tmp/battery/type", "Wireless");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "Wireless");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "Wireless");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "Wireless");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "Wireless");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST018::pluggedType=%{public}d.", __func__, pluggedType);
@@ -603,9 +588,9 @@ HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST019 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "Mains");
-    CreateFile("/data/local/tmp/battery/type", "Mains");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "Mains");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "Mains");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "Mains");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "Mains");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST019::pluggedType=%{public}d.", __func__, pluggedType);
@@ -622,9 +607,9 @@ HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST020 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "UPS");
-    CreateFile("/data/local/tmp/battery/type", "UPS");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "UPS");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "UPS");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "UPS");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "UPS");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST020::pluggedType=%{public}d.", __func__, pluggedType);
@@ -641,9 +626,9 @@ HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST021 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "USB_ACA");
-    CreateFile("/data/local/tmp/battery/type", "USB_ACA");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_ACA");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB_ACA");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "USB_ACA");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "USB_ACA");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST021::pluggedType=%{public}d.", __func__, pluggedType);
@@ -660,9 +645,9 @@ HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST022, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST022 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "USB_C");
-    CreateFile("/data/local/tmp/battery/type", "USB_C");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_C");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB_C");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "USB_C");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "USB_C");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST022::pluggedType=%{public}d.", __func__, pluggedType);
@@ -679,9 +664,9 @@ HWTEST_F (BatterySttest, BatteryST022, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST023, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST023 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "USB_CDP");
-    CreateFile("/data/local/tmp/battery/type", "USB_CDP");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_CDP");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB_CDP");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "USB_CDP");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "USB_CDP");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST023::pluggedType=%{public}d.", __func__, pluggedType);
@@ -698,9 +683,9 @@ HWTEST_F (BatterySttest, BatteryST023, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST024, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST024 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "USB_DCP");
-    CreateFile("/data/local/tmp/battery/type", "USB_DCP");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_DCP");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB_DCP");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "USB_DCP");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "USB_DCP");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST024::pluggedType=%{public}d.", __func__, pluggedType);
@@ -717,9 +702,9 @@ HWTEST_F (BatterySttest, BatteryST024, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST025, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST025 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "USB_HVDCP");
-    CreateFile("/data/local/tmp/battery/type", "USB_HVDCP");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_HVDCP");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB_HVDCP");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "USB_HVDCP");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "USB_HVDCP");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST025::pluggedType=%{public}d.", __func__, pluggedType);
@@ -736,9 +721,9 @@ HWTEST_F (BatterySttest, BatteryST025, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST026, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST026 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "USB_PD");
-    CreateFile("/data/local/tmp/battery/type", "USB_PD");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "USB_PD");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB_PD");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "USB_PD");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "USB_PD");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST026::pluggedType=%{public}d.", __func__, pluggedType);
@@ -755,9 +740,9 @@ HWTEST_F (BatterySttest, BatteryST026, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST027, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST027 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "Unknown");
-    CreateFile("/data/local/tmp/battery/type", "Unknown");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "Unknown");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "Unknown");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "Unknown");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "Unknown");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST027::pluggedType=%{public}d.", __func__, pluggedType);
@@ -774,9 +759,9 @@ HWTEST_F (BatterySttest, BatteryST027, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST028, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST028 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "");
-    CreateFile("/data/local/tmp/battery/type", "");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST028::pluggedType=%{public}d.", __func__, pluggedType);
@@ -793,9 +778,9 @@ HWTEST_F (BatterySttest, BatteryST028, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST029, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST029 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "other");
-    CreateFile("/data/local/tmp/battery/type", "other");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "other");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "other");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "other");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "other");
 
     auto pluggedType = g_service->GetPluggedType();
     HDF_LOGD("%{public}s: enter. BatteryST029::pluggedType=%{public}d.", __func__, pluggedType);
@@ -812,7 +797,7 @@ HWTEST_F (BatterySttest, BatteryST029, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST030, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST030 start.", __func__);
-    CreateFile("/data/local/tmp/battery/status", "Discharging");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/status", "Discharging");
 
     auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST030::chargeState=%{public}d.", __func__, chargeState);
@@ -829,7 +814,7 @@ HWTEST_F (BatterySttest, BatteryST030, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST031, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST031 start.", __func__);
-    CreateFile("/data/local/tmp/battery/status", "Charging");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/status", "Charging");
 
     auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST031::chargeState=%{public}d.", __func__, chargeState);
@@ -846,7 +831,7 @@ HWTEST_F (BatterySttest, BatteryST031, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST032, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST032 start.", __func__);
-    CreateFile("/data/local/tmp/battery/status", "Full");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/status", "Full");
 
     auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST032::chargeState=%{public}d.", __func__, chargeState);
@@ -863,7 +848,7 @@ HWTEST_F (BatterySttest, BatteryST032, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST033, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST033 start.", __func__);
-    CreateFile("/data/local/tmp/battery/status", "Not charging");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/status", "Not charging");
 
     auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST033::chargeState=%{public}d.", __func__, chargeState);
@@ -880,7 +865,7 @@ HWTEST_F (BatterySttest, BatteryST033, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST034, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST034 start.", __func__);
-    CreateFile("/data/local/tmp/battery/status", "Unknown");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/status", "Unknown");
 
     auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST034::chargeState=%{public}d.", __func__, chargeState);
@@ -897,7 +882,7 @@ HWTEST_F (BatterySttest, BatteryST034, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST035, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST035 start.", __func__);
-    CreateFile("/data/local/tmp/battery/status", "");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/status", "");
 
     auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST035::chargeState=%{public}d.", __func__, chargeState);
@@ -914,7 +899,7 @@ HWTEST_F (BatterySttest, BatteryST035, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST036, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST036 start.", __func__);
-    CreateFile("/data/local/tmp/battery/status", "others");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/status", "others");
 
     auto chargeState = g_service->GetChargingStatus();
     HDF_LOGD("%{public}s: enter. BatteryST036::chargeState=%{public}d.", __func__, chargeState);
@@ -931,7 +916,7 @@ HWTEST_F (BatterySttest, BatteryST036, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST037, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST037 start.", __func__);
-    CreateFile("/data/local/tmp/battery/present", "1");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/present", "1");
 
     auto present = g_service->GetPresent();
     HDF_LOGD("%{public}s: enter. BatteryST037::present=%{public}d.", __func__, present);
@@ -948,7 +933,7 @@ HWTEST_F (BatterySttest, BatteryST037, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST038, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST038 start.", __func__);
-    CreateFile("/data/local/tmp/battery/present", "0");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/present", "0");
 
     auto present = g_service->GetPresent();
     HDF_LOGD("%{public}s: enter. BatteryST038::present=%{public}d.", __func__, present);
@@ -965,7 +950,7 @@ HWTEST_F (BatterySttest, BatteryST038, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST039, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST039 start.", __func__);
-    CreateFile("/data/local/tmp/ohos-fgu/technology", "Li");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/technology", "Li");
 
     auto technology = g_service->GetTechnology();
     HDF_LOGD("%{public}s: enter. BatteryST039::technology=%{public}s.", __func__, technology.c_str());
@@ -982,7 +967,7 @@ HWTEST_F (BatterySttest, BatteryST039, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST042, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST042 start.", __func__);
-    CreateFile("/data/local/tmp/battery/capacity", "44");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/capacity", "44");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto capacity = BatterySrvClient.GetCapacity();
@@ -1001,7 +986,7 @@ HWTEST_F (BatterySttest, BatteryST042, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST043, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST043 start.", __func__);
-    CreateFile("/data/local/tmp/battery/status", "Discharging");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/status", "Discharging");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto chargeState = BatterySrvClient.GetChargingStatus();
@@ -1019,7 +1004,7 @@ HWTEST_F (BatterySttest, BatteryST043, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST044, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST044 start.", __func__);
-    CreateFile("/data/local/tmp/battery/status", "Charging");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/status", "Charging");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto chargeState = BatterySrvClient.GetChargingStatus();
@@ -1037,7 +1022,7 @@ HWTEST_F (BatterySttest, BatteryST044, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST045, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST045 start.", __func__);
-    CreateFile("/data/local/tmp/battery/status", "Full");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/status", "Full");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto chargeState = BatterySrvClient.GetChargingStatus();
@@ -1055,7 +1040,7 @@ HWTEST_F (BatterySttest, BatteryST045, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST046, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST046 start.", __func__);
-    CreateFile("/data/local/tmp/battery/status", "Not charging");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/status", "Not charging");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto chargeState = BatterySrvClient.GetChargingStatus();
@@ -1073,7 +1058,7 @@ HWTEST_F (BatterySttest, BatteryST046, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST047, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST047 start.", __func__);
-    CreateFile("/data/local/tmp/battery/status", "Unknown");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/status", "Unknown");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto chargeState = BatterySrvClient.GetChargingStatus();
@@ -1091,7 +1076,7 @@ HWTEST_F (BatterySttest, BatteryST047, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST048, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST048 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Good");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Good");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto healthState = BatterySrvClient.GetHealthStatus();
@@ -1109,7 +1094,7 @@ HWTEST_F (BatterySttest, BatteryST048, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST049, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST049 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Cold");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Cold");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto healthState = BatterySrvClient.GetHealthStatus();
@@ -1127,7 +1112,7 @@ HWTEST_F (BatterySttest, BatteryST049, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST050, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST050 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Hot");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Hot");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto healthState = BatterySrvClient.GetHealthStatus();
@@ -1145,7 +1130,7 @@ HWTEST_F (BatterySttest, BatteryST050, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST051, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST051 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Over voltage");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Over voltage");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto healthState = BatterySrvClient.GetHealthStatus();
@@ -1163,7 +1148,7 @@ HWTEST_F (BatterySttest, BatteryST051, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST052, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST052 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Dead");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Dead");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto healthState = BatterySrvClient.GetHealthStatus();
@@ -1181,7 +1166,7 @@ HWTEST_F (BatterySttest, BatteryST052, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST053, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST053 start.", __func__);
-    CreateFile("/data/local/tmp/battery/health", "Unknown");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/health", "Unknown");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto healthState = BatterySrvClient.GetHealthStatus();
@@ -1199,7 +1184,7 @@ HWTEST_F (BatterySttest, BatteryST053, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST054, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST054 start.", __func__);
-    CreateFile("/data/local/tmp/battery/present", "1");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/present", "1");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto present = BatterySrvClient.GetPresent();
@@ -1217,7 +1202,7 @@ HWTEST_F (BatterySttest, BatteryST054, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST055, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST055 start.", __func__);
-    CreateFile("/data/local/tmp/battery/present", "0");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/present", "0");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto present = BatterySrvClient.GetPresent();
@@ -1235,8 +1220,8 @@ HWTEST_F (BatterySttest, BatteryST055, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST056, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST056 start.", __func__);
-    CreateFile("/data/local/tmp/battery/voltage_avg", "4654321");
-    CreateFile("/data/local/tmp/battery/voltage_now", "4654321");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/voltage_avg", "4654321");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/voltage_now", "4654321");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto voltage = BatterySrvClient.GetVoltage();
@@ -1254,7 +1239,7 @@ HWTEST_F (BatterySttest, BatteryST056, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST057, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST057 start.", __func__);
-    CreateFile("/data/local/tmp/battery/temp", "234");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/temp", "234");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto temperature = BatterySrvClient.GetBatteryTemperature();
@@ -1272,7 +1257,7 @@ HWTEST_F (BatterySttest, BatteryST057, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST058, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST058 start.", __func__);
-    CreateFile("/data/local/tmp/ohos-fgu/technology", "H2");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/technology", "H2");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto technology = BatterySrvClient.GetTechnology();
@@ -1290,8 +1275,8 @@ HWTEST_F (BatterySttest, BatteryST058, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST059, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST059 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "None");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "None");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "None");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "None");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1309,9 +1294,9 @@ HWTEST_F (BatterySttest, BatteryST059, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST060, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST060 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "Mains");
-    CreateFile("/data/local/tmp/battery/type", "Mains");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "Mains");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "Mains");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "Mains");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "Mains");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1329,9 +1314,9 @@ HWTEST_F (BatterySttest, BatteryST060, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST061, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST061 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "USB");
-    CreateFile("/data/local/tmp/battery/type", "USB");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "USB");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "USB");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "USB");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1349,9 +1334,9 @@ HWTEST_F (BatterySttest, BatteryST061, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST062, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST062 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "Wireless");
-    CreateFile("/data/local/tmp/battery/type", "Wireless");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "Wireless");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "Wireless");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "Wireless");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "Wireless");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
@@ -1370,9 +1355,9 @@ HWTEST_F (BatterySttest, BatteryST062, TestSize.Level1)
 HWTEST_F (BatterySttest, BatteryST063, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST063 start.", __func__);
-    CreateFile("/data/local/tmp/ohos_charger/type", "Unknown");
-    CreateFile("/data/local/tmp/battery/type", "Unknown");
-    CreateFile("/data/local/tmp/ohos-fgu/type", "Unknown");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos_charger/type", "Unknown");
+    CreateFile(MOCK_BATTERY_PATH + "/battery/type", "Unknown");
+    CreateFile(MOCK_BATTERY_PATH + "/ohos-fgu/type", "Unknown");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     auto pluggedType = BatterySrvClient.GetPluggedType();
