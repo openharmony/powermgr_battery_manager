@@ -63,6 +63,7 @@ ohos_shared_library("batteryservice") {
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent_manager:libhisyseventmanager",
     "//base/powermgr/battery_manager/frameworks/dialog/dialog_ui/js:dialog_js_files_etc",
     "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
+    "//drivers/interface/light/v1_0:liblight_proxy_1.0",
     "//drivers/peripheral/battery/interfaces/hdi_service:libbattery_interface_service_1.0",
     "//foundation/arkui/ace_engine/interfaces/inner_api/ui_service_manager:ui_service_mgr",
     "//foundation/graphic/graphic_2d:libwmclient",
