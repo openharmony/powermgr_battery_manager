@@ -17,11 +17,12 @@ import router from '@ohos.router'
 
 export default {
     data: {
-        message: router.getParams().message,
+        lowPower: router.getParams().lowPower,
         cancelButton: router.getParams().cancelButton,
     },
     onInit() {
-        console.info('getParams: ' + router.getParams());
+        this.lowPower = this.$t("message.lowPower");
+        this.cancelButton = this.$t("message.cancelButton");
     },
     onCancel() {
         console.info('click cancel');
