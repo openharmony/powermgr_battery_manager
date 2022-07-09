@@ -30,7 +30,7 @@
 #include "power_common.h"
 
 using namespace OHOS::HDI::Battery;
-using namespace OHOS::HDI::Battery::V1_0;
+using namespace OHOS::HDI::Battery::V1_1;
 
 namespace OHOS {
 namespace PowerMgr {
@@ -142,14 +142,14 @@ void BatteryService::RegisterBatteryHdiCallback()
 void BatteryService::InitConfig()
 {
     BATTERY_HILOGD(COMP_SVC, "Enter");
-    batteryConfig_ = std::make_unique<HDI::Battery::V1_0::BatteryConfig>();
+    batteryConfig_ = std::make_unique<HDI::Battery::V1_1::BatteryConfig>();
     if (batteryConfig_ == nullptr) {
         BATTERY_HILOGD(COMP_SVC, "instantiate batteryconfig error.");
         return;
     }
     batteryConfig_->Init();
 
-    batteryLed_ = std::make_unique<HDI::Battery::V1_0::BatteryLed>();
+    batteryLed_ = std::make_unique<HDI::Battery::V1_1::BatteryLed>();
     if (batteryLed_ == nullptr) {
         BATTERY_HILOGD(COMP_SVC, "instantiate BatteryLed error.");
         return;
@@ -158,7 +158,7 @@ void BatteryService::InitConfig()
     BATTERY_HILOGI(COMP_SVC, "Success");
 }
 
-int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_0::BatteryInfo& event)
+int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_1::BatteryInfo& event)
 {
     BATTERY_HILOGD(COMP_SVC, "Enter");
     if (isMockUnplugged_) {
@@ -175,7 +175,7 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_
     return ERR_OK;
 }
 
-void BatteryService::UpdateBatteryInfo(const OHOS::HDI::Battery::V1_0::BatteryInfo& event)
+void BatteryService::UpdateBatteryInfo(const OHOS::HDI::Battery::V1_1::BatteryInfo& event)
 {
     batteryInfo_.SetCapacity(event.capacity);
     batteryInfo_.SetVoltage(event.voltage);
@@ -415,7 +415,7 @@ void BatteryService::ChangePath(const std::string path)
 BatteryChargeState BatteryService::GetChargingStatus()
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    OHOS::HDI::Battery::V1_0::BatteryChargeState chargeState = OHOS::HDI::Battery::V1_0::BatteryChargeState(0);
+    OHOS::HDI::Battery::V1_1::BatteryChargeState chargeState = OHOS::HDI::Battery::V1_1::BatteryChargeState(0);
 
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
@@ -429,7 +429,7 @@ BatteryChargeState BatteryService::GetChargingStatus()
 BatteryHealthState BatteryService::GetHealthStatus()
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    OHOS::HDI::Battery::V1_0::BatteryHealthState healthState = OHOS::HDI::Battery::V1_0::BatteryHealthState(0);
+    OHOS::HDI::Battery::V1_1::BatteryHealthState healthState = OHOS::HDI::Battery::V1_1::BatteryHealthState(0);
 
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
@@ -443,7 +443,7 @@ BatteryHealthState BatteryService::GetHealthStatus()
 BatteryPluggedType BatteryService::GetPluggedType()
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    OHOS::HDI::Battery::V1_0::BatteryPluggedType pluggedType = OHOS::HDI::Battery::V1_0::BatteryPluggedType(0);
+    OHOS::HDI::Battery::V1_1::BatteryPluggedType pluggedType = OHOS::HDI::Battery::V1_1::BatteryPluggedType(0);
 
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
@@ -665,7 +665,7 @@ void BatteryService::MockUnplugged(bool isUnplugged)
         isMockUnplugged_ = true;
     } else {
         isMockUnplugged_ = false;
-        OHOS::HDI::Battery::V1_0::BatteryInfo event;
+        OHOS::HDI::Battery::V1_1::BatteryInfo event;
         iBatteryInterface_->GetBatteryInfo(event);
         HandleBatteryCallbackEvent(event);
     }

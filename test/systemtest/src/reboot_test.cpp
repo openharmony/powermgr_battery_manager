@@ -20,7 +20,7 @@
 #include "utils/hdf_log.h"
 
 using namespace testing::ext;
-using namespace OHOS::HDI::Battery::V1_0;
+using namespace OHOS::HDI::Battery::V1_1;
 using namespace std;
 
 namespace RebootTest {
