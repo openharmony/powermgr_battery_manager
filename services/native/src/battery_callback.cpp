@@ -22,7 +22,7 @@ using namespace OHOS::HDI::Battery;
 namespace OHOS {
 namespace PowerMgr {
 BatteryCallback::BatteryEventCallback BatteryCallback::eventCb_ = nullptr;
-int32_t BatteryCallback::Update(const HDI::Battery::V1_0::BatteryInfo& event)
+int32_t BatteryCallback::Update(const HDI::Battery::V1_1::BatteryInfo& event)
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "BatteryInfo capacity=%{public}d, voltage=%{public}d, temperature=%{public}d, " \
         "healthState=%{public}d, pluggedType=%{public}d, pluggedMaxCurrent=%{public}d, " \
