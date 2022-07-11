@@ -17,17 +17,17 @@
 #define POWERMGR_BATTERY_MANAGER_BATTERY_CALLBACK_H
 
 #include <functional>
-#include "v1_0/ibattery_callback.h"
+#include "v1_1/ibattery_callback.h"
 
 namespace OHOS {
 namespace PowerMgr {
-class BatteryCallback : public HDI::Battery::V1_0::IBatteryCallback {
+class BatteryCallback : public HDI::Battery::V1_1::IBatteryCallback {
 public:
     BatteryCallback() {}
     virtual ~BatteryCallback() {}
-    using BatteryEventCallback = std::function<int32_t(const HDI::Battery::V1_0::BatteryInfo& event)>;
+    using BatteryEventCallback = std::function<int32_t(const HDI::Battery::V1_1::BatteryInfo& event)>;
     static int32_t RegisterBatteryEvent(const BatteryEventCallback& eventCb);
-    int32_t Update(const HDI::Battery::V1_0::BatteryInfo& event) override;
+    int32_t Update(const HDI::Battery::V1_1::BatteryInfo& event) override;
 private:
     static BatteryEventCallback eventCb_;
 };

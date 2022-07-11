@@ -33,13 +33,13 @@ namespace {
     struct ChargerThreadUnitTest {};
 }
 
-std::unique_ptr<OHOS::HDI::Battery::V1_0::BatteryBacklight>
-    GetBacklightTest(OHOS::HDI::Battery::V1_0::ChargerThread& cthread);
+std::unique_ptr<OHOS::HDI::Battery::V1_1::BatteryBacklight>
+    GetBacklightTest(OHOS::HDI::Battery::V1_1::ChargerThread& cthread);
 
 template<typename Tag, typename PrivateFun, PrivateFun privateFun>
 class Reboot {
-    friend std::unique_ptr<OHOS::HDI::Battery::V1_0::BatteryBacklight> GetBacklightTest(
-        OHOS::HDI::Battery::V1_0::ChargerThread& cthread)
+    friend std::unique_ptr<OHOS::HDI::Battery::V1_1::BatteryBacklight> GetBacklightTest(
+        OHOS::HDI::Battery::V1_1::ChargerThread& cthread)
     {
         return std::move(cthread.*privateFun);
     }
@@ -47,8 +47,8 @@ class Reboot {
 
 template class Reboot <
     ChargerThreadUnitTest,
-    decltype(&OHOS::HDI::Battery::V1_0::ChargerThread::backlight_),
-    &OHOS::HDI::Battery::V1_0::ChargerThread::backlight_
+    decltype(&OHOS::HDI::Battery::V1_1::ChargerThread::backlight_),
+    &OHOS::HDI::Battery::V1_1::ChargerThread::backlight_
 >;
 }
 #endif // REBOOT_TEST_H

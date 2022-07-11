@@ -60,7 +60,7 @@ ohos_unittest("test_batteryclient") {
     "ability_base:zuri",
     "bundle_framework:appexecfwk_base",
     "common_event_service:cesfwk_innerkits",
-    "drivers_interface_battery:libbattery_proxy_1.0",
+    "drivers_interface_battery:libbattery_proxy_1.1",
     "eventhandler:libeventhandler",
     "hdf_core:libhdf_utils",
     "hdf_core:libhdi",

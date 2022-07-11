@@ -19,7 +19,7 @@
 #include "iremote_object.h"
 #include "sp_singleton.h"
 #include "system_ability.h"
-#include "v1_0/battery_interface_proxy.h"
+#include "v1_1/battery_interface_proxy.h"
 #include "window_manager.h"
 
 #include "batteryd_api.h"
@@ -33,7 +33,7 @@
 
 namespace OHOS {
 namespace PowerMgr {
-using namespace OHOS::HDI::Battery::V1_0;
+using namespace OHOS::HDI::Battery::V1_1;
 class BatteryService final : public SystemAbility,
     public BatterySrvStub {
 DECLARE_SYSTEM_ABILITY(BatteryService)
@@ -78,8 +78,8 @@ public:
     void MockUnplugged(bool isPlugged);
 private:
     bool Init();
-    int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_0::BatteryInfo& event);
-    void UpdateBatteryInfo(const OHOS::HDI::Battery::V1_0::BatteryInfo &event);
+    int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_1::BatteryInfo& event);
+    void UpdateBatteryInfo(const OHOS::HDI::Battery::V1_1::BatteryInfo &event);
     void HandleBatteryInfo();
     void SendEvent(int32_t event, int64_t delayTime);
     void CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState);
@@ -93,8 +93,8 @@ private:
     std::shared_ptr<AppExecFwk::EventRunner> eventRunner_;
     std::shared_ptr<BatteryServiceEventHandler> handler_;
     sptr<BatteryServiceSubscriber> batterydSubscriber_;
-    std::unique_ptr<HDI::Battery::V1_0::BatteryConfig> batteryConfig_ = nullptr;
-    std::unique_ptr<HDI::Battery::V1_0::BatteryLed> batteryLed_ = nullptr;
+    std::unique_ptr<HDI::Battery::V1_1::BatteryConfig> batteryConfig_ = nullptr;
+    std::unique_ptr<HDI::Battery::V1_1::BatteryLed> batteryLed_ = nullptr;
     sptr<IBatteryInterface> iBatteryInterface_ = nullptr;
     sptr<OHOS::HDI::ServiceManager::V1_0::IServiceManager> hdiServiceMgr_ { nullptr };
     sptr<HdiServiceStatusListener::IServStatListener> hdiServStatListener_ { nullptr };
