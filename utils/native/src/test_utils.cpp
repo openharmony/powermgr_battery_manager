@@ -56,7 +56,7 @@ void TestUtils::WriteMock(const std::string& path, const std::string content)
 {
     std::ofstream stream(path.c_str());
     if (!stream.is_open()) {
-        BATTERY_HILOGI(LABEL_TEST, "Cannot create file %{public}s", path.c_str());
+        BATTERY_HILOGI(LABEL_TEST, "Cannot create file %{private}s", path.c_str());
         return;
     }
     stream << content.c_str() << std::endl;
