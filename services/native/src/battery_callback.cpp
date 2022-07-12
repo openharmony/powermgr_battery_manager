@@ -24,14 +24,6 @@ namespace PowerMgr {
 BatteryCallback::BatteryEventCallback BatteryCallback::eventCb_ = nullptr;
 int32_t BatteryCallback::Update(const HDI::Battery::V1_1::BatteryInfo& event)
 {
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "BatteryInfo capacity=%{public}d, voltage=%{public}d, temperature=%{public}d, " \
-        "healthState=%{public}d, pluggedType=%{public}d, pluggedMaxCurrent=%{public}d, " \
-        "pluggedMaxVoltage=%{public}d, chargeState=%{public}d, chargeCounter=%{public}d, present=%{public}d, " \
-        "technology=%{public}s", event.capacity, event.voltage,
-        event.temperature, event.healthState, event.pluggedType,
-        event.pluggedMaxCurrent, event.pluggedMaxVoltage, event.chargeState,
-        event.chargeCounter, event.present, event.technology.c_str());
-
     if (eventCb_ == nullptr) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "eventCb_ is nullptr, cannot update battery info");
         return HDF_FAILURE;
@@ -42,7 +34,6 @@ int32_t BatteryCallback::Update(const HDI::Battery::V1_1::BatteryInfo& event)
 int32_t BatteryCallback::RegisterBatteryEvent(const BatteryEventCallback& eventCb)
 {
     eventCb_ = eventCb;
-    BATTERY_HILOGD(COMP_HDI, "eventCb_ is registered");
     return HDF_SUCCESS;
 }
 } // OHOS

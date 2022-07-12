@@ -57,13 +57,11 @@ ErrCode BatterySrvClient::Connect()
     }
 
     proxy_ = iface_cast<IBatterySrv>(remoteObject_);
-    BATTERY_HILOGI(COMP_FWK, "Connect BatterySrv ok");
     return ERR_OK;
 }
 
 void BatterySrvClient::ResetProxy(const wptr<IRemoteObject>& remote)
 {
-    BATTERY_HILOGW(COMP_FWK, "Enter");
     std::lock_guard<std::mutex> lock(mutex_);
     RETURN_IF(proxy_ == nullptr);
     auto serviceRemote = proxy_->AsObject();
@@ -75,13 +73,12 @@ void BatterySrvClient::ResetProxy(const wptr<IRemoteObject>& remote)
 
 void BatterySrvClient::BatterySrvDeathRecipient::OnRemoteDied(const wptr<IRemoteObject>& remote)
 {
-    BATTERY_HILOGW(COMP_FWK, "Enter");
+    BATTERY_HILOGW(COMP_FWK, "BateryService Died");
     if (remote == nullptr) {
         BATTERY_HILOGE(COMP_FWK, "remote is nullptr");
         return;
     }
     BatterySrvClient::GetInstance().ResetProxy(remote);
-    BATTERY_HILOGW(COMP_FWK, "Success");
 }
 
 int32_t BatterySrvClient::GetCapacity()
@@ -89,7 +86,6 @@ int32_t BatterySrvClient::GetCapacity()
     int32_t capacity = INVALID_BATT_INT_VALUE;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, capacity);
     capacity = proxy_->GetCapacity();
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "capacity %{public}d", capacity);
     return capacity;
 }
 
@@ -98,7 +94,6 @@ BatteryChargeState BatterySrvClient::GetChargingStatus()
     BatteryChargeState chargingState = BatteryChargeState::CHARGE_STATE_BUTT;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, chargingState);
     chargingState = proxy_->GetChargingStatus();
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "chargingState %{public}d", chargingState);
     return chargingState;
 }
 
@@ -107,7 +102,6 @@ BatteryHealthState BatterySrvClient::GetHealthStatus()
     BatteryHealthState healthStatus = BatteryHealthState::HEALTH_STATE_BUTT;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, healthStatus);
     healthStatus = proxy_->GetHealthStatus();
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "healthStatus %{public}d", healthStatus);
     return healthStatus;
 }
 
@@ -116,7 +110,6 @@ BatteryPluggedType BatterySrvClient::GetPluggedType()
     BatteryPluggedType pluggedType = BatteryPluggedType::PLUGGED_TYPE_BUTT;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, pluggedType);
     pluggedType = proxy_->GetPluggedType();
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "pluggedType %{public}d", pluggedType);
     return pluggedType;
 }
 
@@ -125,7 +118,6 @@ int32_t BatterySrvClient::GetVoltage()
     int32_t voltage = INVALID_BATT_INT_VALUE;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, voltage);
     voltage = proxy_->GetVoltage();
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "voltage %{public}d", voltage);
     return voltage;
 }
 
@@ -134,7 +126,6 @@ bool BatterySrvClient::GetPresent()
     bool present = INVALID_BATT_BOOL_VALUE;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, present);
     present = proxy_->GetPresent();
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "present %{public}d", present);
     return present;
 }
 
@@ -143,7 +134,6 @@ std::string BatterySrvClient::GetTechnology()
     std::string technology;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, technology);
     technology = proxy_->GetTechnology();
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "technology %{public}s", technology.c_str());
     return technology;
 }
 
@@ -152,7 +142,6 @@ int32_t BatterySrvClient::GetBatteryTemperature()
     int32_t temperature = INVALID_BATT_TEMP_VALUE;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, temperature);
     temperature = proxy_->GetBatteryTemperature();
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "temperature %{public}d", temperature);
     return temperature;
 }
 
@@ -161,7 +150,6 @@ int32_t BatterySrvClient::GetNowCurrent()
     int32_t nowCurrent = INVALID_BATT_INT_VALUE;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, nowCurrent);
     nowCurrent = proxy_->GetNowCurrent();
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "nowCurrent %{public}d", nowCurrent);
     return nowCurrent;
 }
 
@@ -170,7 +158,6 @@ int32_t BatterySrvClient::GetRemainEnergy()
     int32_t remainEnergy = INVALID_BATT_INT_VALUE;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, remainEnergy);
     remainEnergy = proxy_->GetRemainEnergy();
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "remainEnergy %{public}d", remainEnergy);
     return remainEnergy;
 }
 
@@ -179,7 +166,6 @@ int32_t BatterySrvClient::GetTotalEnergy()
     int32_t totalEnergy = INVALID_BATT_INT_VALUE;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, totalEnergy);
     totalEnergy = proxy_->GetTotalEnergy();
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "totalEnergy %{public}d", totalEnergy);
     return totalEnergy;
 }
 
