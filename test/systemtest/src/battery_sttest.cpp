@@ -76,7 +76,7 @@ std::string CreateFile(std::string path, std::string content)
     HDF_LOGD("%{public}s: enter. CreateFile enter.", __func__);
     std::ofstream stream(path.c_str());
     if (!stream.is_open()) {
-        HDF_LOGD("%{public}s: enter, Cannot create file %{public}s", __func__, path.c_str());
+        HDF_LOGD("%{public}s: enter, Cannot create file %{private}s", __func__, path.c_str());
         return nullptr;
     }
     stream << content.c_str() << std::endl;
@@ -193,7 +193,7 @@ static int32_t ReadRedLedSysfs()
 
     readSize = read(fd, buf, sizeof(buf) - 1);
     if (readSize < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, sysRedLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to read %{private}s", __func__, sysRedLedPath.c_str());
         close(fd);
     }
 
@@ -221,7 +221,7 @@ static int32_t ReadGreenLedSysfs()
 
     readSize = read(fd, buf, sizeof(buf) - 1);
     if (readSize < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, sysGreenLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to read %{private}s", __func__, sysGreenLedPath.c_str());
         close(fd);
     }
 
@@ -249,7 +249,7 @@ static int32_t ReadBlueLedSysfs()
 
     readSize = read(fd, buf, sizeof(buf) - 1);
     if (readSize < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, sysBlueLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to read %{private}s", __func__, sysBlueLedPath.c_str());
         close(fd);
     }
 
