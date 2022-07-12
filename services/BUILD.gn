@@ -30,9 +30,9 @@ config("batterysrv_public_config") {
     "${aafwk_services_path}/abilitymgr/include/",
     "${aafwk_services_path}/appmgr/include",
     "${aafwk_inner_api_path}/app_manager/include/appmgr",
-    "//foundation/windowmanager/interfaces/innerkits/wm/",
-    "//foundation/windowmanager/utils/include",
-    "//foundation/windowmanager/interfaces/innerkits/dm",
+    "//foundation/window/window_manager/interfaces/innerkits/wm/",
+    "//foundation/window/window_manager/utils/include",
+    "//foundation/window/window_manager/interfaces/innerkits/dm",
     "//drivers/peripheral/battery/interfaces/hdi_service/include",
     "//drivers/peripheral/battery/interfaces/include",
     "//drivers/peripheral/battery/charger/led",
@@ -66,7 +66,7 @@ ohos_shared_library("batteryservice") {
     "//base/powermgr/power_manager/utils/permission:power_permission",
     "//drivers/peripheral/battery/interfaces/hdi_service:libbattery_interface_service_1.1",
     "//foundation/arkui/ace_engine/interfaces/inner_api/ui_service_manager:ui_service_mgr",
-    "//foundation/windowmanager/utils:libwmutil",
+    "//foundation/window/window_manager/utils:libwmutil",
     "//utils/native/base:utils",
   ]
 
