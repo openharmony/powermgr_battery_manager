@@ -19,9 +19,9 @@ Battery Manager provides the following functionalities:
 
 ```
 base/powermgr/battery_manager
-├── charger                  	# Power-off Charging
 ├── figures                  	# Architecture figures
 ├── frameworks                  # FrameWork Layer
+│   ├── dialog                  # Dialog
 │   ├── js                  	# NAPI code
 │   └── native                  # Native code
 ├── interfaces                  # APIs
@@ -30,8 +30,10 @@ base/powermgr/battery_manager
 ├── sa_profile                  # SA profile
 ├── services                    # Services
 │   ├── native                  # Native services
-│   └── zidl                    # zidl APIs
+│   └── zidl                    # Zidl APIs
 ├── test                        # Test code
+│   ├── fuzztest                # Fuzz test
+│   └── systemtest              # System test
 └── utils                       # Utilities and common code
 ```
 

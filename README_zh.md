@@ -19,9 +19,9 @@
 
 ```
 base/powermgr/battery_manager
-├── charger                  	# 关机充电
 ├── figures                  	# 架构图
 ├── frameworks                  # Framework层
+│   ├── dialog                  # 对话框
 │   ├── js                  	# NAPI
 │   └── native                  # Native层
 ├── interfaces                  # 接口层
@@ -29,10 +29,12 @@ base/powermgr/battery_manager
 │   └── kits                 	# 外部接口
 ├── sa_profile                  # SA配置文件
 ├── services                    # 服务层
-│   ├── native                  # native层
-│   └── zidl                    # zidl接口层
-├── test                  		# 测试用例
-└── utils                  		# 工具和通用层
+│   ├── native                  # Native层
+│   └── zidl                    # Zidl接口层
+├── test                        # 测试用例
+│   ├── fuzztest                # Fuzz 测试
+│   └── systemtest              # 系统测试
+└── utils                       # 工具和通用层
 ```
 
 
