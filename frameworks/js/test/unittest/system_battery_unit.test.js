@@ -48,23 +48,17 @@ describe('appInfoTest', function () {
      */
     const successTest = "get_status_success_test";
     it(successTest, 0, function () {
-        let execSucc = false;
-        let execcomplete = false;
         battery.getStatus({
             success: (data) => {
-                execSucc = true;
                 successFunc(data, successTest);
             },
             fail: (data, code) => {
                 failFunc(data, code, successTest);
             },
             complete: () => {
-                execcomplete = true;
                 completeFunc(successTest);
             }
         });
-        expect(execSucc).assertTrue();
-        expect(execcomplete).assertTrue();
     });
 
     /**
@@ -74,18 +68,15 @@ describe('appInfoTest', function () {
      */
     const successNullTest = "get_status_success_null_test";
     it(successNullTest, 0, function () {
-        let execcomplete = false;
         battery.getStatus({
             success: null,
             fail: (data, code) => {
                 failFunc(data, code, successNullTest);
             },
             complete: () => {
-                execcomplete = true;
                 completeFunc(successNullTest);
             }
         });
-        expect(execcomplete).assertTrue();
     });
 
     /**
@@ -95,17 +86,14 @@ describe('appInfoTest', function () {
      */
     const successEmptyTest = "get_status_success_null_test";
     it(successEmptyTest, 0, function () {
-        let execcomplete = false;
         battery.getStatus({
             fail: (data, code) => {
                 failFunc(data, code, successEmptyTest);
             },
             complete: () => {
-                execcomplete = true;
                 completeFunc(successEmptyTest);
             }
         });
-        expect(execcomplete).assertTrue();
     });
 
     /**
@@ -115,21 +103,15 @@ describe('appInfoTest', function () {
      */
     let failNullTest = "get_status_fail_null_test";
     it(failNullTest, 0, function () {
-        let execSucc = false;
-        let execcomplete = false;
         battery.getStatus({
             success: (data) => {
-                execSucc = true;
                 successFunc(data, failNullTest);
             },
             fail: null,
             complete: () => {
-                execcomplete = true;
                 completeFunc(failNullTest);
             }
         });
-        expect(execSucc).assertTrue();
-        expect(execcomplete).assertTrue();
     });
 
     /**
@@ -139,20 +121,14 @@ describe('appInfoTest', function () {
      */
     let failEmptyTest = "get_status_fail_empty_test";
     it(failEmptyTest, 0, function () {
-        let execSucc = false;
-        let execcomplete = false;
         battery.getStatus({
             success: () => {
-                execSucc = true;
                 successFunc(data, failEmptyTest);
             },
             complete: () => {
-                execcomplete = true;
                 completeFunc(failEmptyTest);
             }
         });
-        expect(execSucc).assertTrue();
-        expect(execcomplete).assertTrue();
     });
 
     /**
@@ -162,10 +138,8 @@ describe('appInfoTest', function () {
      */
     let completeNullTest = "get_status_complete_null_test";
     it(completeNullTest, 0, function () {
-        let execSucc = false;
         battery.getStatus({
             success: (data) => {
-                execSucc = true;
                 successFunc(data, completeNullTest);
             },
             fail: (data, code) => {
@@ -173,7 +147,6 @@ describe('appInfoTest', function () {
             },
             complete: null
         });
-        expect(execSucc).assertTrue();
     });
 
     /**
@@ -183,17 +156,14 @@ describe('appInfoTest', function () {
      */
     let completeEmptyTest = "get_status_complete_empty_test";
     it(completeEmptyTest, 0, function () {
-        let execSucc = false;
         battery.getStatus({
             success: (data) => {
-                execSucc = true;
                 successFunc(data, completeEmptyTest);
             },
             fail: (data, code) => {
                 failFunc(data, code, completeEmptyTest);
             }
         });
-        expect(execSucc).assertTrue();
     });
 
     /**
