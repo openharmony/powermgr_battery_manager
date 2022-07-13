@@ -26,8 +26,11 @@ namespace OHOS {
 namespace PowerMgr {
 class SystemBattery {
 public:
-    void GetBatteryStats(napi_env env, napi_value options);
+    void GetBatteryStats(napi_env env);
+    bool CheckValueType(napi_env env, napi_value value, napi_valuetype checkType);
+    bool CreateCallbackRef(napi_env env, napi_value options);
 
+    napi_async_work asyncWork = nullptr;
 private:
     class Error {
     public:
@@ -60,15 +63,17 @@ private:
         BatteryChargeState chargingState_;
     };
 
-    napi_value CreateResponse(napi_env env);
-    bool CheckValueType(napi_env env, napi_value value, napi_valuetype checkType);
     napi_value GetOptionsFunc(napi_env env, napi_value options, const std::string& name);
-    void SuccessCallback(napi_env env, napi_value options);
-    void FailCallback(napi_env env, napi_value options);
-    void CompleteCallback(napi_env env, napi_value options);
+    napi_value CreateResponse(napi_env env);
+    void SuccessCallback(napi_env env);
+    void FailCallback(napi_env env);
+    void CompleteCallback(napi_env env);
 
     Error error_;
     BatteryInfo batteryInfo_;
+    napi_ref successRef_ = nullptr;
+    napi_ref failRef_ = nullptr;
+    napi_ref completeRef_ = nullptr;
 };
 } // namespace PowerMgr
 } // namespace OHOS
