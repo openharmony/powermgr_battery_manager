@@ -90,5 +90,5 @@ ohos_shared_library("batteryservice") {
     "window_manager:libdm",
   ]
 
-  part_name = "battery_manager_native"
+  part_name = "battery_manager"
 }

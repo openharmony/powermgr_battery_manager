@@ -14,7 +14,7 @@
 import("//base/powermgr/battery_manager/batterymgr.gni")
 import("//build/test.gni")
 
-module_output_path = "battery_manager_native/batterysrv"
+module_output_path = "battery_manager/batterysrv"
 
 ###############################################################################
 config("module_private_config") {

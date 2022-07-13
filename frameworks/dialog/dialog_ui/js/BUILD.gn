@@ -23,6 +23,6 @@ gen_sa_dialog_js("dialog_js_files_etc") {
   ]
   common_files = []
   dialog_name = "battery_dialog"
-  part_name = "battery_manager_native"
+  part_name = "battery_manager"
   subsystem_name = "powermgr"
 }
