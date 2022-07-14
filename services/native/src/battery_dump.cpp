@@ -27,7 +27,7 @@ constexpr uint32_t MS_NS = 1000000;
 bool BatteryDump::DumpBatteryHelp(int32_t fd, const std::vector<std::u16string> &args)
 {
     if ((args.empty()) || (args[0].compare(u"-h") != 0)) {
-        BATTERY_HILOGD(FEATURE_BATT_INFO, "args cannot be empty or invalid");
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "args cannot be empty or invalid");
         return false;
     }
     DumpHelp(fd);
@@ -49,7 +49,7 @@ void BatteryDump::DumpCurrentTime(int32_t fd)
     clock_gettime(CLOCK_REALTIME, &curTime);
     struct tm *timeinfo = localtime(&(curTime.tv_sec));
     if (timeinfo == nullptr) {
-        BATTERY_HILOGD(FEATURE_BATT_INFO, "timeinfo cannot be null");
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "timeinfo cannot be null");
         return;
     }
     dprintf(fd, "Current time: %04d-%02d-%02d %02d:%02d:%02d.%03d\n", timeinfo->tm_year, timeinfo->tm_mon,
@@ -59,7 +59,6 @@ void BatteryDump::DumpCurrentTime(int32_t fd)
 
 bool BatteryDump::GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args)
 {
-    BATTERY_HILOGI(FEATURE_BATT_INFO, "enter");
     if ((args.empty()) || (args[0].compare(u"-i") != 0)) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "args cannot be empty or invalid");
         return false;
