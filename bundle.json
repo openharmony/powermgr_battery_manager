@@ -43,7 +43,7 @@
                 "ipc",
                 "multimedia_image_standard",
                 "napi",
-                "power_manager_native",
+                "power_manager",
                 "safwk",
                 "samgr_standard",
                 "utils_base",
