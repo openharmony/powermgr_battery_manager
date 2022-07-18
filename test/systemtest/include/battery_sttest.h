@@ -18,6 +18,7 @@
 
 #include <gtest/gtest.h>
 #include "battery_led.h"
+#include "test_utils.h"
 
 class BatterySttest : public testing::Test {
 public:
@@ -26,24 +27,4 @@ public:
     void SetUp();
     void TearDown();
 };
-
-struct BatteryLedUnitTest {};
-
-void UpdateLedColorTest(int32_t chargestate, int32_t capacity,
-    OHOS::HDI::Battery::V1_1::BatteryLed& batteryled);
-
-template<typename Tag, typename PrivateFun, PrivateFun privateFun>
-class UpdateLedColorImplement {
-    friend void UpdateLedColorTest(int32_t chargestate, int32_t capacity,
-        OHOS::HDI::Battery::V1_1::BatteryLed& batteryled)
-    {
-        (batteryled.*privateFun)(chargestate, capacity);
-    }
-};
-
-template class UpdateLedColorImplement <
-    BatteryLedUnitTest,
-    decltype(&OHOS::HDI::Battery::V1_1::BatteryLed::UpdateLedColor),
-    &OHOS::HDI::Battery::V1_1::BatteryLed::UpdateLedColor
->;
 #endif // BATTERY_STTEST_H
