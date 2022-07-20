@@ -15,5 +15,5 @@ import("//build/ohos/sa_profile/sa_profile.gni")
 
 ohos_sa_profile("batterymgr_sa_profile") {
   sources = [ "3302.xml" ]
-  part_name = "battery_manager_native"
+  part_name = "battery_manager"
 }

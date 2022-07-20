@@ -43,7 +43,7 @@ ohos_shared_library("batteryinfo") {
   relative_install_dir = "module"
 
   subsystem_name = "powermgr"
-  part_name = "battery_manager_native"
+  part_name = "battery_manager"
 }
 
 ohos_shared_library("battery") {
@@ -61,5 +61,5 @@ ohos_shared_library("battery") {
   relative_install_dir = "module"
 
   subsystem_name = "powermgr"
-  part_name = "battery_manager_native"
+  part_name = "battery_manager"
 }

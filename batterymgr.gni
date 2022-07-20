@@ -18,7 +18,7 @@ aafwk_inner_api_path =
 
 aafwk_services_path = "//foundation/ability/ability_runtime/services"
 
-batterymgr_native_part_name = "battery_manager_native"
+batterymgr_native_part_name = "battery_manager"
 
 battery_manager_path = "//base/powermgr/battery_manager"
 

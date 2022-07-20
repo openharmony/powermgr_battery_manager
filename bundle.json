@@ -13,7 +13,7 @@
         "destPath": "base/powermgr/battery_manager"
     },
     "component": {
-        "name": "battery_manager_native",
+        "name": "battery_manager",
         "subsystem": "powermgr",
         "syscap": [
             "SystemCapability.PowerManager.BatteryManager.Core",
