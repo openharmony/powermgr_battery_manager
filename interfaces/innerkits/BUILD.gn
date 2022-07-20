@@ -48,5 +48,5 @@ ohos_shared_library("batterysrv_client") {
     "samgr_standard:samgr_proxy",
   ]
 
-  part_name = "battery_manager_native"
+  part_name = "battery_manager"
 }
