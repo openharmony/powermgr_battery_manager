@@ -15,18 +15,25 @@
 
 #include "battery_service.h"
 
-#include <unistd.h>
-
-#include "display_manager.h"
-#include "file_ex.h"
-#include "power_mgr_client.h"
-#include "system_ability_definition.h"
-#include "ui_service_mgr_client.h"
+#include <ctime>
+#include <cstdio>
+#include <functional>
+#include "errors.h"
+#include "new"
 #include "wm_common.h"
+#include "permission.h"
+#include "system_ability_definition.h"
+#include "iremote_object.h"
+#include "v1_1/ibattery_callback.h"
+#include "ui_service_mgr_client.h"
+#include "hdf_io_service_if.h"
+#include "hdf_service_status.h"
+#include "display.h"
+#include "display_manager.h"
 #include "battery_callback.h"
 #include "battery_dump.h"
 #include "battery_log.h"
-#include "permission.h"
+#include "power_mgr_client.h"
 #include "power_common.h"
 
 using namespace OHOS::HDI::Battery;

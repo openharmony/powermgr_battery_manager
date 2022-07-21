@@ -16,9 +16,16 @@
 #ifndef BATTERY_SRV_PROXY_H
 #define BATTERY_SRV_PROXY_H
 
-#include "ibattery_srv.h"
+#include <cstdint>
+#include <functional>
+#include <iosfwd>
+#include "refbase.h"
 #include "nocopyable.h"
+#include "iremote_broker.h"
+#include "iremote_object.h"
 #include "iremote_proxy.h"
+#include "ibattery_srv.h"
+#include "battery_info.h"
 
 namespace OHOS {
 namespace PowerMgr {

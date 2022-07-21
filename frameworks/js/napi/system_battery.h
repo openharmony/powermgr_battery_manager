@@ -16,10 +16,11 @@
 #ifndef SYSTEM_BATTERY_H
 #define SYSTEM_BATTERY_H
 
+#include <cstdint>
+#include <iosfwd>
 #include "errors.h"
 #include "napi/native_api.h"
 #include "napi/native_node_api.h"
-
 #include "battery_info.h"
 
 namespace OHOS {

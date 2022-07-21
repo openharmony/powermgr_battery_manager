@@ -16,10 +16,10 @@
 #ifndef BATTERY_DUMP_H
 #define BATTERY_DUMP_H
 
+#include <cstdint>
+#include <string>
 #include <vector>
-#include <cinttypes>
-#include <ctime>
-#include <queue>
+#include "refbase.h"
 
 #include "singleton.h"
 #include "battery_service.h"

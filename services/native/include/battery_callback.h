@@ -17,6 +17,8 @@
 #define POWERMGR_BATTERY_MANAGER_BATTERY_CALLBACK_H
 
 #include <functional>
+#include <cstdint>
+#include "v1_1/types.h"
 #include "v1_1/ibattery_callback.h"
 
 namespace OHOS {

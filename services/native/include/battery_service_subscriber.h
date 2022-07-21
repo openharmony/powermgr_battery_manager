@@ -16,6 +16,7 @@
 #ifndef BATTERY_SERVICE_SUBSCRIBER_H
 #define BATTERY_SERVICE_SUBSCRIBER_H
 
+#include <cstdint>
 #include "common_event_data.h"
 #include "common_event_manager.h"
 #include "common_event_support.h"
