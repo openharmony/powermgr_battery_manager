@@ -16,9 +16,12 @@
 #ifndef BATTERY_SRV_STUB_H
 #define BATTERY_SRV_STUB_H
 
-#include "ibattery_srv.h"
+#include <cstdint>
+#include "refbase.h"
 #include "nocopyable.h"
 #include "iremote_stub.h"
+#include "ibattery_srv.h"
+#include "message_option.h"
 
 namespace OHOS {
 namespace PowerMgr {

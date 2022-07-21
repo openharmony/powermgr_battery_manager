@@ -14,6 +14,7 @@
  */
 
 #include "battery_callback.h"
+
 #include "hdf_base.h"
 #include "battery_log.h"
 
