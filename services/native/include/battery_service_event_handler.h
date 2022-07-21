@@ -16,7 +16,10 @@
 #ifndef POWERMGR_BATTERY_SERVICE_EVENT_HANDLER_H
 #define POWERMGR_BATTERY_SERVICE_EVENT_HANDLER_H
 
+#include <memory>
 #include "refbase.h"
+#include "inner_event.h"
+#include "event_runner.h"
 #include "event_handler.h"
 
 namespace OHOS {

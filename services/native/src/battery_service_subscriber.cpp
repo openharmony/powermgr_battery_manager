@@ -15,15 +15,20 @@
 
 #include "battery_service_subscriber.h"
 
-#include <typeinfo>
-#include "battery_log.h"
+#include "base_types.h"
+#include "refbase.h"
+#include "errors.h"
 #include "string_ex.h"
-#include "batteryd_api.h"
 #include "iservice_registry.h"
 #include "if_system_ability_manager.h"
 #include "system_ability_definition.h"
+#include "iremote_object.h"
+#include "matching_skills.h"
 #include "hisysevent.h"
-#include "want.h"
+#include "common_event_publish_info.h"
+#include "hilog/log_cpp.h"
+#include "battery_log.h"
+#include "batteryd_api.h"
 
 using namespace OHOS::AAFwk;
 using namespace OHOS::EventFwk;

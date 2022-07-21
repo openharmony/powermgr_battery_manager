@@ -17,13 +17,11 @@
 
 #include "battery_fuzzer_test.h"
 
-#include <iostream>
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
-#include <ctime>
 #include <random>
-#include "securec.h"
+#include <algorithm>
+#include "battery_info.h"
 #include "battery_srv_client.h"
 
 using namespace OHOS::PowerMgr;

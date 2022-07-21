@@ -16,20 +16,29 @@
 #ifndef POWERMGR_BATTERY_SERVICE_H
 #define POWERMGR_BATTERY_SERVICE_H
 
-#include "iremote_object.h"
+#include <cstdint>
+#include <mutex>
+#include <iosfwd>
+#include <string>
+#include <memory>
+#include <vector>
+#include "refbase.h"
+#include "event_runner.h"
 #include "sp_singleton.h"
 #include "system_ability.h"
+#include "hdi_service_status_listener.h"
+#include "iservmgr_hdi.h"
+#include "iservstat_listener_hdi.h"
+#include "ibattery_srv.h"
+#include "v1_1/ibattery_interface.h"
 #include "v1_1/battery_interface_proxy.h"
-#include "window_manager.h"
-
-#include "batteryd_api.h"
+#include "v1_1/types.h"
+#include "battery_info.h"
 #include "battery_config.h"
 #include "battery_led.h"
 #include "battery_service_event_handler.h"
 #include "battery_service_subscriber.h"
 #include "battery_srv_stub.h"
-#include "hdi_service_status_listener.h"
-#include "ibattery_srv.h"
 
 namespace OHOS {
 namespace PowerMgr {

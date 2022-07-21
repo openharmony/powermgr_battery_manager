@@ -13,14 +13,16 @@
  * limitations under the License.
  */
 
+#include <cstdint>
 #include <cstdio>
-#include <cstdlib>
 #include <string>
+#include "js_native_api.h"
+#include "js_native_api_types.h"
+#include "napi/native_common.h"
+#include "napi/native_api.h"
 #include "battery_info.h"
 #include "battery_srv_client.h"
 #include "battery_log.h"
-#include "napi/native_api.h"
-#include "napi/native_node_api.h"
 
 using namespace OHOS::PowerMgr;
 using namespace OHOS::HDI::Battery;

@@ -14,12 +14,17 @@
  */
 
 #include "battery_srv_client.h"
-#include "string_ex.h"
-#include "datetime_ex.h"
-#include "ipc_skeleton.h"
+
+#include "new"
+#include "refbase.h"
+#include "errors.h"
+#include "iremote_broker.h"
 #include "iservice_registry.h"
 #include "if_system_ability_manager.h"
 #include "system_ability_definition.h"
+#include "battery_info.h"
+#include "battery_log.h"
+#include "power_mgr_errors.h"
 #include "power_common.h"
 
 using namespace OHOS::HDI::Battery;

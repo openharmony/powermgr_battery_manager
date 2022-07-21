@@ -14,10 +14,16 @@
  */
 
 #include "battery_srv_stub.h"
-#include "message_parcel.h"
-#include "power_common.h"
-#include "battery_srv_proxy.h"
+
+#include "errors.h"
 #include "xcollie.h"
+#include "xcollie_define.h"
+#include "ipc_object_stub.h"
+#include "message_parcel.h"
+#include "battery_info.h"
+#include "battery_log.h"
+#include "power_mgr_errors.h"
+#include "power_common.h"
 
 using namespace OHOS::HDI::Battery;
 
