@@ -14,8 +14,11 @@
  */
 
 #include "battery_srv_proxy.h"
-#include "ipc_types.h"
+
+#include "errors.h"
+#include "message_option.h"
 #include "message_parcel.h"
+#include "battery_log.h"
 #include "power_common.h"
 
 using namespace OHOS::HDI::Battery;

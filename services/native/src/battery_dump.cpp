@@ -14,6 +14,12 @@
  */
 
 #include "battery_dump.h"
+
+#include <ctime>
+#include <iosfwd>
+#include <cstdio>
+#include "v1_1/types.h"
+#include "battery_info.h"
 #include "battery_log.h"
 
 using namespace OHOS::HDI::Battery;

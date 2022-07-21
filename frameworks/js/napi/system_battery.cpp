@@ -16,6 +16,10 @@
 #include "system_battery.h"
 
 #include <string>
+#include <cstddef>
+#include <memory>
+#include "new"
+#include "napi/native_common.h"
 
 #include "battery_log.h"
 #include "battery_srv_client.h"
