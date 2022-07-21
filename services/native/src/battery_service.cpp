@@ -656,6 +656,19 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
 
 void BatteryService::MockUnplugged(bool isUnplugged)
 {
+    OHOS::HDI::Battery::V1_1::BatteryInfo event;
+    if (!iBatteryInterface_) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
+        return;
+    }
+
+    if (!g_initConfig) {
+        InitConfig();
+        g_initConfig = true;
+    }
+
+    iBatteryInterface_->GetBatteryInfo(event);
+    UpdateBatteryInfo(event);
     if (isUnplugged) {
         batteryInfo_.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_NONE);
         batteryInfo_.SetPluggedMaxCurrent(0);
@@ -665,9 +678,7 @@ void BatteryService::MockUnplugged(bool isUnplugged)
         isMockUnplugged_ = true;
     } else {
         isMockUnplugged_ = false;
-        OHOS::HDI::Battery::V1_1::BatteryInfo event;
-        iBatteryInterface_->GetBatteryInfo(event);
-        HandleBatteryCallbackEvent(event);
+        HandleBatteryInfo();
     }
 }
 } // namespace PowerMgr
