@@ -38,9 +38,8 @@ ohos_shared_library("batterysrv_client") {
 
   public_configs = [ ":batterysrv_public_config" ]
 
-  deps = [ "//utils/native/base:utils" ]
-
   external_deps = [
+    "c_utils:utils",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
