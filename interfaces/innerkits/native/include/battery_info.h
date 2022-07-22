@@ -24,7 +24,7 @@ static constexpr int32_t INVALID_BATT_INT_VALUE = -1;
 static constexpr int32_t INVALID_BATT_TEMP_VALUE = 100;
 static constexpr int32_t INVALID_BATT_LEVEL_VALUE = -1;
 static constexpr int64_t INVALID_REMAINING_CHARGE_TIME_VALUE = -1;
-static const std::string INVALID_STRING_VALUE = "Invalid";
+static constexpr const char* INVALID_STRING_VALUE = "Invalid";
 static constexpr bool INVALID_BATT_BOOL_VALUE = true;
 
 /**
