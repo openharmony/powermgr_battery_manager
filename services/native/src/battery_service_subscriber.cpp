@@ -266,8 +266,8 @@ bool BatteryServiceSubscriber::HandleBatteryPowerDisconnectedEvent(const Battery
     publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
-    if ((info.GetPluggedType() == BatteryPluggedType::PLUGGED_TYPE_NONE) &&
-        (info.GetPluggedType() == BatteryPluggedType::PLUGGED_TYPE_BUTT)) {
+    if ((info.GetPluggedType() != BatteryPluggedType::PLUGGED_TYPE_NONE) &&
+        (info.GetPluggedType() != BatteryPluggedType::PLUGGED_TYPE_BUTT)) {
         g_batteryDisconnectOnce = false;
         return isSuccess;
     }
