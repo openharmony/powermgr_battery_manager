@@ -43,9 +43,9 @@ using namespace OHOS::HDI::Battery::V1_1;
 namespace OHOS {
 namespace PowerMgr {
 namespace {
-const std::string BATTERY_SERVICE_NAME = "BatteryService";
-const std::string HDI_SERVICE_NAME = "battery_interface_service";
-const std::string BATTERY_LOW_CAPACITY_PARAMS = "{\"lowPower\":\"Low Power\", \"cancelButton\":\"Cancel\"}";
+constexpr const char* BATTERY_SERVICE_NAME = "BatteryService";
+constexpr const char* HDI_SERVICE_NAME = "battery_interface_service";
+constexpr const char* BATTERY_LOW_CAPACITY_PARAMS = "{\"lowPower\":\"Low Power\", \"cancelButton\":\"Cancel\"}";
 constexpr int32_t HELP_DUMP_PARAM = 2;
 constexpr int32_t BATTERY_LOW_CAPACITY = 10;
 constexpr int32_t UI_DIALOG_POWER_WIDTH_NARROW = 400;
