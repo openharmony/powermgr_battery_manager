@@ -47,12 +47,12 @@ ohos_unittest("test_batterysubscriber") {
     "${battery_manager_path}/services:batteryservice",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
-    "//utils/native/base:utils",
   ]
 
   external_deps = [
     "ability_base:base",
     "ability_base:want",
+    "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_1.1",
     "eventhandler:libeventhandler",

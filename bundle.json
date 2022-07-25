@@ -33,6 +33,7 @@
                 "ace_engine",
                 "bundle_framework",
                 "common_event_service",
+		"c_utils",
                 "drivers_interface_battery",
                 "drivers_peripheral_battery",
                 "eventhandler",
@@ -46,7 +47,6 @@
                 "power_manager",
                 "safwk",
                 "samgr_standard",
-                "utils_base",
                 "window_manager"
             ],
             "third_party": [
