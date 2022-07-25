@@ -1380,7 +1380,7 @@ HWTEST_F (BatterySttest, BatteryST064, TestSize.Level1)
     int32_t chargestate = PowerSupplyProvider::CHARGE_STATE_ENABLE;
     int32_t capacity = 0;
     BatteryLed batteryled;
-    batteryled.InitLedsSysfs();
+    batteryled.InitLightInfo();
     UpdateLedColorTest(chargestate, capacity, batteryled);
 
     int32_t value = ReadRedLedSysfs();
