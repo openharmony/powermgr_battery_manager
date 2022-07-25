@@ -51,7 +51,6 @@ ohos_unittest("test_batteryclient") {
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
-    "//utils/native/base:utils",
   ]
 
   external_deps = [
@@ -59,6 +58,7 @@ ohos_unittest("test_batteryclient") {
     "ability_base:want",
     "ability_base:zuri",
     "bundle_framework:appexecfwk_base",
+    "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_1.1",
     "eventhandler:libeventhandler",

@@ -67,13 +67,13 @@ ohos_shared_library("batteryservice") {
     "//drivers/peripheral/battery/interfaces/hdi_service:libbattery_interface_service_1.1",
     "//foundation/arkui/ace_engine/interfaces/inner_api/ui_service_manager:ui_service_mgr",
     "//foundation/window/window_manager/utils:libwmutil",
-    "//utils/native/base:utils",
   ]
 
   external_deps = [
     "ability_base:base",
     "ability_base:want",
     "bundle_framework:appexecfwk_base",
+    "c_utils:utils",
     "common_event_service:cesfwk_core",
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_1.1",
