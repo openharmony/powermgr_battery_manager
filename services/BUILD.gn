@@ -77,6 +77,7 @@ ohos_shared_library("batteryservice") {
     "common_event_service:cesfwk_core",
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_1.1",
+    "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
     "hdf_core:libhdf_utils",
     "hdf_core:libhdi",
