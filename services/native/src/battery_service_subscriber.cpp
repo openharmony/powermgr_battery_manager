@@ -299,8 +299,7 @@ bool BatteryServiceSubscriber::HandleBatteryChargingEvent(const BatteryInfo& inf
     publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
-    if (static_cast<uint32_t>(info.GetChargeState()) !=
-        static_cast<uint32_t>(BatteryChargeState::CHARGE_STATE_ENABLE)) {
+    if (info.GetChargeState() != BatteryChargeState::CHARGE_STATE_ENABLE) {
         g_batteryChargingOnce = false;
         return isSuccess;
     }
@@ -332,7 +331,7 @@ bool BatteryServiceSubscriber::HandleBatteryDischargingEvent(const BatteryInfo& 
     publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
-    if (static_cast<uint32_t>(info.GetChargeState()) != static_cast<uint32_t>(BatteryChargeState::CHARGE_STATE_NONE)) {
+    if (info.GetChargeState() == BatteryChargeState::CHARGE_STATE_ENABLE) {
         g_batteryDischargingOnce = false;
         return isSuccess;
     }
