@@ -14,63 +14,65 @@
  */
 
 /**
- * @devices phone, tablet, wearable, liteWearable
+ * @syscap SystemCapability.PowerManager.BatteryManager.Core
  * @since 3
+ * @deprecated since 9
  */
 export interface BatteryResponse {
     /**
      * Whether the battery is being charged.
-     * @devices phone, tablet, wearable, liteWearable
      * @since 3
+     * @deprecated since 9
      */
     charging: boolean;
 
     /**
      * Current battery level, which ranges from 0.00 to 1.00.
-     * @devices phone, tablet, wearable, liteWearable
      * @since 3
+     * @deprecated since 9
      */
     level: number;
 }
 
 /**
- * @devices phone, tablet, wearable, liteWearable
+ * @syscap SystemCapability.PowerManager.BatteryManager.Core
  * @since 3
+ * @deprecated since 9
  */
 export interface GetStatusOptions {
     /**
      * Called when the current charging state and battery level are obtained.
-     * @devices phone, tablet, wearable, liteWearable
      * @since 3
+     * @deprecated since 9
      */
     success?: (data: BatteryResponse) => void;
 
     /**
      * Called when the current charging state and battery level fail to be obtained.
-     * @devices phone, tablet, wearable, liteWearable
      * @since 3
+     * @deprecated since 9
      */
     fail?: (data: string, code: number) => void;
 
     /**
      * Called when the execution is completed.
-     * @devices phone, tablet, wearable, liteWearable
      * @since 3
+     * @deprecated since 9
      */
     complete?: () => void;
 }
 
 /**
- * @devices phone, tablet, wearable, liteWearable
+ * @syscap SystemCapability.PowerManager.BatteryManager.Core
  * @since 3
- * @import battery from '@system.battery';
+ * @deprecated since 9
  */
 export default class Battery {
     /**
      * Obtains the current charging state and battery level.
      * @param options Options.
-     * @devices phone, tablet, wearable, liteWearable
      * @since 3
+     * @deprecated since 9
      */
     static getStatus(options?: GetStatusOptions): void;
 }
