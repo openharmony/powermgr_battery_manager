@@ -15,18 +15,10 @@
 
 #include "battery_subscriber_test.h"
 
-#include <iostream>
-#include <csignal>
-#include <chrono>
-#include <condition_variable>
-#include <fstream>
 #include <memory>
-#include <mutex>
-#include <streambuf>
 #include <string>
-#include <thread>
-#include <vector>
-#include <sys/stat.h>
+
+#include "common_event_manager.h"
 
 using namespace testing::ext;
 using namespace OHOS::PowerMgr;

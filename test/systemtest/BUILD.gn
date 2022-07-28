@@ -15,47 +15,30 @@ import("//base/powermgr/battery_manager/batterymgr.gni")
 import("//build/test.gni")
 import("//drivers/hdf_core/adapter/uhdf2/uhdf.gni")
 
-module_output_path = "battery_manager/batterysrv"
-
 ###############################################################################
 config("module_private_config") {
   visibility = [ ":*" ]
 
   include_dirs = [
     "include",
-    "//utils/system/safwk/native/include",
-    "//third_party/googletest/googletest/include",
-    "//third_party/jsoncpp/include",
     "//drivers/peripheral/battery/charger/ui/include",
-    "//drivers/peripheral/input/interfaces/include",
     "//third_party/libpng",
-    "//drivers/ability/sbuf/include",
-    "//drivers/framework/include",
-    "//drivers/framework/include/core",
-    "//base/powermgr/battery_manager/services/native/include",
-    "//base/powermgr/battery_manager/interfaces/innerkits/native/test/unittest/include",
-    "//base/powermgr/battery_manager/interfaces/innerkits/native/include",
-    "${battery_manager_path}/interfaces/innerkits/native/include",
-    "${battery_manager_path}/services/zidl/include",
+    "${battery_innerkits}/native/include",
+    "${battery_service_zidl}/include",
     "//drivers/peripheral/battery/charger/led",
     "//drivers/peripheral/battery/charger/backlight",
     "//drivers/peripheral/battery/charger/vibrate",
     "//drivers/peripheral/battery/charger/include",
-    "//drivers/peripheral/input/interfaces/include",
-    "//base/powermgr/power_manager/interfaces/innerkits/native/include",
     "//drivers/peripheral/battery/interfaces/hdi_service/test/unittest/include",
-    "${battery_manager_path}/services/zidl/include",
     "//drivers/peripheral/battery/interfaces/include/",
     "//drivers/peripheral/battery/include/",
     "//drivers/peripheral/battery/interfaces/hdi_service/include",
-    "//drivers/peripheral/battery/charger/led",
-    "//base/powermgr/power_manager/interfaces/innerkits/native/include",
   ]
 }
 
 ##############################systemtest##########################################
 ohos_systemtest("test_systemtest") {
-  module_out_path = module_output_path
+  module_out_path = "${module_output_path}"
 
   sources = [
     "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
@@ -69,22 +52,16 @@ ohos_systemtest("test_systemtest") {
   ]
 
   configs = [
-    "${utils_path}:utils_config",
+    "${battery_utils}:utils_config",
     ":module_private_config",
   ]
 
   deps = [
-    "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
-    "${hdf_uhdf_path}/hdi:libhdi",
+    "${battery_innerkits}:batterysrv_client",
+    "${battery_service}:batteryservice",
     "${hdf_uhdf_path}/host:libhdf_host",
-    "${hdf_uhdf_path}/host:libhdf_host",
-    "${hdf_uhdf_path}/ipc:libhdf_ipc_adapter",
     "${hdf_uhdf_path}/utils:libhdf_utils",
-    "//base/powermgr/battery_manager/services:batteryservice",
-    "//base/powermgr/battery_manager/services:batteryservice",
-    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
@@ -108,7 +85,7 @@ ohos_systemtest("test_systemtest") {
 
 ##############################systemtest##########################################
 ohos_systemtest("test_reboot") {
-  module_out_path = module_output_path
+  module_out_path = "${module_output_path}"
 
   sources = [
     "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
@@ -122,17 +99,13 @@ ohos_systemtest("test_reboot") {
   ]
 
   configs = [
-    "${utils_path}:utils_config",
+    "${battery_utils}:utils_config",
     ":module_private_config",
   ]
 
   deps = [
-    "${hdf_uhdf_path}/host:libhdf_host",
-    "${hdf_uhdf_path}/ipc:libhdf_ipc_adapter",
     "${hdf_uhdf_path}/utils:libhdf_utils",
-    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
@@ -149,7 +122,7 @@ ohos_systemtest("test_reboot") {
 
 ##############################systemtest##########################################
 ohos_systemtest("test_charger_overtemperature_shutdown") {
-  module_out_path = module_output_path
+  module_out_path = "${module_output_path}"
 
   sources = [
     "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
@@ -163,17 +136,13 @@ ohos_systemtest("test_charger_overtemperature_shutdown") {
   ]
 
   configs = [
-    "${utils_path}:utils_config",
+    "${battery_utils}:utils_config",
     ":module_private_config",
   ]
 
   deps = [
-    "${hdf_uhdf_path}/host:libhdf_host",
-    "${hdf_uhdf_path}/ipc:libhdf_ipc_adapter",
     "${hdf_uhdf_path}/utils:libhdf_utils",
-    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
@@ -190,7 +159,7 @@ ohos_systemtest("test_charger_overtemperature_shutdown") {
 
 ##############################systemtest##########################################
 ohos_systemtest("test_charger_undertemperature_shutdown") {
-  module_out_path = module_output_path
+  module_out_path = "${module_output_path}"
 
   sources = [
     "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
@@ -204,17 +173,13 @@ ohos_systemtest("test_charger_undertemperature_shutdown") {
   ]
 
   configs = [
-    "${utils_path}:utils_config",
+    "${battery_utils}:utils_config",
     ":module_private_config",
   ]
 
   deps = [
-    "${hdf_uhdf_path}/host:libhdf_host",
-    "${hdf_uhdf_path}/ipc:libhdf_ipc_adapter",
     "${hdf_uhdf_path}/utils:libhdf_utils",
-    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
@@ -231,7 +196,7 @@ ohos_systemtest("test_charger_undertemperature_shutdown") {
 
 ##############################systemtest##########################################
 ohos_systemtest("test_battery_overtemperature_shutdown") {
-  module_out_path = module_output_path
+  module_out_path = "${module_output_path}"
 
   sources = [
     "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
@@ -245,20 +210,15 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
   ]
 
   configs = [
-    "${utils_path}:utils_config",
+    "${battery_utils}:utils_config",
     ":module_private_config",
   ]
 
   deps = [
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
-    "${hdf_uhdf_path}/host:libhdf_host",
-    "${hdf_uhdf_path}/ipc:libhdf_ipc_adapter",
     "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/battery_manager/services:batteryservice",
-    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
-    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
@@ -272,7 +232,6 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
     "drivers_interface_input:hdi_input",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
-    "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
@@ -282,7 +241,7 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
 
 ##############################systemtest##########################################
 ohos_systemtest("test_battery_undertemperature_shutdown") {
-  module_out_path = module_output_path
+  module_out_path = "${module_output_path}"
 
   sources = [
     "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
@@ -296,20 +255,15 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
   ]
 
   configs = [
-    "${utils_path}:utils_config",
+    "${battery_utils}:utils_config",
     ":module_private_config",
   ]
 
   deps = [
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
-    "${hdf_uhdf_path}/host:libhdf_host",
-    "${hdf_uhdf_path}/ipc:libhdf_ipc_adapter",
     "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/battery_manager/services:batteryservice",
-    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
-    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
@@ -333,7 +287,7 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
 
 ##############################systemtest##########################################
 ohos_systemtest("test_charger_offline_shutdown") {
-  module_out_path = module_output_path
+  module_out_path = "${module_output_path}"
 
   sources = [
     "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
@@ -347,17 +301,13 @@ ohos_systemtest("test_charger_offline_shutdown") {
   ]
 
   configs = [
-    "${utils_path}:utils_config",
+    "${battery_utils}:utils_config",
     ":module_private_config",
   ]
 
   deps = [
-    "${hdf_uhdf_path}/host:libhdf_host",
-    "${hdf_uhdf_path}/ipc:libhdf_ipc_adapter",
     "${hdf_uhdf_path}/utils:libhdf_utils",
-    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
     "//drivers/peripheral/battery/charger/ui:libminui",
-    "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]

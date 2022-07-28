@@ -13,34 +13,25 @@
 
 import("//base/powermgr/battery_manager/batterymgr.gni")
 
-config("batterysrv_private_config") {
-  include_dirs = [
-    "${battery_manager_path}/services/zidl/include",
-    "//utils/system/safwk/native/include",
-  ]
-}
-
 config("batterysrv_public_config") {
-  include_dirs = [ "native/include" ]
+  include_dirs = [
+    "native/include",
+    "${battery_service_zidl}/include",
+  ]
 }
 
 ohos_shared_library("batterysrv_client") {
   sources = [
-    "${battery_manager_path}/frameworks/native/src/battery_srv_client.cpp",
-    "${battery_manager_path}/services/zidl/src/battery_srv_proxy.cpp",
+    "${battery_frameworks}/native/src/battery_srv_client.cpp",
+    "${battery_service_zidl}/src/battery_srv_proxy.cpp",
   ]
 
-  configs = [
-    "${utils_path}:utils_config",
-    ":batterysrv_private_config",
-    ":batterysrv_public_config",
-  ]
+  configs = [ "${battery_utils}:utils_config" ]
 
   public_configs = [ ":batterysrv_public_config" ]
 
   external_deps = [
     "c_utils:utils",
-    "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",

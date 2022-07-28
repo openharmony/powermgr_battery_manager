@@ -17,16 +17,13 @@
 #define BATTERY_SUBSCRIBER_TEST_H
 
 #include <gtest/gtest.h>
-#include <ipc_skeleton.h>
 
-#include "battery_service.h"
+#include "common_event_data.h"
+#include "common_event_subscriber.h"
+#include "common_event_subscribe_info.h"
+#include "common_event_support.h"
+#include "battery_info.h"
 #include "battery_log.h"
-#include "iservice_registry.h"
-#include "if_system_ability_manager.h"
-#include "system_ability_definition.h"
-#include "ipc_skeleton.h"
-#include "string_ex.h"
-#include "sys_param.h"
 
 namespace OHOS {
 namespace PowerMgr {
