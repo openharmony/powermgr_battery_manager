@@ -12,27 +12,14 @@
 # limitations under the License.
 
 import("//base/powermgr/battery_manager/batterymgr.gni")
-import("//base/powermgr/display_manager/displaymgr.gni")
-import("//build/ohos.gni")
-
-config("batterysrv_private_config") {
-  include_dirs = [ "//utils/system/safwk/native/include" ]
-}
 
 config("batterysrv_public_config") {
   include_dirs = [
     "native/include",
-    "${battery_manager_path}/services/zidl/include",
-    "${displaymgr_native_innerkits_path}/native/src",
+    "${battery_service_zidl}/include",
+    "${battery_innerkits}/native/include",
     "//base/hiviewdfx/hicollie/interfaces/native/innerkits/include/xcollie",
     "//base/powermgr/power_manager/utils/permission/include",
-    "//base/startup/appspawn/include/",
-    "${aafwk_services_path}/abilitymgr/include/",
-    "${aafwk_services_path}/appmgr/include",
-    "${aafwk_inner_api_path}/app_manager/include/appmgr",
-    "//foundation/window/window_manager/interfaces/innerkits/wm/",
-    "//foundation/window/window_manager/utils/include",
-    "//foundation/window/window_manager/interfaces/innerkits/dm",
     "//drivers/peripheral/battery/interfaces/hdi_service/include",
     "//drivers/peripheral/battery/interfaces/include",
     "//drivers/peripheral/battery/charger/led",
@@ -41,7 +28,6 @@ config("batterysrv_public_config") {
 
 ohos_shared_library("batteryservice") {
   sources = [
-    "${battery_manager_path}/services/zidl/src/battery_srv_stub.cpp",
     "native/src/battery_callback.cpp",
     "native/src/battery_dump.cpp",
     "native/src/battery_service.cpp",
@@ -49,22 +35,16 @@ ohos_shared_library("batteryservice") {
     "native/src/battery_service_subscriber.cpp",
   ]
 
-  configs = [
-    "${utils_path}:utils_config",
-    ":batterysrv_private_config",
-  ]
+  configs = [ "${battery_utils}:utils_config" ]
 
   public_configs = [ ":batterysrv_public_config" ]
 
   deps = [
-    "${aafwk_services_path}/appmgr:libappms",
-    "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
-    "${displaymgr_native_innerkits_path}:displaymgr",
-    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent_manager:libhisyseventmanager",
-    "//base/powermgr/battery_manager/frameworks/dialog/dialog_ui/js:dialog_js_files_etc",
-    "//base/powermgr/power_manager/interfaces/innerkits:powermgr_client",
+    "${battery_frameworks}:battery_dialog",
+    "${battery_service_zidl}:batterysrv_stub",
     "//base/powermgr/power_manager/utils/permission:power_permission",
     "//drivers/peripheral/battery/interfaces/hdi_service:libbattery_interface_service_1.1",
+    "//foundation/ability/ability_runtime/services/appmgr:libappms",
     "//foundation/arkui/ace_engine/interfaces/inner_api/ui_service_manager:ui_service_mgr",
     "//foundation/window/window_manager/utils:libwmutil",
   ]
@@ -78,13 +58,11 @@ ohos_shared_library("batteryservice") {
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_1.1",
     "eventhandler:libeventhandler",
-    "hdf_core:libhdf_utils",
-    "hdf_core:libhdi",
-    "hicollie_native:libhicollie",
     "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "multimedia_image_standard:image_native",
+    "power_manager:powermgr_client",
     "safwk:system_ability_fwk",
     "samgr_standard:samgr_proxy",
     "window_manager:libdm",

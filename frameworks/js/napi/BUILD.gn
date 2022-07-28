@@ -13,31 +13,14 @@
 
 import("//base/powermgr/battery_manager/batterymgr.gni")
 
-config("batterynapi_private_config") {
-  include_dirs = [
-    "//foundation/arkui/napi/native_engine",
-    "//foundation/arkui/napi/interfaces/kits",
-    "//utils/system/safwk/native/include",
-    "//third_party/node/src",
-    "//base/powermgr/battery_manager/interfaces/innerkits/native/include",
-    "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy/include",
-    "//foundation/distributedschedule/samgr/adapter/interfaces/innerkits/include",
-  ]
-}
-
 ohos_shared_library("batteryinfo") {
   sources = [ "battery_info.cpp" ]
-  configs = [
-    "${utils_path}:utils_config",
-    ":batterynapi_private_config",
-  ]
-  deps = [
-    "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client",
-    "//foundation/arkui/napi:ace_napi",
-  ]
+  configs = [ "${battery_utils}:utils_config" ]
+  deps = [ "${battery_innerkits}:batterysrv_client" ]
   external_deps = [
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
+    "napi:ace_napi",
   ]
 
   relative_install_dir = "module"
@@ -48,14 +31,12 @@ ohos_shared_library("batteryinfo") {
 
 ohos_shared_library("battery") {
   sources = [ "system_battery.cpp" ]
-  configs = [ "${utils_path}:utils_config" ]
-  deps = [
-    "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client",
-    "//foundation/arkui/napi:ace_napi",
-  ]
+  configs = [ "${battery_utils}:utils_config" ]
+  deps = [ "${battery_innerkits}:batterysrv_client" ]
   external_deps = [
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
+    "napi:ace_napi",
   ]
 
   relative_install_dir = "module"

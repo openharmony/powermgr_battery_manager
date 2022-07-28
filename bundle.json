@@ -58,13 +58,17 @@
             ]
         },
         "build": {
-            "sub_component": [
-                "//base/powermgr/battery_manager/frameworks/js/napi:battery",
-                "//base/powermgr/battery_manager/frameworks/js/napi:batteryinfo",
-                "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client",
-                "//base/powermgr/battery_manager/sa_profile:batterymgr_sa_profile",
-                "//base/powermgr/battery_manager/services:batteryservice"
-            ],
+            "group_type": {
+                "base_group": [],
+                "fwk_group": [
+                    "//base/powermgr/battery_manager/frameworks:battery_napi",
+                    "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client"
+                ],
+                "service_group": [
+                    "//base/powermgr/battery_manager/sa_profile:batterymgr_sa_profile",
+                    "//base/powermgr/battery_manager/services:batteryservice"
+                ]
+            },
             "inner_kits": [
                 {
                     "name": "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client",
@@ -79,11 +83,11 @@
                   }
             ],
             "test": [
-                "//base/powermgr/battery_manager/frameworks/js/test:batterymgr_js_test",
+                "//base/powermgr/battery_manager/frameworks:battery_js_frameworks_unittest",
+                "//base/powermgr/battery_manager/frameworks:battery_frameworks_unittest",
                 "//base/powermgr/battery_manager/interfaces/kits/js/test:batterymgr_js_interface_test",
-                "//base/powermgr/battery_manager/frameworks/native/test:unittest",
                 "//base/powermgr/battery_manager/services/native/test:unittest",
-                "//base/powermgr/battery_manager/test:systemtest",
+                "//base/powermgr/battery_manager/test:battery_systemtest",
                 "//base/powermgr/battery_manager/test:battery_fuzzertest"
             ]
         }
