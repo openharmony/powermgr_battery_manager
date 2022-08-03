@@ -31,7 +31,7 @@ using namespace OHOS::HDI::Battery;
 namespace OHOS {
 namespace PowerMgr {
 namespace {
-string MOCK_PATH = "/data/local/tmp";
+string MOCK_PATH = "/data/service/el0/battery";
 string POWER_SUPPLY_PATH = "/sys/class/power_supply";
 vector<string> MOCK_DIR_NAME = {
     "battery",

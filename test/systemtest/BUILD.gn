@@ -33,6 +33,9 @@ config("module_private_config") {
     "//drivers/peripheral/battery/interfaces/include/",
     "//drivers/peripheral/battery/include/",
     "//drivers/peripheral/battery/interfaces/hdi_service/include",
+    "//drivers/peripheral/battery/charger/led",
+    "//drivers/peripheral/battery/utils/include",
+    "//base/powermgr/power_manager/interfaces/innerkits/native/include",
   ]
 }
 
@@ -41,6 +44,7 @@ ohos_systemtest("test_systemtest") {
   module_out_path = "${module_output_path}"
 
   sources = [
+    "//base/powermgr/battery_manager/utils/native/src/test_utils.cpp",
     "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
     "//drivers/peripheral/battery/charger/led/battery_led.cpp",
     "//drivers/peripheral/battery/charger/src/charger_thread.cpp",
@@ -75,7 +79,8 @@ ohos_systemtest("test_systemtest") {
     "drivers_interface_input:hdi_input",
     "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
-    "hiviewdfx_hilog_native:libhilog",
+    "hdf_core:libhdf_utils",
+    "hdf_core:libhdi",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
@@ -331,11 +336,8 @@ ohos_systemtest("test_charger_offline_shutdown") {
 
 group("systemtest") {
   testonly = true
-  deps = []
 
-  deps += [
-    ":test_battery_overtemperature_shutdown",
-    ":test_battery_undertemperature_shutdown",
+  deps = [
     ":test_charger_offline_shutdown",
     ":test_charger_overtemperature_shutdown",
     ":test_charger_undertemperature_shutdown",
