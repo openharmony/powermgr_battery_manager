@@ -46,7 +46,7 @@
                 "napi",
                 "power_manager",
                 "safwk",
-                "samgr_standard",
+                "samgr",
                 "window_manager"
             ],
             "third_party": [
