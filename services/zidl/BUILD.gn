@@ -33,7 +33,7 @@ ohos_shared_library("batterysrv_stub") {
     "c_utils:utils",
     "hicollie_native:libhicollie",
     "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_core",
+    "ipc:ipc_single",
   ]
 
   part_name = "battery_manager"
