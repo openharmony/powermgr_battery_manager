@@ -98,6 +98,7 @@ ohos_systemtest("test_systemtest") {
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_1.1",
     "drivers_interface_input:hdi_input",
+    "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
@@ -143,6 +144,7 @@ ohos_systemtest("test_reboot") {
   external_deps = [
     "drivers_interface_battery:libbattery_proxy_1.1",
     "drivers_interface_input:hdi_input",
+    "drivers_interface_light:liblight_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
@@ -184,6 +186,7 @@ ohos_systemtest("test_charger_overtemperature_shutdown") {
   external_deps = [
     "drivers_interface_battery:libbattery_proxy_1.1",
     "drivers_interface_input:hdi_input",
+    "drivers_interface_light:liblight_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
@@ -225,6 +228,7 @@ ohos_systemtest("test_charger_undertemperature_shutdown") {
   external_deps = [
     "drivers_interface_battery:libbattery_proxy_1.1",
     "drivers_interface_input:hdi_input",
+    "drivers_interface_light:liblight_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
@@ -272,6 +276,7 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_1.1",
     "drivers_interface_input:hdi_input",
+    "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
@@ -323,6 +328,7 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_1.1",
     "drivers_interface_input:hdi_input",
+    "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
@@ -368,6 +374,7 @@ ohos_systemtest("test_charger_offline_shutdown") {
   external_deps = [
     "drivers_interface_battery:libbattery_proxy_1.1",
     "drivers_interface_input:hdi_input",
+    "drivers_interface_light:liblight_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
