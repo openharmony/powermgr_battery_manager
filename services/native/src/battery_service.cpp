@@ -154,8 +154,7 @@ void BatteryService::InitConfig()
         BATTERY_HILOGD(COMP_SVC, "instantiate BatteryLed error.");
         return;
     }
-    batteryLed_->InitLedsSysfs();
-    BATTERY_HILOGI(COMP_SVC, "Success");
+    batteryLed_->InitLightInfo();
 }
 
 int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_1::BatteryInfo& event)
