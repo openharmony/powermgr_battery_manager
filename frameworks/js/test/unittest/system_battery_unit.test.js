@@ -14,7 +14,7 @@
  */
 
 import battery from '@system.battery';
-import batteryInfo from '@ohos.batteryinfo';
+import batteryInfo from '@ohos.batteryInfo';
 
 import {describe, it, expect} from 'deccjsunit/index';
 
