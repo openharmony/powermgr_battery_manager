@@ -37,6 +37,8 @@ ohos_shared_library("batterysrv_client") {
     "safwk:system_ability_fwk",
     "samgr_standard:samgr_proxy",
   ]
+  install_images = [ system_base_dir ]
+  relative_install_dir = "platformsdk"
 
   part_name = "battery_manager"
 }
