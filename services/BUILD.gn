@@ -65,7 +65,7 @@ ohos_shared_library("batteryservice") {
     "multimedia_image_standard:image_native",
     "power_manager:powermgr_client",
     "safwk:system_ability_fwk",
-    "samgr_standard:samgr_proxy",
+    "samgr:samgr_proxy",
     "window_manager:libdm",
   ]
 
