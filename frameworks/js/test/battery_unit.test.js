@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import batteryInfo from '@ohos.batteryinfo';
+import batteryInfo from '@ohos.batteryInfo';
 
 import {describe, beforeAll, beforeEach, afterEach, afterAll, it, expect} from 'deccjsunit/index'
 
