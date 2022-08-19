@@ -18,11 +18,8 @@
 #include <ctime>
 #include <iosfwd>
 #include <cstdio>
-#include "v1_1/types.h"
 #include "battery_info.h"
 #include "battery_log.h"
-
-using namespace OHOS::HDI::Battery;
 
 namespace OHOS {
 namespace PowerMgr {

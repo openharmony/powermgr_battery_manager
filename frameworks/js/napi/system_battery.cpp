@@ -26,7 +26,6 @@
 #include "power_common.h"
 
 using namespace OHOS::PowerMgr;
-using namespace OHOS::HDI::Battery;
 
 namespace {
 const uint32_t MAX_ARGC = 1;

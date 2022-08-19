@@ -20,19 +20,18 @@ config("batterysrv_public_config") {
     "${battery_innerkits}/native/include",
     "//base/hiviewdfx/hicollie/interfaces/native/innerkits/include/xcollie",
     "//base/powermgr/power_manager/utils/permission/include",
-    "//drivers/peripheral/battery/interfaces/hdi_service/include",
-    "//drivers/peripheral/battery/interfaces/include",
-    "//drivers/peripheral/battery/charger/led",
   ]
 }
 
 ohos_shared_library("batteryservice") {
   sources = [
     "native/src/battery_callback.cpp",
+    "native/src/battery_config.cpp",
     "native/src/battery_dump.cpp",
+    "native/src/battery_light.cpp",
+    "native/src/battery_notify.cpp",
     "native/src/battery_service.cpp",
     "native/src/battery_service_event_handler.cpp",
-    "native/src/battery_service_subscriber.cpp",
   ]
 
   configs = [ "${battery_utils}:utils_config" ]
@@ -45,6 +44,7 @@ ohos_shared_library("batteryservice") {
     "//base/powermgr/power_manager/utils/permission:power_permission",
     "//drivers/peripheral/battery/interfaces/hdi_service:libbattery_interface_service_1.1",
     "//foundation/arkui/ace_engine/interfaces/inner_api/ui_service_manager:ui_service_mgr",
+    "//third_party/jsoncpp:jsoncpp",
   ]
 
   external_deps = [
@@ -67,4 +67,11 @@ ohos_shared_library("batteryservice") {
   ]
 
   part_name = "battery_manager"
+}
+
+group("service") {
+  deps = [
+    ":batteryservice",
+    "native/profile:battery_config",
+  ]
 }

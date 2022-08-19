@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,25 +21,28 @@
 #include "common_event_manager.h"
 #include "common_event_support.h"
 #include "ipc_object_stub.h"
+#include "battery_config.h"
 #include "battery_info.h"
 
 namespace OHOS {
 namespace PowerMgr {
-class BatteryServiceSubscriber : public IPCObjectStub {
+class BatteryNotify {
 public:
-    static int32_t Update(const BatteryInfo& info);
+    BatteryNotify();
+    ~BatteryNotify() = default;
+    int32_t PublishEvents(const BatteryInfo& info);
 
 private:
-    static bool HandleBatteryChangedEvent(const BatteryInfo& info);
-    static bool CmpBatteryInfo(const BatteryInfo& info);
-    static void SwaptBatteryInfo(const BatteryInfo& info);
-    static bool HandleBatteryLowEvent(const BatteryInfo& info);
-    static bool HandleBatteryOkayEvent(const BatteryInfo& info);
-    static bool HandleBatteryPowerConnectedEvent(const BatteryInfo& info);
-    static bool HandleBatteryPowerDisconnectedEvent(const BatteryInfo& info);
-    static bool HandleBatteryChargingEvent(const BatteryInfo& info);
-    static bool HandleBatteryDischargingEvent(const BatteryInfo& info);
-    static bool IsCommonEventServiceAbilityExist();
+    bool PublishChangedEvent(const BatteryInfo& info) const;
+    bool PublishLowEvent(const BatteryInfo& info) const;
+    bool PublishOkayEvent(const BatteryInfo& info) const;
+    bool PublishPowerConnectedEvent(const BatteryInfo& info) const;
+    bool PublishPowerDisconnectedEvent(const BatteryInfo& info) const;
+    bool PublishChargingEvent(const BatteryInfo& info) const;
+    bool PublishDischargingEvent(const BatteryInfo& info) const;
+    bool IsCommonEventServiceAbilityExist() const;
+
+    int32_t lowCapacity_ = -1;
 };
 } // namespace PowerMgr
 } // namespace OHOS
