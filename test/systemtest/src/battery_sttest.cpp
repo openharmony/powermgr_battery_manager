@@ -40,8 +40,6 @@
 using namespace testing::ext;
 using namespace OHOS;
 using namespace OHOS::PowerMgr;
-using namespace OHOS::HDI::Battery;
-using namespace OHOS::HDI::Battery::V1_1;
 using namespace std;
 
 const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";

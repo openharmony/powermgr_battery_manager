@@ -18,8 +18,6 @@
 #include "hdf_base.h"
 #include "battery_log.h"
 
-using namespace OHOS::HDI::Battery;
-
 namespace OHOS {
 namespace PowerMgr {
 BatteryCallback::BatteryEventCallback BatteryCallback::eventCb_ = nullptr;

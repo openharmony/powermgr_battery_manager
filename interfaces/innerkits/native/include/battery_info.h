@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -336,21 +336,44 @@ public:
         return technology_;
     }
 
+    bool operator==(const BatteryInfo& info)
+    {
+        return (present_ == info.IsPresent()) &&
+            (capacity_ == info.GetCapacity()) &&
+            (voltage_ == info.GetVoltage()) &&
+            (temperature_ == info.GetTemperature()) &&
+            (totalEnergy_ == info.GetTotalEnergy()) &&
+            (curAverage_ == info.GetCurAverage()) &&
+            (nowCurr_ == info.GetNowCurrent()) &&
+            (pluggedMaxCurrent_ == info.GetPluggedMaxCurrent()) &&
+            (pluggedMaxVoltage_ == info.GetPluggedMaxVoltage()) &&
+            (chargeCounter_ == info.GetChargeCounter()) &&
+            (healthState_ == info.GetHealthState()) &&
+            (pluggedType_ == info.GetPluggedType()) &&
+            (chargeState_ == info.GetChargeState()) &&
+            (technology_ == info.GetTechnology());
+    }
+
+    bool operator!=(const BatteryInfo& info)
+    {
+        return !(*this == info);
+    }
+
 private:
+    bool present_ = INVALID_BATT_BOOL_VALUE;
     int32_t capacity_ = INVALID_BATT_INT_VALUE;
     int32_t voltage_ = INVALID_BATT_INT_VALUE;
     int32_t temperature_ = INVALID_BATT_TEMP_VALUE;
     int32_t totalEnergy_ = INVALID_BATT_INT_VALUE;
     int32_t curAverage_ = INVALID_BATT_INT_VALUE;
     int32_t nowCurr_ = INVALID_BATT_INT_VALUE;
+    int32_t pluggedMaxCurrent_ = INVALID_BATT_INT_VALUE;
+    int32_t pluggedMaxVoltage_ = INVALID_BATT_INT_VALUE;
+    int32_t chargeCounter_ = INVALID_BATT_INT_VALUE;
     int32_t remainEnergy_ = INVALID_BATT_INT_VALUE;
     BatteryHealthState healthState_ = BatteryHealthState::HEALTH_STATE_BUTT;
     BatteryPluggedType pluggedType_ = BatteryPluggedType::PLUGGED_TYPE_BUTT;
-    int32_t pluggedMaxCurrent_ = INVALID_BATT_INT_VALUE;
-    int32_t pluggedMaxVoltage_ = INVALID_BATT_INT_VALUE;
     BatteryChargeState chargeState_ = BatteryChargeState::CHARGE_STATE_BUTT;
-    int32_t chargeCounter_ = INVALID_BATT_INT_VALUE;
-    bool present_ = INVALID_BATT_BOOL_VALUE;
     std::string technology_ = INVALID_STRING_VALUE;
 };
 } // namespace PowerMgr

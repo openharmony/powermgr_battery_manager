@@ -33,15 +33,13 @@
 #include "v1_1/ibattery_interface.h"
 #include "v1_1/types.h"
 #include "battery_info.h"
-#include "battery_config.h"
-#include "battery_led.h"
+#include "battery_light.h"
 #include "battery_service_event_handler.h"
-#include "battery_service_subscriber.h"
+#include "battery_notify.h"
 #include "battery_srv_stub.h"
 
 namespace OHOS {
 namespace PowerMgr {
-using namespace OHOS::HDI::Battery::V1_1;
 class BatteryService final : public SystemAbility,
     public BatterySrvStub {
 DECLARE_SYSTEM_ABILITY(BatteryService)
@@ -87,7 +85,7 @@ public:
 private:
     bool Init();
     int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_1::BatteryInfo& event);
-    void UpdateBatteryInfo(const OHOS::HDI::Battery::V1_1::BatteryInfo &event);
+    void ConvertingEvent(const OHOS::HDI::Battery::V1_1::BatteryInfo &event);
     void HandleBatteryInfo();
     void SendEvent(int32_t event, int64_t delayTime);
     void CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState);
@@ -95,25 +93,29 @@ private:
     void HandleCapacity(int32_t capacity, BatteryChargeState chargeState);
     bool ShowDialog(const std::string &params);
     void GetDisplayPosition(int32_t& width, int32_t& height);
-    bool ready_ {false};
-    int32_t commEventRetryTimes_ {0};
+    bool ready_ { false };
     std::mutex mutex_;
-    std::shared_ptr<AppExecFwk::EventRunner> eventRunner_;
-    std::shared_ptr<BatteryServiceEventHandler> handler_;
-    sptr<BatteryServiceSubscriber> batterydSubscriber_;
-    std::unique_ptr<HDI::Battery::V1_1::BatteryConfig> batteryConfig_ = nullptr;
-    std::unique_ptr<HDI::Battery::V1_1::BatteryLed> batteryLed_ = nullptr;
-    sptr<IBatteryInterface> iBatteryInterface_ = nullptr;
+    std::shared_ptr<AppExecFwk::EventRunner> eventRunner_ { nullptr };
+    std::shared_ptr<BatteryServiceEventHandler> handler_ { nullptr };
+    std::unique_ptr<BatteryNotify> batteryNotify_ { nullptr };
+    BatteryLight batteryLight_;
+    sptr<HDI::Battery::V1_1::IBatteryInterface> iBatteryInterface_ { nullptr };
     sptr<OHOS::HDI::ServiceManager::V1_0::IServiceManager> hdiServiceMgr_ { nullptr };
     sptr<HdiServiceStatusListener::IServStatListener> hdiServStatListener_ { nullptr };
-    int32_t lastCapacity_ = 0;
-    int64_t lastTime_ = 0;
-    int64_t remainTime_ = 0;
-    bool chargeFlag_ {false};
-    int32_t dialogId_ = -1;
-    bool isLowPower_ = false;
+    bool isLowPower_ { false };
+    bool isMockUnplugged_ { false };
+    bool chargeFlag_ { false };
+    int32_t commEventRetryTimes_ { 0 };
+    int32_t lastCapacity_ { 0 };
+    int32_t dialogId_ { INVALID_BATT_INT_VALUE };
+    int32_t warnCapacity_ { INVALID_BATT_INT_VALUE };
+    int32_t highTemperature_ { INT32_MAX };
+    int32_t lowTemperature_ { INT32_MIN };
+    int32_t shutdownCapacity_ { INVALID_BATT_INT_VALUE };
+    int64_t lastTime_ { 0 };
+    int64_t remainTime_ { 0 };
     BatteryInfo batteryInfo_;
-    bool isMockUnplugged_ = false;
+    BatteryInfo lastBatteryInfo_;
 };
 } // namespace PowerMgr
 } // namespace OHOS
