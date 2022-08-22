@@ -36,15 +36,15 @@ private:
     class Error {
     public:
         void SetErrorMsg(int32_t code, const std::string& msg);
-        inline bool IsError()
+        inline bool IsError() const
         {
             return !msg_.empty() && (code_ != ERR_OK);
         }
-        inline int32_t GetCode()
+        inline int32_t GetCode() const
         {
             return code_;
         }
-        inline std::string GetMsg()
+        inline std::string GetMsg() const
         {
             return msg_;
         }
@@ -57,7 +57,7 @@ private:
     public:
         bool GetBatteryInfo();
         double GetLevel();
-        uint32_t IsCharging();
+        uint32_t IsCharging() const;
 
     private:
         int32_t capacity_ { INVALID_BATT_INT_VALUE };
