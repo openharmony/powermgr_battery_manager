@@ -209,7 +209,7 @@ double SystemBattery::BatteryInfo::GetLevel()
     return (capacity_ * LEVEL_RANGES);
 }
 
-uint32_t SystemBattery::BatteryInfo::IsCharging()
+uint32_t SystemBattery::BatteryInfo::IsCharging() const
 {
     return static_cast<uint32_t>(chargingState_ == BatteryChargeState::CHARGE_STATE_ENABLE ||
         chargingState_ == BatteryChargeState::CHARGE_STATE_FULL);
