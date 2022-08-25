@@ -50,8 +50,6 @@ constexpr int32_t BATTERY_LOW_CAPACITY = 10;
 constexpr int32_t UI_DIALOG_POWER_WIDTH_NARROW = 400;
 constexpr int32_t UI_DIALOG_POWER_HEIGHT_NARROW = 240;
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
-constexpr int32_t SEC_TO_MSEC = 1000;
-constexpr int32_t NSEC_TO_MSEC = 1000000;
 constexpr int32_t BATTERY_EMERGENCY_THRESHOLD = 5;
 constexpr int32_t BATTERY_LOW_THRESHOLD = 20;
 constexpr int32_t BATTERY_NORMAL_THRESHOLD = 90;
@@ -75,6 +73,8 @@ BatteryService::~BatteryService() {}
 
 static int64_t GetCurrentTime()
 {
+    constexpr int32_t SEC_TO_MSEC = 1000;
+    constexpr int32_t NSEC_TO_MSEC = 1000000;
     timespec tm {};
     clock_gettime(CLOCK_MONOTONIC, &tm);
 
