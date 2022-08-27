@@ -45,6 +45,7 @@ void BatteryDump::DumpHelp(int32_t fd)
     dprintf(fd, "Usage:\n");
     dprintf(fd, "      -h: dump help\n");
     dprintf(fd, "      -i: dump battery info\n");
+    dprintf(fd, "      -d: show low power diaolog\n");
     dprintf(fd, "      -u: unplug battery charging state\n");
     dprintf(fd, "      -r: reset battery charging state\n");
 }
