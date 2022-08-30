@@ -619,6 +619,11 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
         batteryDump.DumpHelp(fd);
         return ERR_NO_INIT;
     }
+    if (args[0].compare(u"-d") == 0) {
+        ShowDialog(BATTERY_LOW_CAPACITY_PARAMS);
+        dprintf(fd, "show low power dialog \n");
+        return ERR_OK;
+    }
 
     bool helpRet = batteryDump.DumpBatteryHelp(fd, args);
     bool getBatteryInfo = batteryDump.GetBatteryInfo(fd, g_service, args);
