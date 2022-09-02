@@ -17,14 +17,11 @@
 #define BATTERY_STTEST_H
 
 #include <gtest/gtest.h>
-#include "battery_led.h"
 #include "test_utils.h"
 
 class BatterySttest : public testing::Test {
 public:
     static void SetUpTestCase();
     static void TearDownTestCase();
-    void SetUp();
-    void TearDown();
 };
 #endif // BATTERY_STTEST_H

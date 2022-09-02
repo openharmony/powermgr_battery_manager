@@ -36,14 +36,6 @@ void BatteryDialogTest::TearDownTestCase()
     DelayedSpSingleton<BatteryService>::DestroyInstance();
 }
 
-void BatteryDialogTest::SetUp()
-{
-}
-
-void BatteryDialogTest::TearDown()
-{
-}
-
 /**
  * @tc.name: BatteryDailogST_001
  * @tc.desc: test pull up BatteryDialog by service

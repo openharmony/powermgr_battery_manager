@@ -23,8 +23,6 @@ class BatteryUndertemperatureShutdownTest : public testing::Test {
 public:
     static void SetUpTestCase();
     static void TearDownTestCase();
-    void SetUp();
-    void TearDown();
 };
 }
 #endif // BATTERY_UNDERTEMPERATURE_SHUTDOWN_TEST_H

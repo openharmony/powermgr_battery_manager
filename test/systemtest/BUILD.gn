@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,7 +13,6 @@
 
 import("//base/powermgr/battery_manager/batterymgr.gni")
 import("//build/test.gni")
-import("//drivers/hdf_core/adapter/uhdf2/uhdf.gni")
 
 ###############################################################################
 config("module_private_config") {
@@ -21,20 +20,8 @@ config("module_private_config") {
 
   include_dirs = [
     "include",
-    "//drivers/peripheral/battery/charger/ui/include",
-    "//third_party/libpng",
     "${battery_innerkits}/native/include",
     "${battery_service_zidl}/include",
-    "//drivers/peripheral/battery/charger/led",
-    "//drivers/peripheral/battery/charger/backlight",
-    "//drivers/peripheral/battery/charger/vibrate",
-    "//drivers/peripheral/battery/charger/include",
-    "//drivers/peripheral/battery/interfaces/hdi_service/test/unittest/include",
-    "//drivers/peripheral/battery/interfaces/include/",
-    "//drivers/peripheral/battery/include/",
-    "//drivers/peripheral/battery/interfaces/hdi_service/include",
-    "//drivers/peripheral/battery/charger/led",
-    "//drivers/peripheral/battery/utils/include",
     "//base/powermgr/power_manager/interfaces/innerkits/native/include",
   ]
 }
@@ -56,9 +43,6 @@ ohos_systemtest("test_systemtest") {
   deps = [
     "${battery_innerkits}:batterysrv_client",
     "${battery_service}:batteryservice",
-    "${hdf_uhdf_path}/host:libhdf_host",
-    "${hdf_uhdf_path}/utils:libhdf_utils",
-    "//drivers/peripheral/battery/charger/ui:libminui",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
@@ -68,9 +52,6 @@ ohos_systemtest("test_systemtest") {
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
-    "drivers_interface_battery:libbattery_proxy_1.1",
-    "drivers_interface_input:hdi_input",
-    "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
     "hdf_core:libhdf_utils",
     "hdf_core:libhdi",
@@ -83,133 +64,10 @@ ohos_systemtest("test_systemtest") {
 }
 
 ##############################systemtest##########################################
-ohos_systemtest("test_reboot") {
-  module_out_path = "${module_output_path}"
-
-  sources = [
-    "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
-    "//drivers/peripheral/battery/charger/led/battery_led.cpp",
-    "//drivers/peripheral/battery/charger/src/charger_thread.cpp",
-    "//drivers/peripheral/battery/charger/vibrate/battery_vibrate.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/battery_config.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/battery_thread.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/power_supply_provider.cpp",
-    "src/reboot_test.cpp",
-  ]
-
-  configs = [
-    "${battery_utils}:utils_config",
-    ":module_private_config",
-  ]
-
-  deps = [
-    "${hdf_uhdf_path}/utils:libhdf_utils",
-    "//drivers/peripheral/battery/charger/ui:libminui",
-    "//third_party/googletest:gtest_main",
-    "//third_party/jsoncpp:jsoncpp",
-  ]
-
-  external_deps = [
-    "c_utils:utils",
-    "drivers_interface_battery:libbattery_proxy_1.1",
-    "drivers_interface_input:hdi_input",
-    "drivers_interface_light:liblight_proxy_1.0",
-    "hiviewdfx_hilog_native:libhilog",
-    "init:libbegetutil",
-    "ipc:ipc_core",
-  ]
-}
-
-##############################systemtest##########################################
-ohos_systemtest("test_charger_overtemperature_shutdown") {
-  module_out_path = "${module_output_path}"
-
-  sources = [
-    "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
-    "//drivers/peripheral/battery/charger/led/battery_led.cpp",
-    "//drivers/peripheral/battery/charger/src/charger_thread.cpp",
-    "//drivers/peripheral/battery/charger/vibrate/battery_vibrate.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/battery_config.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/battery_thread.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/power_supply_provider.cpp",
-    "src/charger_overtemperature_shutdown_test.cpp",
-  ]
-
-  configs = [
-    "${battery_utils}:utils_config",
-    ":module_private_config",
-  ]
-
-  deps = [
-    "${hdf_uhdf_path}/utils:libhdf_utils",
-    "//drivers/peripheral/battery/charger/ui:libminui",
-    "//third_party/googletest:gtest_main",
-    "//third_party/jsoncpp:jsoncpp",
-  ]
-
-  external_deps = [
-    "c_utils:utils",
-    "drivers_interface_battery:libbattery_proxy_1.1",
-    "drivers_interface_input:hdi_input",
-    "drivers_interface_light:liblight_proxy_1.0",
-    "hiviewdfx_hilog_native:libhilog",
-    "init:libbegetutil",
-    "ipc:ipc_core",
-  ]
-}
-
-##############################systemtest##########################################
-ohos_systemtest("test_charger_undertemperature_shutdown") {
-  module_out_path = "${module_output_path}"
-
-  sources = [
-    "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
-    "//drivers/peripheral/battery/charger/led/battery_led.cpp",
-    "//drivers/peripheral/battery/charger/src/charger_thread.cpp",
-    "//drivers/peripheral/battery/charger/vibrate/battery_vibrate.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/battery_config.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/battery_thread.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/power_supply_provider.cpp",
-    "src/charger_undertemperature_shutdown_test.cpp",
-  ]
-
-  configs = [
-    "${battery_utils}:utils_config",
-    ":module_private_config",
-  ]
-
-  deps = [
-    "${hdf_uhdf_path}/utils:libhdf_utils",
-    "//drivers/peripheral/battery/charger/ui:libminui",
-    "//third_party/googletest:gtest_main",
-    "//third_party/jsoncpp:jsoncpp",
-  ]
-
-  external_deps = [
-    "c_utils:utils",
-    "drivers_interface_battery:libbattery_proxy_1.1",
-    "drivers_interface_input:hdi_input",
-    "drivers_interface_light:liblight_proxy_1.0",
-    "hiviewdfx_hilog_native:libhilog",
-    "init:libbegetutil",
-    "ipc:ipc_core",
-  ]
-}
-
-##############################systemtest##########################################
 ohos_systemtest("test_battery_overtemperature_shutdown") {
   module_out_path = "${module_output_path}"
 
-  sources = [
-    "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
-    "//drivers/peripheral/battery/charger/led/battery_led.cpp",
-    "//drivers/peripheral/battery/charger/src/charger_thread.cpp",
-    "//drivers/peripheral/battery/charger/vibrate/battery_vibrate.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/battery_config.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/battery_thread.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/power_supply_provider.cpp",
-    "src/battery_overtemperature_shutdown_test.cpp",
-  ]
+  sources = [ "src/battery_overtemperature_shutdown_test.cpp" ]
 
   configs = [
     "${battery_utils}:utils_config",
@@ -218,9 +76,7 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
 
   deps = [
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
-    "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/battery_manager/services:batteryservice",
-    "//drivers/peripheral/battery/charger/ui:libminui",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
@@ -230,9 +86,6 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
-    "drivers_interface_battery:libbattery_proxy_1.1",
-    "drivers_interface_input:hdi_input",
-    "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
@@ -246,16 +99,7 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
 ohos_systemtest("test_battery_undertemperature_shutdown") {
   module_out_path = "${module_output_path}"
 
-  sources = [
-    "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
-    "//drivers/peripheral/battery/charger/led/battery_led.cpp",
-    "//drivers/peripheral/battery/charger/src/charger_thread.cpp",
-    "//drivers/peripheral/battery/charger/vibrate/battery_vibrate.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/battery_config.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/battery_thread.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/power_supply_provider.cpp",
-    "src/battery_undertemperature_shutdown_test.cpp",
-  ]
+  sources = [ "src/battery_undertemperature_shutdown_test.cpp" ]
 
   configs = [
     "${battery_utils}:utils_config",
@@ -264,9 +108,7 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
 
   deps = [
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
-    "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/battery_manager/services:batteryservice",
-    "//drivers/peripheral/battery/charger/ui:libminui",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
@@ -276,9 +118,6 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
-    "drivers_interface_battery:libbattery_proxy_1.1",
-    "drivers_interface_input:hdi_input",
-    "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
@@ -293,16 +132,7 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
 ohos_systemtest("test_charger_offline_shutdown") {
   module_out_path = "${module_output_path}"
 
-  sources = [
-    "//drivers/peripheral/battery/charger/backlight/battery_backlight.cpp",
-    "//drivers/peripheral/battery/charger/led/battery_led.cpp",
-    "//drivers/peripheral/battery/charger/src/charger_thread.cpp",
-    "//drivers/peripheral/battery/charger/vibrate/battery_vibrate.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/battery_config.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/battery_thread.cpp",
-    "//drivers/peripheral/battery/interfaces/hdi_service/src/power_supply_provider.cpp",
-    "src/charger_offline_shutdown_test.cpp",
-  ]
+  sources = [ "src/charger_offline_shutdown_test.cpp" ]
 
   configs = [
     "${battery_utils}:utils_config",
@@ -310,17 +140,12 @@ ohos_systemtest("test_charger_offline_shutdown") {
   ]
 
   deps = [
-    "${hdf_uhdf_path}/utils:libhdf_utils",
-    "//drivers/peripheral/battery/charger/ui:libminui",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
 
   external_deps = [
     "c_utils:utils",
-    "drivers_interface_battery:libbattery_proxy_1.1",
-    "drivers_interface_input:hdi_input",
-    "drivers_interface_light:liblight_proxy_1.0",
     "hiviewdfx_hilog_native:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
@@ -340,10 +165,7 @@ ohos_systemtest("test_battery_dialog") {
 
   deps = [
     "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
-    "${hdf_uhdf_path}/utils:libhdf_utils",
     "//base/powermgr/battery_manager/services:batteryservice",
-    "//drivers/peripheral/battery/charger/ui:libminui",
-    "//drivers/peripheral/battery/interfaces/hdi_service:libbattery_interface_service_1.1",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
@@ -353,8 +175,7 @@ ohos_systemtest("test_battery_dialog") {
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
-    "drivers_interface_battery:libbattery_proxy_1.1",
-    "drivers_interface_input:hdi_input",
+    "drivers_interface_battery:battery_idl_headers",
     "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
@@ -369,5 +190,8 @@ ohos_systemtest("test_battery_dialog") {
 group("systemtest") {
   testonly = true
 
-  deps = [ ":test_systemtest" ]
+  deps = [
+    ":test_battery_dialog",
+    ":test_systemtest",
+  ]
 }
