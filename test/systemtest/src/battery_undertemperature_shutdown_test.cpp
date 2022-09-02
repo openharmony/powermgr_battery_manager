@@ -44,14 +44,6 @@ void BatteryUndertemperatureShutdownTest::TearDownTestCase(void)
     DelayedSpSingleton<BatteryService>::DestroyInstance();
 }
 
-void BatteryUndertemperatureShutdownTest::SetUp(void)
-{
-}
-
-void BatteryUndertemperatureShutdownTest::TearDown(void)
-{
-}
-
 /**
  * @tc.name: BatteryST_005
  * @tc.desc: Test functions temperature in normal range in BatteryHostServiceStub
