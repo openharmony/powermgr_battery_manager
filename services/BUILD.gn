@@ -59,6 +59,7 @@ ohos_shared_library("batteryservice") {
     "drivers_interface_battery:libbattery_proxy_1.1",
     "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
+    "hdf_core:libhdi",
     "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",

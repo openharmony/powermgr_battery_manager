@@ -31,7 +31,6 @@
 #include "iservstat_listener_hdi.h"
 #include "ibattery_srv.h"
 #include "v1_1/ibattery_interface.h"
-#include "v1_1/battery_interface_proxy.h"
 #include "v1_1/types.h"
 #include "battery_info.h"
 #include "battery_config.h"
