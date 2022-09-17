@@ -19,7 +19,6 @@ ohos_shared_library("batteryinfo") {
   deps = [ "${battery_innerkits}:batterysrv_client" ]
   external_deps = [
     "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_core",
     "napi:ace_napi",
   ]
 
@@ -35,7 +34,6 @@ ohos_shared_library("battery") {
   deps = [ "${battery_innerkits}:batterysrv_client" ]
   external_deps = [
     "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_core",
     "napi:ace_napi",
   ]
 
