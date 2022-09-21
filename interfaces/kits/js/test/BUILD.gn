@@ -17,5 +17,6 @@ import("//build/test.gni")
 ohos_js_unittest("batterymgr_js_interface_test") {
   module_out_path = "${module_output_path}"
   hap_profile = "./config.json"
-  certificate_profile = "//test/developertest/signature/openharmony_sx.p7b"
+  certificate_profile =
+      "//test/testfwk/developer_test/signature/openharmony_sx.p7b"
 }
