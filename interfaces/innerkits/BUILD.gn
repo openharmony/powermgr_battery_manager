@@ -34,7 +34,6 @@ ohos_shared_library("batterysrv_client") {
     "c_utils:utils",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
-    "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
   install_images = [ system_base_dir ]
