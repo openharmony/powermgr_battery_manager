@@ -24,15 +24,14 @@
 
 #include "battery_log.h"
 
-
 using namespace std;
 using namespace OHOS::HDI::Battery;
 
 namespace OHOS {
 namespace PowerMgr {
 namespace {
-string MOCK_PATH = "/data/service/el0/battery";
-string POWER_SUPPLY_PATH = "/sys/class/power_supply";
+constexpr const char* MOCK_PATH = "/data/service/el0/battery";
+constexpr const char* POWER_SUPPLY_PATH = "/sys/class/power_supply";
 vector<string> MOCK_DIR_NAME = {
     "battery",
     "USB",
@@ -41,6 +40,7 @@ vector<string> MOCK_DIR_NAME = {
     "ohos_charger",
     "ohos-fgu"
 };
+
 vector<vector<string>> MOCK_FILE_NAME = {
     { "capacity", "voltage_now", "temp", "health", "status", "present", "charge_counter", "technology" },
     { "type", "online", "current_max", "voltage_max" },
@@ -50,7 +50,6 @@ vector<vector<string>> MOCK_FILE_NAME = {
     { "type", "online" }
 };
 }
-
 
 void TestUtils::WriteMock(const std::string& path, const std::string content)
 {
@@ -65,9 +64,9 @@ void TestUtils::WriteMock(const std::string& path, const std::string content)
 
 void TestUtils::InitTest()
 {
-    mkdir(MOCK_PATH.c_str(), S_IRWXU);
+    mkdir(MOCK_PATH, S_IRWXU);
     for (size_t i = 0; i < MOCK_DIR_NAME.size(); ++i) {
-        mkdir((MOCK_PATH + "/" + MOCK_DIR_NAME[i]).c_str(), S_IRWXU);
+        mkdir((std::string(MOCK_PATH) + "/" + MOCK_DIR_NAME[i]).c_str(), S_IRWXU);
     }
 }
 
@@ -76,15 +75,16 @@ void TestUtils::ResetOnline()
     for (size_t dInd = 0; dInd < MOCK_DIR_NAME.size(); ++dInd) {
         for (size_t fInd = 0; fInd < MOCK_FILE_NAME[dInd].size(); ++fInd) {
             if (MOCK_FILE_NAME[dInd][fInd] == "online") {
-                std::string file = MOCK_PATH + "/" + MOCK_DIR_NAME[dInd] + "/" + "online";
+                std::string file = std::string(MOCK_PATH) + "/" + MOCK_DIR_NAME[dInd] + "/" + "online";
                 WriteMock(file, "0");
             }
         }
     }
 }
+
 bool TestUtils::IsMock()
 {
-    DIR* dir = opendir(POWER_SUPPLY_PATH.c_str());
+    DIR* dir = opendir(POWER_SUPPLY_PATH);
     if (dir == NULL) {
         return true;
     }
