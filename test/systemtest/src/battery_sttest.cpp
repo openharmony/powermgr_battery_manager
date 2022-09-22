@@ -44,8 +44,10 @@ using namespace OHOS::HDI::Battery;
 using namespace OHOS::HDI::Battery::V1_1;
 using namespace std;
 
+namespace {
 const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";
 bool g_isMock = false;
+}
 
 void BatterySttest::SetUpTestCase(void)
 {
@@ -67,6 +69,7 @@ void BatterySttest::TearDown(void)
 {
 }
 
+namespace {
 /**
  * @tc.name: BatteryST001
  * @tc.desc: Test IBatterySrv interface GetCapacity
@@ -711,4 +714,5 @@ HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
         ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST021 end.");
+}
 }
