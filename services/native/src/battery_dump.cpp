@@ -59,7 +59,8 @@ void BatteryDump::DumpCurrentTime(int32_t fd)
         BATTERY_HILOGE(FEATURE_BATT_INFO, "timeinfo cannot be null");
         return;
     }
-    dprintf(fd, "Current time: %04d-%02d-%02d %02d:%02d:%02d.%03d\n", timeinfo->tm_year, timeinfo->tm_mon,
+    // Add 1900 to the year, add 1 to the month.
+    dprintf(fd, "Current time: %04d-%02d-%02d %02d:%02d:%02d.%03d\n", timeinfo->tm_year + 1900, timeinfo->tm_mon + 1,
             timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec,
             int32_t { (curTime.tv_nsec / MS_NS) });
 }
