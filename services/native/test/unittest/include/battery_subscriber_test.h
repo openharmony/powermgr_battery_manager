@@ -49,7 +49,6 @@ public:
 
     void OnReceiveEvent(const EventFwk::CommonEventData& data)
     {
-        using namespace OHOS::HDI::Battery;
         BATTERY_HILOGD(LABEL_TEST, "OnReceiveEvent enter.");
         std::string action = data.GetWant().GetAction();
         BATTERY_HILOGD(LABEL_TEST, "BatteryService=== start. action=%{public}s", action.c_str());

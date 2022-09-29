@@ -25,7 +25,6 @@
 #include "battery_log.h"
 
 using namespace std;
-using namespace OHOS::HDI::Battery;
 
 namespace OHOS {
 namespace PowerMgr {

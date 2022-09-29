@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "battery_service_subscriber.h"
+#include "battery_notify.h"
 
 #include "base_types.h"
 #include "refbase.h"
@@ -28,16 +28,13 @@
 #include "common_event_publish_info.h"
 #include "hilog/log_cpp.h"
 #include "battery_log.h"
-#include "batteryd_api.h"
 
 using namespace OHOS::AAFwk;
 using namespace OHOS::EventFwk;
-using namespace OHOS::HDI::Battery;
 using namespace OHOS::HiviewDFX;
 
 namespace OHOS {
 namespace PowerMgr {
-bool g_firstPublish = true;
 bool g_batteryLowOnce = false;
 bool g_batteryOkOnce = false;
 bool g_batteryConnectOnce = false;
@@ -45,10 +42,15 @@ bool g_batteryDisconnectOnce = false;
 bool g_batteryChargingOnce = false;
 bool g_batteryDischargingOnce = false;
 bool g_commonEventInitSuccess = false;
-BatterydInfo g_batteryInfo;
-const int BATTERY_LOW_CAPACITY = 20;
 
-int32_t BatteryServiceSubscriber::Update(const BatteryInfo& info)
+BatteryNotify::BatteryNotify()
+{
+    int32_t DEFAULT_VALUE = 20;
+    lowCapacity_ = BatteryConfig::GetInstance().GetInt("soc.event", DEFAULT_VALUE);
+    BATTERY_HILOGI(COMP_SVC, "Low broadcast power=%{public}d", lowCapacity_);
+}
+
+int32_t BatteryNotify::PublishEvents(const BatteryInfo& info)
 {
     if (g_commonEventInitSuccess) {
         BATTERY_HILOGI(COMP_SVC, "common event service ability init success");
@@ -59,26 +61,25 @@ int32_t BatteryServiceSubscriber::Update(const BatteryInfo& info)
     }
 
     bool isAllSuccess = true;
-    bool ret = HandleBatteryChangedEvent(info);
+    bool ret = PublishChangedEvent(info);
     isAllSuccess &= ret;
-    ret = HandleBatteryLowEvent(info);
+    ret = PublishLowEvent(info);
     isAllSuccess &= ret;
-    ret = HandleBatteryOkayEvent(info);
+    ret = PublishOkayEvent(info);
     isAllSuccess &= ret;
-    ret = HandleBatteryPowerConnectedEvent(info);
+    ret = PublishPowerConnectedEvent(info);
     isAllSuccess &= ret;
-    ret = HandleBatteryPowerDisconnectedEvent(info);
+    ret = PublishPowerDisconnectedEvent(info);
     isAllSuccess &= ret;
-    ret = HandleBatteryChargingEvent(info);
+    ret = PublishChargingEvent(info);
     isAllSuccess &= ret;
-    ret = HandleBatteryDischargingEvent(info);
+    ret = PublishDischargingEvent(info);
     isAllSuccess &= ret;
-    g_firstPublish = false;
 
     return isAllSuccess ? ERR_OK : ERR_NO_INIT;
 }
 
-bool BatteryServiceSubscriber::IsCommonEventServiceAbilityExist()
+bool BatteryNotify::IsCommonEventServiceAbilityExist() const
 {
     sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (!sysMgr) {
@@ -96,7 +97,7 @@ bool BatteryServiceSubscriber::IsCommonEventServiceAbilityExist()
     return true;
 }
 
-bool BatteryServiceSubscriber::HandleBatteryChangedEvent(const BatteryInfo& info)
+bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
 {
     Want want;
     want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CAPACITY), info.GetCapacity());
@@ -119,53 +120,18 @@ bool BatteryServiceSubscriber::HandleBatteryChangedEvent(const BatteryInfo& info
     publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
-    if ((g_firstPublish == true) || (CmpBatteryInfo(info) == false)) {
-        // HiSysEvent::Write(HiSysEvent::Domain::POWERMGR, "BATTERY_CHANGED", HiSysEvent::EventType::STATISTIC,
-        HiSysEvent::Write("BATTERY", "BATTERY_CHANGED", HiSysEvent::EventType::STATISTIC,
-            "LEVEL", info.GetCapacity(), "CHARGER", static_cast<int>(info.GetPluggedType()),
-            "VOLTAGE", info.GetVoltage(), "TEMPERATURE", info.GetTemperature(),
-            "HEALTH", static_cast<int>(info.GetHealthState()), "CURRENT", info.GetNowCurrent());
-        isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
-        SwaptBatteryInfo(info);
-    }
-
+    HiSysEvent::Write("BATTERY", "BATTERY_CHANGED", HiSysEvent::EventType::STATISTIC,
+        "LEVEL", info.GetCapacity(), "CHARGER", static_cast<int>(info.GetPluggedType()),
+        "VOLTAGE", info.GetVoltage(), "TEMPERATURE", info.GetTemperature(),
+        "HEALTH", static_cast<int>(info.GetHealthState()), "CURRENT", info.GetNowCurrent());
+    isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "failed to publish BATTERY_CHANGED event");
     }
     return isSuccess;
 }
 
-bool BatteryServiceSubscriber::CmpBatteryInfo(const BatteryInfo& info)
-{
-    return ((g_batteryInfo.capacity_ == info.GetCapacity()) &&
-            (g_batteryInfo.voltage_ == info.GetVoltage()) &&
-            (g_batteryInfo.temperature_ == info.GetTemperature()) &&
-            (g_batteryInfo.healthState_ == static_cast<int32_t>(info.GetHealthState())) &&
-            (g_batteryInfo.pluggedType_ == static_cast<int32_t>(info.GetPluggedType())) &&
-            (g_batteryInfo.pluggedMaxCurrent_ == info.GetPluggedMaxCurrent()) &&
-            (g_batteryInfo.pluggedMaxVoltage_ == info.GetPluggedMaxVoltage()) &&
-            (g_batteryInfo.chargeState_ == static_cast<int32_t>(info.GetChargeState())) &&
-            (g_batteryInfo.chargeCounter_ == info.GetChargeCounter()) &&
-            (g_batteryInfo.present_ == info.IsPresent()) &&
-            (g_batteryInfo.curNow_) == info.GetNowCurrent());
-}
-
-void BatteryServiceSubscriber::SwaptBatteryInfo(const BatteryInfo& info)
-{
-    g_batteryInfo.capacity_ = info.GetCapacity();
-    g_batteryInfo.voltage_ = info.GetVoltage();
-    g_batteryInfo.temperature_ = info.GetTemperature();
-    g_batteryInfo.healthState_ = static_cast<uint32_t>(info.GetHealthState());
-    g_batteryInfo.pluggedType_ = static_cast<uint32_t>(info.GetPluggedType());
-    g_batteryInfo.pluggedMaxCurrent_ = info.GetPluggedMaxCurrent();
-    g_batteryInfo.pluggedMaxVoltage_ = info.GetPluggedMaxVoltage();
-    g_batteryInfo.chargeState_ = static_cast<int32_t>(info.GetChargeState());
-    g_batteryInfo.chargeCounter_ = info.GetChargeCounter();
-    g_batteryInfo.present_ = info.IsPresent();
-    g_batteryInfo.curNow_ = info.GetNowCurrent();
-}
-
-bool BatteryServiceSubscriber::HandleBatteryLowEvent(const BatteryInfo& info)
+bool BatteryNotify::PublishLowEvent(const BatteryInfo& info) const
 {
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_LOW);
@@ -175,7 +141,7 @@ bool BatteryServiceSubscriber::HandleBatteryLowEvent(const BatteryInfo& info)
     publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
-    if (info.GetCapacity() > BATTERY_LOW_CAPACITY) {
+    if (info.GetCapacity() > lowCapacity_) {
         g_batteryLowOnce = false;
         return isSuccess;
     }
@@ -195,7 +161,7 @@ bool BatteryServiceSubscriber::HandleBatteryLowEvent(const BatteryInfo& info)
     return isSuccess;
 }
 
-bool BatteryServiceSubscriber::HandleBatteryOkayEvent(const BatteryInfo& info)
+bool BatteryNotify::PublishOkayEvent(const BatteryInfo& info) const
 {
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_OKAY);
@@ -205,7 +171,7 @@ bool BatteryServiceSubscriber::HandleBatteryOkayEvent(const BatteryInfo& info)
     publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
-    if (info.GetCapacity() <= BATTERY_LOW_CAPACITY) {
+    if (info.GetCapacity() <= lowCapacity_) {
         g_batteryOkOnce = false;
         return isSuccess;
     }
@@ -225,7 +191,7 @@ bool BatteryServiceSubscriber::HandleBatteryOkayEvent(const BatteryInfo& info)
     return isSuccess;
 }
 
-bool BatteryServiceSubscriber::HandleBatteryPowerConnectedEvent(const BatteryInfo& info)
+bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
 {
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_CONNECTED);
@@ -258,7 +224,7 @@ bool BatteryServiceSubscriber::HandleBatteryPowerConnectedEvent(const BatteryInf
     return isSuccess;
 }
 
-bool BatteryServiceSubscriber::HandleBatteryPowerDisconnectedEvent(const BatteryInfo& info)
+bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const
 {
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_DISCONNECTED);
@@ -291,7 +257,7 @@ bool BatteryServiceSubscriber::HandleBatteryPowerDisconnectedEvent(const Battery
     return isSuccess;
 }
 
-bool BatteryServiceSubscriber::HandleBatteryChargingEvent(const BatteryInfo& info)
+bool BatteryNotify::PublishChargingEvent(const BatteryInfo& info) const
 {
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_CHARGING);
@@ -323,7 +289,7 @@ bool BatteryServiceSubscriber::HandleBatteryChargingEvent(const BatteryInfo& inf
     return isSuccess;
 }
 
-bool BatteryServiceSubscriber::HandleBatteryDischargingEvent(const BatteryInfo& info)
+bool BatteryNotify::PublishDischargingEvent(const BatteryInfo& info) const
 {
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_DISCHARGING);

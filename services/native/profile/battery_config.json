@@ -1,0 +1,25 @@
+{
+    "light": {
+        "low": {
+            "soc": [0, 10],
+            "rgb": [255, 0, 0]
+        },
+        "normal": {
+            "soc": [10, 90],
+            "rgb": [255, 255, 0]
+        },
+        "high": {
+            "soc": [90, 100],
+            "rgb": [0, 255, 0]
+        }
+    },
+    "temperature": {
+        "high": 600,
+        "low": -500
+    },
+    "soc": {
+        "shutdown": 3,
+        "warning": 10,
+        "event": 20
+    }
+}

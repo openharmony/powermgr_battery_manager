@@ -17,8 +17,6 @@
 #include "battery_log.h"
 #include "battery_service.h"
 
-using namespace OHOS::HDI::Battery;
-
 namespace OHOS {
 namespace PowerMgr {
 BatteryServiceEventHandler::BatteryServiceEventHandler(const std::shared_ptr<AppExecFwk::EventRunner>& runner,

@@ -13,27 +13,18 @@
  * limitations under the License.
  */
 
-#include "battery_callback.h"
+#ifndef BATTERY_LIGHT_TEST_H
+#define BATTERY_LIGHT_TEST_H
 
-#include "hdf_base.h"
-#include "battery_log.h"
+#include <gtest/gtest.h>
 
 namespace OHOS {
 namespace PowerMgr {
-BatteryCallback::BatteryEventCallback BatteryCallback::eventCb_ = nullptr;
-int32_t BatteryCallback::Update(const HDI::Battery::V1_1::BatteryInfo& event)
-{
-    if (eventCb_ == nullptr) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "eventCb_ is nullptr, cannot update battery info");
-        return HDF_FAILURE;
-    }
-    return eventCb_(event);
-}
-
-int32_t BatteryCallback::RegisterBatteryEvent(const BatteryEventCallback& eventCb)
-{
-    eventCb_ = eventCb;
-    return HDF_SUCCESS;
-}
-} // OHOS
-} // PowerMgr
+class BatteryLightTest : public testing::Test {
+public:
+    static void SetUpTestCase();
+    void TearDown();
+};
+} // namespace PowerMgr
+} // namespace OHOS
+#endif // BATTERY_LIGHT_TEST_H
