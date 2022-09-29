@@ -66,7 +66,7 @@
                 ],
                 "service_group": [
                     "//base/powermgr/battery_manager/sa_profile:batterymgr_sa_profile",
-                    "//base/powermgr/battery_manager/services:batteryservice"
+                    "//base/powermgr/battery_manager/services:service"
                 ]
             },
             "inner_kits": [
