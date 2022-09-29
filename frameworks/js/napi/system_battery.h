@@ -56,7 +56,7 @@ private:
     class BatteryInfo {
     public:
         bool GetBatteryInfo();
-        double GetLevel();
+        double GetLevel() const;
         uint32_t IsCharging() const;
 
     private:

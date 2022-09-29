@@ -90,9 +90,11 @@ bool TestUtils::IsMock()
     struct dirent* ptr = NULL;
     while ((ptr = readdir(dir)) != NULL) {
         if (strcmp(".", ptr->d_name) != 0 && strcmp("..", ptr->d_name) != 0) {
+            closedir(dir);
             return false;
         }
     }
+    closedir(dir);
     return true;
 }
 } // namespace PowerMgr

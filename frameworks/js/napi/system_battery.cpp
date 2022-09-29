@@ -202,7 +202,7 @@ bool SystemBattery::BatteryInfo::GetBatteryInfo()
     return (capacity_ != INVALID_BATT_INT_VALUE) && (chargingState_ != BatteryChargeState::CHARGE_STATE_BUTT);
 }
 
-double SystemBattery::BatteryInfo::GetLevel()
+double SystemBattery::BatteryInfo::GetLevel() const
 {
     // Current battery level, which ranges from 0.00 to 1.00.
     return (capacity_ * LEVEL_RANGES);
