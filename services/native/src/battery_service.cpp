@@ -290,10 +290,8 @@ void BatteryService::WakeupDevice(BatteryChargeState chargeState)
 
 void BatteryService::HandlePopupEvent(int32_t capacity)
 {
-    bool ret = false;
     if ((capacity < warnCapacity_) && !isLowPower_) {
-        ret = ShowDialog(BATTERY_LOW_CAPACITY_PARAMS);
-        if (!ret) {
+        if (!ShowDialog(BATTERY_LOW_CAPACITY_PARAMS)) {
             BATTERY_HILOGI(COMP_SVC, "failed to popup");
             return;
         }
@@ -574,9 +572,8 @@ void BatteryService::CalculateRemainingChargeTime(int32_t capacity, BatteryCharg
         lastCapacity_ = capacity;
     }
 
-    int64_t onceTime = 0;
     if (((capacity - lastCapacity_) >= 1) && (lastCapacity_ >= 0) && chargeFlag_) {
-        onceTime = (GetCurrentTime() - lastTime_) / (capacity - lastCapacity_);
+        int64_t onceTime = (GetCurrentTime() - lastTime_) / (capacity - lastCapacity_);
         remainTime_ = (BATTERY_FULL_CAPACITY - capacity) * onceTime;
         lastCapacity_ = capacity;
         lastTime_ = GetCurrentTime();
