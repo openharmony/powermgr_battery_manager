@@ -13,19 +13,18 @@
  * limitations under the License.
  */
 
-import router from '@ohos.router'
+#ifndef BATTERY_DIALOG_TEST_H
+#define BATTERY_DIALOG_TEST_H
 
-export default {
-    data: {
-        lowPower: router.getParams().lowPower,
-        cancelButton: router.getParams().cancelButton,
-    },
-    onInit() {
-        this.lowPower = this.$t("message.lowPower");
-        this.cancelButton = this.$t("message.cancelButton");
-    },
-    onCancel() {
-        console.info('click cancel');
-        callNativeHandler("EVENT_CANCEL", "cancel");
-    }
+#include <gtest/gtest.h>
+
+namespace BatteryDialogTest {
+class BatteryDialogTest : public testing::Test {
+public:
+    static void SetUpTestCase();
+    static void TearDownTestCase();
+    void SetUp();
+    void TearDown();
+};
 }
+#endif
