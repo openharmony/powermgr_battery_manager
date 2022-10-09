@@ -13,6 +13,10 @@
 
 import("//build/ohos.gni")
 
+ability_runtime_path = "//foundation/ability/ability_runtime"
+ability_runtime_napi_path = "${ability_runtime_path}/frameworks/js/napi"
+ability_runtime_inner_api_path = "${ability_runtime_path}/interfaces/inner_api"
+ability_runtime_services_path = "${ability_runtime_path}/services"
 batterymgr_native_part_name = "battery_manager"
 module_output_path = "${batterymgr_native_part_name}/batterysrv"
 battery_manager_path = "//base/powermgr/battery_manager"
