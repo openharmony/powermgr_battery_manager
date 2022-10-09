@@ -19,6 +19,7 @@
 #include <cstdio>
 #include <functional>
 #include <ipc_skeleton.h>
+#include "ability_manager_client.h"
 #include "errors.h"
 #include "new"
 #include "permission.h"
@@ -28,8 +29,6 @@
 #include "ui_service_mgr_client.h"
 #include "hdf_io_service_if.h"
 #include "hdf_service_status.h"
-#include "display.h"
-#include "display_manager.h"
 #include "battery_callback.h"
 #include "battery_config.h"
 #include "battery_dump.h"
@@ -38,6 +37,7 @@
 #include "power_common.h"
 
 using namespace OHOS::HDI::Battery;
+using namespace OHOS::AAFwk;
 
 namespace OHOS {
 namespace PowerMgr {
@@ -45,10 +45,7 @@ namespace {
 constexpr const char* BATTERY_SERVICE_NAME = "BatteryService";
 constexpr const char* BATTERY_HDI_NAME = "battery_interface_service";
 constexpr const char* LIGHT_HDI_NAME = "light_interface_service";
-constexpr const char* BATTERY_LOW_CAPACITY_PARAMS = "{\"lowPower\":\"Low Power\", \"cancelButton\":\"Cancel\"}";
 constexpr int32_t HELP_DUMP_PARAM = 2;
-constexpr int32_t UI_DIALOG_POWER_WIDTH_NARROW = 400;
-constexpr int32_t UI_DIALOG_POWER_HEIGHT_NARROW = 240;
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
 constexpr int32_t BATTERY_EMERGENCY_THRESHOLD = 5;
 constexpr int32_t BATTERY_LOW_THRESHOLD = 20;
@@ -291,70 +288,51 @@ void BatteryService::WakeupDevice(BatteryChargeState chargeState)
 void BatteryService::HandlePopupEvent(int32_t capacity)
 {
     if ((capacity < warnCapacity_) && !isLowPower_) {
-        if (!ShowDialog(BATTERY_LOW_CAPACITY_PARAMS)) {
-            BATTERY_HILOGI(COMP_SVC, "failed to popup");
-            return;
-        }
+        ShowBatteryDialog();
         isLowPower_ = true;
-    }
-
+        return;
+        }
     if (capacity >= warnCapacity_ && isLowPower_) {
-        Ace::UIServiceMgrClient::GetInstance()->CancelDialog(dialogId_);
-        dialogId_ = -1;
+        DestoryBatteryDialog();
         isLowPower_ = false;
+        return;
     }
 }
 
-bool BatteryService::ShowDialog(const std::string &params)
+bool BatteryService::ShowBatteryDialog()
 {
-    int width;
-    int height;
-
-    GetDisplayPosition(width, height);
-
-    if (params.empty()) {
+    BATTERY_HILOGD(COMP_SVC, "ShowBatteryDialog start.");
+    auto client = AbilityManagerClient::GetInstance();
+    if (client == nullptr) {
         return false;
     }
-
-    int32_t errCode = Ace::UIServiceMgrClient::GetInstance()->ShowDialog(
-        "battery_dialog",
-        params,
-        OHOS::Rosen::WindowType::WINDOW_TYPE_SYSTEM_ALARM_WINDOW,
-        0,
-        0,
-        width,
-        height,
-        [this](int32_t id, const std::string& event, const std::string& params) {
-            BATTERY_HILOGI(COMP_SVC, "Dialog callback: %{public}s, %{public}s", event.c_str(), params.c_str());
-            if (event == "EVENT_CANCEL") {
-                Ace::UIServiceMgrClient::GetInstance()->CancelDialog(id);
-                dialogId_ = -1;
-            }
-        }, &dialogId_);
-    BATTERY_HILOGD(COMP_SVC, "Show dialog errCode %{public}d, dialogId=%{public}d", errCode, dialogId_);
-    return !errCode;
+    AAFwk::Want want;
+    want.SetElementName("com.ohos.powerdialog", "BatteryServiceExtAbility");
+    int32_t result = client->StartAbility(want);
+    if (result != 0) {
+        BATTERY_HILOGE(COMP_SVC, "ShowBatteryDialog failed, result = %{public}d", result);
+        return false;
+    }
+    BATTERY_HILOGD(COMP_SVC, "ShowBatteryDialog success.");
+    return true;
 }
 
-void BatteryService::GetDisplayPosition(int32_t& width, int32_t& height)
+bool BatteryService::DestoryBatteryDialog()
 {
-    std::string identity = IPCSkeleton::ResetCallingIdentity();
-    auto display = Rosen::DisplayManager::GetInstance().GetDefaultDisplay();
-    if (display == nullptr) {
-        BATTERY_HILOGI(COMP_SVC, "dialog GetDefaultDisplay fail, try again.");
-        display = Rosen::DisplayManager::GetInstance().GetDefaultDisplay();
+    BATTERY_HILOGD(COMP_SVC, "DestoryBatteryDialog start.");
+    auto client = AbilityManagerClient::GetInstance();
+    if (client == nullptr) {
+        return false;
     }
-    IPCSkeleton::SetCallingIdentity(identity);
-
-    if (display != nullptr) {
-        BATTERY_HILOGI(COMP_SVC, "display size: %{public}d x %{public}d",
-            display->GetWidth(), display->GetHeight());
-        width = display->GetWidth();
-        height = display->GetHeight();
-    } else {
-        BATTERY_HILOGI(COMP_SVC, "dialog get display fail, use default wide.");
-        width = UI_DIALOG_POWER_WIDTH_NARROW;
-        height = UI_DIALOG_POWER_HEIGHT_NARROW;
+    AAFwk::Want want;
+    want.SetElementName("com.ohos.powerdialog", "BatteryServiceExtAbility");
+    int32_t result = client->StopServiceAbility(want);
+    if (result != 0) {
+        BATTERY_HILOGE(COMP_SVC, "DestoryBatteryDialog failed, result = %{public}d", result);
+        return false;
     }
+    BATTERY_HILOGD(COMP_SVC, "DestoryBatteryDialog success.");
+    return true;
 }
 
 void BatteryService::HandleTemperature(int32_t temperature)
@@ -617,7 +595,7 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
         return ERR_NO_INIT;
     }
     if (args[0].compare(u"-d") == 0) {
-        ShowDialog(BATTERY_LOW_CAPACITY_PARAMS);
+        ShowBatteryDialog();
         dprintf(fd, "show low power dialog \n");
         return ERR_OK;
     }
