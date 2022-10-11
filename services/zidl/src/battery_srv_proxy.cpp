@@ -20,6 +20,7 @@
 #include "message_parcel.h"
 #include "battery_log.h"
 #include "power_common.h"
+#include "string_ex.h"
 
 using namespace OHOS::HDI::Battery;
 
@@ -171,7 +172,6 @@ bool BatterySrvProxy::GetPresent()
 
 std::string BatterySrvProxy::GetTechnology()
 {
-    std::string technology = INVALID_STRING_VALUE;
     sptr<IRemoteObject> remote = Remote();
     RETURN_IF_WITH_RET(remote == nullptr, INVALID_STRING_VALUE);
     MessageParcel data;
@@ -189,8 +189,9 @@ std::string BatterySrvProxy::GetTechnology()
         BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
         return INVALID_STRING_VALUE;
     }
-    READ_PARCEL_WITH_RET(reply, String, technology, INVALID_STRING_VALUE);
-    return technology;
+    std::u16string technology = Str8ToStr16(INVALID_STRING_VALUE);
+    READ_PARCEL_WITH_RET(reply, String16, technology, INVALID_STRING_VALUE);
+    return Str16ToStr8(technology);
 }
 
 int32_t BatterySrvProxy::GetBatteryTemperature()
