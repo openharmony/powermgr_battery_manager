@@ -24,6 +24,7 @@
 #include "battery_log.h"
 #include "power_mgr_errors.h"
 #include "power_common.h"
+#include "string_ex.h"
 
 using namespace OHOS::HDI::Battery;
 
@@ -140,8 +141,8 @@ int32_t BatterySrvStub::GetPresentStub(MessageParcel& reply)
 
 int32_t BatterySrvStub::GetTechnologyStub(MessageParcel& reply)
 {
-    std::string ret = GetTechnology();
-    WRITE_PARCEL_WITH_RET(reply, String, ret, E_WRITE_PARCEL_ERROR);
+    std::u16string ret = Str8ToStr16(GetTechnology());
+    WRITE_PARCEL_WITH_RET(reply, String16, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
