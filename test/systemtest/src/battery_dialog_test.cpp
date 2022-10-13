@@ -14,6 +14,7 @@
  */
 
 #include "battery_dialog_test.h"
+#include "battery_service.h"
 
 using namespace testing::ext;
 using namespace OHOS;
