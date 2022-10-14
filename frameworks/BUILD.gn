@@ -13,10 +13,6 @@
 
 import("//build/ohos.gni")
 
-group("battery_dialog") {
-  deps = [ "dialog/dialog_ui/js:dialog_js_files_etc" ]
-}
-
 group("battery_napi") {
   deps = [
     "js/napi:battery",
