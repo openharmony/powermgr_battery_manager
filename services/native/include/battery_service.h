@@ -82,6 +82,8 @@ public:
     void RegisterHdiStatusListener();
     void RegisterBatteryHdiCallback();
     void MockUnplugged(bool isPlugged);
+    bool ShowBatteryDialog();
+    bool DestoryBatteryDialog();
 private:
     bool Init();
     int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_1::BatteryInfo& event);
@@ -91,8 +93,6 @@ private:
     void CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState);
     void HandlePopupEvent(int32_t capacity);
     void HandleCapacity(int32_t capacity, BatteryChargeState chargeState);
-    bool ShowDialog(const std::string &params);
-    void GetDisplayPosition(int32_t& width, int32_t& height);
     bool ready_ { false };
     std::mutex mutex_;
     std::shared_ptr<AppExecFwk::EventRunner> eventRunner_ { nullptr };
