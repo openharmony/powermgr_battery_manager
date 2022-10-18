@@ -369,5 +369,8 @@ ohos_systemtest("test_battery_dialog") {
 group("systemtest") {
   testonly = true
 
-  deps = [ ":test_systemtest" ]
+  deps = [
+    ":test_battery_dialog",
+    ":test_systemtest",
+  ]
 }
