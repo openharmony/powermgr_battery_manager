@@ -13,6 +13,12 @@
 
 import("//base/powermgr/battery_manager/batterymgr.gni")
 
+config("batterysrv_private_config") {
+  include_dirs = [
+    "//base/hiviewdfx/hicollie/interfaces/native/innerkits/include/xcollie",
+  ]
+}
+
 config("batterysrv_public_config") {
   include_dirs = [
     "native/include",
@@ -34,7 +40,10 @@ ohos_shared_library("batteryservice") {
     "native/src/battery_service_event_handler.cpp",
   ]
 
-  configs = [ "${battery_utils}:utils_config" ]
+  configs = [
+    "${battery_utils}:utils_config",
+    ":batterysrv_private_config",
+  ]
 
   public_configs = [ ":batterysrv_public_config" ]
 
@@ -57,6 +66,7 @@ ohos_shared_library("batteryservice") {
     "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
     "hdf_core:libhdi",
+    "hicollie_native:libhicollie",
     "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
