@@ -77,7 +77,6 @@ void BatteryService::OnDump()
 
 void BatteryService::OnStart()
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
     if (ready_) {
         BATTERY_HILOGD(COMP_SVC, "Service is ready, nothing to do");
         return;
@@ -95,12 +94,10 @@ void BatteryService::OnStart()
         return;
     }
     ready_ = true;
-    BATTERY_HILOGI(COMP_SVC, "Success");
 }
 
 bool BatteryService::Init()
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
     if (!eventRunner_) {
         eventRunner_ = AppExecFwk::EventRunner::Create(BATTERY_SERVICE_NAME);
         if (eventRunner_ == nullptr) {
@@ -117,13 +114,11 @@ bool BatteryService::Init()
         }
     }
 
-    BATTERY_HILOGI(COMP_SVC, "Success");
     return true;
 }
 
 bool BatteryService::InitBatteryd()
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
     sptr<OHOS::HDI::Battery::V1_0::IBatteryCallback> callback =  new OHOS::HDI::Battery::V1_0::BatteryCallbackImpl();
     ibatteryInterface = OHOS::HDI::Battery::V1_0::IBatteryInterface::Get();
     if (ibatteryInterface == nullptr) {
@@ -142,26 +137,23 @@ bool BatteryService::InitBatteryd()
 
 void BatteryService::InitConfig()
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
     batteryConfig_ = std::make_unique<HDI::Battery::V1_0::BatteryConfig>();
     if (batteryConfig_ == nullptr) {
-        BATTERY_HILOGD(COMP_SVC, "instantiate batteryconfig error.");
+        BATTERY_HILOGE(COMP_SVC, "instantiate batteryconfig error.");
         return;
     }
     batteryConfig_->Init();
 
     batteryLed_ = std::make_unique<HDI::Battery::V1_0::BatteryLed>();
     if (batteryLed_ == nullptr) {
-        BATTERY_HILOGD(COMP_SVC, "instantiate BatteryLed error.");
+        BATTERY_HILOGE(COMP_SVC, "instantiate BatteryLed error.");
         return;
     }
     batteryLed_->InitLedsSysfs();
-    BATTERY_HILOGI(COMP_SVC, "Success");
 }
 
 int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_0::BatteryInfo& event)
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
     BatteryInfo batteryInfo;
     BATTERY_HILOGD(COMP_SVC,
         "capacity=%{public}d, voltage=%{public}d, temperature=%{public}d, " \
@@ -201,7 +193,6 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_
 
 void BatteryService::OnStop()
 {
-    BATTERY_HILOGW(COMP_SVC, "Enter");
     if (!ready_) {
         return;
     }
@@ -214,26 +205,21 @@ void BatteryService::OnStop()
         return;
     }
     ibatteryInterface->UnRegister();
-    BATTERY_HILOGW(COMP_SVC, "Success");
 }
 
 void BatteryService::WakeupDevice(const int32_t& chargestate)
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
     if ((g_lastChargeState == CHARGE_STATE_NONE || g_lastChargeState == CHARGE_STATE_RESERVED) &&
         (chargestate != CHARGE_STATE_NONE && chargestate !=CHARGE_STATE_RESERVED)) {
         auto& powerMgrClient = PowerMgrClient::GetInstance();
         powerMgrClient.WakeupDevice();
     }
     g_lastChargeState = chargestate;
-
-    BATTERY_HILOGD(COMP_SVC, "Exit");
     return;
 }
 
 void BatteryService::HandlePopupEvent(const int32_t capacity)
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
     bool ret = false;
     if ((capacity < BATTERY_LOW_CAPACITY) && (g_lastLowCapacity == false)) {
         ret = ShowDialog(BATTERY_LOW_CAPACITY_PARAMS);
@@ -251,7 +237,6 @@ void BatteryService::HandlePopupEvent(const int32_t capacity)
 
 bool BatteryService::ShowDialog(const std::string &params)
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
     int pos_x;
     int pos_y;
     int width;
@@ -273,7 +258,7 @@ bool BatteryService::ShowDialog(const std::string &params)
         width,
         height,
         [this](int32_t id, const std::string& event, const std::string& params) {
-            BATTERY_HILOGI(COMP_SVC, "Dialog callback: %{public}s, %{public}s", event.c_str(), params.c_str());
+            BATTERY_HILOGD(COMP_SVC, "Dialog callback: %{public}s, %{public}s", event.c_str(), params.c_str());
             if (event == "EVENT_CANCEL") {
                 Ace::UIServiceMgrClient::GetInstance()->CancelDialog(id);
             }
@@ -327,7 +312,6 @@ void BatteryService::GetDisplayPosition(
 
 void BatteryService::HandleTemperature(const int32_t& temperature)
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
     auto tempConf = batteryConfig_->GetTempConf();
     BATTERY_HILOGI(COMP_SVC, "temperature=%{public}d, tempConf.lower=%{public}d, tempConf.upper=%{public}d",
         temperature, tempConf.lower, tempConf.upper);
@@ -337,22 +321,17 @@ void BatteryService::HandleTemperature(const int32_t& temperature)
         std::string reason = "TemperatureOutOfRange";
         powerMgrClient.ShutDownDevice(reason);
     }
-
-    BATTERY_HILOGD(COMP_SVC, "Exit");
     return;
 }
 
 void BatteryService::HandleCapacity(const int32_t& capacity, const int32_t& chargeState)
 {
-    BATTERY_HILOGD(COMP_SVC, "Enter");
     auto& powerMgrClient = PowerMgrClient::GetInstance();
     if ((capacity <= batteryConfig_->GetCapacityConf()) &&
         ((chargeState == CHARGE_STATE_NONE) || (chargeState == CHARGE_STATE_RESERVED))) {
         std::string reason = "LowCapacity";
         powerMgrClient.ShutDownDevice(reason);
     }
-
-    BATTERY_HILOGD(COMP_SVC, "Exit");
     return;
 }
 
@@ -409,7 +388,6 @@ BatteryHealthState BatteryService::GetHealthStatus()
 
 BatteryPluggedType BatteryService::GetPluggedType()
 {
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     OHOS::HDI::Battery::V1_0::BatteryPluggedType pluggedType = OHOS::HDI::Battery::V1_0::BatteryPluggedType(0);
 
     if (ibatteryInterface == nullptr) {
@@ -424,7 +402,6 @@ BatteryPluggedType BatteryService::GetPluggedType()
 int32_t BatteryService::GetVoltage()
 {
     int voltage;
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     if (ibatteryInterface == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
         return ERR_NO_INIT;
@@ -435,7 +412,6 @@ int32_t BatteryService::GetVoltage()
 
 bool BatteryService::GetPresent()
 {
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     bool present = false;
 
     if (ibatteryInterface == nullptr) {
@@ -449,7 +425,6 @@ bool BatteryService::GetPresent()
 
 std::string BatteryService::GetTechnology()
 {
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     if (ibatteryInterface == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "ibatteryInterface is nullptr");
         return "";
@@ -474,7 +449,6 @@ int32_t BatteryService::GetBatteryTemperature()
 
 void BatteryService::CalculateRemainingChargeTime(int32_t capacity)
 {
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     if (capacity > BATTERY_FULL_CAPACITY) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "capacity error");
         return;
@@ -492,13 +466,11 @@ void BatteryService::CalculateRemainingChargeTime(int32_t capacity)
 
 int64_t BatteryService::GetRemainingChargeTime()
 {
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     return remainTime_;
 }
 
 int32_t BatteryService::GetBatteryLevel()
 {
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     int32_t batteryLevel;
     int32_t capacity = GetCapacity();
     if (capacity < BATTERY_EMERGENCY_THRESHOLD) {
@@ -518,7 +490,6 @@ int32_t BatteryService::GetBatteryLevel()
 
 int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args)
 {
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     g_service = DelayedSpSingleton<BatteryService>::GetInstance();
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     if ((args.empty()) || (args[0].size() != HELP_DMUP_PARAM)) {
@@ -537,8 +508,8 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
         return ERR_NO_INIT;
     }
 
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     return ERR_OK;
 }
 } // namespace PowerMgr
 } // namespace OHOS
+
