@@ -567,4 +567,23 @@ HWTEST_F (BatteryClientTest, BatteryClient017, TestSize.Level1)
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient017 end.");
 }
+
+/**
+ * @tc.name: BatteryClient018
+ * @tc.desc: Test BatteryInfo operator== and operator!=
+ * @tc.type: FUNC
+ */
+HWTEST_F (BatteryClientTest, BatteryClient018, TestSize.Level1)
+{
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient018 start.");
+    BatteryInfo info1;
+    BatteryInfo info2;
+    ASSERT_TRUE(info1 == info2);
+
+    info1.SetCapacity(100);
+    info2.SetCapacity(0);
+    ASSERT_TRUE(info1 != info2);
+
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient018 end.");
+}
 }
