@@ -29,8 +29,6 @@ using namespace std;
 
 namespace {
 auto& g_batterySrvClient = BatterySrvClient::GetInstance();
-constexpr int32_t MIN = 0;
-constexpr int32_t MAX = 7;
 }
 
 static void TestGetCapacity(const uint8_t* data)
@@ -112,7 +110,8 @@ bool DoSomethingInterestingWithMyAPI(const uint8_t* data, size_t size)
     if (static_cast<int32_t>(size) > idSize) {
         std::random_device rd;
         std::default_random_engine engine(rd());
-        std::uniform_int_distribution<int32_t> randomNum(MIN, MAX);
+        std::uniform_int_distribution<int32_t> randomNum(static_cast<int32_t>(ApiNumber::NUM_ZERO),
+            static_cast<int32_t>(ApiNumber::NUM_END) - 1);
         int32_t number = randomNum(engine);
 
         switch (static_cast<ApiNumber>(number)) {
@@ -140,11 +139,25 @@ bool DoSomethingInterestingWithMyAPI(const uint8_t* data, size_t size)
             case ApiNumber::NUM_SEVEN:
                 TestGetTemperature(data);
                 break;
+            case ApiNumber::NUM_EIGHT:
+                g_batterySrvClient.GetNowCurrent();
+                break;
+            case ApiNumber::NUM_NINE:
+                g_batterySrvClient.GetRemainEnergy();
+                break;
+            case ApiNumber::NUM_TEN:
+                g_batterySrvClient.GetTotalEnergy();
+                break;
+            case ApiNumber::NUM_ELEVEN:
+                g_batterySrvClient.GetBatteryLevel();
+                break;
+            case ApiNumber::NUM_TWELVE:
+                g_batterySrvClient.GetRemainingChargeTime();
+                break;
             default:
                 break;
         }
     }
-
     return true;
 }
 }
