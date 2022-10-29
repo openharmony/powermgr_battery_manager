@@ -239,14 +239,14 @@ static napi_value GetStatus(napi_env env, napi_callback_info info)
         resource,
         [](napi_env env, void *data) {},
         [](napi_env env, napi_status status, void *data) {
-            SystemBattery *asyncInfo = (SystemBattery*)data;
+            SystemBattery *asyncInfo = reinterpret_cast<SystemBattery*>(data);
             if (asyncInfo != nullptr) {
                 asyncInfo->GetBatteryStats(env);
                 napi_delete_async_work(env, asyncInfo->asyncWork);
                 delete asyncInfo;
             }
         },
-        (void*)asyncInfo.get(),
+        reinterpret_cast<void*>(asyncInfo.get()),
         &asyncInfo->asyncWork);
     NAPI_CALL(env, napi_queue_async_work(env, asyncInfo->asyncWork));
     asyncInfo.release();
