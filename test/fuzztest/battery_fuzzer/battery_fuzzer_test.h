@@ -28,7 +28,13 @@ enum class ApiNumber {
     NUM_FOUR,
     NUM_FIVE,
     NUM_SIX,
-    NUM_SEVEN
+    NUM_SEVEN,
+    NUM_EIGHT,
+    NUM_NINE,
+    NUM_TEN,
+    NUM_ELEVEN,
+    NUM_TWELVE,
+    NUM_END
 };
 
 #endif
