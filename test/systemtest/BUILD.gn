@@ -36,6 +36,7 @@ config("module_private_config") {
     "//drivers/peripheral/battery/charger/led",
     "//drivers/peripheral/battery/utils/include",
     "//base/powermgr/power_manager/interfaces/innerkits/native/include",
+    "${battery_manager_path}/test/utils",
   ]
 }
 
@@ -44,7 +45,7 @@ ohos_systemtest("test_systemtest") {
   module_out_path = "${module_output_path}"
 
   sources = [
-    "//base/powermgr/battery_manager/utils/native/src/test_utils.cpp",
+    "${battery_manager_path}/test/utils/test_utils.cpp",
     "src/battery_sttest.cpp",
   ]
 
