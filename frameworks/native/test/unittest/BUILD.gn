@@ -18,9 +18,12 @@ import("//build/test.gni")
 ohos_unittest("test_batteryclient") {
   module_out_path = "${module_output_path}"
 
-  include_dirs = [ "include" ]
+  include_dirs = [
+    "include",
+    "${battery_manager_path}/test/utils",
+  ]
   sources = [
-    "${battery_utils}/native/src/test_utils.cpp",
+    "${battery_manager_path}/test/utils/test_utils.cpp",
     "src/battery_client_test.cpp",
   ]
 

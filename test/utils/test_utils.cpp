@@ -84,11 +84,11 @@ void TestUtils::ResetOnline()
 bool TestUtils::IsMock()
 {
     DIR* dir = opendir(POWER_SUPPLY_PATH);
-    if (dir == NULL) {
+    if (dir == nullptr) {
         return true;
     }
-    struct dirent* ptr = NULL;
-    while ((ptr = readdir(dir)) != NULL) {
+    struct dirent* ptr = nullptr;
+    while ((ptr = readdir(dir)) != nullptr) {
         if (strcmp(".", ptr->d_name) != 0 && strcmp("..", ptr->d_name) != 0) {
             closedir(dir);
             return false;
