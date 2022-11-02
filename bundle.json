@@ -35,7 +35,6 @@
                 "common_event_service",
                 "c_utils",
                 "drivers_interface_battery",
-                "drivers_peripheral_battery",
                 "eventhandler",
                 "hdf_core",
                 "hicollie_native",

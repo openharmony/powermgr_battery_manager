@@ -29,13 +29,9 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-#include "power_supply_provider.h"
-#include "battery_service.h"
 #include "hdf_device_desc.h"
 #include "battery_log.h"
 #include "battery_srv_client.h"
-#include "battery_thread_test.h"
-#include "animation_label.h"
 
 using namespace testing::ext;
 using namespace OHOS;
@@ -57,14 +53,6 @@ void BatterySttest::TearDownTestCase(void)
 {
     g_isMock = false;
     TestUtils::ResetOnline();
-}
-
-void BatterySttest::SetUp(void)
-{
-}
-
-void BatterySttest::TearDown(void)
-{
 }
 
 namespace {
