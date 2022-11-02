@@ -35,6 +35,7 @@
 #include "battery_log.h"
 #include "power_mgr_client.h"
 #include "power_common.h"
+#include "watchdog.h"
 
 using namespace OHOS::HDI::Battery;
 using namespace OHOS::AAFwk;
@@ -116,6 +117,7 @@ bool BatteryService::Init()
             BATTERY_HILOGE(COMP_SVC, "Init failed due to create handler error");
             return false;
         }
+	HiviewDFX::Watchdog::GetInstance().AddThread("BatteryServiceEventHandler", handler_);
     }
 
     InitConfig();
