@@ -188,11 +188,51 @@ ohos_systemtest("test_battery_dialog") {
   ]
 }
 
+##############################systemtest##########################################
+ohos_systemtest("test_battery_event_systemtest") {
+  module_out_path = module_output_path
+
+  sources = [
+    "${battery_manager_path}/test/utils/test_utils.cpp",
+    "src/battery_event_system_test.cpp",
+  ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config",
+  ]
+
+  deps = [
+    "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
+    "${battery_manager_path}/services:batteryservice",
+    "//foundation/arkui/ace_engine/interfaces/inner_api/ui_service_manager:ui_service_mgr",
+    "//third_party/googletest:gtest_main",
+    "//third_party/jsoncpp:jsoncpp",
+  ]
+
+  external_deps = [
+    "ability_base:want",
+    "battery_manager:batterysrv_client",
+    "c_utils:utils",
+    "common_event_service:cesfwk_innerkits",
+    "drivers_interface_battery:libbattery_proxy_1.1",
+    "drivers_interface_input:hdi_input",
+    "drivers_interface_light:liblight_proxy_1.0",
+    "eventhandler:libeventhandler",
+    "hiviewdfx_hilog_native:libhilog",
+    "init:libbegetutil",
+    "ipc:ipc_core",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
+  ]
+}
+
 group("systemtest") {
   testonly = true
 
   deps = [
     ":test_battery_dialog",
+    ":test_battery_event_systemtest",
     ":test_systemtest",
   ]
 }
