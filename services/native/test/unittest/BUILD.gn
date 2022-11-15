@@ -32,29 +32,6 @@ config("module_mock_private_config") {
 }
 
 ##############################unittest##########################################
-ohos_unittest("test_batterysubscriber") {
-  module_out_path = "${module_output_path}"
-
-  sources = [ "src/battery_subscriber_test.cpp" ]
-
-  configs = [
-    "${battery_utils}:utils_config",
-    ":module_private_config",
-  ]
-
-  deps = [ "//third_party/googletest:gtest_main" ]
-
-  external_deps = [
-    "ability_base:want",
-    "battery_manager:batterysrv_client",
-    "c_utils:utils",
-    "common_event_service:cesfwk_innerkits",
-    "eventhandler:libeventhandler",
-    "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_core",
-  ]
-}
-
 ohos_unittest("test_battery") {
   module_out_path = "${module_output_path}"
 
