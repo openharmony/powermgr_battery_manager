@@ -77,11 +77,10 @@ public:
     int64_t GetRemainingChargeTime() override;
     void ChangePath(const std::string path);
     void InitConfig();
-    void WakeupDevice(BatteryChargeState chargeState);
     void HandleTemperature(int32_t temperature);
     void RegisterHdiStatusListener();
     void RegisterBatteryHdiCallback();
-    void MockUnplugged(bool isPlugged);
+    void MockUnplugged(bool isUnplugged);
     bool ShowBatteryDialog();
     bool DestoryBatteryDialog();
 private:
@@ -93,6 +92,11 @@ private:
     void CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState);
     void HandlePopupEvent(int32_t capacity);
     void HandleCapacity(int32_t capacity, BatteryChargeState chargeState);
+    bool IsLastPlugged();
+    bool IsNowPlugged(BatteryPluggedType pluggedType);
+    bool IsPlugged(BatteryPluggedType pluggedType);
+    bool IsUnplugged(BatteryPluggedType pluggedType);
+    void WakeupDevice(BatteryPluggedType pluggedType);
     bool ready_ { false };
     std::mutex mutex_;
     std::shared_ptr<AppExecFwk::EventRunner> eventRunner_ { nullptr };

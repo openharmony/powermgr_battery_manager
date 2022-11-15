@@ -18,5 +18,6 @@ group("unittest") {
   deps = [
     "unittest:test_battery",
     "unittest:test_batterysubscriber",
+    "unittest:test_batterywakeup",
   ]
 }
