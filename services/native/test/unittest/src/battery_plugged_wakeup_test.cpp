@@ -38,6 +38,7 @@ const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";
 void BatteryPluggedWakeupTest::SetUpTestCase()
 {
     g_service = DelayedSpSingleton<BatteryService>::GetInstance();
+    g_service->OnStart();
     g_isMock = TestUtils::IsMock();
     GTEST_LOG_(INFO) << " g_isMock: " << g_isMock;
 }
