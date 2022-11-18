@@ -56,6 +56,7 @@ constexpr int32_t BATTERY_HIGH_FULL = 100;
 constexpr uint32_t RETRY_TIME = 1000;
 sptr<BatteryService> g_service;
 BatteryPluggedType g_lastPluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
+static PowerMgrClient& g_powerMgrClient = PowerMgrClient::GetInstance();
 }
 
 const bool G_REGISTER_RESULT = SystemAbility::MakeAndRegisterAbility(
@@ -321,6 +322,7 @@ void BatteryService::HandlePopupEvent(int32_t capacity)
 {
     if ((capacity < warnCapacity_) && !isLowPower_) {
         ShowBatteryDialog();
+        g_powerMgrClient.RefreshActivity(UserActivityType::USER_ACTIVITY_TYPE_ATTENTION);
         isLowPower_ = true;
         return;
         }
