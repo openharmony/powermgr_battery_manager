@@ -45,7 +45,7 @@ void BatteryServiceTest::SetUpTestCase()
 
 int32_t BatteryServiceTest::ReadFile(const char* path, char* buf, size_t size)
 {
-    int32_t fd = open(path, O_RDONLY);
+    int32_t fd = open(path, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
     if (fd < 0) {
         return -1;
     }
@@ -57,7 +57,7 @@ int32_t BatteryServiceTest::ReadFile(const char* path, char* buf, size_t size)
 
 int32_t BatteryServiceTest::WriteFile(const char* path, char* buf, size_t size)
 {
-    int32_t fd = open(path, O_WRONLY);
+    int32_t fd = open(path, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
     if (fd < 0) {
         return -1;
     }
