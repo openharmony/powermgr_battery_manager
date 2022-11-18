@@ -78,11 +78,6 @@ static int64_t GetCurrentTime()
     return tm.tv_sec * SEC_TO_MSEC + (tm.tv_nsec / NSEC_TO_MSEC);
 }
 
-void BatteryService::OnDump()
-{
-    BATTERY_HILOGD(COMP_SVC, "OnDump");
-}
-
 void BatteryService::OnStart()
 {
     if (ready_) {
@@ -127,22 +122,24 @@ bool BatteryService::Init()
     return true;
 }
 
-void BatteryService::RegisterBatteryHdiCallback()
+bool BatteryService::RegisterBatteryHdiCallback()
 {
     if (iBatteryInterface_ == nullptr) {
         iBatteryInterface_ = V1_1::IBatteryInterface::Get();
-        RETURN_IF_WITH_LOG(iBatteryInterface_ == nullptr, "failed to get battery hdi interface");
+        BATTERY_HILOGE(COMP_SVC, "failed to get battery hdi interface");
+        RETURN_IF_WITH_RET(iBatteryInterface_ == nullptr, false);
     }
     sptr<V1_1::IBatteryCallback> callback = new BatteryCallback();
     ErrCode ret = iBatteryInterface_->Register(callback);
     if (ret < 0) {
         BATTERY_HILOGE(COMP_SVC, "register callback failed");
-        return;
+        return false;
     }
 
     BatteryCallback::BatteryEventCallback eventCb =
         std::bind(&BatteryService::HandleBatteryCallbackEvent, this, std::placeholders::_1);
     BatteryCallback::RegisterBatteryEvent(eventCb);
+    return true;
 }
 
 void BatteryService::InitConfig()
@@ -213,13 +210,13 @@ void BatteryService::HandleBatteryInfo()
     lastBatteryInfo_ = batteryInfo_;
 }
 
-void BatteryService::RegisterHdiStatusListener()
+bool BatteryService::RegisterHdiStatusListener()
 {
     hdiServiceMgr_ = OHOS::HDI::ServiceManager::V1_0::IServiceManager::Get();
     if (hdiServiceMgr_ == nullptr) {
         BATTERY_HILOGW(COMP_SVC, "hdi service manager is nullptr, Try again after %{public}u second", RETRY_TIME);
         SendEvent(BatteryServiceEventHandler::EVENT_RETRY_REGISTER_HDI_STATUS_LISTENER, RETRY_TIME);
-        return;
+        return false;
     }
 
     hdiServStatListener_ = new HdiServiceStatusListener(HdiServiceStatusListener::StatusCallback(
@@ -247,7 +244,9 @@ void BatteryService::RegisterHdiStatusListener()
     if (status != ERR_OK) {
         BATTERY_HILOGW(COMP_SVC, "Register hdi failed, Try again after %{public}u second", RETRY_TIME);
         SendEvent(BatteryServiceEventHandler::EVENT_RETRY_REGISTER_HDI_STATUS_LISTENER, RETRY_TIME);
+        return false;
     }
+    return true;
 }
 
 void BatteryService::SendEvent(int32_t event, int64_t delayTime)
@@ -637,6 +636,11 @@ void BatteryService::MockUnplugged(bool isUnplugged)
         isMockUnplugged_ = false;
         HandleBatteryInfo();
     }
+}
+
+bool BatteryService::IsMockUnplugged()
+{
+    return isMockUnplugged_;
 }
 } // namespace PowerMgr
 } // namespace OHOS
