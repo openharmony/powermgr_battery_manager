@@ -20,8 +20,8 @@
 
 namespace OHOS {
 namespace PowerMgr {
-#define FILE_NAME         (__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1 : __FILE__)
-#define FORMAT(fmt, ...)  "[%{public}s:%{public}d] %{public}s# " fmt, FILE_NAME, __LINE__, __FUNCTION__, ##__VA_ARGS__
+#define FILENAME         (__builtin_strrchr("/" __FILE__, '/') + 1)
+#define FORMAT(fmt, ...) "[%{public}s:%{public}d] %{public}s# " fmt, FILENAME, __LINE__, __FUNCTION__, ##__VA_ARGS__
 
 #ifdef BATTERY_HILOGF
 #undef BATTERY_HILOGF
