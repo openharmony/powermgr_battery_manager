@@ -63,8 +63,7 @@ HWTEST_F(BatteryLightTest, BatteryLight001, TestSize.Level1)
 HWTEST_F(BatteryLightTest, BatteryLight002, TestSize.Level1)
 {
     uint32_t color = 0U;
-    int32_t brightness = 1;
-    g_light.TurnOn(color, brightness);
+    g_light.TurnOn(color);
     EXPECT_TRUE(g_light.GetLightColor() == color);
 }
 
@@ -90,8 +89,7 @@ HWTEST_F(BatteryLightTest, BatteryLight003, TestSize.Level1)
 HWTEST_F(BatteryLightTest, BatteryLight004, TestSize.Level1)
 {
     uint32_t color = 0x7fffffff;
-    int32_t brightness = 0x7fffffff;
-    g_light.TurnOn(color, brightness);
+    g_light.TurnOn(color);
     EXPECT_TRUE(g_light.GetLightColor() == color);
 }
 
