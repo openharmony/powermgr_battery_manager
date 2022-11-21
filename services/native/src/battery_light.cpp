@@ -64,11 +64,10 @@ void BatteryLight::TurnOff()
     lightColor_ = (ret < ERR_OK) ? lightColor_ : 0;
 }
 
-void BatteryLight::TurnOn(uint32_t color, int32_t brightness)
+void BatteryLight::TurnOn(uint32_t color)
 {
     RETURN_IF(!available_);
     struct HdfLightEffect effect = {
-        .lightColor.colorValue.rgbColor.brightness = brightness,
         .lightColor.colorValue.rgbColor.r = (color >> MOVE_RIGHT_16) & 0xFF,
         .lightColor.colorValue.rgbColor.g = (color >> MOVE_RIGHT_8) & 0xFF,
         .lightColor.colorValue.rgbColor.b = color & 0xFF,
