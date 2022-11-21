@@ -46,7 +46,6 @@ DECLARE_SYSTEM_ABILITY(BatteryService)
 
 DECLARE_DELAYED_SP_SINGLETON(BatteryService);
 public:
-    virtual void OnDump() override;
     virtual void OnStart() override;
     virtual void OnStop() override;
 
@@ -77,15 +76,16 @@ public:
     int64_t GetRemainingChargeTime() override;
     void ChangePath(const std::string path);
     void InitConfig();
-    void WakeupDevice(BatteryChargeState chargeState);
     void HandleTemperature(int32_t temperature);
-    void RegisterHdiStatusListener();
-    void RegisterBatteryHdiCallback();
-    void MockUnplugged(bool isPlugged);
+    bool RegisterHdiStatusListener();
+    bool RegisterBatteryHdiCallback();
+    bool IsMockUnplugged();
+    void MockUnplugged(bool isUnplugged);
     bool ShowBatteryDialog();
     bool DestoryBatteryDialog();
 private:
     bool Init();
+    void WakeupDevice(BatteryChargeState chargeState);
     int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_1::BatteryInfo& event);
     void ConvertingEvent(const OHOS::HDI::Battery::V1_1::BatteryInfo &event);
     void HandleBatteryInfo();
