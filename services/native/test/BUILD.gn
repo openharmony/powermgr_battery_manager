@@ -22,5 +22,6 @@ group("unittest") {
     "unittest:test_battery_proxy_mock_parcel_read_error",
     "unittest:test_battery_proxy_mock_sendrequest_error",
     "unittest:test_batterysubscriber",
+    "unittest:test_batterywakeup",
   ]
 }
