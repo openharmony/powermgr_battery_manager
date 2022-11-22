@@ -21,11 +21,12 @@ config("module_private_config") {
     "${battery_service_native}/include",
     "${battery_service_zidl}/include",
     "${battery_innerkits}/native/include",
-    "${battery_manager_path}/test/utils",
+    "${battery_utils}/native/include",
     "//third_party/json/single_include",
     "//third_party/jsoncpp/include",
     "//base/hiviewdfx/hicollie/interfaces/native/innerkits/include/xcollie",
     "//base/powermgr/power_manager/utils/permission/include",
+    "//base/notification/common_event_service/interfaces/inner_api",
   ]
 }
 
@@ -237,11 +238,12 @@ ohos_unittest("test_battery_proxy_mock_parcel_read_error") {
   ]
 }
 
+### test batterywakeup when battery plugged or not
 ohos_unittest("test_batterywakeup") {
   module_out_path = "${module_output_path}"
 
   sources = [
-    "${battery_manager_path}/test/utils/test_utils.cpp",
+    "${battery_utils}/native/src/test_utils.cpp",
     "src/battery_plugged_wakeup_test.cpp",
   ]
 
