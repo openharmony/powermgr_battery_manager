@@ -17,6 +17,7 @@
 
 #include <memory>
 #include <string>
+#include <fcntl.h>
 
 #include "battery_info.h"
 #include "battery_log.h"
