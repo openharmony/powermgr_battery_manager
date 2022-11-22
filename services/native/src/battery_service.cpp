@@ -55,7 +55,7 @@ constexpr int32_t BATTERY_HIGH_THRESHOLD = 99;
 constexpr int32_t BATTERY_HIGH_FULL = 100;
 constexpr uint32_t RETRY_TIME = 1000;
 sptr<BatteryService> g_service;
-BatteryChargeState g_lastChargeState = BatteryChargeState::CHARGE_STATE_NONE;
+BatteryPluggedType g_lastPluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
 }
 
 const bool G_REGISTER_RESULT = SystemAbility::MakeAndRegisterAbility(
@@ -200,7 +200,7 @@ void BatteryService::HandleBatteryInfo()
         batteryInfo_.GetTotalEnergy(), batteryInfo_.GetCurAverage(), batteryInfo_.GetRemainEnergy());
 
     batteryLight_.UpdateColor(batteryInfo_.GetChargeState(), batteryInfo_.GetCapacity());
-    WakeupDevice(batteryInfo_.GetChargeState());
+    WakeupDevice(batteryInfo_.GetPluggedType());
     HandlePopupEvent(batteryInfo_.GetCapacity());
     CalculateRemainingChargeTime(batteryInfo_.GetCapacity(), batteryInfo_.GetChargeState());
 
@@ -275,15 +275,46 @@ void BatteryService::OnStop()
     }
 }
 
-void BatteryService::WakeupDevice(BatteryChargeState chargeState)
+bool BatteryService::IsLastPlugged()
 {
-    if ((g_lastChargeState == BatteryChargeState::CHARGE_STATE_NONE ||
-         g_lastChargeState == BatteryChargeState::CHARGE_STATE_BUTT) &&
-        (chargeState != BatteryChargeState::CHARGE_STATE_NONE &&
-         chargeState != BatteryChargeState::CHARGE_STATE_BUTT)) {
+    if (g_lastPluggedType != BatteryPluggedType::PLUGGED_TYPE_NONE &&
+        g_lastPluggedType != BatteryPluggedType::PLUGGED_TYPE_BUTT) {
+        return true;
+    }
+    return false;
+}
+
+bool BatteryService::IsNowPlugged(BatteryPluggedType pluggedType)
+{
+    if (pluggedType != BatteryPluggedType::PLUGGED_TYPE_NONE &&
+        pluggedType != BatteryPluggedType::PLUGGED_TYPE_BUTT) {
+        return true;
+    }
+    return false;
+}
+
+bool BatteryService::IsPlugged(BatteryPluggedType pluggedType)
+{
+    if (!IsLastPlugged() && IsNowPlugged(pluggedType)) {
+        return true;
+    }
+    return false;
+}
+
+bool BatteryService::IsUnplugged(BatteryPluggedType pluggedType)
+{
+    if (IsLastPlugged() && !IsNowPlugged(pluggedType)) {
+        return true;
+    }
+    return false;
+}
+
+void BatteryService::WakeupDevice(BatteryPluggedType pluggedType)
+{
+    if (IsPlugged(pluggedType) || IsUnplugged(pluggedType)) {
         PowerMgrClient::GetInstance().WakeupDevice();
     }
-    g_lastChargeState = chargeState;
+    g_lastPluggedType = pluggedType;
 }
 
 void BatteryService::HandlePopupEvent(int32_t capacity)

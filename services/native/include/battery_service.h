@@ -85,7 +85,11 @@ public:
     bool DestoryBatteryDialog();
 private:
     bool Init();
-    void WakeupDevice(BatteryChargeState chargeState);
+    bool IsLastPlugged();
+    bool IsNowPlugged(BatteryPluggedType pluggedType);
+    bool IsPlugged(BatteryPluggedType pluggedType);
+    bool IsUnplugged(BatteryPluggedType pluggedType);
+    void WakeupDevice(BatteryPluggedType pluggedType);
     int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_1::BatteryInfo& event);
     void ConvertingEvent(const OHOS::HDI::Battery::V1_1::BatteryInfo &event);
     void HandleBatteryInfo();
