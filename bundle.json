@@ -46,8 +46,7 @@
                 "napi",
                 "power_manager",
                 "safwk",
-                "samgr",
-                "window_manager"
+                "samgr"
             ],
             "third_party": [
                 "libdrm",
