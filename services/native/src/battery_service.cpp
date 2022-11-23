@@ -112,7 +112,7 @@ bool BatteryService::Init()
             BATTERY_HILOGE(COMP_SVC, "Init failed due to create handler error");
             return false;
         }
-	HiviewDFX::Watchdog::GetInstance().AddThread("BatteryServiceEventHandler", handler_);
+        HiviewDFX::Watchdog::GetInstance().AddThread("BatteryServiceEventHandler", handler_);
     }
 
     InitConfig();
