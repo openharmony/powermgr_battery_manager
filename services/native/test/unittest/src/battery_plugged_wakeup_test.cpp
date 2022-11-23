@@ -53,6 +53,7 @@ void BatteryPluggedWakeupTest::SetUp() {}
 
 void BatteryPluggedWakeupTest::TearDown() {}
 
+namespace {
 /**
  * @tc.name: BatteryPluggedWakeupTest001
  * @tc.desc: Test function of wakeup_device when USB plugged.
@@ -266,4 +267,5 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest009, TestSize.Level0)
         EXPECT_FALSE(isScreenOnNow);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest009 end.");
+}
 }
