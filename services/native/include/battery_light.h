@@ -29,7 +29,7 @@ public:
 
     void InitLight();
     void TurnOff();
-    void TurnOn(uint32_t color = 0, int32_t brightness = 255);
+    void TurnOn(uint32_t color = 0);
     bool UpdateColor(BatteryChargeState chargeState, int32_t capacity);
     bool isAvailable() const;
     uint32_t GetLightColor() const;
