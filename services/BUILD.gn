@@ -74,7 +74,6 @@ ohos_shared_library("batteryservice") {
     "power_manager:powermgr_client",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
-    "window_manager:libdm",
   ]
 
   part_name = "battery_manager"
