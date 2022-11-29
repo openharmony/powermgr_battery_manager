@@ -41,3 +41,34 @@ ohos_unittest("test_batteryclient") {
     "samgr:samgr_proxy",
   ]
 }
+
+ohos_unittest("test_batteryclient_death") {
+  module_out_path = "${module_output_path}"
+  defines = [ "BATTERYMGR_DEATHRECIPIENT_UNITTEST" ]
+
+  include_dirs = [
+    "include",
+    "${battery_manager_path}/test/utils",
+  ]
+  sources = [
+    "${battery_utils}/native/src/test_utils.cpp",
+    "src/battery_client_death_recipient_test.cpp",
+  ]
+
+  configs = [ "${battery_utils}:utils_config" ]
+
+  deps = [
+    "${battery_innerkits}:batterysrv_client",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "common_event_service:cesfwk_innerkits",
+    "eventhandler:libeventhandler",
+    "hiviewdfx_hilog_native:libhilog",
+    "ipc:ipc_core",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
+  ]
+}

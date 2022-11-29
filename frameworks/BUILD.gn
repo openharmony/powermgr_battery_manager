@@ -27,5 +27,8 @@ group("battery_js_frameworks_unittest") {
 
 group("battery_frameworks_unittest") {
   testonly = true
-  deps = [ "native/test/unittest:test_batteryclient" ]
+  deps = [
+    "native/test/unittest:test_batteryclient",
+    "native/test/unittest:test_batteryclient_death",
+  ]
 }

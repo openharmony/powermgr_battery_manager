@@ -86,7 +86,9 @@ public:
      */
     int64_t GetRemainingChargeTime();
 
+#ifndef BATTERYMGR_DEATHRECIPIENT_UNITTEST
 private:
+#endif
     class BatterySrvDeathRecipient : public IRemoteObject::DeathRecipient {
     public:
         BatterySrvDeathRecipient() = default;
