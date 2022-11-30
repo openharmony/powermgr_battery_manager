@@ -25,8 +25,10 @@ using namespace OHOS::PowerMgr;
 using namespace OHOS;
 using namespace std;
 
+namespace {
 std::shared_ptr<BatterySrvProxy> g_proxy;
 sptr<IRemoteObject> remoteObj;
+}
 
 void BatteryProxyMockTest::SetUpTestCase()
 {
