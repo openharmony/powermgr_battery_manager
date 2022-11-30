@@ -40,6 +40,7 @@ ohos_unittest("test_battery") {
     "src/battery_config_test.cpp",
     "src/battery_dump_test.cpp",
     "src/battery_event_test.cpp",
+    "src/battery_info_test.cpp",
     "src/battery_light_test.cpp",
     "src/battery_notify_test.cpp",
     "src/battery_service_test.cpp",
