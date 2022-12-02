@@ -21,8 +21,9 @@
 #include "battery_light.h"
 #include "battery_log.h"
 #include "power_common.h"
+#include "light_agent.h"
+#include "light_agent_type.h"
 
-using namespace OHOS::HDI::Light::V1_0;
 using namespace std;
 
 namespace OHOS {
@@ -33,21 +34,23 @@ constexpr uint32_t MOVE_RIGHT_8 = 8;
 }
 void BatteryLight::InitLight()
 {
-    batteryLight_ = ILightInterface::Get();
-    if (batteryLight_ == nullptr) {
-        BATTERY_HILOGW(FEATURE_BATT_LIGHT, "Light interface is null");
+    LightInfo* lightInfo = nullptr;
+    int32_t count = 0;
+    int32_t ret = OHOS::Sensors::GetLightList(&lightInfo, count);
+
+    if (ret < ERR_OK || lightInfo == nullptr || count <= 0) {
+        BATTERY_HILOGW(FEATURE_BATT_LIGHT, "Light info is null");
         return;
     }
 
-    vector<HdfLightInfo> lightInfo;
-    if (batteryLight_->GetLightInfo(lightInfo) < ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_LIGHT, "Get battert light failed");
-        return;
-    }
-
-    for (const auto& item : lightInfo) {
-        if (item.lightId == HdfLightId::HDF_LIGHT_ID_BATTERY) {
+    for (int32_t i = 0; i < count; ++i) {
+        BATTERY_HILOGD(FEATURE_BATT_LIGHT,
+            "LightInfo name: %{public}s, id: %{public}d, number: %{public}d, type: %{public}d", lightInfo[i].lightName,
+            lightInfo[i].lightId, lightInfo[i].lightNumber, lightInfo[i].lightType);
+        // lightName is associated by the light hdi driver
+        if (std::string(lightInfo[i].lightName) == "battery") {
             available_ = true;
+            lightId_ = lightInfo[i].lightId;
             BATTERY_HILOGI(FEATURE_BATT_LIGHT, "Battery light is available");
             break;
         }
@@ -57,7 +60,7 @@ void BatteryLight::InitLight()
 void BatteryLight::TurnOff()
 {
     RETURN_IF(!available_);
-    int32_t ret = batteryLight_->TurnOffLight(HdfLightId::HDF_LIGHT_ID_BATTERY);
+    int32_t ret = OHOS::Sensors::TurnOff(lightId_);
     if (ret < ERR_OK) {
         BATTERY_HILOGW(FEATURE_BATT_LIGHT, "Failed to turn off the battery light");
     }
@@ -67,13 +70,15 @@ void BatteryLight::TurnOff()
 void BatteryLight::TurnOn(uint32_t color)
 {
     RETURN_IF(!available_);
-    struct HdfLightEffect effect = {
-        .lightColor.colorValue.rgbColor.r = (color >> MOVE_RIGHT_16) & 0xFF,
-        .lightColor.colorValue.rgbColor.g = (color >> MOVE_RIGHT_8) & 0xFF,
-        .lightColor.colorValue.rgbColor.b = color & 0xFF,
+    union LightColor lightColor;
+    lightColor.rgbColor.r = (color >> MOVE_RIGHT_16) & 0xFF;
+    lightColor.rgbColor.g = (color >> MOVE_RIGHT_8) & 0xFF;
+    lightColor.rgbColor.b = color & 0xFF;
+    LightAnimation animation = {
+        .mode = FlashMode::LIGHT_MODE_DEFAULT
     };
-    BATTERY_HILOGD(FEATURE_BATT_LIGHT, "battery light color is %{public}d", color);
-    int32_t ret = batteryLight_->TurnOnLight(HdfLightId::HDF_LIGHT_ID_BATTERY, effect);
+    BATTERY_HILOGD(FEATURE_BATT_LIGHT, "battery light color is %{public}u", color);
+    int32_t ret = OHOS::Sensors::TurnOn(lightId_, lightColor, animation);
     if (ret < ERR_OK) {
         BATTERY_HILOGW(FEATURE_BATT_LIGHT, "Failed to turn on the battery light");
     }
