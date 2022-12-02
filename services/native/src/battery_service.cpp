@@ -26,7 +26,6 @@
 #include "system_ability_definition.h"
 #include "iremote_object.h"
 #include "v1_1/ibattery_callback.h"
-#include "ui_service_mgr_client.h"
 #include "hdf_io_service_if.h"
 #include "hdf_service_status.h"
 #include "battery_callback.h"
@@ -45,7 +44,6 @@ namespace PowerMgr {
 namespace {
 constexpr const char* BATTERY_SERVICE_NAME = "BatteryService";
 constexpr const char* BATTERY_HDI_NAME = "battery_interface_service";
-constexpr const char* LIGHT_HDI_NAME = "light_interface_service";
 constexpr int32_t HELP_DUMP_PARAM = 2;
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
 constexpr int32_t BATTERY_EMERGENCY_THRESHOLD = 5;
@@ -94,6 +92,7 @@ void BatteryService::OnStart()
         BATTERY_HILOGE(COMP_SVC, "Register to system ability manager failed");
         return;
     }
+    AddSystemAbilityListener(MISCDEVICE_SERVICE_ABILITY_ID);
     ready_ = true;
 }
 
@@ -121,6 +120,14 @@ bool BatteryService::Init()
         batteryNotify_ = std::make_unique<BatteryNotify>();
     }
     return true;
+}
+
+void BatteryService::OnAddSystemAbility(int32_t systemAbilityId, const std::string& deviceId)
+{
+    BATTERY_HILOGI(COMP_SVC, "systemAbilityId=%{public}d, deviceId=%{private}s", systemAbilityId, deviceId.c_str());
+    if (systemAbilityId == MISCDEVICE_SERVICE_ABILITY_ID) {
+        batteryLight_.InitLight();
+    }
 }
 
 bool BatteryService::RegisterBatteryHdiCallback()
@@ -222,21 +229,15 @@ bool BatteryService::RegisterHdiStatusListener()
 
     hdiServStatListener_ = new HdiServiceStatusListener(HdiServiceStatusListener::StatusCallback(
         [&](const OHOS::HDI::ServiceManager::V1_0::ServiceStatus &status) {
-            RETURN_IF((status.serviceName != BATTERY_HDI_NAME &&
-                status.serviceName != LIGHT_HDI_NAME) ||
-                status.deviceClass != DEVICE_CLASS_DEFAULT);
+            RETURN_IF(status.serviceName != BATTERY_HDI_NAME || status.deviceClass != DEVICE_CLASS_DEFAULT);
 
-            if (status.serviceName == BATTERY_HDI_NAME && status.status == SERVIE_STATUS_START) {
+            if (status.status == SERVIE_STATUS_START) {
                 SendEvent(BatteryServiceEventHandler::EVENT_REGISTER_BATTERY_HDI_CALLBACK, 0);
                 BATTERY_HILOGD(COMP_SVC, "battery interface service start");
-            } else if (status.serviceName == BATTERY_HDI_NAME &&
-                status.status == SERVIE_STATUS_STOP && iBatteryInterface_) {
+            } else if (status.status == SERVIE_STATUS_STOP && iBatteryInterface_) {
                 iBatteryInterface_->UnRegister();
                 iBatteryInterface_ = nullptr;
                 BATTERY_HILOGW(COMP_SVC, "battery interface service stop, unregister interface");
-            } else if (status.serviceName == LIGHT_HDI_NAME && status.status == SERVIE_STATUS_START) {
-                BATTERY_HILOGD(COMP_SVC, "light interface service start");
-                batteryLight_.InitLight();
             }
         }
     ));

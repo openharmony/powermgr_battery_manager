@@ -168,7 +168,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService007, TestSize.Level1)
 
 /**
  * @tc.name: BatteryService008
- * @tc.desc: Test functions OnStart and OnStop
+ * @tc.desc: Test functions OnStart and OnStop and OnAddSystemAbility
  * @tc.type: FUNC
  * @tc.require: issueI5YZR1
  */
@@ -179,6 +179,8 @@ static HWTEST_F(BatteryServiceTest, BatteryService008, TestSize.Level1)
     g_service->OnStop();
     g_service->OnStart();
     g_service->OnStart();
+    int32_t systemAbilityId = 3602; // MISCDEVICE_SERVICE_ABILITY_ID
+    g_service->OnAddSystemAbility(systemAbilityId, std::string("BatteryService008"));
     BATTERY_HILOGD(LABEL_TEST, "BatteryService008 end.");
 }
 

@@ -16,8 +16,6 @@
 #ifndef POWERMGR_BATTERY_MANAGER_BATTERY_LIGHT_H
 #define POWERMGR_BATTERY_MANAGER_BATTERY_LIGHT_H
 
-#include "v1_0/ilight_interface.h"
-#include "v1_0/light_types.h"
 #include "battery_info.h"
 
 namespace OHOS {
@@ -35,8 +33,8 @@ public:
     uint32_t GetLightColor() const;
 
 private:
-    sptr<OHOS::HDI::Light::V1_0::ILightInterface> batteryLight_ {nullptr};
     bool available_ {false};
+    int32_t lightId_ {-1};
     uint32_t lightColor_ {0};
 };
 } // namespace PowerMgr

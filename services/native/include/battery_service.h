@@ -48,6 +48,7 @@ DECLARE_DELAYED_SP_SINGLETON(BatteryService);
 public:
     virtual void OnStart() override;
     virtual void OnStop() override;
+    virtual void OnAddSystemAbility(int32_t systemAbilityId, const std::string& deviceId) override;
 
     bool IsServiceReady() const
     {
