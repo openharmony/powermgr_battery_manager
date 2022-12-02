@@ -16,6 +16,7 @@ import("//base/powermgr/battery_manager/batterymgr.gni")
 config("batterysrv_private_config") {
   include_dirs = [
     "//base/hiviewdfx/hicollie/interfaces/native/innerkits/include/xcollie",
+    "//base/sensors/miscdevice/interfaces/native/light/include",
   ]
 }
 
@@ -50,8 +51,7 @@ ohos_shared_library("batteryservice") {
   deps = [
     "${battery_service_zidl}:batterysrv_stub",
     "//base/powermgr/power_manager/utils/permission:power_permission",
-    "//drivers/peripheral/battery/interfaces/hdi_service:libbattery_interface_service_1.1",
-    "//foundation/arkui/ace_engine/interfaces/inner_api/ui_service_manager:ui_service_mgr",
+    "//base/sensors/miscdevice/interfaces/native/light:light_target",
     "//third_party/jsoncpp:jsoncpp",
   ]
 
@@ -63,14 +63,12 @@ ohos_shared_library("batteryservice") {
     "common_event_service:cesfwk_core",
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_1.1",
-    "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
     "hdf_core:libhdi",
     "hicollie_native:libhicollie",
     "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
-    "multimedia_image_framework:image_native",
     "power_manager:powermgr_client",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
