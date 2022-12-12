@@ -120,7 +120,7 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
     publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
-    HiSysEvent::Write("BATTERY", "BATTERY_CHANGED", HiSysEvent::EventType::STATISTIC,
+    HiSysEventWrite(HiSysEvent::Domain::BATTERY, "BATTERY_CHANGED", HiSysEvent::EventType::STATISTIC,
         "LEVEL", info.GetCapacity(), "CHARGER", static_cast<int>(info.GetPluggedType()),
         "VOLTAGE", info.GetVoltage(), "TEMPERATURE", info.GetTemperature(),
         "HEALTH", static_cast<int>(info.GetHealthState()), "CURRENT", info.GetNowCurrent());
