@@ -338,7 +338,7 @@ public:
 
     bool operator==(const BatteryInfo& info)
     {
-        return (present_ == info.IsPresent()) &&
+        bool eq = (present_ == info.IsPresent()) &&
             (capacity_ == info.GetCapacity()) &&
             (voltage_ == info.GetVoltage()) &&
             (temperature_ == info.GetTemperature()) &&
@@ -352,6 +352,7 @@ public:
             (pluggedType_ == info.GetPluggedType()) &&
             (chargeState_ == info.GetChargeState()) &&
             (technology_ == info.GetTechnology());
+        return eq;
     }
 
     bool operator!=(const BatteryInfo& info)

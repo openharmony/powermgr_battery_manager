@@ -28,7 +28,7 @@ class HdiServiceStatusListener : public OHOS::HDI::ServiceManager::V1_0::ServSta
 public:
     using StatusCallback = std::function<void(const OHOS::HDI::ServiceManager::V1_0::ServiceStatus &)>;
     explicit HdiServiceStatusListener(StatusCallback callback) : callback_(std::move(callback)) {}
-    ~HdiServiceStatusListener() = default;
+    virtual ~HdiServiceStatusListener() = default;
     void OnReceive(const OHOS::HDI::ServiceManager::V1_0::ServiceStatus &status) override
     {
         callback_(status);

@@ -61,5 +61,19 @@ HWTEST_F(BatteryCallbackTest, BatteryCallback001, TestSize.Level1)
     iBatteryInterface->GetBatteryInfo(event);
     EXPECT_NE(callback->Update(event), HDF_FAILURE);
 }
+
+/**
+ * @tc.name: BatteryCallback002
+ * @tc.desc: Update BatteryInfo, the eventCb_ is invalid
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryCallbackTest, BatteryCallback002, TestSize.Level1)
+{
+    BatteryCallback::BatteryEventCallback eventCb = nullptr;
+    EXPECT_EQ(BatteryCallback::RegisterBatteryEvent(eventCb), HDF_SUCCESS);
+    HDI::Battery::V1_1::BatteryInfo event;
+    sptr<HDI::Battery::V1_1::IBatteryCallback> callback = new BatteryCallback();
+    EXPECT_EQ(callback->Update(event), HDF_FAILURE);
+}
 } // namespace PowerMgr
 } // namespace OHOS
