@@ -34,8 +34,10 @@ config("module_mock_private_config") {
 ##############################unittest##########################################
 ohos_unittest("test_battery") {
   module_out_path = "${module_output_path}"
+  defines = [ "GTEST" ]
 
   sources = [
+    "${battery_manager_path}/test/utils/test_utils.cpp",
     "src/battery_callback_test.cpp",
     "src/battery_config_test.cpp",
     "src/battery_dump_test.cpp",
@@ -44,6 +46,7 @@ ohos_unittest("test_battery") {
     "src/battery_light_test.cpp",
     "src/battery_notify_test.cpp",
     "src/battery_service_test.cpp",
+    "src/battery_srv_stub_test.cpp",
   ]
 
   configs = [
@@ -52,6 +55,8 @@ ohos_unittest("test_battery") {
   ]
 
   deps = [
+    "${battery_innerkits}:batterysrv_client",
+    "${battery_service_zidl}:batterysrv_stub",
     "${battery_service}:batteryservice",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",

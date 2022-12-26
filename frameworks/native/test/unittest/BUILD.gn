@@ -17,7 +17,7 @@ import("//build/test.gni")
 ##############################unittest##########################################
 ohos_unittest("test_batteryclient") {
   module_out_path = "${module_output_path}"
-
+  defines = [ "GTEST" ]
   include_dirs = [
     "include",
     "${battery_manager_path}/test/utils",

@@ -13,18 +13,18 @@
  * limitations under the License.
  */
 
-#ifndef BATTERY_SERVICE_TEST_H
-#define BATTERY_SERVICE_TEST_H
+#ifndef BATTERY_SRV_STUB_TEST_H
+#define BATTERY_SRV_STUB_TEST_H
 
 #include <gtest/gtest.h>
 
 namespace OHOS {
 namespace PowerMgr {
-class BatteryServiceTest : public testing::Test {
+class BatterySrvStubTest : public testing::Test {
 public:
-    int32_t ReadFile(const char* path, char* buf, size_t size);
-    int32_t WriteFile(const char* path, char* buf, size_t size);
+    static void SetUpTestCase();
+    static void TearDownTestCase();
 };
 } // namespace PowerMgr
 } // namespace OHOS
-#endif // BATTERY_SERVICE_TEST_H
+#endif // BATTERY_SRV_STUB_TEST_H
