@@ -15,9 +15,20 @@
 
 #include "battery_client_test.h"
 
+#ifdef GTEST
+#define private   public
+#define protected public
+#endif
+
 #include <iostream>
 #include <string>
 #include <gtest/gtest.h>
+
+#include "if_system_ability_manager.h"
+#include "iremote_broker.h"
+#include "iservice_registry.h"
+#include "system_ability_definition.h"
+
 #include "battery_log.h"
 #include "battery_srv_client.h"
 #include "test_utils.h"
@@ -35,6 +46,7 @@ constexpr int32_t BATTERY_NORMAL_THRESHOLD = 90;
 constexpr int32_t BATTERY_HIGH_THRESHOLD = 99;
 constexpr int32_t BATTERY_HIGH_FULL = 100;
 const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";
+BatteryInfo g_info;
 }
 
 void BatteryClientTest::SetUpTestCase(void)
@@ -51,6 +63,21 @@ void BatteryClientTest::TearDownTestCase(void)
 
 void BatteryClientTest::SetUp(void)
 {
+    g_info.SetCapacity(100);
+    g_info.SetPresent(false);
+    g_info.SetVoltage(10);
+    g_info.SetTemperature(10);
+    g_info.SetHealthState(BatteryHealthState::HEALTH_STATE_GOOD);
+    g_info.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_USB);
+    g_info.SetPluggedMaxCurrent(10);
+    g_info.SetPluggedMaxVoltage(10);
+    g_info.SetChargeState(BatteryChargeState::CHARGE_STATE_DISABLE);
+    g_info.SetChargeCounter(10);
+    g_info.SetTotalEnergy(10);
+    g_info.SetCurAverage(10);
+    g_info.SetNowCurrent(10);
+    g_info.SetRemainEnergy(10);
+    g_info.SetTechnology("test");
 }
 
 void BatteryClientTest::TearDown(void)
@@ -573,17 +600,123 @@ HWTEST_F (BatteryClientTest, BatteryClient017, TestSize.Level1)
  * @tc.desc: Test BatteryInfo operator== and operator!=
  * @tc.type: FUNC
  */
-HWTEST_F (BatteryClientTest, BatteryClient018, TestSize.Level1)
+HWTEST_F(BatteryClientTest, BatteryClient018, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient018 start.");
-    BatteryInfo info1;
-    BatteryInfo info2;
-    ASSERT_TRUE(info1 == info2);
-
-    info1.SetCapacity(100);
-    info2.SetCapacity(0);
-    ASSERT_TRUE(info1 != info2);
-
+    {
+        BatteryInfo info1;
+        info1.SetCapacity(100);
+        info1.SetPresent(false);
+        info1.SetVoltage(10);
+        info1.SetTemperature(10);
+        info1.SetHealthState(BatteryHealthState::HEALTH_STATE_GOOD);
+        info1.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_USB);
+        info1.SetPluggedMaxCurrent(10);
+        info1.SetPluggedMaxVoltage(10);
+        info1.SetChargeState(BatteryChargeState::CHARGE_STATE_DISABLE);
+        info1.SetChargeCounter(10);
+        info1.SetTotalEnergy(10);
+        info1.SetCurAverage(10);
+        info1.SetNowCurrent(10);
+        info1.SetRemainEnergy(10);
+        info1.SetTechnology("BatteryClient018");
+        BatteryInfo info2;
+        info2.SetCapacity(100);
+        info2.SetPresent(false);
+        info2.SetVoltage(10);
+        info2.SetTemperature(10);
+        info2.SetHealthState(BatteryHealthState::HEALTH_STATE_GOOD);
+        info2.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_USB);
+        info2.SetPluggedMaxCurrent(10);
+        info2.SetPluggedMaxVoltage(10);
+        info2.SetChargeState(BatteryChargeState::CHARGE_STATE_DISABLE);
+        info2.SetChargeCounter(10);
+        info2.SetTotalEnergy(10);
+        info2.SetCurAverage(10);
+        info2.SetNowCurrent(10);
+        info2.SetRemainEnergy(10);
+        info2.SetTechnology("BatteryClient018");
+        ASSERT_TRUE(info1 == info2);
+        ASSERT_FALSE(info1 != info2);
+        info1.SetTechnology("BatteryClient018_false");
+        ASSERT_FALSE(info1 == info2);
+        ASSERT_TRUE(info1 != info2);
+    }
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient018 end.");
 }
+
+/**
+ * @tc.name: BatteryClient019
+ * @tc.desc: Test BatteryInfo operator==
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryClientTest, BatteryClient019, TestSize.Level1)
+{
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient019 start.");
+    BatteryInfo info1 = g_info;
+    info1.SetPresent(false);
+    BatteryInfo info2 = g_info;
+    info2.SetPresent(true);
+    ASSERT_FALSE(info1 == info2);
+
+    info1 = info2 = g_info;
+    info1.SetCapacity(100);
+    info2.SetCapacity(50);
+    ASSERT_FALSE(info1 == info2);
+
+    info1 = info2 = g_info;
+    info2.SetVoltage(10);
+    info1.SetVoltage(5);
+    ASSERT_FALSE(info1 == info2);
+
+    info1 = info2 = g_info;
+    info2.SetTemperature(5);
+    info1.SetTemperature(10);
+    ASSERT_FALSE(info1 == info2);
+
+    info1 = info2 = g_info;
+    info2.SetHealthState(BatteryHealthState::HEALTH_STATE_GOOD);
+    info1.SetHealthState(BatteryHealthState::HEALTH_STATE_DEAD);
+    ASSERT_FALSE(info1 == info2);
+
+    info1 = info2 = g_info;
+    info2.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_USB);
+    info1.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_NONE);
+    ASSERT_FALSE(info1 == info2);
+
+    info1 = info2 = g_info;
+    info2.SetPluggedMaxCurrent(10);
+    info1.SetPluggedMaxCurrent(20);
+    ASSERT_FALSE(info1 == info2);
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient019 end.");
 }
+
+/**
+ * @tc.name: BatteryClient020
+ * @tc.desc: Test ResetProxy
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryClientTest, BatteryClient020, TestSize.Level1)
+{
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient020 start.");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    BatterySrvClient.proxy_ = nullptr;
+    BatterySrvClient.ResetProxy(nullptr);
+
+    sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (sysMgr == nullptr) {
+        BATTERY_HILOGD(LABEL_TEST, "Failed to get Registry");
+        return;
+    }
+    wptr<IRemoteObject> remoteObj = sysMgr->CheckSystemAbility(POWER_MANAGER_SERVICE_ID);
+    if (remoteObj == nullptr) {
+        BATTERY_HILOGD(LABEL_TEST, "GetSystemAbility failed");
+        return;
+    }
+    EXPECT_EQ(BatterySrvClient.Connect(), ERR_OK);
+    BatterySrvClient.ResetProxy(remoteObj);
+    EXPECT_NE(BatterySrvClient.proxy_, nullptr);
+
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient020 end.");
+}
+} // namespace

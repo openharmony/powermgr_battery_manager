@@ -89,6 +89,9 @@ int32_t BatterySrvStub::CheckRequestCode(const uint32_t code, MessageParcel& dat
         case static_cast<int>(IBatterySrv::BATT_GET_BATTERY_TOTAL_ENERGY): {
             return GetTotalEnergyStub(reply);
         }
+        case static_cast<int>(IBatterySrv::BATT_GET_BATTERY_CURRENT_AVERAGE): {
+            return GetCurrentAverageStub(reply);
+        }
         default: {
             return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
         }
@@ -179,6 +182,12 @@ int32_t BatterySrvStub::GetRemainEnergyStub(MessageParcel& reply)
 int32_t BatterySrvStub::GetTotalEnergyStub(MessageParcel& reply)
 {
     int32_t ret = GetTotalEnergy();
+    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    return ERR_OK;
+}
+int32_t BatterySrvStub::GetCurrentAverageStub(MessageParcel& reply)
+{
+    int32_t ret = GetCurrentAverage();
     WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }

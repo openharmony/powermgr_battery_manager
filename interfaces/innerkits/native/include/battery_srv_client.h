@@ -25,7 +25,7 @@
 namespace OHOS {
 namespace PowerMgr {
 class BatterySrvClient final : public DelayedRefSingleton<BatterySrvClient> {
-    DECLARE_DELAYED_REF_SINGLETON(BatterySrvClient)
+    DECLARE_DELAYED_REF_SINGLETON(BatterySrvClient);
 
 public:
     DISALLOW_COPY_AND_MOVE(BatterySrvClient);
@@ -92,7 +92,7 @@ private:
     class BatterySrvDeathRecipient : public IRemoteObject::DeathRecipient {
     public:
         BatterySrvDeathRecipient() = default;
-        ~BatterySrvDeathRecipient() = default;
+        virtual ~BatterySrvDeathRecipient() = default;
         void OnRemoteDied(const wptr<IRemoteObject>& remote);
     private:
         DISALLOW_COPY_AND_MOVE(BatterySrvDeathRecipient);
