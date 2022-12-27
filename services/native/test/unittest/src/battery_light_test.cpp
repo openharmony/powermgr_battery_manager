@@ -78,6 +78,7 @@ HWTEST_F(BatteryLightTest, BatteryLight003, TestSize.Level1)
     int32_t capacity = 1;
     g_light.UpdateColor(BatteryChargeState::CHARGE_STATE_ENABLE, capacity);
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::RED_LIGHT);
+    EXPECT_TRUE(g_light.UpdateColor(BatteryChargeState::CHARGE_STATE_ENABLE, capacity));
 }
 
 /**
@@ -177,6 +178,22 @@ HWTEST_F(BatteryLightTest, BatteryLight009, TestSize.Level1)
     EXPECT_FALSE(g_light.UpdateColor(BatteryChargeState::CHARGE_STATE_ENABLE, -1));
     GTEST_LOG_(INFO) << "actual:" << g_light.GetLightColor() << "=expect:" << BatteryConfigTest::GREEN_LIGHT;
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::GREEN_LIGHT);
+}
+
+/**
+ * @tc.name: BatteryLight010
+ * @tc.desc: The call interface was not initialized
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryLightTest, BatteryLight010, TestSize.Level1)
+{
+    BatteryLight light;
+    uint32_t initColor = light.GetLightColor();
+    GTEST_LOG_(INFO) << "initial:" << initColor;
+    light.TurnOn(123);
+    EXPECT_EQ(light.GetLightColor(), initColor);
+    light.TurnOff();
+    EXPECT_EQ(light.GetLightColor(), initColor);
 }
 } // namespace PowerMgr
 } // namespace OHOS

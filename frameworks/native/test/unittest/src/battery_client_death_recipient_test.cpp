@@ -15,12 +15,18 @@
 
 #include "battery_client_death_recipient_test.h"
 
-#include "battery_log.h"
-#include "battery_srv_client.h"
-#include "test_utils.h"
 #include <gtest/gtest.h>
 #include <iostream>
 #include <string>
+
+#include "if_system_ability_manager.h"
+#include "iremote_broker.h"
+#include "iservice_registry.h"
+#include "system_ability_definition.h"
+
+#include "battery_log.h"
+#include "battery_srv_client.h"
+#include "test_utils.h"
 
 using namespace testing::ext;
 using namespace OHOS::PowerMgr;
@@ -33,7 +39,7 @@ namespace {
  * @tc.desc: test OnRemoteDied function
  * @tc.type: FUNC
  */
-HWTEST_F(BatteryClientDeathRecipientTest, BatteryClient001, TestSize.Level1)
+HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient001, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryClientDeathRecipient001 start.");
     auto& batterySrvClient = BatterySrvClient::GetInstance();
@@ -46,5 +52,39 @@ HWTEST_F(BatteryClientDeathRecipientTest, BatteryClient001, TestSize.Level1)
     deathRecipient->OnRemoteDied(remoteObj);
     EXPECT_NE(batterySrvClient.proxy_, nullptr);
     BATTERY_HILOGD(LABEL_TEST, "BatteryClientDeathRecipient001 end.");
+}
+
+/**
+ * @tc.name: BatteryClientDeathRecipient002
+ * @tc.desc: test OnRemoteDied function
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient002, TestSize.Level1)
+{
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClientDeathRecipient002 start.");
+    auto& batterySrvClient = BatterySrvClient::GetInstance();
+    EXPECT_EQ(batterySrvClient.Connect(), ERR_OK);
+
+    sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (sysMgr == nullptr) {
+        BATTERY_HILOGD(LABEL_TEST, "Failed to get Registry");
+        return;
+    }
+    wptr<IRemoteObject> remoteObj = sysMgr->CheckSystemAbility(POWER_MANAGER_BATT_SERVICE_ID);
+    if (remoteObj == nullptr) {
+        BATTERY_HILOGD(LABEL_TEST, "GetSystemAbility failed");
+        return;
+    }
+
+    {
+        std::shared_ptr<IRemoteObject::DeathRecipient> deathRecipient =
+            std::make_shared<BatterySrvClient::BatterySrvDeathRecipient>();
+        EXPECT_NE(deathRecipient, nullptr);
+        deathRecipient->OnRemoteDied(remoteObj);
+        deathRecipient = nullptr;
+    }
+
+    ASSERT_EQ(batterySrvClient.proxy_, nullptr);
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClientDeathRecipient002 end.");
 }
 } // namespace
