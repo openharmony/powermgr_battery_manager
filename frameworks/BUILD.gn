@@ -20,11 +20,6 @@ group("battery_napi") {
   ]
 }
 
-group("battery_js_frameworks_unittest") {
-  testonly = true
-  deps = [ "js/test/unittest/:BatteryMgrBatteryJsTest" ]
-}
-
 group("battery_frameworks_unittest") {
   testonly = true
   deps = [
