@@ -81,9 +81,7 @@
                   }
             ],
             "test": [
-                "//base/powermgr/battery_manager/frameworks:battery_js_frameworks_unittest",
                 "//base/powermgr/battery_manager/frameworks:battery_frameworks_unittest",
-                "//base/powermgr/battery_manager/interfaces/kits/js/test:batterymgr_js_interface_test",
                 "//base/powermgr/battery_manager/services/native/test:unittest",
                 "//base/powermgr/battery_manager/test:battery_systemtest",
                 "//base/powermgr/battery_manager/test:battery_fuzzertest"
