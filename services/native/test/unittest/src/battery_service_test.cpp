@@ -26,6 +26,7 @@
 #include "common_event_subscriber.h"
 #include "common_event_support.h"
 #include "securec.h"
+#include "test_utils.h"
 
 using namespace testing::ext;
 using namespace OHOS::PowerMgr;
@@ -36,36 +37,14 @@ using namespace std;
 
 namespace {
 sptr<BatteryService> g_service;
+bool g_isMock = TestUtils::IsMock();
+const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";
 }
 
 void BatteryServiceTest::SetUpTestCase()
 {
     g_service = DelayedSpSingleton<BatteryService>::GetInstance();
     g_service->OnStart();
-}
-
-int32_t BatteryServiceTest::ReadFile(const char* path, char* buf, size_t size)
-{
-    int32_t fd = open(path, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-    if (fd < 0) {
-        return -1;
-    }
-
-    size_t readSize = read(fd, buf, size);
-    close(fd);
-    return readSize;
-}
-
-int32_t BatteryServiceTest::WriteFile(const char* path, char* buf, size_t size)
-{
-    int32_t fd = open(path, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-    if (fd < 0) {
-        return -1;
-    }
-
-    size_t writeSize = write(fd, buf, size);
-    close(fd);
-    return writeSize;
 }
 
 /**
@@ -103,13 +82,19 @@ static HWTEST_F(BatteryServiceTest, BatteryService003, TestSize.Level1)
 static HWTEST_F(BatteryServiceTest, BatteryService004, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryService004 start.");
-    char buf[128];
-    memset_s(buf, sizeof(buf), '\0', sizeof(buf));
-    int32_t readSize = ReadFile("/data/service/el0/battery/battery/voltage_now", buf, sizeof(buf));
-    EXPECT_TRUE(readSize > 0);
+    if (g_isMock) {
+        auto tempVoltage = g_service->GetVoltage();
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/voltage_now", "4654321");
+        auto voltage = g_service->GetVoltage();
+        ASSERT_TRUE(voltage == 4654321);
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/voltage_now", std::to_string(tempVoltage));
+    } else {
+        auto voltage = g_service->GetVoltage();
+        BATTERY_HILOGI(LABEL_TEST, "BatteryService004::voltage=%{public}d", voltage);
+        GTEST_LOG_(INFO) << "BatteryService004 executing, voltage=" << voltage;
+        ASSERT_TRUE(voltage >= 0);
+    }
 
-    int32_t voltage = g_service->GetVoltage();
-    EXPECT_TRUE(voltage == std::stoi(buf));
     BATTERY_HILOGD(LABEL_TEST, "BatteryService004 end.");
 }
 
@@ -122,13 +107,20 @@ static HWTEST_F(BatteryServiceTest, BatteryService004, TestSize.Level1)
 static HWTEST_F(BatteryServiceTest, BatteryService005, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryService005 start.");
-    char buf[128];
-    int32_t readSize = ReadFile("/data/service/el0/battery/battery/present", buf, sizeof(buf));
-    EXPECT_TRUE(readSize > 0);
-    char present[] = "1";
-    EXPECT_TRUE(WriteFile("/data/service/el0/battery/battery/present", present, sizeof(present)));
-    EXPECT_TRUE(g_service->GetPresent());
-    WriteFile("/data/service/el0/battery/battery/present", buf, readSize);
+    if (g_isMock) {
+        auto tempPresent = g_service->GetPresent();
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/present", "0");
+        auto present = g_service->GetPresent();
+        BATTERY_HILOGI(LABEL_TEST, "BatteryService005::present=%{public}d", present);
+        GTEST_LOG_(INFO) << "BatteryService005 executing, present=" << present;
+        ASSERT_FALSE(present);
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/present", std::to_string(tempPresent));
+    } else {
+        auto present = g_service->GetPresent();
+        BATTERY_HILOGI(LABEL_TEST, "BatteryService005::present=%{public}d", present);
+        GTEST_LOG_(INFO) << "BatteryService005 executing, present=" << present;
+        ASSERT_TRUE(present);
+    }
     BATTERY_HILOGD(LABEL_TEST, "BatteryService005 end.");
 }
 
@@ -141,15 +133,20 @@ static HWTEST_F(BatteryServiceTest, BatteryService005, TestSize.Level1)
 static HWTEST_F(BatteryServiceTest, BatteryService006, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryService006 start.");
-
-    char buf[128];
-    memset_s(buf, sizeof(buf), '\0', sizeof(buf));
-    int32_t readSize = ReadFile("/data/service/el0/battery/battery/temp", buf, sizeof(buf));
-    EXPECT_TRUE(readSize > 0);
-
-    BATTERY_HILOGD(LABEL_TEST, "Battery temperature is %{public}s", buf);
-    int32_t temp = g_service->GetBatteryTemperature();
-    EXPECT_TRUE(temp == std::stoi(buf));
+    if (g_isMock) {
+        auto tempTempPresent = g_service->GetBatteryTemperature();
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/temp", "222");
+        auto temperature = g_service->GetBatteryTemperature();
+        BATTERY_HILOGI(LABEL_TEST, "BatteryService006::temperature=%{public}d", temperature);
+        GTEST_LOG_(INFO) << "BatteryService006 executing, temperature=" << temperature;
+        ASSERT_TRUE(temperature == 222);
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/temp", std::to_string(tempTempPresent));
+    } else {
+        auto temperature = g_service->GetBatteryTemperature();
+        BATTERY_HILOGI(LABEL_TEST, "BatteryService006::temperature=%{public}d", temperature);
+        GTEST_LOG_(INFO) << "BatteryService006 executing, temperature=" << temperature;
+        ASSERT_TRUE(temperature >= 0 && temperature <= 600);
+    }
     BATTERY_HILOGD(LABEL_TEST, "BatteryService006 end.");
 }
 

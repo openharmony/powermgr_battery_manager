@@ -39,6 +39,7 @@ ohos_unittest("test_battery") {
   module_out_path = "${module_output_path}"
 
   sources = [
+    "${battery_manager_path}/utils/native/src/test_utils.cpp",
     "src/battery_callback_test.cpp",
     "src/battery_config_test.cpp",
     "src/battery_dump_test.cpp",
