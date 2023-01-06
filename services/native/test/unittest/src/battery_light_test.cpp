@@ -35,6 +35,7 @@ void BatteryLightTest::SetUpTestCase()
     BatteryConfig::GetInstance().ParseConfig(SYSTEM_BATTERY_CONFIG_PATH);
     g_light.InitLight();
     g_light.TurnOff();
+    GTEST_LOG_(INFO) << "The current device supports Light: " << g_light.isAvailable();
 }
 
 void BatteryLightTest::TearDown()
@@ -50,6 +51,7 @@ void BatteryLightTest::TearDown()
  */
 HWTEST_F(BatteryLightTest, BatteryLight001, TestSize.Level1)
 {
+    RETURN_IF(!g_light.isAvailable());
     g_light.TurnOff();
     EXPECT_TRUE(g_light.GetLightColor() == 0U);
 }
@@ -62,6 +64,7 @@ HWTEST_F(BatteryLightTest, BatteryLight001, TestSize.Level1)
  */
 HWTEST_F(BatteryLightTest, BatteryLight002, TestSize.Level1)
 {
+    RETURN_IF(!g_light.isAvailable());
     uint32_t color = 0U;
     g_light.TurnOn(color);
     EXPECT_TRUE(g_light.GetLightColor() == color);
@@ -75,6 +78,7 @@ HWTEST_F(BatteryLightTest, BatteryLight002, TestSize.Level1)
  */
 HWTEST_F(BatteryLightTest, BatteryLight003, TestSize.Level1)
 {
+    RETURN_IF(!g_light.isAvailable());
     int32_t capacity = 1;
     g_light.UpdateColor(BatteryChargeState::CHARGE_STATE_ENABLE, capacity);
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::RED_LIGHT);
@@ -89,6 +93,7 @@ HWTEST_F(BatteryLightTest, BatteryLight003, TestSize.Level1)
  */
 HWTEST_F(BatteryLightTest, BatteryLight004, TestSize.Level1)
 {
+    RETURN_IF(!g_light.isAvailable());
     uint32_t color = 0x7fffffff;
     g_light.TurnOn(color);
     EXPECT_TRUE(g_light.GetLightColor() == color);
