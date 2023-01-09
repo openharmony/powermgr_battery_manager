@@ -511,7 +511,7 @@ int32_t BatteryService::GetTotalEnergy()
         return ERR_NO_INIT;
     }
 
-    if (!Permission::IsSystem()) {
+    if (!Permission::IsSystemApl() && !Permission::IsSystemHap()) {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "GetTotalEnergy totalEnergy: %{public}d", totalEnergy);
         return totalEnergy;
     }
@@ -538,7 +538,7 @@ int32_t BatteryService::GetNowCurrent()
         return ERR_NO_INIT;
     }
 
-    if (!Permission::IsSystem()) {
+    if (!Permission::IsSystemApl() && !Permission::IsSystemHap()) {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "GetNowCurrent nowCurr: %{public}d", nowCurr);
         return nowCurr;
     }
@@ -554,7 +554,7 @@ int32_t BatteryService::GetRemainEnergy()
         return ERR_NO_INIT;
     }
 
-    if (!Permission::IsSystem()) {
+    if (!Permission::IsSystemApl() && !Permission::IsSystemHap()) {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "GetRemainEnergy remainEnergy: %{public}d", remainEnergy);
         return remainEnergy;
     }
