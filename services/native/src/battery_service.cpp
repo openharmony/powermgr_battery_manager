@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -506,14 +506,14 @@ int32_t BatteryService::GetBatteryTemperature()
 int32_t BatteryService::GetTotalEnergy()
 {
     int32_t totalEnergy = -1;
+    if (!Permission::IsSystem()) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "GetTotalEnergy totalEnergy: %{public}d", totalEnergy);
+        return totalEnergy;
+    }
+
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
-    }
-
-    if (!Permission::IsSystemApl() && !Permission::IsSystemHap()) {
-        BATTERY_HILOGD(FEATURE_BATT_INFO, "GetTotalEnergy totalEnergy: %{public}d", totalEnergy);
-        return totalEnergy;
     }
     iBatteryInterface_->GetTotalEnergy(totalEnergy);
     return totalEnergy;
@@ -533,14 +533,14 @@ int32_t BatteryService::GetCurrentAverage()
 int32_t BatteryService::GetNowCurrent()
 {
     int32_t nowCurr = -1;
+    if (!Permission::IsSystem()) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "GetNowCurrent nowCurr: %{public}d", nowCurr);
+        return nowCurr;
+    }
+
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
-    }
-
-    if (!Permission::IsSystemApl() && !Permission::IsSystemHap()) {
-        BATTERY_HILOGD(FEATURE_BATT_INFO, "GetNowCurrent nowCurr: %{public}d", nowCurr);
-        return nowCurr;
     }
     iBatteryInterface_->GetCurrentNow(nowCurr);
     return nowCurr;
@@ -549,14 +549,14 @@ int32_t BatteryService::GetNowCurrent()
 int32_t BatteryService::GetRemainEnergy()
 {
     int32_t remainEnergy = -1;
+    if (!Permission::IsSystem()) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "GetRemainEnergy remainEnergy: %{public}d", remainEnergy);
+        return remainEnergy;
+    }
+
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
-    }
-
-    if (!Permission::IsSystemApl() && !Permission::IsSystemHap()) {
-        BATTERY_HILOGD(FEATURE_BATT_INFO, "GetRemainEnergy remainEnergy: %{public}d", remainEnergy);
-        return remainEnergy;
     }
     iBatteryInterface_->GetRemainEnergy(remainEnergy);
     return remainEnergy;
