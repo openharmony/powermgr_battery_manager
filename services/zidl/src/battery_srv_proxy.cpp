@@ -216,28 +216,28 @@ int32_t BatterySrvProxy::GetBatteryTemperature()
     return temperature;
 }
 
-BatteryLevel BatterySrvProxy::GetBatteryLevel()
+BatteryCapacityLevel BatterySrvProxy::GetCapacityLevel()
 {
     sptr<IRemoteObject> remote = Remote();
-    RETURN_IF_WITH_RET(remote == nullptr, BatteryLevel::LEVEL_RESERVED);
+    RETURN_IF_WITH_RET(remote == nullptr, BatteryCapacityLevel::LEVEL_NONE);
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
-        return BatteryLevel::LEVEL_RESERVED;
+        return BatteryCapacityLevel::LEVEL_NONE;
     }
 
     int ret = remote->SendRequest(static_cast<int>(IBatterySrv::BATT_GET_BATTERY_LEVEL),
         data, reply, option);
     if (ret != ERR_OK) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
-        return BatteryLevel::LEVEL_RESERVED;
+        return BatteryCapacityLevel::LEVEL_NONE;
     }
-    uint32_t level = static_cast<uint32_t>(BatteryLevel::LEVEL_RESERVED);
-    READ_PARCEL_WITH_RET(reply, Uint32, level, BatteryLevel::LEVEL_RESERVED);
-    return static_cast<BatteryLevel>(level);
+    uint32_t level = static_cast<uint32_t>(BatteryCapacityLevel::LEVEL_NONE);
+    READ_PARCEL_WITH_RET(reply, Uint32, level, BatteryCapacityLevel::LEVEL_NONE);
+    return static_cast<BatteryCapacityLevel>(level);
 }
 
 int64_t BatterySrvProxy::GetRemainingChargeTime()

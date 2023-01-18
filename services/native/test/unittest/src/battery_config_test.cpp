@@ -151,7 +151,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig006, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig007, TestSize.Level1)
 {
-    std::string key = "soc.event";
+    std::string key = "soc.low";
     if (!g_configTest.IsExist(key)) {
         BATTERY_HILOGD(LABEL_TEST, "BatteryConfig007 %{public}s does not exist", key.c_str());
         return;
