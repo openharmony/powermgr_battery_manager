@@ -71,7 +71,7 @@ bool BatteryDump::GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, cons
     DumpCurrentTime(fd);
     int32_t capacity = service->GetCapacity();
     dprintf(fd, "capacity: %u \n", capacity);
-    BatteryLevel batteryLevel = service->GetBatteryLevel();
+    BatteryCapacityLevel batteryLevel = service->GetCapacityLevel();
     dprintf(fd, "batteryLevel: %u \n", batteryLevel);
     BatteryChargeState chargingStatus = service->GetChargingStatus();
     dprintf(fd, "chargingStatus: %u \n", chargingStatus);

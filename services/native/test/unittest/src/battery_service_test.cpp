@@ -455,36 +455,44 @@ static HWTEST_F(BatteryServiceTest, BatteryService022, TestSize.Level1)
 
 /**
  * @tc.name: BatteryService023
- * @tc.desc: Test functions GetBatteryLevel
+ * @tc.desc: Test functions GetCapacityLevel
  * @tc.type: FUNC
  */
 static HWTEST_F(BatteryServiceTest, BatteryService023, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryService023 start.");
     if (g_isMock) {
-        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "4");
-        auto level = g_service->GetBatteryLevel();
-        EXPECT_EQ(level, BatteryLevel::LEVEL_CRITICAL);
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "1");
+        auto level = g_service->GetCapacityLevel();
+        EXPECT_EQ(level, BatteryCapacityLevel::LEVEL_SHUTDOWN);
 
-        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "20");
-        level = g_service->GetBatteryLevel();
-        EXPECT_EQ(level, BatteryLevel::LEVEL_LOW);
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "4");
+        level = g_service->GetCapacityLevel();
+        EXPECT_EQ(level, BatteryCapacityLevel::LEVEL_CRITICAL);
+
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "10");
+        level = g_service->GetCapacityLevel();
+        EXPECT_EQ(level, BatteryCapacityLevel::LEVEL_WARNING);
+
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "15");
+        level = g_service->GetCapacityLevel();
+        EXPECT_EQ(level, BatteryCapacityLevel::LEVEL_LOW);
 
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "90");
-        level = g_service->GetBatteryLevel();
-        EXPECT_EQ(level, BatteryLevel::LEVEL_NORMAL);
+        level = g_service->GetCapacityLevel();
+        EXPECT_EQ(level, BatteryCapacityLevel::LEVEL_NORMAL);
 
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "99");
-        level = g_service->GetBatteryLevel();
-        EXPECT_EQ(level, BatteryLevel::LEVEL_HIGH);
+        level = g_service->GetCapacityLevel();
+        EXPECT_EQ(level, BatteryCapacityLevel::LEVEL_HIGH);
 
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "100");
-        level = g_service->GetBatteryLevel();
-        EXPECT_EQ(level, BatteryLevel::LEVEL_FULL);
+        level = g_service->GetCapacityLevel();
+        EXPECT_EQ(level, BatteryCapacityLevel::LEVEL_FULL);
 
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "200");
-        level = g_service->GetBatteryLevel();
-        EXPECT_EQ(level, BatteryLevel::LEVEL_NONE);
+        level = g_service->GetCapacityLevel();
+        EXPECT_EQ(level, BatteryCapacityLevel::LEVEL_NONE);
 
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "50");
     }

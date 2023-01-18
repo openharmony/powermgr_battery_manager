@@ -149,7 +149,7 @@ bool DoSomethingInterestingWithMyAPI(const uint8_t* data, size_t size)
                 g_batterySrvClient.GetTotalEnergy();
                 break;
             case ApiNumber::NUM_ELEVEN:
-                g_batterySrvClient.GetBatteryLevel();
+                g_batterySrvClient.GetCapacityLevel();
                 break;
             case ApiNumber::NUM_TWELVE:
                 g_batterySrvClient.GetRemainingChargeTime();
