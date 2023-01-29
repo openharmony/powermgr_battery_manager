@@ -165,10 +165,10 @@ static napi_value GetTotalEnergy(napi_env env, napi_callback_info info)
     return napiValue;
 }
 
-static napi_value GetBatteryLevel(napi_env env, napi_callback_info info)
+static napi_value GetCapacityLevel(napi_env env, napi_callback_info info)
 {
     napi_value napiValue = nullptr;
-    int32_t batteryLevel = (int32_t)g_battClient.GetBatteryLevel();
+    int32_t batteryLevel = (int32_t)g_battClient.GetCapacityLevel();
 
     NAPI_CALL(env, napi_create_int32(env, batteryLevel, &napiValue));
 
@@ -237,27 +237,30 @@ static napi_value CreateEnumHealthState(napi_env env, napi_value exports)
 
 static napi_value CreateEnumLevelState(napi_env env, napi_value exports)
 {
-    napi_value none = nullptr;
     napi_value full = nullptr;
     napi_value high = nullptr;
     napi_value normal = nullptr;
     napi_value low = nullptr;
-    napi_value critival = nullptr;
+    napi_value warning = nullptr;
+    napi_value critical = nullptr;
+    napi_value shutdown = nullptr;
 
-    napi_create_int32(env, (int32_t)BatteryLevel::LEVEL_NONE, &none);
-    napi_create_int32(env, (int32_t)BatteryLevel::LEVEL_FULL, &full);
-    napi_create_int32(env, (int32_t)BatteryLevel::LEVEL_HIGH, &high);
-    napi_create_int32(env, (int32_t)BatteryLevel::LEVEL_NORMAL, &normal);
-    napi_create_int32(env, (int32_t)BatteryLevel::LEVEL_LOW, &low);
-    napi_create_int32(env, (int32_t)BatteryLevel::LEVEL_CRITICAL, &critival);
+    napi_create_int32(env, (int32_t)BatteryCapacityLevel::LEVEL_FULL, &full);
+    napi_create_int32(env, (int32_t)BatteryCapacityLevel::LEVEL_HIGH, &high);
+    napi_create_int32(env, (int32_t)BatteryCapacityLevel::LEVEL_NORMAL, &normal);
+    napi_create_int32(env, (int32_t)BatteryCapacityLevel::LEVEL_LOW, &low);
+    napi_create_int32(env, (int32_t)BatteryCapacityLevel::LEVEL_WARNING, &warning);
+    napi_create_int32(env, (int32_t)BatteryCapacityLevel::LEVEL_CRITICAL, &critical);
+    napi_create_int32(env, (int32_t)BatteryCapacityLevel::LEVEL_SHUTDOWN, &shutdown);
 
     napi_property_descriptor desc[] = {
-        DECLARE_NAPI_STATIC_PROPERTY("LEVEL_NONE", none),
         DECLARE_NAPI_STATIC_PROPERTY("LEVEL_FULL", full),
         DECLARE_NAPI_STATIC_PROPERTY("LEVEL_HIGH", high),
         DECLARE_NAPI_STATIC_PROPERTY("LEVEL_NORMAL", normal),
         DECLARE_NAPI_STATIC_PROPERTY("LEVEL_LOW", low),
-        DECLARE_NAPI_STATIC_PROPERTY("LEVEL_CRITICAL", critival),
+        DECLARE_NAPI_STATIC_PROPERTY("LEVEL_WARNING", warning),
+        DECLARE_NAPI_STATIC_PROPERTY("LEVEL_CRITICAL", critical),
+        DECLARE_NAPI_STATIC_PROPERTY("LEVEL_SHUTDOWN", shutdown),
     };
     napi_value result = nullptr;
     napi_define_class(env, "BatteryCapacityLevel", NAPI_AUTO_LENGTH, EnumLevelClassConstructor, nullptr,
@@ -378,6 +381,7 @@ static napi_value CreateEventBatteryChangedCode(napi_env env, napi_value exports
     napi_value chargeCounter = nullptr;
     napi_value present = nullptr;
     napi_value technology = nullptr;
+    napi_value batteryCapacityLevel = nullptr;
 
     napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_CAPACITY, &soc);
     napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_VOLTAGE, &voltage);
@@ -390,6 +394,7 @@ static napi_value CreateEventBatteryChangedCode(napi_env env, napi_value exports
     napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_CHARGE_COUNTER, &chargeCounter);
     napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_PRESENT, &present);
     napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_TECHNOLOGY, &technology);
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_CAPACITY_LEVEL, &batteryCapacityLevel);
 
     napi_property_descriptor desc[] = {
         DECLARE_NAPI_STATIC_PROPERTY("EXTRA_SOC", soc),
@@ -403,6 +408,7 @@ static napi_value CreateEventBatteryChangedCode(napi_env env, napi_value exports
         DECLARE_NAPI_STATIC_PROPERTY("EXTRA_CHARGE_COUNTER", chargeCounter),
         DECLARE_NAPI_STATIC_PROPERTY("EXTRA_PRESENT", present),
         DECLARE_NAPI_STATIC_PROPERTY("EXTRA_TECHNOLOGY", technology),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_CAPACITY_LEVEL", batteryCapacityLevel),
     };
 
     napi_value result = nullptr;
@@ -431,7 +437,7 @@ static napi_value BatteryInit(napi_env env, napi_value exports)
         DECLARE_NAPI_GETTER("technology", GetTechnology),
         DECLARE_NAPI_GETTER("batteryTemperature", GetBatteryTemperature),
         DECLARE_NAPI_GETTER("isBatteryPresent", GetBatteryPresent),
-        DECLARE_NAPI_GETTER("batteryCapacityLevel", GetBatteryLevel),
+        DECLARE_NAPI_GETTER("batteryCapacityLevel", GetCapacityLevel),
         DECLARE_NAPI_GETTER("estimatedRemainingChargeTime", GetRemainingChargeTime),
         DECLARE_NAPI_GETTER("nowCurrent", GetBatteryNowCurrent),
         DECLARE_NAPI_GETTER("remainingEnergy", GetBatteryRemainEnergy),
