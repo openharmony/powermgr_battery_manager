@@ -405,7 +405,7 @@ HWTEST_F (BatteryClientTest, BatteryClient011, TestSize.Level1)
 
 /**
  * @tc.name: BatteryClient012
- * @tc.desc: Test IBatterySrv interface GetBatteryLevel
+ * @tc.desc: Test IBatterySrv interface GetCapacityLevel
  * @tc.type: FUNC
  */
 HWTEST_F (BatteryClientTest, BatteryClient012, TestSize.Level1)
@@ -415,23 +415,23 @@ HWTEST_F (BatteryClientTest, BatteryClient012, TestSize.Level1)
     if (g_isMock) {
         auto tempCapacity = BatterySrvClient.GetCapacity();
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "3");
-        auto batterylevel = BatterySrvClient.GetBatteryLevel();
+        auto batterylevel = BatterySrvClient.GetCapacityLevel();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d",
             static_cast<int32_t>(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient012 executing, batterylevel="
             << static_cast<int32_t>(batterylevel);
-        ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_CRITICAL);
+        ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_CRITICAL);
 
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", std::to_string(tempCapacity));
     } else {
-        auto batterylevel = BatterySrvClient.GetBatteryLevel();
+        auto batterylevel = BatterySrvClient.GetCapacityLevel();
         auto capacity = BatterySrvClient.GetCapacity();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d",
             static_cast<int32_t>(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient012 executing, batterylevel="
             << static_cast<int32_t>(batterylevel);
         if (capacity < BATTERY_EMERGENCY_THRESHOLD) {
-            ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_CRITICAL);
+            ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_CRITICAL);
         }
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient012 end.");
@@ -439,7 +439,7 @@ HWTEST_F (BatteryClientTest, BatteryClient012, TestSize.Level1)
 
 /**
  * @tc.name: BatteryClient013
- * @tc.desc: Test IBatterySrv interface GetBatteryLevel
+ * @tc.desc: Test IBatterySrv interface GetCapacityLevel
  * @tc.type: FUNC
  */
 HWTEST_F (BatteryClientTest, BatteryClient013, TestSize.Level1)
@@ -449,23 +449,23 @@ HWTEST_F (BatteryClientTest, BatteryClient013, TestSize.Level1)
     if (g_isMock) {
         auto tempCapacity = BatterySrvClient.GetCapacity();
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "11");
-        auto batterylevel = BatterySrvClient.GetBatteryLevel();
+        auto batterylevel = BatterySrvClient.GetCapacityLevel();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d",
             static_cast<int32_t>(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient013 executing, batterylevel="
             << static_cast<int32_t>(batterylevel);
-        ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_LOW);
+        ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_LOW);
 
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", std::to_string(tempCapacity));
     } else {
-        auto batterylevel = BatterySrvClient.GetBatteryLevel();
+        auto batterylevel = BatterySrvClient.GetCapacityLevel();
         auto capacity = BatterySrvClient.GetCapacity();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d",
             static_cast<int32_t>(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient013 executing, batterylevel="
             << static_cast<int32_t>(batterylevel);
         if (capacity >= BATTERY_EMERGENCY_THRESHOLD && capacity <= BATTERY_LOW_THRESHOLD) {
-            ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_LOW);
+            ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_LOW);
         }
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient013 end.");
@@ -473,7 +473,7 @@ HWTEST_F (BatteryClientTest, BatteryClient013, TestSize.Level1)
 
 /**
  * @tc.name: BatteryClient014
- * @tc.desc: Test IBatterySrv interface GetBatteryLevel
+ * @tc.desc: Test IBatterySrv interface GetCapacityLevel
  * @tc.type: FUNC
  */
 HWTEST_F (BatteryClientTest, BatteryClient014, TestSize.Level1)
@@ -483,23 +483,23 @@ HWTEST_F (BatteryClientTest, BatteryClient014, TestSize.Level1)
     if (g_isMock) {
         auto tempCapacity = BatterySrvClient.GetCapacity();
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "80");
-        auto batterylevel = BatterySrvClient.GetBatteryLevel();
+        auto batterylevel = BatterySrvClient.GetCapacityLevel();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d",
             static_cast<int32_t>(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient014 executing, batterylevel="
             << static_cast<int32_t>(batterylevel);
-        ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_NORMAL);
+        ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_NORMAL);
 
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", std::to_string(tempCapacity));
     } else {
-        auto batterylevel = BatterySrvClient.GetBatteryLevel();
+        auto batterylevel = BatterySrvClient.GetCapacityLevel();
         auto capacity = BatterySrvClient.GetCapacity();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d",
             static_cast<int32_t>(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient014 executing, batterylevel="
             << static_cast<int32_t>(batterylevel);
         if (capacity > BATTERY_LOW_THRESHOLD && capacity <= BATTERY_NORMAL_THRESHOLD) {
-            ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_NORMAL);
+            ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_NORMAL);
         }
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient014 end.");
@@ -507,7 +507,7 @@ HWTEST_F (BatteryClientTest, BatteryClient014, TestSize.Level1)
 
 /**
  * @tc.name: BatteryClient015
- * @tc.desc: Test IBatterySrv interface GetBatteryLevel
+ * @tc.desc: Test IBatterySrv interface GetCapacityLevel
  * @tc.type: FUNC
  */
 HWTEST_F (BatteryClientTest, BatteryClient015, TestSize.Level1)
@@ -517,23 +517,23 @@ HWTEST_F (BatteryClientTest, BatteryClient015, TestSize.Level1)
     if (g_isMock) {
         auto tempCapacity = BatterySrvClient.GetCapacity();
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "94");
-        auto batterylevel = BatterySrvClient.GetBatteryLevel();
+        auto batterylevel = BatterySrvClient.GetCapacityLevel();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d",
             static_cast<int32_t>(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient015 executing, batterylevel="
             << static_cast<int32_t>(batterylevel);
-        ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_HIGH);
+        ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_HIGH);
 
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", std::to_string(tempCapacity));
     } else {
-        auto batterylevel = BatterySrvClient.GetBatteryLevel();
+        auto batterylevel = BatterySrvClient.GetCapacityLevel();
         auto capacity = BatterySrvClient.GetCapacity();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d",
             static_cast<int32_t>(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient015 executing, batterylevel="
             << static_cast<int32_t>(batterylevel);
         if (capacity > BATTERY_NORMAL_THRESHOLD && capacity <= BATTERY_HIGH_THRESHOLD) {
-            ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_HIGH);
+            ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_HIGH);
         }
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient015 end.");
@@ -541,7 +541,7 @@ HWTEST_F (BatteryClientTest, BatteryClient015, TestSize.Level1)
 
 /**
  * @tc.name: BatteryClient016
- * @tc.desc: Test IBatterySrv interface GetBatteryLevel
+ * @tc.desc: Test IBatterySrv interface GetCapacityLevel
  * @tc.type: FUNC
  */
 HWTEST_F (BatteryClientTest, BatteryClient016, TestSize.Level1)
@@ -551,23 +551,23 @@ HWTEST_F (BatteryClientTest, BatteryClient016, TestSize.Level1)
     if (g_isMock) {
         auto tempCapacity = BatterySrvClient.GetCapacity();
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "100");
-        auto batterylevel = BatterySrvClient.GetBatteryLevel();
+        auto batterylevel = BatterySrvClient.GetCapacityLevel();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d",
            static_cast<int32_t>(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient016 executing, batterylevel="
            << static_cast<int32_t>(batterylevel);
-        ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_FULL);
+        ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_FULL);
 
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", std::to_string(tempCapacity));
     } else {
-        auto batterylevel = BatterySrvClient.GetBatteryLevel();
+        auto batterylevel = BatterySrvClient.GetCapacityLevel();
         auto capacity = BatterySrvClient.GetCapacity();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::batterylevel=%{public}d",
             static_cast<int32_t>(batterylevel));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient016 executing, batterylevel="
             << static_cast<int32_t>(batterylevel);
         if (capacity == BATTERY_HIGH_FULL) {
-            ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryLevel::LEVEL_FULL);
+            ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_FULL);
         }
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient016 end.");

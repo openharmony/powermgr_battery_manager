@@ -72,7 +72,7 @@ int32_t BatterySrvStub::CheckRequestCode(const uint32_t code, MessageParcel& dat
             return GetBatteryTemperatureStub(reply);
         }
         case static_cast<int>(IBatterySrv::BATT_GET_BATTERY_LEVEL): {
-            return GetBatteryLevelStub(reply);
+            return GetBatteryCapacityLevelStub(reply);
         }
         case static_cast<int>(IBatterySrv::BATT_GET_REMAINING_CHARGE_TIME): {
             return GetRemainingChargeTimeStub(reply);
@@ -154,9 +154,9 @@ int32_t BatterySrvStub::GetBatteryTemperatureStub(MessageParcel& reply)
     return ERR_OK;
 }
 
-int32_t BatterySrvStub::GetBatteryLevelStub(MessageParcel& reply)
+int32_t BatterySrvStub::GetBatteryCapacityLevelStub(MessageParcel& reply)
 {
-    BatteryLevel ret = GetBatteryLevel();
+    BatteryCapacityLevel ret = GetCapacityLevel();
     WRITE_PARCEL_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }

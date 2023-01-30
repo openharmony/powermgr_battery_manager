@@ -80,7 +80,7 @@ public:
     /**
      * Return the level of the battery
      */
-    BatteryLevel GetBatteryLevel();
+    BatteryCapacityLevel GetCapacityLevel();
     /**
      * Return the remaining charge time
      */

@@ -48,7 +48,7 @@ public:
     virtual int32_t GetNowCurrent() override;
     virtual int32_t GetRemainEnergy() override;
     virtual int32_t GetBatteryTemperature() override;
-    virtual BatteryLevel GetBatteryLevel() override;
+    virtual BatteryCapacityLevel GetCapacityLevel() override;
     virtual int64_t GetRemainingChargeTime() override;
 private:
     static inline BrokerDelegator<BatterySrvProxy> delegator_;
