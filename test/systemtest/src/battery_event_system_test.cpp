@@ -170,7 +170,7 @@ void CommonEventBatteryOkayTest::OnReceiveEvent(const CommonEventData& data)
     int defaultCapacity = -1;
     int capacity = data.GetWant().GetIntParam(KEY_CAPACITY, defaultCapacity);
     g_cv.notify_one();
-    EXPECT_EQ(capacity, static_cast<int32_t>(BatteryLevel::LEVEL_HIGH)) << "COMMON_EVENT_BATTERY_OKAY";
+    EXPECT_EQ(capacity, static_cast<int32_t>(BatteryCapacityLevel::LEVEL_HIGH)) << "COMMON_EVENT_BATTERY_OKAY";
 }
 
 void CommonEventBatteryChargingTest::OnReceiveEvent(const CommonEventData& data)

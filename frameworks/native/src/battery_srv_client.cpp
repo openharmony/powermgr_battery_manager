@@ -172,11 +172,11 @@ int32_t BatterySrvClient::GetTotalEnergy()
     return totalEnergy;
 }
 
-BatteryLevel BatterySrvClient::GetBatteryLevel()
+BatteryCapacityLevel BatterySrvClient::GetCapacityLevel()
 {
-    BatteryLevel level = BatteryLevel::LEVEL_RESERVED;
+    BatteryCapacityLevel level = BatteryCapacityLevel::LEVEL_NONE;
     RETURN_IF_WITH_RET(Connect() != ERR_OK, level);
-    level = proxy_->GetBatteryLevel();
+    level = proxy_->GetCapacityLevel();
     return level;
 }
 

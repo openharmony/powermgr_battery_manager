@@ -128,38 +128,48 @@ enum class BatteryPluggedType : uint32_t {
 };
 
 /**
- * Battery charge level of a device
+ * Battery capacity level of a device
  */
-enum class BatteryLevel : uint32_t {
+enum class BatteryCapacityLevel : uint32_t {
     /**
-     * Unknown level
+     * The battery is in unknown capacity level
      */
     LEVEL_NONE,
 
     /**
-     * full level
+     * The battery is in full capacity level
      */
     LEVEL_FULL,
 
     /**
-     * High level
+     * The battery is in high capacity level
      */
     LEVEL_HIGH,
 
     /**
-     * Normal level
+     * The battery is in normal capacity level
      */
     LEVEL_NORMAL,
 
     /**
-     * Low level
+     * The battery is in low capacity level
      */
     LEVEL_LOW,
 
     /**
-     * Emergency level
+     * The battery is in warning low capacity level
+     */
+    LEVEL_WARNING,
+
+    /**
+     * The battery is in critical low capacity level
      */
     LEVEL_CRITICAL,
+
+    /**
+     * The battery is in shutdown low capacity level
+     */
+    LEVEL_SHUTDOWN,
 
     /**
     * Reserved
@@ -181,7 +191,8 @@ public:
         COMMON_EVENT_CODE_CHARGE_COUNTER = 8,
         COMMON_EVENT_CODE_PRESENT = 9,
         COMMON_EVENT_CODE_TECHNOLOGY = 10,
-        COMMON_EVENT_CODE_PLUGGED_NOW_CURRENT = 11,
+        COMMON_EVENT_CODE_CAPACITY_LEVEL = 11,
+        COMMON_EVENT_CODE_PLUGGED_NOW_CURRENT = 12,
     };
 
     BatteryInfo() = default;
@@ -350,6 +361,7 @@ public:
             (chargeCounter_ == info.GetChargeCounter()) &&
             (healthState_ == info.GetHealthState()) &&
             (pluggedType_ == info.GetPluggedType()) &&
+            (remainEnergy_ == info.GetRemainEnergy()) &&
             (chargeState_ == info.GetChargeState()) &&
             (technology_ == info.GetTechnology());
         return eq;
