@@ -382,7 +382,6 @@ static napi_value CreateEventBatteryChangedCode(napi_env env, napi_value exports
     napi_value present = nullptr;
     napi_value technology = nullptr;
     napi_value batteryCapacityLevel = nullptr;
-    napi_value nowCurrent = nullptr;
 
     napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_CAPACITY, &soc);
     napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_VOLTAGE, &voltage);
@@ -396,7 +395,6 @@ static napi_value CreateEventBatteryChangedCode(napi_env env, napi_value exports
     napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_PRESENT, &present);
     napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_TECHNOLOGY, &technology);
     napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_CAPACITY_LEVEL, &batteryCapacityLevel);
-    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_PLUGGED_NOW_CURRENT, &nowCurrent);
 
     napi_property_descriptor desc[] = {
         DECLARE_NAPI_STATIC_PROPERTY("EXTRA_SOC", soc),
@@ -411,7 +409,6 @@ static napi_value CreateEventBatteryChangedCode(napi_env env, napi_value exports
         DECLARE_NAPI_STATIC_PROPERTY("EXTRA_PRESENT", present),
         DECLARE_NAPI_STATIC_PROPERTY("EXTRA_TECHNOLOGY", technology),
         DECLARE_NAPI_STATIC_PROPERTY("EXTRA_CAPACITY_LEVEL", batteryCapacityLevel),
-        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_NOW_CURRENT", nowCurrent),
     };
 
     napi_value result = nullptr;
