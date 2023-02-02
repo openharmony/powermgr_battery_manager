@@ -46,11 +46,6 @@ constexpr const char* BATTERY_SERVICE_NAME = "BatteryService";
 constexpr const char* BATTERY_HDI_NAME = "battery_interface_service";
 constexpr int32_t HELP_DUMP_PARAM = 2;
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
-constexpr int32_t BATTERY_EMERGENCY_THRESHOLD = 5;
-constexpr int32_t BATTERY_LOW_THRESHOLD = 20;
-constexpr int32_t BATTERY_NORMAL_THRESHOLD = 90;
-constexpr int32_t BATTERY_HIGH_THRESHOLD = 99;
-constexpr int32_t BATTERY_HIGH_FULL = 100;
 constexpr uint32_t RETRY_TIME = 1000;
 sptr<BatteryService> g_service;
 BatteryPluggedType g_lastPluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
@@ -158,10 +153,20 @@ void BatteryService::InitConfig()
     warnCapacity_ = batteryConfig.GetInt("soc.warning", warnCapacity_);
     highTemperature_ = batteryConfig.GetInt("temperature.high", highTemperature_);
     lowTemperature_ = batteryConfig.GetInt("temperature.low", lowTemperature_);
-    shutdownCapacity_ = batteryConfig.GetInt("soc.shutdown", shutdownCapacity_);
+    shutdownCapacityThreshold_ = batteryConfig.GetInt("soc.shutdown", shutdownCapacityThreshold_);
+    criticalCapacityThreshold_ = batteryConfig.GetInt("soc.critical", criticalCapacityThreshold_);
+    warningCapacityThreshold_ = batteryConfig.GetInt("soc.warning", warningCapacityThreshold_);
+    lowCapacityThreshold_ = batteryConfig.GetInt("soc.low", lowCapacityThreshold_);
+    normalCapacityThreshold_ = batteryConfig.GetInt("soc.normal", normalCapacityThreshold_);
+    highCapacityThreshold_ = batteryConfig.GetInt("soc.high", highCapacityThreshold_);
+    fullCapacityThreshold_ = batteryConfig.GetInt("soc.full", fullCapacityThreshold_);
     BATTERY_HILOGI(COMP_SVC, "warnCapacity_=%{public}d, highTemperature_=%{public}d,\
-        lowTemperature_=%{public}d, shutdownCapacity_=%{public}d",
-        warnCapacity_, highTemperature_, lowTemperature_, shutdownCapacity_);
+        lowTemperature_=%{public}d, shutdownCapacityThreshold_=%{public}d,\
+        criticalCapacityThreshold_=%{public}d, warningCapacityThreshold_=%{public}d, lowCapacityThreshold_=%{public}d,\
+        normalCapacityThreshold_=%{public}d, highCapacityThreshold_=%{public}d, fullCapacityThreshold_=%{public}d",
+        warnCapacity_, highTemperature_, lowTemperature_, shutdownCapacityThreshold_, criticalCapacityThreshold_,
+        warningCapacityThreshold_, lowCapacityThreshold_, normalCapacityThreshold_, highCapacityThreshold_,
+        fullCapacityThreshold_);
 }
 
 int32_t BatteryService::HandleBatteryCallbackEvent(const V1_1::BatteryInfo& event)
@@ -383,7 +388,7 @@ void BatteryService::HandleTemperature(int32_t temperature)
 void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeState)
 {
     auto& powerMgrClient = PowerMgrClient::GetInstance();
-    if ((capacity <= shutdownCapacity_) &&
+    if ((capacity <= shutdownCapacityThreshold_) &&
         ((chargeState == BatteryChargeState::CHARGE_STATE_NONE) ||
          (chargeState == BatteryChargeState::CHARGE_STATE_BUTT))) {
         std::string reason = "LowCapacity";
@@ -393,7 +398,7 @@ void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeS
 
 int32_t BatteryService::GetCapacity()
 {
-    int capacity = BATTERY_HIGH_FULL;
+    int capacity = BATTERY_FULL_CAPACITY;
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
@@ -598,25 +603,31 @@ int64_t BatteryService::GetRemainingChargeTime()
     return remainTime_;
 }
 
-BatteryLevel BatteryService::GetBatteryLevel()
+bool IsCapacityLevelDefined(int32_t capacityThreshold)
 {
-    BatteryLevel batteryLevel;
-    int32_t capacity = GetCapacity();
-    if (capacity < BATTERY_EMERGENCY_THRESHOLD) {
-        batteryLevel = BatteryLevel::LEVEL_CRITICAL;
-    } else if (capacity <= BATTERY_LOW_THRESHOLD) {
-        batteryLevel = BatteryLevel::LEVEL_LOW;
-    } else if (capacity <= BATTERY_NORMAL_THRESHOLD) {
-        batteryLevel = BatteryLevel::LEVEL_NORMAL;
-    } else if (capacity <= BATTERY_HIGH_THRESHOLD) {
-        batteryLevel = BatteryLevel::LEVEL_HIGH;
-    } else if (capacity == BATTERY_HIGH_FULL) {
-        batteryLevel = BatteryLevel::LEVEL_FULL;
-    } else {
-        batteryLevel = BatteryLevel::LEVEL_NONE;
-    }
+    return capacityThreshold != INVALID_BATT_INT_VALUE;
+}
 
-    return batteryLevel;
+BatteryCapacityLevel BatteryService::GetCapacityLevel()
+{
+    BatteryCapacityLevel batteryCapacityLevel = BatteryCapacityLevel::LEVEL_NONE;
+    int32_t capacity = GetCapacity();
+    if (IsCapacityLevelDefined(shutdownCapacityThreshold_) && capacity <= shutdownCapacityThreshold_) {
+        batteryCapacityLevel = BatteryCapacityLevel::LEVEL_SHUTDOWN;
+    } else if (IsCapacityLevelDefined(criticalCapacityThreshold_) && capacity <= criticalCapacityThreshold_) {
+        batteryCapacityLevel = BatteryCapacityLevel::LEVEL_CRITICAL;
+    } else if (IsCapacityLevelDefined(warningCapacityThreshold_) && capacity <= warningCapacityThreshold_) {
+        batteryCapacityLevel = BatteryCapacityLevel::LEVEL_WARNING;
+    } else if (IsCapacityLevelDefined(lowCapacityThreshold_) && capacity <= lowCapacityThreshold_) {
+        batteryCapacityLevel = BatteryCapacityLevel::LEVEL_LOW;
+    } else if (IsCapacityLevelDefined(normalCapacityThreshold_) && capacity <= normalCapacityThreshold_) {
+        batteryCapacityLevel = BatteryCapacityLevel::LEVEL_NORMAL;
+    } else if (IsCapacityLevelDefined(highCapacityThreshold_) && capacity <= highCapacityThreshold_) {
+        batteryCapacityLevel = BatteryCapacityLevel::LEVEL_HIGH;
+    } else if (IsCapacityLevelDefined(fullCapacityThreshold_) && capacity == fullCapacityThreshold_) {
+        batteryCapacityLevel = BatteryCapacityLevel::LEVEL_FULL;
+    }
+    return batteryCapacityLevel;
 }
 
 int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args)

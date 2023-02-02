@@ -188,15 +188,15 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_011, TestSize.Level0)
 
 /**
  * @tc.name: BatteryProxyMockTest_012
- * @tc.desc: test BatterySrvProxy::GetBatteryLevel() when an exception is raised
+ * @tc.desc: test BatterySrvProxy::GetCapacityLevel() when an exception is raised
  * @tc.type: FUNC
  * @tc.require: issueI5X13X
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_012, TestSize.Level0)
 {
-    BatteryLevel batteryLevel = g_proxy->GetBatteryLevel();
-    EXPECT_TRUE(batteryLevel >= BatteryLevel::LEVEL_NONE &&
-        batteryLevel <= BatteryLevel::LEVEL_RESERVED); // the enum value range of BatteryLevel
+    BatteryCapacityLevel batteryLevel = g_proxy->GetCapacityLevel();
+    EXPECT_TRUE(batteryLevel >= BatteryCapacityLevel::LEVEL_NONE &&
+        batteryLevel <= BatteryCapacityLevel::LEVEL_RESERVED); // the enum value range of BatteryCapacityLevel
 }
 
 /**
