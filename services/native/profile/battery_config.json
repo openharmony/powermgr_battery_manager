@@ -18,8 +18,12 @@
         "low": -500
     },
     "soc": {
-        "shutdown": 3,
+        "shutdown": 1,
+        "critical": 5,
         "warning": 10,
-        "event": 20
+        "low": 20,
+        "normal": 90,
+        "high": 99,
+        "full": 100
     }
 }

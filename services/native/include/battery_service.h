@@ -73,7 +73,7 @@ public:
     int32_t GetNowCurrent() override;
     int32_t GetRemainEnergy() override;
     int32_t GetBatteryTemperature() override;
-    BatteryLevel GetBatteryLevel() override;
+    BatteryCapacityLevel GetCapacityLevel() override;
     int64_t GetRemainingChargeTime() override;
     void ChangePath(const std::string path);
     void InitConfig();
@@ -116,7 +116,13 @@ private:
     int32_t warnCapacity_ { INVALID_BATT_INT_VALUE };
     int32_t highTemperature_ { INT32_MAX };
     int32_t lowTemperature_ { INT32_MIN };
-    int32_t shutdownCapacity_ { INVALID_BATT_INT_VALUE };
+    int32_t shutdownCapacityThreshold_ = { INVALID_BATT_INT_VALUE };
+    int32_t criticalCapacityThreshold_ = { INVALID_BATT_INT_VALUE };
+    int32_t warningCapacityThreshold_ = { INVALID_BATT_INT_VALUE };
+    int32_t lowCapacityThreshold_ = { INVALID_BATT_INT_VALUE };
+    int32_t normalCapacityThreshold_ = { INVALID_BATT_INT_VALUE };
+    int32_t highCapacityThreshold_ = { INVALID_BATT_INT_VALUE };
+    int32_t fullCapacityThreshold_ = { INVALID_BATT_INT_VALUE };
     int64_t lastTime_ { 0 };
     int64_t remainTime_ { 0 };
     BatteryInfo batteryInfo_;
