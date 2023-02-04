@@ -25,7 +25,7 @@
 #include "permission.h"
 #include "system_ability_definition.h"
 #include "iremote_object.h"
-#include "v1_1/ibattery_callback.h"
+#include "v1_2/ibattery_callback.h"
 #include "hdf_io_service_if.h"
 #include "hdf_service_status.h"
 #include "battery_callback.h"
@@ -128,11 +128,11 @@ void BatteryService::OnAddSystemAbility(int32_t systemAbilityId, const std::stri
 bool BatteryService::RegisterBatteryHdiCallback()
 {
     if (iBatteryInterface_ == nullptr) {
-        iBatteryInterface_ = V1_1::IBatteryInterface::Get();
+        iBatteryInterface_ = V1_2::IBatteryInterface::Get();
         BATTERY_HILOGE(COMP_SVC, "failed to get battery hdi interface");
         RETURN_IF_WITH_RET(iBatteryInterface_ == nullptr, false);
     }
-    sptr<V1_1::IBatteryCallback> callback = new BatteryCallback();
+    sptr<V1_2::IBatteryCallback> callback = new BatteryCallback();
     ErrCode ret = iBatteryInterface_->Register(callback);
     if (ret < 0) {
         BATTERY_HILOGE(COMP_SVC, "register callback failed");
@@ -169,7 +169,7 @@ void BatteryService::InitConfig()
         fullCapacityThreshold_);
 }
 
-int32_t BatteryService::HandleBatteryCallbackEvent(const V1_1::BatteryInfo& event)
+int32_t BatteryService::HandleBatteryCallbackEvent(const V1_2::BatteryInfo& event)
 {
     if (isMockUnplugged_) {
         return ERR_OK;
@@ -181,7 +181,7 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const V1_1::BatteryInfo& even
     return ERR_OK;
 }
 
-void BatteryService::ConvertingEvent(const V1_1::BatteryInfo& event)
+void BatteryService::ConvertingEvent(const V1_2::BatteryInfo& event)
 {
     batteryInfo_.SetCapacity(event.capacity);
     batteryInfo_.SetVoltage(event.voltage);
@@ -198,6 +198,7 @@ void BatteryService::ConvertingEvent(const V1_1::BatteryInfo& event)
     batteryInfo_.SetPresent(event.present);
     batteryInfo_.SetTechnology(event.technology);
     batteryInfo_.SetNowCurrent(event.curNow);
+    batteryInfo_.SetChargeType(GetChargeType());
 }
 
 void BatteryService::HandleBatteryInfo()
@@ -206,11 +207,12 @@ void BatteryService::HandleBatteryInfo()
         "healthState=%{public}d, pluggedType=%{public}d, pluggedMaxCurrent=%{public}d, "
         "pluggedMaxVoltage=%{public}d, chargeState=%{public}d, chargeCounter=%{public}d, present=%{public}d, "
         "technology=%{public}s, currNow=%{public}d, totalEnergy=%{public}d, curAverage=%{public}d, "
-        "remainEnergy=%{public}d", batteryInfo_.GetCapacity(), batteryInfo_.GetVoltage(), batteryInfo_.GetTemperature(),
-        batteryInfo_.GetHealthState(), batteryInfo_.GetPluggedType(), batteryInfo_.GetPluggedMaxCurrent(),
-        batteryInfo_.GetPluggedMaxVoltage(), batteryInfo_.GetChargeState(), batteryInfo_.GetChargeCounter(),
-        batteryInfo_.IsPresent(), batteryInfo_.GetTechnology().c_str(), batteryInfo_.GetNowCurrent(),
-        batteryInfo_.GetTotalEnergy(), batteryInfo_.GetCurAverage(), batteryInfo_.GetRemainEnergy());
+        "remainEnergy=%{public}d, chargeType=%{public}d", batteryInfo_.GetCapacity(), batteryInfo_.GetVoltage(),
+        batteryInfo_.GetTemperature(), batteryInfo_.GetHealthState(), batteryInfo_.GetPluggedType(),
+        batteryInfo_.GetPluggedMaxCurrent(), batteryInfo_.GetPluggedMaxVoltage(), batteryInfo_.GetChargeState(),
+        batteryInfo_.GetChargeCounter(), batteryInfo_.IsPresent(), batteryInfo_.GetTechnology().c_str(),
+        batteryInfo_.GetNowCurrent(), batteryInfo_.GetTotalEnergy(), batteryInfo_.GetCurAverage(),
+        batteryInfo_.GetRemainEnergy(), batteryInfo_.GetChargeType());
 
     batteryLight_.UpdateColor(batteryInfo_.GetChargeState(), batteryInfo_.GetCapacity());
     WakeupDevice(batteryInfo_.GetPluggedType());
@@ -422,7 +424,7 @@ void BatteryService::ChangePath(const std::string path)
 BatteryChargeState BatteryService::GetChargingStatus()
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    V1_1::BatteryChargeState chargeState = V1_1::BatteryChargeState(0);
+    V1_2::BatteryChargeState chargeState = V1_2::BatteryChargeState(0);
 
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
@@ -436,7 +438,7 @@ BatteryChargeState BatteryService::GetChargingStatus()
 BatteryHealthState BatteryService::GetHealthStatus()
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
-    V1_1::BatteryHealthState healthState = V1_1::BatteryHealthState(0);
+    V1_2::BatteryHealthState healthState = V1_2::BatteryHealthState(0);
 
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
@@ -449,7 +451,7 @@ BatteryHealthState BatteryService::GetHealthStatus()
 
 BatteryPluggedType BatteryService::GetPluggedType()
 {
-    V1_1::BatteryPluggedType pluggedType = V1_1::BatteryPluggedType(0);
+    V1_2::BatteryPluggedType pluggedType = V1_2::BatteryPluggedType(0);
 
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
@@ -567,6 +569,19 @@ int32_t BatteryService::GetRemainEnergy()
     return remainEnergy;
 }
 
+ChargeType BatteryService::GetChargeType()
+{
+    V1_2::ChargeType chargeType = V1_2::ChargeType::CHARGE_TYPE_NONE;
+
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
+        return ChargeType(chargeType);
+    }
+
+    iBatteryInterface_->GetChargeType(chargeType);
+    return ChargeType(chargeType);
+}
+
 void BatteryService::CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState)
 {
     if (capacity > BATTERY_FULL_CAPACITY) {
@@ -662,7 +677,7 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
 
 void BatteryService::MockUnplugged(bool isUnplugged)
 {
-    V1_1::BatteryInfo event;
+    V1_2::BatteryInfo event;
     if (!iBatteryInterface_) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
