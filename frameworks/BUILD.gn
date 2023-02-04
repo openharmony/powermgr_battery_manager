@@ -17,6 +17,7 @@ group("battery_napi") {
   deps = [
     "js/napi:battery",
     "js/napi:batteryinfo",
+    "js/napi:charger",
   ]
 }
 

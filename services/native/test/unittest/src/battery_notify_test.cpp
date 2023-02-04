@@ -337,5 +337,18 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify019, TestSize.Level1)
         g_batteryNotify->PublishEvents(*g_batteryInfo);
     }
 }
+
+/**
+ * @tc.name: BatteryNotify020
+ * @tc.desc: Test PublishChargeTypeEvent
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify020, TestSize.Level1)
+{
+    const ChargeType chargeType = ChargeType::WIRED_NORMAL;
+    g_batteryInfo->SetChargeType(chargeType);
+    auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
+    EXPECT_EQ(ret, ERR_OK);
+}
 } // namespace PowerMgr
 } // namespace OHOS

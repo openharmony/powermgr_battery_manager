@@ -26,7 +26,7 @@
 using namespace testing::ext;
 using namespace OHOS;
 using namespace OHOS::PowerMgr;
-using namespace OHOS::HDI::Battery::V1_1;
+using namespace OHOS::HDI::Battery::V1_2;
 using namespace std;
 
 static sptr<BatteryService> g_service;

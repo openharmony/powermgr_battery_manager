@@ -40,9 +40,11 @@ private:
     bool PublishPowerDisconnectedEvent(const BatteryInfo& info) const;
     bool PublishChargingEvent(const BatteryInfo& info) const;
     bool PublishDischargingEvent(const BatteryInfo& info) const;
+    bool PublishChargeTypeChangedEvent(const BatteryInfo& info);
     bool IsCommonEventServiceAbilityExist() const;
 
     int32_t lowCapacity_ = -1;
+    ChargeType batteryInfoChargeType_ = ChargeType::NONE;
 };
 } // namespace PowerMgr
 } // namespace OHOS
