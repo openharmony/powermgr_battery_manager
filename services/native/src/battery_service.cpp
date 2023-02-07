@@ -612,19 +612,25 @@ BatteryCapacityLevel BatteryService::GetCapacityLevel()
 {
     BatteryCapacityLevel batteryCapacityLevel = BatteryCapacityLevel::LEVEL_NONE;
     int32_t capacity = GetCapacity();
-    if (IsCapacityLevelDefined(shutdownCapacityThreshold_) && capacity <= shutdownCapacityThreshold_) {
+    if (IsCapacityLevelDefined(shutdownCapacityThreshold_) && capacity > 0 && capacity <= shutdownCapacityThreshold_) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_SHUTDOWN;
-    } else if (IsCapacityLevelDefined(criticalCapacityThreshold_) && capacity <= criticalCapacityThreshold_) {
+    } else if (IsCapacityLevelDefined(criticalCapacityThreshold_) && capacity > shutdownCapacityThreshold_ &&
+        capacity <= criticalCapacityThreshold_) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_CRITICAL;
-    } else if (IsCapacityLevelDefined(warningCapacityThreshold_) && capacity <= warningCapacityThreshold_) {
+    } else if (IsCapacityLevelDefined(warningCapacityThreshold_) && capacity > criticalCapacityThreshold_ &&
+        capacity <= warningCapacityThreshold_) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_WARNING;
-    } else if (IsCapacityLevelDefined(lowCapacityThreshold_) && capacity <= lowCapacityThreshold_) {
+    } else if (IsCapacityLevelDefined(lowCapacityThreshold_) && capacity > warningCapacityThreshold_ &&
+        capacity <= lowCapacityThreshold_) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_LOW;
-    } else if (IsCapacityLevelDefined(normalCapacityThreshold_) && capacity <= normalCapacityThreshold_) {
+    } else if (IsCapacityLevelDefined(normalCapacityThreshold_) && capacity > lowCapacityThreshold_ &&
+        capacity <= normalCapacityThreshold_) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_NORMAL;
-    } else if (IsCapacityLevelDefined(highCapacityThreshold_) && capacity <= highCapacityThreshold_) {
+    } else if (IsCapacityLevelDefined(highCapacityThreshold_) && capacity > normalCapacityThreshold_ &&
+        capacity <= highCapacityThreshold_) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_HIGH;
-    } else if (IsCapacityLevelDefined(fullCapacityThreshold_) && capacity == fullCapacityThreshold_) {
+    } else if (IsCapacityLevelDefined(fullCapacityThreshold_) && capacity > highCapacityThreshold_ &&
+        capacity <= fullCapacityThreshold_) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_FULL;
     }
     return batteryCapacityLevel;
