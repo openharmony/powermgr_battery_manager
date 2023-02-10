@@ -600,6 +600,10 @@ void BatteryService::CalculateRemainingChargeTime(int32_t capacity, BatteryCharg
 
 int64_t BatteryService::GetRemainingChargeTime()
 {
+    if (!Permission::IsSystem()) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "system permission denied.");
+        return INVALID_REMAINING_CHARGE_TIME_VALUE;
+    }
     return remainTime_;
 }
 
