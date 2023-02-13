@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -194,9 +194,9 @@ public:
         COMMON_EVENT_CODE_CAPACITY_LEVEL = 11,
         COMMON_EVENT_CODE_PLUGGED_NOW_CURRENT = 12,
     };
-
     BatteryInfo() = default;
     ~BatteryInfo() = default;
+
     void SetCapacity(const int32_t capacity)
     {
         capacity_ = capacity;
@@ -371,6 +371,23 @@ public:
     {
         return !(*this == info);
     }
+
+    // Used by both napi and native
+    static constexpr const char* COMMON_EVENT_KEY_CAPACITY = "soc";
+    static constexpr const char* COMMON_EVENT_KEY_CHARGE_STATE = "chargeState";
+    static constexpr const char* COMMON_EVENT_KEY_HEALTH_STATE = "healthState";
+    static constexpr const char* COMMON_EVENT_KEY_PLUGGED_TYPE = "pluggedType";
+    static constexpr const char* COMMON_EVENT_KEY_VOLTAGE = "voltage";
+    static constexpr const char* COMMON_EVENT_KEY_TECHNOLOGY = "technology";
+    static constexpr const char* COMMON_EVENT_KEY_TEMPERATURE = "temperature";
+    static constexpr const char* COMMON_EVENT_KEY_PRESENT = "present";
+    static constexpr const char* COMMON_EVENT_KEY_CAPACITY_LEVEL = "capacityLevel";
+
+    // Used by native only
+    static constexpr const char* COMMON_EVENT_KEY_PLUGGED_MAX_CURRENT = "maxCurrent";
+    static constexpr const char* COMMON_EVENT_KEY_PLUGGED_MAX_VOLTAGE = "maxVoltage";
+    static constexpr const char* COMMON_EVENT_KEY_PLUGGED_NOW_CURRENT = "nowCurrent";
+    static constexpr const char* COMMON_EVENT_KEY_CHARGE_COUNTER = "chargeCounter";
 
 private:
     bool present_ = INVALID_BATT_BOOL_VALUE;
