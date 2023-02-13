@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -50,9 +50,9 @@ constexpr int64_t TIME_OUT = 1;
 bool g_isMock = false;
 const int32_t RETRY_TIMES = 2;
 const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";
-const std::string KEY_CAPACITY = ToString(BatteryInfo::COMMON_EVENT_CODE_CAPACITY);
-const std::string KEY_CHARGE_STATE = ToString(BatteryInfo::COMMON_EVENT_CODE_CHARGE_STATE);
-const std::string KEY_PLUGGED_MAX_VOLTAGE = ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_VOLTAGE);
+const std::string KEY_CAPACITY = BatteryInfo::COMMON_EVENT_KEY_CAPACITY;
+const std::string KEY_CHARGE_STATE = BatteryInfo::COMMON_EVENT_KEY_CHARGE_STATE;
+const std::string KEY_PLUGGED_MAX_VOLTAGE = BatteryInfo::COMMON_EVENT_KEY_PLUGGED_MAX_VOLTAGE;
 } // namespace
 
 class CommonEventBatteryChangedTest : public CommonEventSubscriber {
