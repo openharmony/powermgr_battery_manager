@@ -179,6 +179,21 @@ enum class BatteryCapacityLevel : uint32_t {
 
 class BatteryInfo {
 public:
+    enum {
+        COMMON_EVENT_CODE_CAPACITY = 0,
+        COMMON_EVENT_CODE_VOLTAGE = 1,
+        COMMON_EVENT_CODE_TEMPERATURE = 2,
+        COMMON_EVENT_CODE_HEALTH_STATE = 3,
+        COMMON_EVENT_CODE_PLUGGED_TYPE = 4,
+        COMMON_EVENT_CODE_PLUGGED_MAX_CURRENT = 5,
+        COMMON_EVENT_CODE_PLUGGED_MAX_VOLTAGE = 6,
+        COMMON_EVENT_CODE_CHARGE_STATE = 7,
+        COMMON_EVENT_CODE_CHARGE_COUNTER = 8,
+        COMMON_EVENT_CODE_PRESENT = 9,
+        COMMON_EVENT_CODE_TECHNOLOGY = 10,
+        COMMON_EVENT_CODE_CAPACITY_LEVEL = 11,
+        COMMON_EVENT_CODE_PLUGGED_NOW_CURRENT = 12,
+    };
     BatteryInfo() = default;
     ~BatteryInfo() = default;
 
