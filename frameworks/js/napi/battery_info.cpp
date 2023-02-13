@@ -366,7 +366,7 @@ static napi_value EnumEventChangedCodeConstructor(napi_env env, napi_callback_in
     return thisArg;
 }
 
-static napi_value CreateEventBatteryChangedCode(napi_env env, napi_value exports)
+static napi_value CreateEventBatteryChangedKey(napi_env env, napi_value exports)
 {
     napi_value soc = nullptr;
     napi_value chargeState = nullptr;
@@ -409,6 +409,58 @@ static napi_value CreateEventBatteryChangedCode(napi_env env, napi_value exports
     return exports;
 }
 
+static napi_value CreateEventBatteryChangedCode(napi_env env, napi_value exports)
+{
+    napi_value soc = nullptr;
+    napi_value voltage = nullptr;
+    napi_value temperature = nullptr;
+    napi_value healthState = nullptr;
+    napi_value pluggedType = nullptr;
+    napi_value maxCurrent = nullptr;
+    napi_value maxVoltage = nullptr;
+    napi_value chargeState = nullptr;
+    napi_value chargeCounter = nullptr;
+    napi_value present = nullptr;
+    napi_value technology = nullptr;
+    napi_value batteryCapacityLevel = nullptr;
+
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_CAPACITY, &soc);
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_VOLTAGE, &voltage);
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_TEMPERATURE, &temperature);
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_HEALTH_STATE, &healthState);
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_PLUGGED_TYPE, &pluggedType);
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_CURRENT, &maxCurrent);
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_VOLTAGE, &maxVoltage);
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_CHARGE_STATE, &chargeState);
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_CHARGE_COUNTER, &chargeCounter);
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_PRESENT, &present);
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_TECHNOLOGY, &technology);
+    napi_create_int32(env, (int32_t)BatteryInfo::COMMON_EVENT_CODE_CAPACITY_LEVEL, &batteryCapacityLevel);
+
+    napi_property_descriptor desc[] = {
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_SOC", soc),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_VOLTAGE", voltage),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_TEMPERATURE", temperature),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_HEALTH_STATE", healthState),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_PLUGGED_TYPE", pluggedType),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_MAX_CURRENT", maxCurrent),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_MAX_VOLTAGE", maxVoltage),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_CHARGE_STATE", chargeState),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_CHARGE_COUNTER", chargeCounter),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_PRESENT", present),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_TECHNOLOGY", technology),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_CAPACITY_LEVEL", batteryCapacityLevel),
+    };
+
+    napi_value result = nullptr;
+    napi_define_class(env, "CommonEventBatteryChangedCode", NAPI_AUTO_LENGTH, EnumEventChangedCodeConstructor, nullptr,
+        sizeof(desc) / sizeof(*desc), desc, &result);
+
+    napi_set_named_property(env, exports, "CommonEventBatteryChangedCode", result);
+
+    return exports;
+}
+
 EXTERN_C_START
 /*
  * function for module exports
@@ -438,6 +490,7 @@ static napi_value BatteryInit(napi_env env, napi_value exports)
     CreateEnumChargeState(env, exports);
     CreateEnumHealthState(env, exports);
     CreateEnumLevelState(env, exports);
+    CreateEventBatteryChangedKey(env, exports);
     CreateEventBatteryChangedCode(env, exports);
 
     BATTERY_HILOGD(COMP_FWK, "Success");
