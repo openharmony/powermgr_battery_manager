@@ -21,7 +21,7 @@
 namespace OHOS {
 namespace PowerMgr {
 BatteryCallback::BatteryEventCallback BatteryCallback::eventCb_ = nullptr;
-int32_t BatteryCallback::Update(const HDI::Battery::V1_1::BatteryInfo& event)
+int32_t BatteryCallback::Update(const HDI::Battery::V1_2::BatteryInfo& event)
 {
     if (eventCb_ == nullptr) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "eventCb_ is nullptr, cannot update battery info");

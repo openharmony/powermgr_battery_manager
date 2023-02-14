@@ -177,6 +177,40 @@ enum class BatteryCapacityLevel : uint32_t {
     LEVEL_RESERVED
 };
 
+/**
+ * Charge type of the connected charger.
+ */
+enum class ChargeType : uint32_t {
+    /**
+     * Unknown charge type
+     */
+    NONE,
+    /**
+     * Wired normal charge type
+     */
+    WIRED_NORMAL,
+    /**
+     * Wired quick charge type
+     */
+    WIRED_QUICK,
+    /**
+     * Wired super quick charge type
+     */
+    WIRED_SUPER_QUICK,
+    /**
+     * Wireless normal charge type
+     */
+    WIRELESS_NORMAL,
+    /**
+     * Wireless quick charge type
+     */
+    WIRELESS_QUICK,
+    /**
+     * Wireless super quick charge type
+     */
+    WIRELESS_SUPER_QUICK,
+};
+
 class BatteryInfo {
 public:
     enum {
@@ -272,6 +306,11 @@ public:
         technology_ = technology;
     }
 
+    void SetChargeType(const ChargeType chargeType)
+    {
+        chargeType_ = chargeType;
+    }
+
     const int32_t& GetCapacity() const
     {
         return capacity_;
@@ -347,6 +386,11 @@ public:
         return technology_;
     }
 
+    ChargeType GetChargeType() const
+    {
+        return chargeType_;
+    }
+
     bool operator==(const BatteryInfo& info)
     {
         bool eq = (present_ == info.IsPresent()) &&
@@ -363,7 +407,8 @@ public:
             (pluggedType_ == info.GetPluggedType()) &&
             (remainEnergy_ == info.GetRemainEnergy()) &&
             (chargeState_ == info.GetChargeState()) &&
-            (technology_ == info.GetTechnology());
+            (technology_ == info.GetTechnology()) &&
+            (chargeType_ == info.GetChargeType());
         return eq;
     }
 
@@ -401,6 +446,7 @@ private:
     int32_t pluggedMaxVoltage_ = INVALID_BATT_INT_VALUE;
     int32_t chargeCounter_ = INVALID_BATT_INT_VALUE;
     int32_t remainEnergy_ = INVALID_BATT_INT_VALUE;
+    ChargeType chargeType_ = ChargeType::NONE;
     BatteryHealthState healthState_ = BatteryHealthState::HEALTH_STATE_BUTT;
     BatteryPluggedType pluggedType_ = BatteryPluggedType::PLUGGED_TYPE_BUTT;
     BatteryChargeState chargeState_ = BatteryChargeState::CHARGE_STATE_BUTT;
