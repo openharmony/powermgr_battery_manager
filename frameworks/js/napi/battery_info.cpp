@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -353,7 +353,6 @@ static napi_value CreateEnumPluggedType(napi_env env, napi_value exports)
     return exports;
 }
 
-
 static napi_value EnumEventChangedCodeConstructor(napi_env env, napi_callback_info info)
 {
     napi_value thisArg = nullptr;
@@ -367,6 +366,48 @@ static napi_value EnumEventChangedCodeConstructor(napi_env env, napi_callback_in
     return thisArg;
 }
 
+static napi_value CreateEventBatteryChangedKey(napi_env env, napi_value exports)
+{
+    napi_value soc = nullptr;
+    napi_value chargeState = nullptr;
+    napi_value healthState = nullptr;
+    napi_value pluggedType = nullptr;
+    napi_value voltage = nullptr;
+    napi_value technology = nullptr;
+    napi_value temperature = nullptr;
+    napi_value present = nullptr;
+    napi_value capacityLevel = nullptr;
+
+    napi_create_string_utf8(env, BatteryInfo::COMMON_EVENT_KEY_CAPACITY, NAPI_AUTO_LENGTH, &soc);
+    napi_create_string_utf8(env, BatteryInfo::COMMON_EVENT_KEY_CHARGE_STATE, NAPI_AUTO_LENGTH, &chargeState);
+    napi_create_string_utf8(env, BatteryInfo::COMMON_EVENT_KEY_HEALTH_STATE, NAPI_AUTO_LENGTH, &healthState);
+    napi_create_string_utf8(env, BatteryInfo::COMMON_EVENT_KEY_PLUGGED_TYPE, NAPI_AUTO_LENGTH, &pluggedType);
+    napi_create_string_utf8(env, BatteryInfo::COMMON_EVENT_KEY_VOLTAGE, NAPI_AUTO_LENGTH, &voltage);
+    napi_create_string_utf8(env, BatteryInfo::COMMON_EVENT_KEY_TECHNOLOGY, NAPI_AUTO_LENGTH, &technology);
+    napi_create_string_utf8(env, BatteryInfo::COMMON_EVENT_KEY_TEMPERATURE, NAPI_AUTO_LENGTH, &temperature);
+    napi_create_string_utf8(env, BatteryInfo::COMMON_EVENT_KEY_PRESENT, NAPI_AUTO_LENGTH, &present);
+    napi_create_string_utf8(env, BatteryInfo::COMMON_EVENT_KEY_CAPACITY_LEVEL, NAPI_AUTO_LENGTH, &capacityLevel);
+
+    napi_property_descriptor desc[] = {
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_SOC", soc),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_CHARGE_STATE", chargeState),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_HEALTH_STATE", healthState),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_PLUGGED_TYPE", pluggedType),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_VOLTAGE", voltage),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_TECHNOLOGY", technology),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_TEMPERATURE", temperature),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_PRESENT", present),
+        DECLARE_NAPI_STATIC_PROPERTY("EXTRA_CAPACITY_LEVEL", capacityLevel),
+    };
+
+    napi_value result = nullptr;
+    napi_define_class(env, "CommonEventBatteryChangedKey", NAPI_AUTO_LENGTH, EnumEventChangedCodeConstructor, nullptr,
+        sizeof(desc) / sizeof(*desc), desc, &result);
+
+    napi_set_named_property(env, exports, "CommonEventBatteryChangedKey", result);
+
+    return exports;
+}
 
 static napi_value CreateEventBatteryChangedCode(napi_env env, napi_value exports)
 {
@@ -449,6 +490,7 @@ static napi_value BatteryInit(napi_env env, napi_value exports)
     CreateEnumChargeState(env, exports);
     CreateEnumHealthState(env, exports);
     CreateEnumLevelState(env, exports);
+    CreateEventBatteryChangedKey(env, exports);
     CreateEventBatteryChangedCode(env, exports);
 
     BATTERY_HILOGD(COMP_FWK, "Success");
