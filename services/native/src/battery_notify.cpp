@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -102,24 +102,29 @@ bool BatteryNotify::IsCommonEventServiceAbilityExist() const
 bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
 {
     Want want;
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CAPACITY), info.GetCapacity());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_VOLTAGE), info.GetVoltage());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_TEMPERATURE), info.GetTemperature());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_HEALTH_STATE), static_cast<int32_t>(info.GetHealthState()));
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_TYPE), static_cast<int32_t>(info.GetPluggedType()));
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_CURRENT), info.GetPluggedMaxCurrent());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_VOLTAGE), info.GetPluggedMaxVoltage());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CHARGE_STATE), static_cast<int32_t>(info.GetChargeState()));
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CHARGE_COUNTER), info.GetChargeCounter());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PRESENT), info.IsPresent());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_TECHNOLOGY), info.GetTechnology());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CAPACITY, info.GetCapacity());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_VOLTAGE, info.GetVoltage());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_TEMPERATURE, info.GetTemperature());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_HEALTH_STATE, static_cast<int32_t>(info.GetHealthState()));
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_TYPE, static_cast<int32_t>(info.GetPluggedType()));
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CHARGE_STATE, static_cast<int32_t>(info.GetChargeState()));
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PRESENT, info.IsPresent());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_TECHNOLOGY, info.GetTechnology());
+
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_MAX_CURRENT, info.GetPluggedMaxCurrent());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_MAX_VOLTAGE, info.GetPluggedMaxVoltage());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_NOW_CURRENT, info.GetNowCurrent());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CHARGE_COUNTER, info.GetChargeCounter());
+
     sptr<BatteryService> batterySrv = DelayedSpSingleton<BatteryService>::GetInstance();
     auto capacityLevel = batterySrv->GetCapacityLevel();
     if (capacityLevel != g_lastCapacityLevel) {
+        want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CAPACITY_LEVEL, static_cast<int32_t>(capacityLevel));
+        // The old way of broadcasting
         want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CAPACITY_LEVEL), static_cast<int32_t>(capacityLevel));
         g_lastCapacityLevel = capacityLevel;
     }
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_NOW_CURRENT), info.GetNowCurrent());
+    ChangedEventDeprecated(want, info);
 
     want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED);
     CommonEventData data;
@@ -137,6 +142,22 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
         BATTERY_HILOGE(FEATURE_BATT_INFO, "failed to publish BATTERY_CHANGED event");
     }
     return isSuccess;
+}
+
+void BatteryNotify::ChangedEventDeprecated(Want& want, const BatteryInfo& info) const
+{
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CAPACITY), info.GetCapacity());
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_VOLTAGE), info.GetVoltage());
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_TEMPERATURE), info.GetTemperature());
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_HEALTH_STATE), static_cast<int32_t>(info.GetHealthState()));
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_TYPE), static_cast<int32_t>(info.GetPluggedType()));
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_CURRENT), info.GetPluggedMaxCurrent());
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_VOLTAGE), info.GetPluggedMaxVoltage());
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CHARGE_STATE), static_cast<int32_t>(info.GetChargeState()));
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CHARGE_COUNTER), info.GetChargeCounter());
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PRESENT), info.IsPresent());
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_TECHNOLOGY), info.GetTechnology());
+    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_NOW_CURRENT), info.GetNowCurrent());
 }
 
 bool BatteryNotify::PublishLowEvent(const BatteryInfo& info) const
@@ -158,8 +179,7 @@ bool BatteryNotify::PublishLowEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
-    data.SetCode(BatteryInfo::COMMON_EVENT_CODE_CAPACITY);
-    data.SetData(ToString(info.GetCapacity()));
+    data.SetCode(info.GetCapacity());
     BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher capacity=%{public}d", info.GetCapacity());
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
@@ -188,8 +208,7 @@ bool BatteryNotify::PublishOkayEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
-    data.SetCode(BatteryInfo::COMMON_EVENT_CODE_CAPACITY);
-    data.SetData(ToString(info.GetCapacity()));
+    data.SetCode(info.GetCapacity());
     BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher capacity=%{public}d", info.GetCapacity());
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
@@ -219,9 +238,8 @@ bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
-    data.SetCode(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_TYPE);
-    data.SetData(ToString(static_cast<uint32_t>(info.GetPluggedType())));
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher pluggedtype=%{public}d",
+    data.SetCode(static_cast<int32_t>(info.GetPluggedType()));
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher pluggedtype=%{public}u",
         static_cast<uint32_t>(info.GetPluggedType()));
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
@@ -252,9 +270,8 @@ bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
-    data.SetCode(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_TYPE);
-    data.SetData(ToString(static_cast<uint32_t>(info.GetPluggedType())));
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher pluggedtype=%{public}d",
+    data.SetCode(static_cast<int32_t>(info.GetPluggedType()));
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher pluggedtype=%{public}u",
         static_cast<uint32_t>(info.GetPluggedType()));
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
@@ -284,9 +301,8 @@ bool BatteryNotify::PublishChargingEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
-    data.SetCode(BatteryInfo::COMMON_EVENT_CODE_CHARGE_STATE);
-    data.SetData(ToString(static_cast<uint32_t>(info.GetChargeState())));
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher chargeState=%{public}d",
+    data.SetCode(static_cast<int32_t>(info.GetChargeState()));
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher chargeState=%{public}u",
         static_cast<uint32_t>(info.GetChargeState()));
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
@@ -316,9 +332,8 @@ bool BatteryNotify::PublishDischargingEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
-    data.SetCode(BatteryInfo::COMMON_EVENT_CODE_CHARGE_STATE);
-    data.SetData(ToString(static_cast<uint32_t>(info.GetChargeState())));
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher chargeState=%{public}d",
+    data.SetCode(static_cast<int32_t>(info.GetChargeState()));
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher chargeState=%{public}u",
         static_cast<uint32_t>(info.GetChargeState()));
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
