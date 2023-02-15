@@ -40,8 +40,6 @@ private:
     bool available_ {false};
     uint32_t lightColor_ {0};
 };
-} // namespace V1_1
-} // namespace Battery
-} // namespace HDI
+} // namespace PowerMgr
 } // namespace OHOS
 #endif

@@ -80,8 +80,6 @@ public:
     void UpdateInfoByReadSysFile(struct BatterydInfo* info) const;
     void SetSysFilePath(const std::string& path);
     void InitBatteryPath();
-    int32_t SetChargingLimit(const std::vector<ChargingLimit>& chargingLimit,
-        std::string& currentPath, std::string& voltagePath);
 
 private:
     struct BatterySysfsInfo {
@@ -133,7 +131,6 @@ private:
     void CreateMockChargerPath(std::string& mockChargerPath);
     void CreateMockBatteryPath(std::string& mockBatteryPath);
     int32_t ReadFileToMap(std::map<std::string, std::string>& chargingLimitMap, std::string chargingLimitPath);
-    int32_t WriteChargingLimit(std::string chargingLimitPath, std::string& configStr);
     std::vector<std::string> nodeNames_;
     std::map<std::string, std::string> nodeNamePathMap_;
     std::string path_;

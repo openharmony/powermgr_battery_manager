@@ -33,12 +33,6 @@ constexpr int32_t TIMER_FAST_SEC = 2;
 constexpr int32_t SEC_TO_MSEC = 1000;
 const std::string POWER_SUPPLY = "SUBSYSTEM=power_supply";
 }
-static sptr<IBatteryCallback> g_callback;
-
-void BatteryThread::InitCallback(const sptr<IBatteryCallback>& callback)
-{
-    g_callback = callback;
-}
 
 int32_t BatteryThread::OpenUeventSocket()
 {
@@ -51,20 +45,20 @@ int32_t BatteryThread::OpenUeventSocket()
 
     int32_t fd = socket(PF_NETLINK, SOCK_DGRAM | SOCK_CLOEXEC, NETLINK_KOBJECT_UEVENT);
     if (fd == INVALID_FD) {
-        BATTERY_HILOGE(COMP_HDI, "open uevent socket failed, fd is invalid");
+        BATTERY_HILOGE(FEATURE_CHARGING, "open uevent socket failed, fd is invalid");
         return INVALID_FD;
     }
 
     int32_t ret = setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &bufferSize, sizeof(bufferSize));
     if (ret < 0) {
-        BATTERY_HILOGE(COMP_HDI, "set socket opt failed, ret: %{public}d", ret);
+        BATTERY_HILOGE(FEATURE_CHARGING, "set socket opt failed, ret: %{public}d", ret);
         close(fd);
         return INVALID_FD;
     }
 
     ret = bind(fd, reinterpret_cast<const struct sockaddr*>(&address), sizeof(struct sockaddr_nl));
     if (ret < 0) {
-        BATTERY_HILOGE(COMP_HDI, "bind socket address failed, ret: %{public}d", ret);
+        BATTERY_HILOGE(FEATURE_CHARGING, "bind socket address failed, ret: %{public}d", ret);
         close(fd);
         return INVALID_FD;
     }
@@ -83,7 +77,7 @@ int32_t BatteryThread::RegisterCallback(int32_t fd, EventType et)
     ev.data.ptr = reinterpret_cast<void*>(this);
     ev.data.fd = fd;
     if (epoll_ctl(epFd_, EPOLL_CTL_ADD, fd, &ev) == -1) {
-        BATTERY_HILOGE(COMP_HDI, "epoll_ctl failed, error num =%{public}d", errno);
+        BATTERY_HILOGE(FEATURE_CHARGING, "epoll_ctl failed, error num =%{public}d", errno);
         return HDF_FAILURE;
     }
     return HDF_SUCCESS;
@@ -103,7 +97,7 @@ int32_t BatteryThread::InitUevent()
 {
     ueventFd_ = OpenUeventSocket();
     if (ueventFd_ == INVALID_FD) {
-        BATTERY_HILOGE(COMP_HDI, "open uevent socket failed, fd is invalid");
+        BATTERY_HILOGE(FEATURE_CHARGING, "open uevent socket failed, fd is invalid");
         return HDF_ERR_BAD_FD;
     }
 
@@ -111,7 +105,7 @@ int32_t BatteryThread::InitUevent()
     callbacks_.insert(std::make_pair(ueventFd_, &BatteryThread::UeventCallback));
 
     if (RegisterCallback(ueventFd_, EVENT_UEVENT_FD)) {
-        BATTERY_HILOGE(COMP_HDI, "register Uevent event failed");
+        BATTERY_HILOGE(FEATURE_CHARGING, "register Uevent event failed");
         return HDF_ERR_BAD_FD;
     }
     return HDF_SUCCESS;
@@ -127,7 +121,7 @@ int32_t BatteryThread::Init([[maybe_unused]] void* service)
 
     epFd_ = epoll_create1(EPOLL_CLOEXEC);
     if (epFd_ == INVALID_FD) {
-        BATTERY_HILOGE(COMP_HDI, "epoll create failed, epFd_ is invalid");
+        BATTERY_HILOGE(FEATURE_CHARGING, "epoll create failed, epFd_ is invalid");
         return HDF_ERR_BAD_FD;
     }
 
@@ -147,7 +141,7 @@ void BatteryThread::UeventCallback(void* service)
 
     ssize_t len = recv(ueventFd_, msg, UEVENT_MSG_LEN, 0);
     if (len < 0 || len >= UEVENT_MSG_LEN) {
-        BATTERY_HILOGI(COMP_HDI, "recv return msg is invalid, len: %{public}zd", len);
+        BATTERY_HILOGI(FEATURE_CHARGING, "recv return msg is invalid, len: %{public}zd", len);
         return;
     }
 
@@ -160,37 +154,7 @@ void BatteryThread::UeventCallback(void* service)
     UpdateBatteryInfo(service);
 }
 
-void BatteryThread::UpdateBatteryInfo(void* service)
-{
-    BatteryInfo event = {};
-    std::unique_ptr<BatterydInfo> batteryInfo = std::make_unique<BatterydInfo>();
-    if (batteryInfo == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "make_unique BatterydInfo error");
-        return;
-    }
-
-    provider_->UpdateInfoByReadSysFile(batteryInfo.get());
-    event.capacity = batteryInfo->capacity_;
-    event.voltage= batteryInfo->voltage_;
-    event.temperature = batteryInfo->temperature_;
-    event.healthState = batteryInfo->healthState_;
-    event.pluggedType = batteryInfo->pluggedType_;
-    event.pluggedMaxCurrent = batteryInfo->pluggedMaxCurrent_;
-    event.pluggedMaxVoltage = batteryInfo->pluggedMaxVoltage_;
-    event.chargeState = batteryInfo->chargeState_;
-    event.chargeCounter = batteryInfo->chargeCounter_;
-    event.present = batteryInfo->present_;
-    event.technology = batteryInfo->technology_;
-    event.curNow = batteryInfo->curNow_;
-    event.remainEnergy = batteryInfo->remainEnergy_;
-    event.totalEnergy = batteryInfo->totalEnergy_;
-
-    if (g_callback != nullptr) {
-        g_callback->Update(event);
-    } else {
-        BATTERY_HILOGI(FEATURE_BATT_INFO, "g_callback is nullptr");
-    }
-}
+void BatteryThread::UpdateBatteryInfo(void* service) {}
 
 bool BatteryThread::IsPowerSupplyEvent(const char* msg)
 {
@@ -249,7 +213,5 @@ void BatteryThread::Run(void* service)
     pthread_setname_np(batteryThread.native_handle(), "battery_thread");
     batteryThread.detach();
 }
-} // namespace V1_1
-} // namespace Battery
-} // namespace HDI
+} // namespace PowerMgr
 } // namespace OHOS

@@ -74,8 +74,6 @@ private:
     static bool isConfigParse_;
     static int32_t lackPowerCapacity_;
 };
-} // namespace V1_1
-} // namespace Battery
-} // namespace HDI
+} // namespace PowerMgr
 } // namespace OHOS
 #endif

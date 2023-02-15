@@ -53,8 +53,6 @@ private:
     enum AnimationState chargingPromptState_ = LACKPOWER_CHARGING_PROMPT_STOP;
     enum AnimationState notChargingPromptState_ = LACKPOWER_NOTCHARGING_PROMPT_STOP;
 };
-} // namespace V1_1
-} // namespace Battery
-} // namespace HDI
+} // namespace PowerMgr
 } // namespace OHOS
 #endif

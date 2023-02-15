@@ -20,8 +20,8 @@
 
 int main(int argc, char** argv)
 {
-    using namespace OHOS::HDI::Battery;
-    using namespace OHOS::HDI::Battery::V1_1;
+    using namespace OHOS;
+    using namespace OHOS::PowerMgr;
     BATTERY_HILOGD(FEATURE_CHARGING, "starting battery charger");
     std::unique_ptr<ChargerThread> chargerThread = std::make_unique<ChargerThread>();
     if (chargerThread == nullptr) {
