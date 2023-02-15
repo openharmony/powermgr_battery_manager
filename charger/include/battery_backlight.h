@@ -19,9 +19,7 @@
 #include "display_device.h"
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 class BatteryBacklight {
 public:
     enum ScreenState {

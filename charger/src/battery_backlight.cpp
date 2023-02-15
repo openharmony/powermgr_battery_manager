@@ -15,15 +15,12 @@
 
 #include "battery_backlight.h"
 
-#include "battery_log.h"
+#include "charger_log.h"
 #include "display_type.h"
-#include "errors.h"
 #include "hdf_base.h"
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 namespace {
 constexpr uint32_t BACKLIGHT_ON = 128;
 }

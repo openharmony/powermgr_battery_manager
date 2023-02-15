@@ -15,12 +15,10 @@
 
 #include "battery_config.h"
 #include "string_ex.h"
-#include "battery_log.h"
+#include "charger_log.h"
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 namespace {
 constexpr const char* VENDOR_BATTERY_CONFIG_PATH = "/vendor/etc/battery/battery_config.json";
 constexpr int32_t MAP_KEY_INDEX = 0;
@@ -175,7 +173,5 @@ Json::Value BatteryConfig::GetValue(std::string key) const
     }
     return value;
 }
-}  // namespace V1_1
-}  // namespace Battery
-}  // namespace HDI
+}  // namespace PowerMgr
 }  // namespace OHOS

@@ -25,9 +25,7 @@
 #include "v1_1/ibattery_interface.h"
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 class PowerSupplyProvider {
 public:
     // Keep it same as the BatteryHealthState in battery_info.h
@@ -141,9 +139,7 @@ private:
     std::string path_;
     int32_t index_;
 };
-}  // namespace V1_1
-}  // namespace Battery
-}  // namespace HDI
+}  // namespace PowerMgr
 }  // namespace OHOS
 
 #endif // POWER_SUPPLY_PROVIDER_H

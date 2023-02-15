@@ -27,9 +27,7 @@
 #include <linux/input.h>
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 class ChargerThread : public BatteryThread {
 public:
     friend class BatteryThreadTest;

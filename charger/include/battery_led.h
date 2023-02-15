@@ -22,9 +22,7 @@
 #include "v1_0/light_types.h"
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 class BatteryLed {
 public:
     BatteryLed() = default;
