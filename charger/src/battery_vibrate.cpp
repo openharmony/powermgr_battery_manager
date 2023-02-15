@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "../include/battery_vibrate.h"
+#include "battery_vibrate.h"
 
 #include <unistd.h>
 #include "file_ex.h"

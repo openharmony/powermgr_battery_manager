@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "../include/charger_animation.h"
+#include "charger_animation.h"
 #include <sys/types.h>
 
 #include "common/graphic_startup.h"

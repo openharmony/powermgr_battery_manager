@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "../include/battery_backlight.h"
+#include "battery_backlight.h"
 
 #include "battery_log.h"
 #include "display_type.h"
