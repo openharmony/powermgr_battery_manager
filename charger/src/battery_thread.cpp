@@ -21,12 +21,10 @@
 #include <unistd.h>
 #include <linux/netlink.h>
 #include "hdf_base.h"
-#include "battery_log.h"
+#include "charger_log.h"
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 namespace {
 constexpr int32_t UEVENT_BUFF_SIZE = (64 * 1024);
 constexpr int32_t UEVENT_RESERVED_SIZE = 2;

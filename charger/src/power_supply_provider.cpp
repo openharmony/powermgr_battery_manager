@@ -22,13 +22,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include "osal/osal_mem.h"
-#include "battery_log.h"
+#include "charger_log.h"
 #include "battery_config.h"
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 namespace {
 constexpr int32_t MAX_SYSFS_SIZE = 64;
 constexpr int32_t MAX_BUFF_SIZE = 128;
@@ -942,7 +940,5 @@ int32_t PowerSupplyProvider::WriteChargingLimit(std::string chargingLimitPath, s
     BATTERY_HILOGI(FEATURE_BATT_INFO, "Exit");
     return HDF_SUCCESS;
 }
-}  // namespace V1_1
-}  // namespace Battery
-}  // namespace HDI
+}  // namespace PowerMgr
 }  // namespace OHOS

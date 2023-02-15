@@ -14,15 +14,13 @@
  */
 
 #include "battery_led.h"
-#include "battery_log.h"
+#include "charger_log.h"
 
 using namespace OHOS::HDI::Light::V1_0;
 using namespace std;
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 namespace {
 constexpr uint32_t MOVE_RIGHT_16 = 16;
 constexpr uint32_t MOVE_RIGHT_8 = 8;

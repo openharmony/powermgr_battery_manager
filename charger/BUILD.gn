@@ -16,7 +16,6 @@ import("//build/ohos.gni")
 config("batteryd_private_config") {
   include_dirs = [
     "include",
-    "../utils/native/include",
     "//foundation/graphic/ui/frameworks",
     "//foundation/graphic/ui/interfaces/kits",
     "//foundation/graphic/ui/interfaces/innerkits",

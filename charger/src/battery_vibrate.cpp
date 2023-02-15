@@ -17,12 +17,10 @@
 
 #include <unistd.h>
 #include "file_ex.h"
-#include "battery_log.h"
+#include "charger_log.h"
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 namespace {
 const std::string VIBRATOR_PLAYMODE_PATH = "/sys/class/leds/vibrator/play_mode";
 const std::string VIBRATOR_DURATIONMODE_PATH = "/sys/class/leds/vibrator/duration";
@@ -139,7 +137,5 @@ void BatteryVibrate::SetDuration(int32_t time)
         BATTERY_HILOGW(FEATURE_CHARGING, "duration mode fclose failed.");
     }
 }
-}  // namespace V1_1
-}  // namespace Battery
-}  // namespace HDI
+}  // namespace PowerMgr
 }  // namespace OHOS

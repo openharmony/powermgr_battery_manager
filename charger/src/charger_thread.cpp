@@ -15,7 +15,7 @@
 
 #include "charger_thread.h"
 #include "battery_config.h"
-#include "battery_log.h"
+#include "charger_log.h"
 #include "charger_animation.h"
 #include "init_reboot.h"
 #include "input_manager.h"
@@ -26,9 +26,7 @@
 #include <securec.h>
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 namespace {
 constexpr int32_t SEC_TO_MSEC = 1000;
 constexpr int32_t NSEC_TO_MSEC = 1000000;

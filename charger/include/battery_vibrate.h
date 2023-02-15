@@ -19,9 +19,7 @@
 #include <fstream>
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 class BatteryVibrate {
 public:
     bool InitVibration();
@@ -34,8 +32,6 @@ private:
     static void SetDuration(int32_t time);
     int32_t vibrateMode_ = -1;
 };
-}  // namespace V1_1
-}  // namespace Battery
-}  // namespace HDI
+}  // namespace PowerMgr
 }  // namespace OHOS
 #endif

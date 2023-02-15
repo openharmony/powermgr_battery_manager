@@ -15,16 +15,14 @@
 #ifndef CHARGER_ANIMATION_H
 #define CHARGER_ANIMATION_H
 
-#include "battery_log.h"
+#include "charger_log.h"
 #include "page/page_manager.h"
 #include <string>
 #include <thread>
 #include <vector>
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 class ChargerAnimation {
     enum AnimationState {
         ANIMATION_STOP = 0,

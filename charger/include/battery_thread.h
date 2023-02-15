@@ -25,9 +25,7 @@
 #include "v1_1/ibattery_callback.h"
 
 namespace OHOS {
-namespace HDI {
-namespace Battery {
-namespace V1_1 {
+namespace PowerMgr {
 enum EventType {
     EVENT_UEVENT_FD,
     EVENT_TIMER_FD,
@@ -63,9 +61,7 @@ private:
     std::map<int32_t, Callback> callbacks_;
     std::unique_ptr<PowerSupplyProvider> provider_ = nullptr;
 };
-}  // namespace V1_1
-}  // namespace Battery
-}  // namespace HDI
+}  // namespace PowerMgr
 }  // namespace OHOS
 
 #endif // BATTERY_THREAD_H
