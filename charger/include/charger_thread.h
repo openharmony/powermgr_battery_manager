@@ -29,9 +29,6 @@
 namespace OHOS {
 namespace PowerMgr {
 class ChargerThread : public BatteryThread {
-public:
-    friend class BatteryThreadTest;
-
 private:
     void Init();
     static void UpdateAnimation(const int32_t& chargeState, const int32_t& capacity);

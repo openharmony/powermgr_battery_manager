@@ -45,15 +45,15 @@ ohos_executable("charger") {
   ]
 
   sources = [
-    "src/battery_config.cpp",
-    "src/battery_thread.cpp",
-    "src/power_supply_provider.cpp",
     "src/battery_backlight.cpp",
+    "src/battery_config.cpp",
     "src/battery_led.cpp",
-    "src/charger.cpp",
-    "src/charger_thread.cpp",
-    "src/charger_animation.cpp",
+    "src/battery_thread.cpp",
     "src/battery_vibrate.cpp",
+    "src/charger.cpp",
+    "src/charger_animation.cpp",
+    "src/charger_thread.cpp",
+    "src/power_supply_provider.cpp",
   ]
 
   configs = [ ":batteryd_private_config" ]
@@ -70,7 +70,7 @@ ohos_executable("charger") {
 
   external_deps = [
     "c_utils:utils",
-    "drivers_interface_battery:libbattery_proxy_1.1",
+    "drivers_interface_battery:libbattery_proxy_1.2",
     "drivers_interface_light:liblight_proxy_1.0",
     "drivers_peripheral_input:hdi_input",
     "init:libbegetutil",

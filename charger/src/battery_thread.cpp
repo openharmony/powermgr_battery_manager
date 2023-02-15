@@ -207,11 +207,6 @@ void BatteryThread::StartThread(void* service)
     Run(service);
 }
 
-void BatteryThread::Run(void* service)
-{
-    std::thread batteryThread(&BatteryThread::LoopingThreadEntry, this, service);
-    pthread_setname_np(batteryThread.native_handle(), "battery_thread");
-    batteryThread.detach();
-}
+void BatteryThread::Run(void* service) {}
 } // namespace PowerMgr
 } // namespace OHOS

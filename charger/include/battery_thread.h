@@ -22,7 +22,7 @@
 #include <thread>
 #include <vector>
 #include "power_supply_provider.h"
-#include "v1_1/ibattery_callback.h"
+#include "v1_2/ibattery_callback.h"
 
 namespace OHOS {
 namespace PowerMgr {
@@ -50,7 +50,6 @@ private:
     int32_t Init([[maybe_unused]]void* service);
     int32_t InitUevent();
     void UeventCallback(void* service);
-    void SetTimerInterval(int32_t interval);
     int32_t RegisterCallback(int32_t fd, EventType et);
     static constexpr int32_t INVALID_FD = -1;
     int32_t ueventFd_ = INVALID_FD;
