@@ -64,7 +64,5 @@ int32_t BatteryBacklight::GetScreenState()
 {
     return screenState_;
 }
-} // namespace V1_1
-} // namespace Battery
-} // namespace HDI
+} // namespace PowerMgr
 } // namespace OHOS

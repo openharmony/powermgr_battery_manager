@@ -16,15 +16,11 @@
 #ifndef BATTERY_LOG_H
 #define BATTERY_LOG_H
 
-#include "hilog/log.h"
-
 #include "beget_ext.h"
 #include <string>
 
 #define CHARGER_LOG_FILE  "charger.log"
 #define FEATURE_CHARGING  "charger: "
-#define FEATURE_BATT_INFO FEATURE_CHARGING
-#define COMP_HDI          FEATURE_CHARGING
 
 inline void ReplaceHolder(std::string& str, const std::string& holder)
 {

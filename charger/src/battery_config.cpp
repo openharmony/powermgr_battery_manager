@@ -98,7 +98,7 @@ bool BatteryConfig::OpenFile(std::ifstream& ifsConf, const std::string& configPa
     if (!configPath.empty()) {
         ifsConf.open(configPath);
         isOpen = ifsConf.is_open();
-        BATTERY_HILOGD(COMP_HDI, "open %{private}s file is %{public}d", configPath.c_str(), isOpen);
+        BATTERY_HILOGD(FEATURE_CHARGING, "open %{private}s file is %{public}d", configPath.c_str(), isOpen);
     }
     if (isOpen) {
         return true;
@@ -106,7 +106,7 @@ bool BatteryConfig::OpenFile(std::ifstream& ifsConf, const std::string& configPa
 
     ifsConf.open(VENDOR_BATTERY_CONFIG_PATH);
     isOpen = ifsConf.is_open();
-    BATTERY_HILOGI(COMP_HDI, "open then vendor battery_config.json is %{public}d", isOpen);
+    BATTERY_HILOGI(FEATURE_CHARGING, "open then vendor battery_config.json is %{public}d", isOpen);
     return isOpen;
 }
 
@@ -116,7 +116,7 @@ void BatteryConfig::ParseConfInner()
     ParseLightConf("low");
     ParseLightConf("normal");
     ParseLightConf("high");
-    BATTERY_HILOGD(COMP_HDI, "The battery light configuration size %{public}d",
+    BATTERY_HILOGD(FEATURE_CHARGING, "The battery light configuration size %{public}d",
         static_cast<int32_t>(lightConf_.size()));
 }
 
@@ -125,7 +125,7 @@ void BatteryConfig::ParseLightConf(std::string level)
     Json::Value soc = GetValue("light." + level + ".soc");
     Json::Value rgb = GetValue("light." + level + ".rgb");
     if (!soc.isArray() || !rgb.isArray()) {
-        BATTERY_HILOGW(COMP_HDI, "The battery light %{public}s configuration is invalid.", level.c_str());
+        BATTERY_HILOGW(FEATURE_CHARGING, "The battery light %{public}s configuration is invalid.", level.c_str());
         return;
     }
 
@@ -154,19 +154,19 @@ Json::Value BatteryConfig::GetValue(std::string key) const
 {
     std::vector<std::string> keys;
     if (!SplitKey(key, keys)) {
-        BATTERY_HILOGW(COMP_HDI, "The key does not meet the. key=%{public}s", key.c_str());
+        BATTERY_HILOGW(FEATURE_CHARGING, "The key does not meet the. key=%{public}s", key.c_str());
         return Json::Value();
     }
 
     Json::Value value = FindConf(keys[MAP_KEY_INDEX]);
     if (value.isNull()) {
-        BATTERY_HILOGW(COMP_HDI, "Value is empty. key=%{public}s", keys[MAP_KEY_INDEX].c_str());
+        BATTERY_HILOGW(FEATURE_CHARGING, "Value is empty. key=%{public}s", keys[MAP_KEY_INDEX].c_str());
         return value;
     }
 
     for (size_t i = 1; i < keys.size(); ++i) {
         if (!value.isObject() || !value.isMember(keys[i])) {
-            BATTERY_HILOGW(COMP_HDI, "The key is not configured. key=%{public}s", keys[i].c_str());
+            BATTERY_HILOGW(FEATURE_CHARGING, "The key is not configured. key=%{public}s", keys[i].c_str());
             break;
         }
         value = value[keys[i]];

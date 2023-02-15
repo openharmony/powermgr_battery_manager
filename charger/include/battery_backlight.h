@@ -36,8 +36,6 @@ private:
     DeviceFuncs* displayDevice_ = nullptr;
     enum ScreenState screenState_ = SCREEN_OFF;
 };
-} // namespace V1_1
-} // namespace Battery
-} // namespace HDI
+} // namespace PowerMgr
 } // namespace OHOS
 #endif
