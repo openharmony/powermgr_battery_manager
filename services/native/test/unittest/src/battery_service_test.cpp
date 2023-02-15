@@ -203,7 +203,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService008, TestSize.Level1)
     EXPECT_FALSE(g_service->ready_);
 
     g_service->OnStart();
-    g_service->iBatteryInterface_ = V1_1::IBatteryInterface::Get();
+    g_service->iBatteryInterface_ = V1_2::IBatteryInterface::Get();
     BATTERY_HILOGD(LABEL_TEST, "BatteryService008 end.");
 }
 
@@ -339,7 +339,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService017, TestSize.Level1)
 static HWTEST_F(BatteryServiceTest, BatteryService018, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryService018 start.");
-    V1_1::BatteryInfo event;
+    V1_2::BatteryInfo event;
     event.capacity = 90; // Prevent shutdown
     EXPECT_EQ(g_service->HandleBatteryCallbackEvent(event), ERR_OK);
 
@@ -421,7 +421,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService021, TestSize.Level1)
     g_service->iBatteryInterface_ = nullptr;
     g_service->ChangePath("/data/service/el0/battery");
 
-    g_service->iBatteryInterface_ = V1_1::IBatteryInterface::Get();
+    g_service->iBatteryInterface_ = V1_2::IBatteryInterface::Get();
     g_service->ChangePath("/data/service/el0/battery");
 
     if (!g_isMock) {
@@ -497,4 +497,17 @@ static HWTEST_F(BatteryServiceTest, BatteryService023, TestSize.Level1)
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "50");
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryService023 end.");
+}
+
+/**
+ * @tc.name: BatteryService024
+ * @tc.desc: Test functions GetChargeType
+ * @tc.type: FUNC
+ */
+static HWTEST_F(BatteryServiceTest, BatteryService024, TestSize.Level1)
+{
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService024 start.");
+    ChargeType chargeType = g_service->GetChargeType();
+    EXPECT_TRUE(chargeType >= ChargeType::NONE && chargeType <= ChargeType::WIRELESS_SUPER_QUICK);
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService024 end.");
 }

@@ -77,8 +77,36 @@ int32_t BatteryNotify::PublishEvents(const BatteryInfo& info)
     isAllSuccess &= ret;
     ret = PublishDischargingEvent(info);
     isAllSuccess &= ret;
+    ret = PublishChargeTypeChangedEvent(info);
+    isAllSuccess &= ret;
 
     return isAllSuccess ? ERR_OK : ERR_NO_INIT;
+}
+
+bool BatteryNotify::PublishChargeTypeChangedEvent(const BatteryInfo& info)
+{
+    ChargeType chargeType = info.GetChargeType();
+    bool isSuccess = true;
+    if (batteryInfoChargeType_ == chargeType) {
+        BATTERY_HILOGD(COMP_SVC, "No need to send chargetype event");
+        return isSuccess;
+    }
+    batteryInfoChargeType_ = chargeType;
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_CHARGE_TYPE_CHANGED);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(false);
+    
+    data.SetCode(static_cast<int32_t>(chargeType));
+    BATTERY_HILOGD(COMP_SVC, "publisher chargeType=%{public}d", chargeType);
+    isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
+    if (!isSuccess) {
+        BATTERY_HILOGD(COMP_SVC, "failed to publish battery charge type event");
+    }
+
+    return isSuccess;
 }
 
 bool BatteryNotify::IsCommonEventServiceAbilityExist() const

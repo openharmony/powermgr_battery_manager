@@ -97,6 +97,8 @@ bool BatteryDump::GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, cons
     dprintf(fd, "remainingChargeTime: %ld \n", remainingChargeTime);
     int32_t temperature = service->GetBatteryTemperature();
     dprintf(fd, "temperature: %d \n", temperature);
+    ChargeType chargeType = service->GetChargeType();
+    dprintf(fd, "chargeType: %u \n", chargeType);
     return true;
 }
 
