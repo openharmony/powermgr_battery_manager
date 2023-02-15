@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "../include/battery_led.h"
+#include "battery_led.h"
 #include "battery_log.h"
 
 using namespace OHOS::HDI::Light::V1_0;

@@ -17,13 +17,6 @@ config("batteryd_private_config") {
   include_dirs = [
     "include",
     "../utils/native/include",
-    "//drivers/hdf_core/framework/ability/sbuf/include",
-    "//drivers/hdf_core/framework/include/platform",
-    "//drivers/hdf_core/framework/include/core",
-    "//drivers/hdf_core/framework/include/osal",
-    "//drivers/hdf_core/framework/include/utils",
-    "//drivers/hdf_core/framework/include/config",
-    "//drivers/hdf_core/framework/include",
     "//foundation/graphic/ui/frameworks",
     "//foundation/graphic/ui/interfaces/kits",
     "//foundation/graphic/ui/interfaces/innerkits",
