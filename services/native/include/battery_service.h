@@ -30,8 +30,8 @@
 #include "iservmgr_hdi.h"
 #include "iservstat_listener_hdi.h"
 #include "ibattery_srv.h"
-#include "v1_1/ibattery_interface.h"
-#include "v1_1/types.h"
+#include "v1_2/ibattery_interface.h"
+#include "v1_2/types.h"
 #include "battery_info.h"
 #include "battery_light.h"
 #include "battery_service_event_handler.h"
@@ -75,6 +75,7 @@ public:
     int32_t GetBatteryTemperature() override;
     BatteryCapacityLevel GetCapacityLevel() override;
     int64_t GetRemainingChargeTime() override;
+    ChargeType GetChargeType();
     void ChangePath(const std::string path);
     void InitConfig();
     void HandleTemperature(int32_t temperature);
@@ -87,8 +88,8 @@ public:
 private:
     bool Init();
     void WakeupDevice(BatteryChargeState chargeState);
-    int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_1::BatteryInfo& event);
-    void ConvertingEvent(const OHOS::HDI::Battery::V1_1::BatteryInfo &event);
+    int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_2::BatteryInfo& event);
+    void ConvertingEvent(const OHOS::HDI::Battery::V1_2::BatteryInfo &event);
     void HandleBatteryInfo();
     void SendEvent(int32_t event, int64_t delayTime);
     void CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState);
@@ -105,7 +106,7 @@ private:
     std::shared_ptr<BatteryServiceEventHandler> handler_ { nullptr };
     std::unique_ptr<BatteryNotify> batteryNotify_ { nullptr };
     BatteryLight batteryLight_;
-    sptr<HDI::Battery::V1_1::IBatteryInterface> iBatteryInterface_ { nullptr };
+    sptr<HDI::Battery::V1_2::IBatteryInterface> iBatteryInterface_ { nullptr };
     sptr<OHOS::HDI::ServiceManager::V1_0::IServiceManager> hdiServiceMgr_ { nullptr };
     sptr<HdiServiceStatusListener::IServStatListener> hdiServStatListener_ { nullptr };
     bool isLowPower_ { false };
