@@ -64,8 +64,8 @@ public:
     static shared_ptr<CommonEventBatteryChangedTest> RegisterEvent();
 };
 
-CommonEventBatteryChangedTest::CommonEventBatteryChangedTest(const CommonEventSubscribeInfo& subscriberInfo) :
-    CommonEventSubscriber(subscriberInfo)
+CommonEventBatteryChangedTest::CommonEventBatteryChangedTest(const CommonEventSubscribeInfo& subscriberInfo)
+    : CommonEventSubscriber(subscriberInfo)
 {
 }
 
@@ -78,8 +78,8 @@ public:
     static shared_ptr<CommonEventBatteryLowTest> RegisterEvent();
 };
 
-CommonEventBatteryLowTest::CommonEventBatteryLowTest(const CommonEventSubscribeInfo& subscriberInfo) :
-    CommonEventSubscriber(subscriberInfo)
+CommonEventBatteryLowTest::CommonEventBatteryLowTest(const CommonEventSubscribeInfo& subscriberInfo)
+    : CommonEventSubscriber(subscriberInfo)
 {
 }
 
@@ -92,8 +92,8 @@ public:
     static shared_ptr<CommonEventBatteryOkayTest> RegisterEvent();
 };
 
-CommonEventBatteryOkayTest::CommonEventBatteryOkayTest(const CommonEventSubscribeInfo& subscriberInfo) :
-    CommonEventSubscriber(subscriberInfo)
+CommonEventBatteryOkayTest::CommonEventBatteryOkayTest(const CommonEventSubscribeInfo& subscriberInfo)
+    : CommonEventSubscriber(subscriberInfo)
 {
 }
 
@@ -106,8 +106,8 @@ public:
     static shared_ptr<CommonEventBatteryChargingTest> RegisterEvent();
 };
 
-CommonEventBatteryChargingTest::CommonEventBatteryChargingTest(const CommonEventSubscribeInfo& subscriberInfo) :
-    CommonEventSubscriber(subscriberInfo)
+CommonEventBatteryChargingTest::CommonEventBatteryChargingTest(const CommonEventSubscribeInfo& subscriberInfo)
+    : CommonEventSubscriber(subscriberInfo)
 {
 }
 
@@ -120,8 +120,8 @@ public:
     static shared_ptr<CommonEventBatteryDischargingTest> RegisterEvent();
 };
 
-CommonEventBatteryDischargingTest::CommonEventBatteryDischargingTest(const CommonEventSubscribeInfo& subscriberInfo) :
-    CommonEventSubscriber(subscriberInfo)
+CommonEventBatteryDischargingTest::CommonEventBatteryDischargingTest(const CommonEventSubscribeInfo& subscriberInfo)
+    : CommonEventSubscriber(subscriberInfo)
 {
 }
 
@@ -134,8 +134,8 @@ public:
     static shared_ptr<CommonEventBatteryDisconnectTest> RegisterEvent();
 };
 
-CommonEventBatteryDisconnectTest::CommonEventBatteryDisconnectTest(const CommonEventSubscribeInfo& subscriberInfo) :
-    CommonEventSubscriber(subscriberInfo)
+CommonEventBatteryDisconnectTest::CommonEventBatteryDisconnectTest(const CommonEventSubscribeInfo& subscriberInfo)
+    : CommonEventSubscriber(subscriberInfo)
 {
 }
 
@@ -148,8 +148,22 @@ public:
     static shared_ptr<CommonEventBatteryConnectTest> RegisterEvent();
 };
 
-CommonEventBatteryConnectTest::CommonEventBatteryConnectTest(const CommonEventSubscribeInfo& subscriberInfo) :
-    CommonEventSubscriber(subscriberInfo)
+CommonEventBatteryConnectTest::CommonEventBatteryConnectTest(const CommonEventSubscribeInfo& subscriberInfo)
+    : CommonEventSubscriber(subscriberInfo)
+{
+}
+
+class CommonEventChargeTypeChangedTest : public CommonEventSubscriber {
+public:
+    CommonEventChargeTypeChangedTest() = default;
+    explicit CommonEventChargeTypeChangedTest(const CommonEventSubscribeInfo& subscriberInfo);
+    virtual ~CommonEventChargeTypeChangedTest() {};
+    virtual void OnReceiveEvent(const CommonEventData& data);
+    static shared_ptr<CommonEventChargeTypeChangedTest> RegisterEvent();
+};
+
+CommonEventChargeTypeChangedTest::CommonEventChargeTypeChangedTest(const CommonEventSubscribeInfo& subscriberInfo)
+    : CommonEventSubscriber(subscriberInfo)
 {
 }
 
@@ -204,6 +218,12 @@ void CommonEventBatteryConnectTest::OnReceiveEvent(const CommonEventData& data)
     int maxVoltage = data.GetWant().GetIntParam(KEY_PLUGGED_MAX_VOLTAGE, defaultMaxVoltage);
     g_cv.notify_one();
     EXPECT_NE(maxVoltage, static_cast<int32_t>(BatteryPluggedType::PLUGGED_TYPE_USB)) << "COMMON_EVENT_POWER_CONNECTED";
+}
+
+void CommonEventChargeTypeChangedTest::OnReceiveEvent(const CommonEventData& data)
+{
+    g_action = data.GetWant().GetAction();
+    g_cv.notify_one();
 }
 
 shared_ptr<CommonEventBatteryChangedTest> CommonEventBatteryChangedTest::RegisterEvent()
@@ -309,6 +329,22 @@ shared_ptr<CommonEventBatteryConnectTest> CommonEventBatteryConnectTest::Registe
     matchingSkills.AddEvent(CommonEventSupport::COMMON_EVENT_POWER_CONNECTED);
     CommonEventSubscribeInfo subscribeInfo(matchingSkills);
     auto subscriberPtr = std::make_shared<CommonEventBatteryConnectTest>(subscribeInfo);
+    for (int32_t tryTimes = 0; tryTimes < RETRY_TIMES; tryTimes++) {
+        succeed = CommonEventManager::SubscribeCommonEvent(subscriberPtr);
+    }
+    if (!succeed) {
+        return nullptr;
+    }
+    return subscriberPtr;
+}
+
+shared_ptr<CommonEventChargeTypeChangedTest> CommonEventChargeTypeChangedTest::RegisterEvent()
+{
+    bool succeed = false;
+    MatchingSkills matchingSkills;
+    matchingSkills.AddEvent(CommonEventSupport::COMMON_EVENT_CHARGE_TYPE_CHANGED);
+    CommonEventSubscribeInfo subscribeInfo(matchingSkills);
+    auto subscriberPtr = std::make_shared<CommonEventChargeTypeChangedTest>(subscribeInfo);
     for (int32_t tryTimes = 0; tryTimes < RETRY_TIMES; tryTimes++) {
         succeed = CommonEventManager::SubscribeCommonEvent(subscriberPtr);
     }
@@ -445,6 +481,23 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest007, TestSize.Level0)
 {
     shared_ptr<CommonEventBatteryConnectTest> subscriber = CommonEventBatteryConnectTest::RegisterEvent();
     TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB");
+    system("hidumper -s 3302 -a -r");
+    std::unique_lock<std::mutex> lck(g_mtx);
+    if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
+        g_cv.notify_one();
+    }
+    CommonEventManager::UnSubscribeCommonEvent(subscriber);
+}
+
+/*
+ * @tc.number: BatteryEventSystemTest008
+ * @tc.name: BatteryEventSystemTest
+ * @tc.desc: Verify the receive the common event
+ */
+HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
+{
+    shared_ptr<CommonEventChargeTypeChangedTest> subscriber = CommonEventChargeTypeChangedTest::RegisterEvent();
+    TestUtils::WriteMock(MOCK_BATTERY_PATH + "/charger_type", "1");
     system("hidumper -s 3302 -a -r");
     std::unique_lock<std::mutex> lck(g_mtx);
     if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
