@@ -60,7 +60,6 @@ ohos_executable("charger") {
 
   deps = [
     "//base/update/updater/services/ui:libui",
-    "//drivers/peripheral/display/hal:hdi_display_device",
     "//foundation/graphic/ui/ext/updater:libupdater_layout",
     "//third_party/cJSON:cjson",
     "//third_party/jsoncpp:jsoncpp",
@@ -71,14 +70,15 @@ ohos_executable("charger") {
   external_deps = [
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_1.2",
+    "drivers_interface_display:display_device_client",
+    "drivers_interface_input:hdi_input",
     "drivers_interface_light:liblight_proxy_1.0",
-    "drivers_peripheral_input:hdi_input",
     "init:libbegetutil",
     "ipc:ipc_core",
   ]
 
   install_images = [ chipset_base_dir ]
-  part_name = "drivers_peripheral_battery"
+  part_name = "battery_manager"
 }
 
 group("charger_group") {

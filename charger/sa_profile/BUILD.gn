@@ -18,7 +18,7 @@ ohos_prebuilt_etc("led_config") {
   source = "battery_config.json"
   install_images = [ chipset_base_dir ]
   relative_install_dir = "battery"
-  part_name = "drivers_peripheral_battery"
+  part_name = "battery_manager"
   subsystem_name = "hdf"
 }
 
@@ -26,6 +26,6 @@ ohos_prebuilt_etc("animation_config") {
   source = "animation.json"
   install_images = [ chipset_base_dir ]
   relative_install_dir = "charger/resources"
-  part_name = "drivers_peripheral_battery"
+  part_name = "battery_manager"
   subsystem_name = "hdf"
 }
