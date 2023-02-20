@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -48,7 +48,7 @@ namespace {
 constexpr unsigned int BATTERY_DOMAIN_ID_START = 0xD002920;
 constexpr unsigned int BATTERY_DOMAIN_ID_END = BATTERY_DOMAIN_ID_START + 32;
 constexpr unsigned int TEST_DOMAIN_ID = 0xD000F00;
-}
+} // namespace
 
 enum BatteryManagerLogLabel {
     // Component labels, you can add if needed
@@ -69,28 +69,28 @@ enum BatteryManagerLogLabel {
 
 enum BatteryManagerLogDomain {
     DOMAIN_APP = BATTERY_DOMAIN_ID_START + COMP_APP, // 0xD002920
-    DOMAIN_FRAMEWORK, // 0xD002921
-    DOMAIN_SERVICE, // 0xD002922
-    DOMAIN_HDI, // 0xD002923
-    DOMAIN_DRIVER, // 0xD002924
+    DOMAIN_FRAMEWORK,                                // 0xD002921
+    DOMAIN_SERVICE,                                  // 0xD002922
+    DOMAIN_HDI,                                      // 0xD002923
+    DOMAIN_DRIVER,                                   // 0xD002924
     DOMAIN_FEATURE_CHARGING,
     DOMAIN_FEATURE_BATT_INFO,
     DOMAIN_FEATURE_BATT_LIGHT,
-    DOMAIN_TEST = TEST_DOMAIN_ID, // 0xD000F00
+    DOMAIN_TEST = TEST_DOMAIN_ID,       // 0xD000F00
     DOMAIN_END = BATTERY_DOMAIN_ID_END, // Max to 0xD002940, keep the sequence and length same as BatteryManagerLogLabel
 };
 
 // Keep the sequence and length same as BatteryManagerLogDomain
 static constexpr OHOS::HiviewDFX::HiLogLabel BATTERY_LABEL[LABEL_END] = {
-    {LOG_CORE, DOMAIN_APP,               "BatteryApp"},
-    {LOG_CORE, DOMAIN_FRAMEWORK,         "BatteryFwk"},
-    {LOG_CORE, DOMAIN_SERVICE,           "BatterySvc"},
-    {LOG_CORE, DOMAIN_HDI,               "BatteryHdi"},
-    {LOG_CORE, DOMAIN_DRIVER,            "BatteryDrv"},
-    {LOG_CORE, DOMAIN_FEATURE_CHARGING,  "BatteryCharging"},
-    {LOG_CORE, DOMAIN_FEATURE_BATT_INFO, "BatteryInfo"},
-    {LOG_CORE, DOMAIN_FEATURE_BATT_LIGHT, "BatteryLight"},
-    {LOG_CORE, DOMAIN_TEST,              "BatteryTest"},
+    {LOG_CORE, DOMAIN_APP,                "BatteryApp"     },
+    {LOG_CORE, DOMAIN_FRAMEWORK,          "BatteryFwk"     },
+    {LOG_CORE, DOMAIN_SERVICE,            "BatterySvc"     },
+    {LOG_CORE, DOMAIN_HDI,                "BatteryHdi"     },
+    {LOG_CORE, DOMAIN_DRIVER,             "BatteryDrv"     },
+    {LOG_CORE, DOMAIN_FEATURE_CHARGING,   "BatteryCharging"},
+    {LOG_CORE, DOMAIN_FEATURE_BATT_INFO,  "BatteryInfo"    },
+    {LOG_CORE, DOMAIN_FEATURE_BATT_LIGHT, "BatteryLight"   },
+    {LOG_CORE, DOMAIN_TEST,               "BatteryTest"    },
 };
 
 #define BATTERY_HILOGF(domain, ...) (void)OHOS::HiviewDFX::HiLog::Fatal(BATTERY_LABEL[domain], FORMAT(__VA_ARGS__))
