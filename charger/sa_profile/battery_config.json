@@ -32,6 +32,9 @@
         },
         "voltage_limit":{
             "path": "/data/service/el0/battery/voltage_limit"
+        },
+        "type": {
+            "path": "/data/service/el0/battery/charger_type"
         }
     }
 }
