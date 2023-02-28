@@ -28,8 +28,8 @@
 namespace OHOS {
 namespace PowerMgr {
 namespace {
-constexpr const char* UI_CFG_FILE = "/vendor/etc/charger/resources/animation.json";
-constexpr const char* FONT_PATH = "/vendor/etc/charger/resources/";
+constexpr const char* UI_CFG_FILE = "/system/etc/charger/resources/animation.json";
+constexpr const char* FONT_PATH = "/system/etc/charger/resources/";
 constexpr const char* CHARGER_ANIMATION_PAGE_ID = "Charger:Animation";
 constexpr const char* CHARGER_ANIMATION_COM_ID = "Charging_Animation_Image";
 constexpr const char* CHARGER_PERCENT_COM_ID = "Charging_Percent_Label";

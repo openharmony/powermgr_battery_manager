@@ -2,7 +2,7 @@
     "id": "Charger",
     "screenWidth": 720,
     "screenHeight": 1280,
-    "dir": "/vendor/etc/charger/resources",
+    "dir": "/system/etc/charger/resources",
     "bgColor": "#000000ff",
     "subpages": [
         {
@@ -51,7 +51,7 @@
             "y": 410,
             "w": 400,
             "h": 400,
-            "resPath": "/vendor/etc/charger/resources/",
+            "resPath": "/system/etc/charger/resources/",
             "imgCnt": 62,
             "updInterval": 60,
             "filePrefix": "loop"
