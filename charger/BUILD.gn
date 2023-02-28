@@ -77,16 +77,11 @@ ohos_executable("charger") {
     "ipc:ipc_core",
   ]
 
-  install_images = [ chipset_base_dir ]
   part_name = "battery_manager"
 }
 
 group("charger_group") {
   deps = [ ":charger" ]
-}
-
-group("led_service") {
-  deps = [ "sa_profile:led_config" ]
 }
 
 group("charger_animation") {
