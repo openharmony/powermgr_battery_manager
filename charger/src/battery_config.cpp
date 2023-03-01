@@ -20,6 +20,7 @@
 namespace OHOS {
 namespace PowerMgr {
 namespace {
+constexpr const char* SYSTEM_BATTERY_CONFIG_PATH = "/system/etc/battery/battery_config.json";
 constexpr const char* VENDOR_BATTERY_CONFIG_PATH = "/vendor/etc/battery/battery_config.json";
 constexpr int32_t MAP_KEY_INDEX = 0;
 constexpr int32_t BEGIN_SOC_INDEX = 0;
@@ -107,6 +108,14 @@ bool BatteryConfig::OpenFile(std::ifstream& ifsConf, const std::string& configPa
     ifsConf.open(VENDOR_BATTERY_CONFIG_PATH);
     isOpen = ifsConf.is_open();
     BATTERY_HILOGI(FEATURE_CHARGING, "open then vendor battery_config.json is %{public}d", isOpen);
+
+    if (isOpen) {
+        return true;
+    }
+
+    ifsConf.open(SYSTEM_BATTERY_CONFIG_PATH);
+    isOpen = ifsConf.is_open();
+    BATTERY_HILOGI(FEATURE_CHARGING, "open then system battery_config.json is %{public}d", isOpen);
     return isOpen;
 }
 
