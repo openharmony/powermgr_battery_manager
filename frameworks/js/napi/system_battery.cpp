@@ -128,6 +128,7 @@ void SystemBattery::SuccessCallback(napi_env env)
     argv = CreateResponse(env);
     if (argv == nullptr) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "Failed to create BatteryResponse");
+        napi_delete_reference(env, successRef_);
         return;
     }
 
@@ -157,6 +158,7 @@ void SystemBattery::FailCallback(napi_env env)
     if (strStatus != napi_ok || intStatus != napi_ok) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "Napi failed to create a parameter, code: %{public}d, msg: %{public}s",
             error_.GetCode(), msg.c_str());
+        napi_delete_reference(env, failRef_);
         return;
     }
 
