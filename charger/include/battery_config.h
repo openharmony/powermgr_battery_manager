@@ -36,7 +36,7 @@ public:
     };
     static BatteryConfig& GetInstance();
     static void DestroyInstance();
-    bool ParseConfig(std::string configPath = "");
+    bool ParseConfig();
     bool IsExist(std::string key) const;
     int32_t GetInt(std::string key, int32_t defVal = 0) const;
     std::string GetString(std::string key, std::string defVal = "") const;
