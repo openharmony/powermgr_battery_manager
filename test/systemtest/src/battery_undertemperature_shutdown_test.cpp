@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -48,11 +48,13 @@ void BatteryUndertemperatureShutdownTest::TearDownTestCase(void)
  * @tc.name: BatteryST_005
  * @tc.desc: Test functions temperature in normal range in BatteryHostServiceStub
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatteryUndertemperatureShutdownTest, BatteryST_005, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST_005 start.", __func__);
-    g_service->InitConfig();
+    auto ret = g_service->InitConfig();
+    EXPECT_TRUE(ret);
 
     g_service->HandleTemperature(-99);
     HDF_LOGD("%{public}s: enter. BatteryST_005 end.", __func__);
@@ -62,11 +64,13 @@ HWTEST_F (BatteryUndertemperatureShutdownTest, BatteryST_005, TestSize.Level1)
  * @tc.name: BatteryST_006
  * @tc.desc: Test functions lower temperature shutdown in BatteryHostServiceStub
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatteryUndertemperatureShutdownTest, BatteryST_006, TestSize.Level1)
 {
     HDF_LOGD("%{public}s: enter. BatteryST_006 start.", __func__);
-    g_service->InitConfig();
+    auto ret = g_service->InitConfig();
+    EXPECT_TRUE(ret);
     if (false) {
         g_service->HandleTemperature(-100);
     }

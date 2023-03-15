@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -131,6 +131,7 @@ static HWTEST_F(BatteryDumpTest, BatteryDump007, TestSize.Level1)
     int32_t fd = 1;
     std::vector<std::u16string> args;
     g_service->Dump(fd, args);
+    EXPECT_EQ(g_service->Dump(fd, args), ERR_NO_INIT);
 }
 
 /**
