@@ -14,12 +14,15 @@
  */
 
 #include "battery_config.h"
+
 #include "string_ex.h"
+#include "config_policy_utils.h"
 #include "charger_log.h"
 
 namespace OHOS {
 namespace PowerMgr {
 namespace {
+constexpr const char* BATTERY_CONFIG_PATH = "etc/battery/battery_config.json";
 constexpr const char* SYSTEM_BATTERY_CONFIG_PATH = "/system/etc/battery/battery_config.json";
 constexpr const char* VENDOR_BATTERY_CONFIG_PATH = "/vendor/etc/battery/battery_config.json";
 constexpr int32_t MAP_KEY_INDEX = 0;
@@ -32,7 +35,7 @@ constexpr int32_t MAX_DEPTH = 5;
 constexpr int32_t MIN_DEPTH = 1;
 constexpr uint32_t MOVE_LEFT_16 = 16;
 constexpr uint32_t MOVE_LEFT_8 = 8;
-}
+} // namespace
 std::shared_ptr<BatteryConfig> BatteryConfig::instance_ = nullptr;
 std::mutex BatteryConfig::mutex_;
 
@@ -45,12 +48,15 @@ BatteryConfig& BatteryConfig::GetInstance()
     return *(instance_.get());
 }
 
-bool BatteryConfig::ParseConfig(std::string configPath)
+bool BatteryConfig::ParseConfig()
 {
+    char buf[MAX_PATH_LEN];
+    char* path = GetOneCfgFile(BATTERY_CONFIG_PATH, buf, MAX_PATH_LEN);
+    BATTERY_HILOGD(FEATURE_CHARGING, "GetOneCfgFile battery_config.json is %{private}s", path);
+
     Json::CharReaderBuilder readerBuilder;
     std::ifstream ifsConf;
-
-    if (!OpenFile(ifsConf, configPath)) {
+    if (!OpenFile(ifsConf, path)) {
         return false;
     }
 
@@ -182,5 +188,5 @@ Json::Value BatteryConfig::GetValue(std::string key) const
     }
     return value;
 }
-}  // namespace PowerMgr
-}  // namespace OHOS
+} // namespace PowerMgr
+} // namespace OHOS
