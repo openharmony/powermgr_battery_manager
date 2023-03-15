@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -37,7 +37,7 @@ auto& g_configTest = BatteryConfig::GetInstance();
 HWTEST_F(BatteryConfigTest, BatteryConfig001, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryConfig001 begin");
-    EXPECT_TRUE(g_configTest.ParseConfig(SYSTEM_BATTERY_CONFIG_PATH));
+    EXPECT_TRUE(g_configTest.ParseConfig());
     BATTERY_HILOGD(LABEL_TEST, "BatteryConfig001 end");
 }
 
@@ -210,7 +210,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig010, TestSize.Level1)
 HWTEST_F(BatteryConfigTest, BatteryConfig011, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryConfig0011 begin");
-    EXPECT_TRUE(g_configTest.ParseConfig(""));
+    EXPECT_TRUE(g_configTest.ParseConfig());
     BATTERY_HILOGD(LABEL_TEST, "BatteryConfig0011 end");
 }
 

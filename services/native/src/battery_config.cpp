@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,10 +16,13 @@
 #include "battery_config.h"
 
 #include "string_ex.h"
+#include "config_policy_utils.h"
+
 #include "battery_log.h"
 #include "power_common.h"
 
 namespace {
+constexpr const char* BATTERY_CONFIG_PATH = "etc/battery/battery_config.json";
 constexpr const char* SYSTEM_BATTERY_CONFIG_PATH = "/system/etc/battery/battery_config.json";
 constexpr const char* VENDOR_BATTERY_CONFIG_PATH = "/vendor/etc/battery/battery_config.json";
 constexpr int32_t MAP_KEY_INDEX = 0;
@@ -47,12 +50,16 @@ BatteryConfig& BatteryConfig::GetInstance()
     return *(instance_.get());
 }
 
-bool BatteryConfig::ParseConfig(std::string configPath)
+bool BatteryConfig::ParseConfig()
 {
+    char buf[MAX_PATH_LEN];
+    char* path = GetOneCfgFile(BATTERY_CONFIG_PATH, buf, MAX_PATH_LEN);
+    BATTERY_HILOGD(COMP_SVC, "GetOneCfgFile battery_config.json is %{private}s", path);
+
     Json::CharReaderBuilder readerBuilder;
     std::ifstream ifsConf;
 
-    RETURN_IF_WITH_RET (!OpenFile(ifsConf, configPath), false);
+    RETURN_IF_WITH_RET(!OpenFile(ifsConf, path), false);
 
     config_.clear();
     readerBuilder["collectComments"] = false;
