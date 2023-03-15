@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,14 +25,12 @@ using namespace testing::ext;
 namespace OHOS {
 namespace PowerMgr {
 namespace {
-constexpr const char* SYSTEM_BATTERY_CONFIG_PATH = "/system/etc/battery/battery_config.json";
-
 BatteryLight g_light;
 } // namespace
 
 void BatteryLightTest::SetUpTestCase()
 {
-    BatteryConfig::GetInstance().ParseConfig(SYSTEM_BATTERY_CONFIG_PATH);
+    BatteryConfig::GetInstance().ParseConfig();
     g_light.InitLight();
     g_light.TurnOff();
     GTEST_LOG_(INFO) << "The current device supports Light: " << g_light.isAvailable();
