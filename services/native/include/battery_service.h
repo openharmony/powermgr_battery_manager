@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -76,7 +76,7 @@ public:
     BatteryCapacityLevel GetCapacityLevel() override;
     int64_t GetRemainingChargeTime() override;
     ChargeType GetChargeType();
-    void ChangePath(const std::string path);
+    bool ChangePath(const std::string path);
     void InitConfig();
     void HandleTemperature(int32_t temperature);
     bool RegisterHdiStatusListener();
