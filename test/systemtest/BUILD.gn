@@ -22,7 +22,7 @@ config("module_private_config") {
     "include",
     "${battery_innerkits}/native/include",
     "${battery_service_zidl}/include",
-    "//base/powermgr/power_manager/interfaces/innerkits/native/include",
+    "${battery_manager_path}/interfaces/inner_api/native/include",
     "${battery_manager_path}/test/utils",
   ]
 }
@@ -76,7 +76,7 @@ ohos_systemtest("test_battery_overtemperature_shutdown") {
   ]
 
   deps = [
-    "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
+    "${battery_manager_path}/interfaces/inner_api:batterysrv_client",
     "//base/powermgr/battery_manager/services:batteryservice",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
@@ -108,7 +108,7 @@ ohos_systemtest("test_battery_undertemperature_shutdown") {
   ]
 
   deps = [
-    "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
+    "${battery_manager_path}/interfaces/inner_api:batterysrv_client",
     "//base/powermgr/battery_manager/services:batteryservice",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
@@ -165,7 +165,7 @@ ohos_systemtest("test_battery_dialog") {
   ]
 
   deps = [
-    "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
+    "${battery_manager_path}/interfaces/inner_api:batterysrv_client",
     "//base/powermgr/battery_manager/services:batteryservice",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
@@ -203,7 +203,7 @@ ohos_systemtest("test_battery_event_systemtest") {
   ]
 
   deps = [
-    "${battery_manager_path}/interfaces/innerkits:batterysrv_client",
+    "${battery_manager_path}/interfaces/inner_api:batterysrv_client",
     "${battery_manager_path}/services:batteryservice",
     "//foundation/arkui/ace_engine/interfaces/inner_api/ui_service_manager:ui_service_mgr",
     "//third_party/googletest:gtest_main",
