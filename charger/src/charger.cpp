@@ -24,10 +24,6 @@ int main(int argc, char** argv)
     using namespace OHOS::PowerMgr;
     BATTERY_HILOGD(FEATURE_CHARGING, "starting battery charger");
     std::unique_ptr<ChargerThread> chargerThread = std::make_unique<ChargerThread>();
-    if (chargerThread == nullptr) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "make_unique ChargerThread return nullptr");
-        return ERR_NO_MEMORY;
-    }
     chargerThread->StartThread(nullptr);
 
     BATTERY_HILOGD(FEATURE_CHARGING, "battery charger thread started");

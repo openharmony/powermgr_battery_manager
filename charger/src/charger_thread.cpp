@@ -239,8 +239,8 @@ void ChargerThread::HandlePowerKeyState()
 
 void ChargerThread::HandlePowerKey(int32_t keycode, int64_t now)
 {
-    static bool turnOnByKeydown = false;
     if (keycode == KEY_POWER) {
+        static bool turnOnByKeydown = false;
         if (g_keys[keycode].down) {
             int64_t rebootTime = g_keys[keycode].timestamp + REBOOT_TIME;
             if (now >= rebootTime) {
