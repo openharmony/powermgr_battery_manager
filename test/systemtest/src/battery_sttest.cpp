@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -60,6 +60,7 @@ namespace {
  * @tc.name: BatteryST001
  * @tc.desc: Test IBatterySrv interface GetCapacity
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST001, TestSize.Level1)
 {
@@ -71,7 +72,7 @@ HWTEST_F (BatterySttest, BatteryST001, TestSize.Level1)
         auto capacity = BatterySrvClient.GetCapacity();
         BATTERY_HILOGD(LABEL_TEST, "BatteryST001::capacity=%{public}d.", capacity);
         GTEST_LOG_(INFO) << "BatteryST001 executing, capacity=" << capacity;
-        ASSERT_TRUE(capacity == 44);
+        EXPECT_TRUE(capacity == 44);
 
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", std::to_string(tempCapacity));
         GTEST_LOG_(INFO) << "BatteryST001 executing, capacity=" << tempCapacity;
@@ -79,7 +80,7 @@ HWTEST_F (BatterySttest, BatteryST001, TestSize.Level1)
         auto capacity = BatterySrvClient.GetCapacity();
         BATTERY_HILOGD(LABEL_TEST, "BatteryST001::capacity=%{public}d", capacity);
         GTEST_LOG_(INFO) << "BatteryST001 executing, capacity=" << capacity;
-        ASSERT_TRUE(capacity <= 100 && capacity >= 0);
+        EXPECT_TRUE(capacity <= 100 && capacity >= 0);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST001 end.");
 }
@@ -88,6 +89,7 @@ HWTEST_F (BatterySttest, BatteryST001, TestSize.Level1)
  * @tc.name: BatteryST002
  * @tc.desc: Test IBatterySrv interface GetChargingStatus when chargestate value is none
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST002, TestSize.Level1)
 {
@@ -102,7 +104,7 @@ HWTEST_F (BatterySttest, BatteryST002, TestSize.Level1)
         BATTERY_HILOGD(LABEL_TEST, "BatteryST002::capacity=%{public}d.", chargeState);
         GTEST_LOG_(INFO) << "BatteryST002 executing, chargeState=" << static_cast<int32_t>(chargeState);
 
-        ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_NONE);
+        EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_NONE);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/status",
                 chargeStateArr[static_cast<int32_t>(tempChargeState)]);
         GTEST_LOG_(INFO) << "BatteryST002 executing, chargeState=" << static_cast<int32_t>(tempChargeState);
@@ -112,7 +114,7 @@ HWTEST_F (BatterySttest, BatteryST002, TestSize.Level1)
             static_cast<int32_t>(chargeState));
         GTEST_LOG_(INFO) << "BatteryST002 executing, chargeState="
             << static_cast<int32_t>(chargeState);
-        ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
+        EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
             chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST002 end.");
@@ -122,6 +124,7 @@ HWTEST_F (BatterySttest, BatteryST002, TestSize.Level1)
  * @tc.name: BatteryST003
  * @tc.desc: Test IBatterySrv interface GetChargingStatus when chargestate value is enable
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST003, TestSize.Level1)
 {
@@ -135,7 +138,7 @@ HWTEST_F (BatterySttest, BatteryST003, TestSize.Level1)
         auto chargeState = BatterySrvClient.GetChargingStatus();
         GTEST_LOG_(INFO) << "BatteryST003 executing, chargeState=" << static_cast<int32_t>(chargeState);
 
-        ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE);
+        EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/status",
                 chargeStateArr[static_cast<int32_t>(tempChargeState)]);
         GTEST_LOG_(INFO) << "BatteryST003 executing, chargeState=" << static_cast<int32_t>(tempChargeState);
@@ -145,7 +148,7 @@ HWTEST_F (BatterySttest, BatteryST003, TestSize.Level1)
             static_cast<int32_t>(chargeState));
         GTEST_LOG_(INFO) << "BatteryST003 executing, chargeState="
             << static_cast<int32_t>(chargeState);
-        ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
+        EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
             chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST003 end.");
@@ -155,6 +158,7 @@ HWTEST_F (BatterySttest, BatteryST003, TestSize.Level1)
  * @tc.name: BatteryST004
  * @tc.desc: Test IBatterySrv interface GetChargingStatus when chargestate value is full
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST004, TestSize.Level1)
 {
@@ -168,7 +172,7 @@ HWTEST_F (BatterySttest, BatteryST004, TestSize.Level1)
         auto chargeState = BatterySrvClient.GetChargingStatus();
         GTEST_LOG_(INFO) << "BatteryST004 executing, chargeState=" << static_cast<int32_t>(chargeState);
 
-        ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
+        EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/status",
                 chargeStateArr[static_cast<int32_t>(tempChargeState)]);
         GTEST_LOG_(INFO) << "BatteryST004 executing, chargeState=" << static_cast<int32_t>(tempChargeState);
@@ -178,7 +182,7 @@ HWTEST_F (BatterySttest, BatteryST004, TestSize.Level1)
             static_cast<int32_t>(chargeState));
         GTEST_LOG_(INFO) << "BatteryST004 executing, chargeState="
             << static_cast<int32_t>(chargeState);
-        ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
+        EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
             chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST004 end.");
@@ -188,6 +192,7 @@ HWTEST_F (BatterySttest, BatteryST004, TestSize.Level1)
  * @tc.name: BatteryST005
  * @tc.desc: Test IBatterySrv interface GetChargingStatus when chargestate value is disable
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST005, TestSize.Level1)
 {
@@ -201,7 +206,7 @@ HWTEST_F (BatterySttest, BatteryST005, TestSize.Level1)
         auto chargeState = BatterySrvClient.GetChargingStatus();
         GTEST_LOG_(INFO) << "BatteryST005 executing, chargeState=" << static_cast<int32_t>(chargeState);
 
-        ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_DISABLE);
+        EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_DISABLE);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/status",
                 chargeStateArr[static_cast<int32_t>(tempChargeState)]);
         GTEST_LOG_(INFO) << "BatteryST005 executing, chargeState=" << static_cast<int32_t>(tempChargeState);
@@ -211,7 +216,7 @@ HWTEST_F (BatterySttest, BatteryST005, TestSize.Level1)
             static_cast<int32_t>(chargeState));
         GTEST_LOG_(INFO) << "BatteryST005 executing, chargeState="
             << static_cast<int32_t>(chargeState);
-        ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
+        EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
             chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST005 end.");
@@ -221,6 +226,7 @@ HWTEST_F (BatterySttest, BatteryST005, TestSize.Level1)
  * @tc.name: BatteryST006
  * @tc.desc: Test IBatterySrv interface GetChargingStatus when chargestate value is butt
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST006, TestSize.Level1)
 {
@@ -234,7 +240,7 @@ HWTEST_F (BatterySttest, BatteryST006, TestSize.Level1)
         auto chargeState = BatterySrvClient.GetChargingStatus();
         GTEST_LOG_(INFO) << "BatteryST006 executing, chargeState=" << static_cast<int32_t>(chargeState);
 
-        ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_BUTT);
+        EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_BUTT);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/status",
                 chargeStateArr[static_cast<int32_t>(tempChargeState)]);
         GTEST_LOG_(INFO) << "BatteryST006 executing, chargeState=" << static_cast<int32_t>(tempChargeState);
@@ -244,7 +250,7 @@ HWTEST_F (BatterySttest, BatteryST006, TestSize.Level1)
             static_cast<int32_t>(chargeState));
         GTEST_LOG_(INFO) << "BatteryST006 executing, chargeState="
             << static_cast<int32_t>(chargeState);
-        ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
+        EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
             chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST006 end.");
@@ -254,6 +260,7 @@ HWTEST_F (BatterySttest, BatteryST006, TestSize.Level1)
  * @tc.name: BatteryST007
  * @tc.desc: Test IBatterySrv interface GetHealthStatus when healthstatus value is HEALTH_STATE_GOOD
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST007, TestSize.Level1)
 {
@@ -267,7 +274,7 @@ HWTEST_F (BatterySttest, BatteryST007, TestSize.Level1)
         auto healthState = BatterySrvClient.GetHealthStatus();
         GTEST_LOG_(INFO) << "BatteryST007 executing, healthState=" << static_cast<int32_t>(healthState);
 
-        ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
+        EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/health",
                 healthStateArr[static_cast<int32_t>(tempHealthState)]);
         GTEST_LOG_(INFO) << "BatteryST007 executing, healthState=" << static_cast<int32_t>(tempHealthState);
@@ -277,7 +284,7 @@ HWTEST_F (BatterySttest, BatteryST007, TestSize.Level1)
             static_cast<int32_t>(healthState));
         GTEST_LOG_(INFO) << "BatteryST007 executing, healthState="
             << static_cast<int32_t>(healthState);
-        ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
+        EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST007 end.");
 }
@@ -286,6 +293,7 @@ HWTEST_F (BatterySttest, BatteryST007, TestSize.Level1)
  * @tc.name: BatteryST008
  * @tc.desc: Test IBatterySrv interface GetHealthStatus when healthstatus value is HEALTH_STATE_COLD
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST008, TestSize.Level1)
 {
@@ -299,7 +307,7 @@ HWTEST_F (BatterySttest, BatteryST008, TestSize.Level1)
         auto healthState = BatterySrvClient.GetHealthStatus();
         GTEST_LOG_(INFO) << "BatteryST008 executing, healthState=" << static_cast<int32_t>(healthState);
 
-        ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_COLD);
+        EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_COLD);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/health",
                 healthStateArr[static_cast<int32_t>(tempHealthState)]);
         GTEST_LOG_(INFO) << "BatteryST008 executing, healthState=" << static_cast<int32_t>(tempHealthState);
@@ -309,7 +317,7 @@ HWTEST_F (BatterySttest, BatteryST008, TestSize.Level1)
             static_cast<int32_t>(healthState));
         GTEST_LOG_(INFO) << "BatteryST008 executing, healthState="
             << static_cast<int32_t>(healthState);
-        ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
+        EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST008 end.");
 }
@@ -318,6 +326,7 @@ HWTEST_F (BatterySttest, BatteryST008, TestSize.Level1)
  * @tc.name: BatteryST009
  * @tc.desc: Test IBatterySrv interface GetHealthStatus when healthstatus value is HEALTH_STATE_OVERHEAT
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST009, TestSize.Level1)
 {
@@ -331,7 +340,7 @@ HWTEST_F (BatterySttest, BatteryST009, TestSize.Level1)
         auto healthState = BatterySrvClient.GetHealthStatus();
         GTEST_LOG_(INFO) << "BatteryST009 executing, healthState=" << static_cast<int32_t>(healthState);
 
-        ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_OVERHEAT);
+        EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_OVERHEAT);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/health",
                 healthStateArr[static_cast<int32_t>(tempHealthState)]);
         GTEST_LOG_(INFO) << "BatteryST009 executing, healthState=" << static_cast<int32_t>(tempHealthState);
@@ -341,7 +350,7 @@ HWTEST_F (BatterySttest, BatteryST009, TestSize.Level1)
             static_cast<int32_t>(healthState));
         GTEST_LOG_(INFO) << "BatteryST009 executing, healthState="
             << static_cast<int32_t>(healthState);
-        ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
+        EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST009 end.");
 }
@@ -350,6 +359,7 @@ HWTEST_F (BatterySttest, BatteryST009, TestSize.Level1)
  * @tc.name: BatteryST010
  * @tc.desc: Test IBatterySrv interface GetHealthStatus when healthstatus value is HEALTH_STATE_OVERVOLTAGE
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST010, TestSize.Level1)
 {
@@ -363,7 +373,7 @@ HWTEST_F (BatterySttest, BatteryST010, TestSize.Level1)
         auto healthState = BatterySrvClient.GetHealthStatus();
         GTEST_LOG_(INFO) << "BatteryST010 executing, healthState=" << static_cast<int32_t>(healthState);
 
-        ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_OVERVOLTAGE);
+        EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_OVERVOLTAGE);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/health",
                 healthStateArr[static_cast<int32_t>(tempHealthState)]);
         GTEST_LOG_(INFO) << "BatteryST010 executing, healthState=" << static_cast<int32_t>(tempHealthState);
@@ -373,7 +383,7 @@ HWTEST_F (BatterySttest, BatteryST010, TestSize.Level1)
             static_cast<int32_t>(healthState));
         GTEST_LOG_(INFO) << "BatteryST010 executing, healthState="
             << static_cast<int32_t>(healthState);
-        ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
+        EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST010 end.");
 }
@@ -382,6 +392,7 @@ HWTEST_F (BatterySttest, BatteryST010, TestSize.Level1)
  * @tc.name: BatteryST011
  * @tc.desc: Test IBatterySrv interface GetHealthStatus when healthstatus value is HEALTH_STATE_DEAD
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST011, TestSize.Level1)
 {
@@ -395,7 +406,7 @@ HWTEST_F (BatterySttest, BatteryST011, TestSize.Level1)
         auto healthState = BatterySrvClient.GetHealthStatus();
         GTEST_LOG_(INFO) << "BatteryST011 executing, healthState=" << static_cast<int32_t>(healthState);
 
-        ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_DEAD);
+        EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_DEAD);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/health",
                 healthStateArr[static_cast<int32_t>(tempHealthState)]);
         GTEST_LOG_(INFO) << "BatteryST011 executing, healthState=" << static_cast<int32_t>(tempHealthState);
@@ -405,7 +416,7 @@ HWTEST_F (BatterySttest, BatteryST011, TestSize.Level1)
             static_cast<int32_t>(healthState));
         GTEST_LOG_(INFO) << "BatteryST011 executing, healthState="
             << static_cast<int32_t>(healthState);
-        ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
+        EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST011 end.");
 }
@@ -414,6 +425,7 @@ HWTEST_F (BatterySttest, BatteryST011, TestSize.Level1)
  * @tc.name: BatteryST012
  * @tc.desc: Test IBatterySrv interface GetHealthStatus when healthstatus value is HEALTH_STATE_UNKNOWN
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST012, TestSize.Level1)
 {
@@ -427,7 +439,7 @@ HWTEST_F (BatterySttest, BatteryST012, TestSize.Level1)
         auto healthState = BatterySrvClient.GetHealthStatus();
         GTEST_LOG_(INFO) << "BatteryST012 executing, healthState=" << static_cast<int32_t>(healthState);
 
-        ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_UNKNOWN);
+        EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_UNKNOWN);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/health",
                 healthStateArr[static_cast<int32_t>(tempHealthState)]);
         GTEST_LOG_(INFO) << "BatteryST012 executing, healthState=" << static_cast<int32_t>(tempHealthState);
@@ -437,7 +449,7 @@ HWTEST_F (BatterySttest, BatteryST012, TestSize.Level1)
             static_cast<int32_t>(healthState));
         GTEST_LOG_(INFO) << "BatteryST012 executing, healthState="
             << static_cast<int32_t>(healthState);
-        ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
+        EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST012 end.");
 }
@@ -446,6 +458,7 @@ HWTEST_F (BatterySttest, BatteryST012, TestSize.Level1)
  * @tc.name: BatteryST013
  * @tc.desc: Test IBatterySrv interface GetPresent when present is true
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST013, TestSize.Level1)
 {
@@ -458,14 +471,14 @@ HWTEST_F (BatterySttest, BatteryST013, TestSize.Level1)
         auto present = BatterySrvClient.GetPresent();
         GTEST_LOG_(INFO) << "BatteryST013 executing, present=" << present;
 
-        ASSERT_TRUE(present);
+        EXPECT_TRUE(present);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/present", std::to_string(tempPresent));
         GTEST_LOG_(INFO) << "BatteryST013 executing, tempPresent=" << static_cast<int32_t>(tempPresent);
     } else {
         auto present = BatterySrvClient.GetPresent();
         BATTERY_HILOGD(LABEL_TEST, "BatteryST013::present=%{public}d", present);
         GTEST_LOG_(INFO) << "BatteryST013 executing, present=" << present;
-        ASSERT_TRUE(present);
+        EXPECT_TRUE(present);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST013 end.");
 }
@@ -474,6 +487,7 @@ HWTEST_F (BatterySttest, BatteryST013, TestSize.Level1)
  * @tc.name: BatteryST014
  * @tc.desc: Test IBatterySrv interface GetPresent when present is false
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST014, TestSize.Level1)
 {
@@ -486,14 +500,14 @@ HWTEST_F (BatterySttest, BatteryST014, TestSize.Level1)
         auto present = BatterySrvClient.GetPresent();
         GTEST_LOG_(INFO) << "BatteryST014 executing, present=" << present;
 
-        ASSERT_FALSE(present);
+        EXPECT_FALSE(present);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/present", std::to_string(tempPresent));
         GTEST_LOG_(INFO) << "BatteryST014 executing, tempPresent=" << static_cast<int32_t>(tempPresent);
     } else {
         auto present = BatterySrvClient.GetPresent();
         BATTERY_HILOGD(LABEL_TEST, "BatteryST014::present=%{public}d", present);
         GTEST_LOG_(INFO) << "BatteryST014 executing, present=" << present;
-        ASSERT_TRUE(present);
+        EXPECT_TRUE(present);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST014 end.");
 }
@@ -502,6 +516,7 @@ HWTEST_F (BatterySttest, BatteryST014, TestSize.Level1)
  * @tc.name: BatteryST015
  * @tc.desc: Test IBatterySrv interface GetVoltage
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST015, TestSize.Level1)
 {
@@ -514,14 +529,14 @@ HWTEST_F (BatterySttest, BatteryST015, TestSize.Level1)
         auto voltage = BatterySrvClient.GetVoltage();
         GTEST_LOG_(INFO) << "BatteryST015 executing, voltage=" << voltage;
 
-        ASSERT_TRUE(voltage == 4654321);
+        EXPECT_TRUE(voltage == 4654321);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/voltage_now", std::to_string(tempVoltagenow));
         GTEST_LOG_(INFO) << "BatteryST015 executing, tempPresent=" << static_cast<int32_t>(tempVoltagenow);
     } else {
         auto voltage = BatterySrvClient.GetVoltage();
         BATTERY_HILOGD(LABEL_TEST, "BatteryST015::voltage=%{public}d", voltage);
         GTEST_LOG_(INFO) << "BatteryST015 executing, voltage=" << voltage;
-        ASSERT_TRUE(voltage >= 0);
+        EXPECT_TRUE(voltage >= 0);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST015 end.");
 }
@@ -530,6 +545,7 @@ HWTEST_F (BatterySttest, BatteryST015, TestSize.Level1)
  * @tc.name: BatteryST016
  * @tc.desc: Test IBatterySrv interface GetTemperature
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST016, TestSize.Level1)
 {
@@ -542,14 +558,14 @@ HWTEST_F (BatterySttest, BatteryST016, TestSize.Level1)
         auto temperature = BatterySrvClient.GetBatteryTemperature();
         GTEST_LOG_(INFO) << "BatteryST016 executing, temperature=" << temperature;
 
-        ASSERT_TRUE(temperature == 234);
+        EXPECT_TRUE(temperature == 234);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/temp", std::to_string(tempTempPresent));
         GTEST_LOG_(INFO) << "BatteryST016 executing, temperature=" << static_cast<int32_t>(tempTempPresent);
     } else {
         auto temperature = BatterySrvClient.GetBatteryTemperature();
         BATTERY_HILOGD(LABEL_TEST, "BatteryST016::temperature=%{public}d", temperature);
         GTEST_LOG_(INFO) << "BatteryST016 executing, temperature=" << temperature;
-        ASSERT_TRUE(temperature >= 0 && temperature <= 600);
+        EXPECT_TRUE(temperature >= 0 && temperature <= 600);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST016 end.");
 }
@@ -558,6 +574,7 @@ HWTEST_F (BatterySttest, BatteryST016, TestSize.Level1)
  * @tc.name: BatteryST017
  * @tc.desc: Test IBatterySrv interface GetTechnology
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
 {
@@ -570,14 +587,14 @@ HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
         auto technology = BatterySrvClient.GetTechnology();
         GTEST_LOG_(INFO) << "BatteryST017 executing, technology=" << technology;
 
-        ASSERT_TRUE(technology == "H2");
+        EXPECT_TRUE(technology == "H2");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos-fgu/technology", tempTechnology);
         GTEST_LOG_(INFO) << "BatteryST017 executing, technology=" << tempTechnology;
     } else {
         auto technology = BatterySrvClient.GetTechnology();
         BATTERY_HILOGD(LABEL_TEST, "BatteryST017::technology=%{public}s", technology.c_str());
         GTEST_LOG_(INFO) << "BatteryST017 executing, technology=" << technology;
-        ASSERT_TRUE(technology == "Li-poly");
+        EXPECT_TRUE(technology == "Li-poly");
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST058 end.");
 }
@@ -586,8 +603,8 @@ HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
  * @tc.name: BatteryST018
  * @tc.desc: Test IBatterySrv interface GetPluggedType when pluggedType value is PLUGGED_TYPE_AC
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
-
 HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryST018 start.");
@@ -600,14 +617,14 @@ HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
         auto pluggedType = BatterySrvClient.GetPluggedType();
         GTEST_LOG_(INFO) << "BatteryST018 executing, pluggedType=" << static_cast<int32_t>(pluggedType);
 
-        ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
+        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
     } else {
         auto pluggedType = BatterySrvClient.GetPluggedType();
         BATTERY_HILOGI(LABEL_TEST, "BatteryST018::pluggedType=%{public}d",
             static_cast<int32_t>(pluggedType));
         GTEST_LOG_(INFO) << "BatteryST018 executing, pluggedType="
             << static_cast<int32_t>(pluggedType);
-        ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST018 end.");
 }
@@ -616,8 +633,8 @@ HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
  * @tc.name: BatteryST019
  * @tc.desc: Test IBatterySrv interface GetPluggedType when pluggedType value is PLUGGED_TYPE_USB
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
-
 HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryST019 start.");
@@ -630,23 +647,24 @@ HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
         auto pluggedType = BatterySrvClient.GetPluggedType();
         GTEST_LOG_(INFO) << "BatteryST019 executing, pluggedType=" << static_cast<int32_t>(pluggedType);
 
-        ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     } else {
         auto pluggedType = BatterySrvClient.GetPluggedType();
         BATTERY_HILOGI(LABEL_TEST, "BatteryST019::pluggedType=%{public}d",
             static_cast<int32_t>(pluggedType));
         GTEST_LOG_(INFO) << "BatteryST019 executing, pluggedType="
             << static_cast<int32_t>(pluggedType);
-        ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST019 end.");
 }
+
 /**
  * @tc.name: BatteryST020
  * @tc.desc: Test IBatterySrv interface GetPluggedType when pluggedType value is PLUGGED_TYPE_WIRELESS
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
-
 HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryST020 start.");
@@ -659,14 +677,14 @@ HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
         auto pluggedType = BatterySrvClient.GetPluggedType();
         GTEST_LOG_(INFO) << "BatteryST020 executing, pluggedType=" << static_cast<int32_t>(pluggedType);
 
-        ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_WIRELESS);
+        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_WIRELESS);
     } else {
         auto pluggedType = BatterySrvClient.GetPluggedType();
         BATTERY_HILOGI(LABEL_TEST, "BatteryST020::pluggedType=%{public}d",
             static_cast<int32_t>(pluggedType));
         GTEST_LOG_(INFO) << "BatteryST020 executing, pluggedType="
             << static_cast<int32_t>(pluggedType);
-        ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST020 end.");
 }
@@ -676,8 +694,8 @@ HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
  * @tc.desc: Test IBatterySrv interface GetPluggedType when pluggedType value is PLUGGED_TYPE_BUTT
  *           ParsePluggedType return HDF_ERR_NOT_SUPPORT, g_service->GetPluggedType FAIL
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
-
 HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryST021 start.");
@@ -690,14 +708,14 @@ HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
         auto pluggedType = BatterySrvClient.GetPluggedType();
         GTEST_LOG_(INFO) << "BatteryST021 executing, pluggedType=" << static_cast<int32_t>(pluggedType);
 
-        ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_NONE);
+        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_NONE);
     } else {
         auto pluggedType = BatterySrvClient.GetPluggedType();
         BATTERY_HILOGI(LABEL_TEST, "BatteryST021::pluggedType=%{public}d",
             static_cast<int32_t>(pluggedType));
         GTEST_LOG_(INFO) << "BatteryST021 executing, pluggedType="
             << static_cast<int32_t>(pluggedType);
-        ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryST021 end.");
 }

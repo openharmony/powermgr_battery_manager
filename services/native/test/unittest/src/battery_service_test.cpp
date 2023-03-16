@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -103,13 +103,13 @@ static HWTEST_F(BatteryServiceTest, BatteryService004, TestSize.Level1)
         auto tempVoltage = g_service->GetVoltage();
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/voltage_now", "4654321");
         auto voltage = g_service->GetVoltage();
-        ASSERT_TRUE(voltage == 4654321);
+        EXPECT_TRUE(voltage == 4654321);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/voltage_now", std::to_string(tempVoltage));
     } else {
         auto voltage = g_service->GetVoltage();
         BATTERY_HILOGI(LABEL_TEST, "BatteryService004::voltage=%{public}d", voltage);
         GTEST_LOG_(INFO) << "BatteryService004 executing, voltage=" << voltage;
-        ASSERT_TRUE(voltage >= 0);
+        EXPECT_TRUE(voltage >= 0);
     }
 
     BATTERY_HILOGD(LABEL_TEST, "BatteryService004 end.");
@@ -130,13 +130,13 @@ static HWTEST_F(BatteryServiceTest, BatteryService005, TestSize.Level1)
         auto present = g_service->GetPresent();
         BATTERY_HILOGI(LABEL_TEST, "BatteryService005::present=%{public}d", present);
         GTEST_LOG_(INFO) << "BatteryService005 executing, present=" << present;
-        ASSERT_FALSE(present);
+        EXPECT_FALSE(present);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/present", std::to_string(tempPresent));
     } else {
         auto present = g_service->GetPresent();
         BATTERY_HILOGI(LABEL_TEST, "BatteryService005::present=%{public}d", present);
         GTEST_LOG_(INFO) << "BatteryService005 executing, present=" << present;
-        ASSERT_TRUE(present);
+        EXPECT_TRUE(present);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryService005 end.");
 }
@@ -156,13 +156,13 @@ static HWTEST_F(BatteryServiceTest, BatteryService006, TestSize.Level1)
         auto temperature = g_service->GetBatteryTemperature();
         BATTERY_HILOGI(LABEL_TEST, "BatteryService006::temperature=%{public}d", temperature);
         GTEST_LOG_(INFO) << "BatteryService006 executing, temperature=" << temperature;
-        ASSERT_TRUE(temperature == 222);
+        EXPECT_TRUE(temperature == 222);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/temp", std::to_string(tempTempPresent));
     } else {
         auto temperature = g_service->GetBatteryTemperature();
         BATTERY_HILOGI(LABEL_TEST, "BatteryService006::temperature=%{public}d", temperature);
         GTEST_LOG_(INFO) << "BatteryService006 executing, temperature=" << temperature;
-        ASSERT_TRUE(temperature >= 0 && temperature <= 600);
+        EXPECT_TRUE(temperature >= 0 && temperature <= 600);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryService006 end.");
 }
@@ -414,18 +414,22 @@ static HWTEST_F(BatteryServiceTest, BatteryService020, TestSize.Level1)
  * @tc.name: BatteryService021
  * @tc.desc: Test functions ChangePath
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 static HWTEST_F(BatteryServiceTest, BatteryService021, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryService021 start.");
     g_service->iBatteryInterface_ = nullptr;
-    g_service->ChangePath("/data/service/el0/battery");
+    auto ret = g_service->ChangePath("/data/service/el0/battery");
+    EXPECT_FALSE(ret);
 
     g_service->iBatteryInterface_ = V1_2::IBatteryInterface::Get();
-    g_service->ChangePath("/data/service/el0/battery");
+    ret = g_service->ChangePath("/data/service/el0/battery");
+    EXPECT_TRUE(ret);
 
     if (!g_isMock) {
-        g_service->ChangePath("/sys/class/power_supply");
+        ret = g_service->ChangePath("/sys/class/power_supply");
+        EXPECT_FALSE(ret);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryService021 end.");
 }

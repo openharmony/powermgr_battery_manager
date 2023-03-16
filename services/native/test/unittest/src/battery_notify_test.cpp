@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -305,7 +305,8 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify017, TestSize.Level1)
 {
     const int32_t capacity = -100;
     g_batteryInfo->SetCapacity(capacity);
-    g_batteryNotify->PublishEvents(*g_batteryInfo);
+    auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
+    EXPECT_EQ(ret, ERR_OK);
 }
 
 /**
@@ -319,7 +320,8 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify018, TestSize.Level1)
     for (int i = 0; i < 2; i++) {
         const BatteryChargeState chargeState = BatteryChargeState::CHARGE_STATE_ENABLE;
         g_batteryInfo->SetChargeState(chargeState);
-        g_batteryNotify->PublishEvents(*g_batteryInfo);
+        auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
+        EXPECT_EQ(ret, ERR_OK);
     }
 }
 
@@ -334,7 +336,8 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify019, TestSize.Level1)
     const int32_t capacity = -100;
     g_batteryInfo->SetCapacity(capacity);
     for (int i = 0; i < 2; i++) {
-        g_batteryNotify->PublishEvents(*g_batteryInfo);
+        auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
+        EXPECT_EQ(ret, ERR_OK);
     }
 }
 
