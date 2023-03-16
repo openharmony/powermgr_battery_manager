@@ -408,6 +408,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest002, TestSize.Level0)
  * @tc.number: BatteryEventSystemTest003
  * @tc.name: BatteryEventSystemTest
  * @tc.desc: Verify the receive the common event
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest003, TestSize.Level0)
 {
@@ -418,13 +419,15 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest003, TestSize.Level0)
     if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
         g_cv.notify_one();
     }
-    CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    EXPECT_TRUE(ret);
 }
 
 /*
  * @tc.number: BatteryEventSystemTest004
  * @tc.name: BatteryEventSystemTest
  * @tc.desc: Verify the receive the common event
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest004, TestSize.Level0)
 {
@@ -435,13 +438,15 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest004, TestSize.Level0)
     if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
         g_cv.notify_one();
     }
-    CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    EXPECT_TRUE(ret);
 }
 
 /*
  * @tc.number: BatteryEventSystemTest005
  * @tc.name: BatteryEventSystemTest
  * @tc.desc: Verify the receive the common event
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest005, TestSize.Level0)
 {
@@ -452,13 +457,15 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest005, TestSize.Level0)
     if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
         g_cv.notify_one();
     }
-    CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    EXPECT_TRUE(ret);
 }
 
 /*
  * @tc.number: BatteryEventSystemTest006
  * @tc.name: BatteryEventSystemTest
  * @tc.desc: Verify the receive the common event
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest006, TestSize.Level0)
 {
@@ -469,13 +476,15 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest006, TestSize.Level0)
     if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
         g_cv.notify_one();
     }
-    CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    EXPECT_TRUE(ret);
 }
 
 /*
  * @tc.number: BatteryEventSystemTest007
  * @tc.name: BatteryEventSystemTest
  * @tc.desc: Verify the receive the common event
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest007, TestSize.Level0)
 {
@@ -486,13 +495,15 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest007, TestSize.Level0)
     if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
         g_cv.notify_one();
     }
-    CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    EXPECT_TRUE(ret);
 }
 
 /*
  * @tc.number: BatteryEventSystemTest008
  * @tc.name: BatteryEventSystemTest
  * @tc.desc: Verify the receive the common event
+ * @tc.require: issueI6KRS8
  */
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
 {
@@ -503,6 +514,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
     if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
         g_cv.notify_one();
     }
-    CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    EXPECT_TRUE(ret);
 }
 } // namespace

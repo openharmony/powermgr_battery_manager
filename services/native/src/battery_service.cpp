@@ -410,15 +410,15 @@ int32_t BatteryService::GetCapacity()
     return capacity;
 }
 
-void BatteryService::ChangePath(const std::string path)
+bool BatteryService::ChangePath(const std::string path)
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
-        return;
+        return false;
     }
     iBatteryInterface_->ChangePath(path);
-    return;
+    return true;
 }
 
 BatteryChargeState BatteryService::GetChargingStatus()

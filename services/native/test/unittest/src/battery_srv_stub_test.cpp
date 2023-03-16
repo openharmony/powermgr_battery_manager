@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -52,6 +52,7 @@ namespace {
  * @tc.name: BatterySrvStub001
  * @tc.desc: Test functions OnRemoteRequest no WriteInterfaceToken
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 static HWTEST_F(BatterySrvStubTest, BatterySrvStub001, TestSize.Level1)
 {
@@ -59,7 +60,7 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub001, TestSize.Level1)
     uint32_t code = 0;
     MessageParcel data;
     int32_t ret = g_service->OnRemoteRequest(code, data, g_reply, g_option);
-    ASSERT_EQ(ret, E_GET_POWER_SERVICE_FAILED);
+    EXPECT_EQ(ret, E_GET_POWER_SERVICE_FAILED);
     BATTERY_HILOGD(LABEL_TEST, "BatterySrvStub001 end.");
 }
 
@@ -67,6 +68,7 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub001, TestSize.Level1)
  * @tc.name: BatteryClient020
  * @tc.desc: Test ResetProxy code
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 static HWTEST_F(BatterySrvStubTest, BatterySrvStub002, TestSize.Level1)
 {
@@ -76,7 +78,7 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub002, TestSize.Level1)
     for (uint32_t code = begin; code <= end; ++code) {
         g_data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor());
         int32_t ret = g_service->OnRemoteRequest(code, g_data, g_reply, g_option);
-        ASSERT_EQ(ret, ERR_OK) << "ret: " << ret << " code: " << code;
+        EXPECT_EQ(ret, ERR_OK) << "ret: " << ret << " code: " << code;
     }
 
     BATTERY_HILOGD(LABEL_TEST, "BatterySrvStub002 end.");
@@ -86,6 +88,7 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub002, TestSize.Level1)
  * @tc.name: BatteryClient020
  * @tc.desc: Test ResetProxy Invalid code
  * @tc.type: FUNC
+ * @tc.require: issueI6KRS8
  */
 static HWTEST_F(BatterySrvStubTest, BatterySrvStub003, TestSize.Level1)
 {
@@ -93,7 +96,7 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub003, TestSize.Level1)
     uint32_t code = -100;
     g_data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor());
     int32_t ret = g_service->OnRemoteRequest(code, g_data, g_reply, g_option);
-    ASSERT_EQ(ret, IPC_STUB_UNKNOW_TRANS_ERR) << "ret: " << ret << " code: " << code;
+    EXPECT_EQ(ret, IPC_STUB_UNKNOW_TRANS_ERR) << "ret: " << ret << " code: " << code;
     BATTERY_HILOGD(LABEL_TEST, "BatterySrvStub003 end.");
 }
 } // namespace
