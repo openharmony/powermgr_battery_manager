@@ -29,7 +29,6 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-#include "hdf_device_desc.h"
 #include "battery_log.h"
 #include "battery_srv_client.h"
 

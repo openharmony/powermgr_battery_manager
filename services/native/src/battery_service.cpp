@@ -26,7 +26,7 @@
 #include "system_ability_definition.h"
 #include "iremote_object.h"
 #include "v1_2/ibattery_callback.h"
-#include "hdf_io_service_if.h"
+#include "hdf_device_class.h"
 #include "hdf_service_status.h"
 #include "battery_callback.h"
 #include "battery_config.h"
