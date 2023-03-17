@@ -175,7 +175,6 @@ void PowerSupplyProvider::InitBatteryPath()
 int32_t PowerSupplyProvider::InitPowerSupplySysfs()
 {
     DIR* dir;
-    struct dirent* entry;
     index_ = 0;
 
     BATTERY_HILOGD(FEATURE_CHARGING, "path_ is %{private}s", path_.c_str());
@@ -186,7 +185,7 @@ int32_t PowerSupplyProvider::InitPowerSupplySysfs()
     }
 
     while (true) {
-        entry = readdir(dir);
+        struct dirent* entry = readdir(dir);
         if (entry == nullptr) {
             break;
         }
@@ -247,7 +246,6 @@ void PowerSupplyProvider::TraversalNode()
 void PowerSupplyProvider::CheckSubfolderNode(const std::string& path)
 {
     DIR* dir;
-    struct dirent* entry;
     std::string batteryPath = path_ + "/" + path;
     BATTERY_HILOGI(FEATURE_CHARGING, "subfolder path is:%{private}s", batteryPath.c_str());
 
@@ -258,7 +256,7 @@ void PowerSupplyProvider::CheckSubfolderNode(const std::string& path)
     }
 
     while (true) {
-        entry = readdir(dir);
+        struct dirent* entry = readdir(dir);
         if (entry == nullptr) {
             break;
         }
