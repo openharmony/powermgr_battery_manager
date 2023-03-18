@@ -98,7 +98,7 @@ bool BatteryNotify::PublishChargeTypeChangedEvent(const BatteryInfo& info)
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
-    
+
     data.SetCode(static_cast<int32_t>(chargeType));
     BATTERY_HILOGD(COMP_SVC, "publisher chargeType=%{public}d", chargeType);
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
@@ -161,7 +161,7 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
     publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
-    HiSysEventWrite(HiSysEvent::Domain::BATTERY, "BATTERY_CHANGED", HiSysEvent::EventType::STATISTIC,
+    HiSysEventWrite(HiSysEvent::Domain::BATTERY, "CHANGED", HiSysEvent::EventType::STATISTIC,
         "LEVEL", info.GetCapacity(), "CHARGER", static_cast<int32_t>(info.GetPluggedType()),
         "VOLTAGE", info.GetVoltage(), "TEMPERATURE", info.GetTemperature(),
         "HEALTH", static_cast<int32_t>(info.GetHealthState()), "CURRENT", info.GetNowCurrent());
