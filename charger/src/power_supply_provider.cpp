@@ -99,7 +99,6 @@ void PowerSupplyProvider::FormatPath(
         return;
     }
     path.assign(buff, strlen(buff));
-    BATTERY_HILOGD(FEATURE_CHARGING, "path is %{private}s", path.c_str());
 }
 
 void PowerSupplyProvider::FormatSysfsPaths()
@@ -117,7 +116,7 @@ int32_t PowerSupplyProvider::ReadSysfsFile(const char* path, char* buf, size_t s
 {
     int32_t fd = open(path, O_RDONLY, S_IRUSR | S_IRGRP | S_IROTH);
     if (fd < NUM_ZERO) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "failed to open %{private}s", path);
+        BATTERY_HILOGE(FEATURE_CHARGING, "failed to open path");
         return HDF_ERR_IO;
     }
 
@@ -133,7 +132,7 @@ int32_t PowerSupplyProvider::ReadBatterySysfsToBuff(const char* path, char* buf,
 {
     int32_t ret = ReadSysfsFile(path, buf, size);
     if (ret != HDF_SUCCESS) {
-        BATTERY_HILOGW(FEATURE_CHARGING, "read path %{private}s failed, ret: %{public}d", path, ret);
+        BATTERY_HILOGW(FEATURE_CHARGING, "read path failed, ret: %{public}d", ret);
         return ret;
     }
 
@@ -148,7 +147,7 @@ void PowerSupplyProvider::CreateFile(const std::string& path, const std::string&
 
     std::ofstream stream(path.c_str());
     if (!stream.is_open()) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "cannot create file %{private}s", path.c_str());
+        BATTERY_HILOGE(FEATURE_CHARGING, "cannot create file");
         return;
     }
     stream << content.c_str() << std::endl;
@@ -177,10 +176,9 @@ int32_t PowerSupplyProvider::InitPowerSupplySysfs()
     DIR* dir;
     index_ = 0;
 
-    BATTERY_HILOGD(FEATURE_CHARGING, "path_ is %{private}s", path_.c_str());
     dir = opendir(path_.c_str());
     if (dir == nullptr) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "cannot open path_ %{private}s", path_.c_str());
+        BATTERY_HILOGE(FEATURE_CHARGING, "cannot open path_");
         return HDF_ERR_IO;
     }
 
@@ -247,7 +245,6 @@ void PowerSupplyProvider::CheckSubfolderNode(const std::string& path)
 {
     DIR* dir;
     std::string batteryPath = path_ + "/" + path;
-    BATTERY_HILOGI(FEATURE_CHARGING, "subfolder path is:%{private}s", batteryPath.c_str());
 
     dir = opendir(batteryPath.c_str());
     if (dir == nullptr) {

@@ -54,7 +54,7 @@ bool BatteryConfig::ParseConfig()
 {
     char buf[MAX_PATH_LEN];
     char* path = GetOneCfgFile(BATTERY_CONFIG_PATH, buf, MAX_PATH_LEN);
-    BATTERY_HILOGD(COMP_SVC, "GetOneCfgFile battery_config.json is %{private}s", path);
+    BATTERY_HILOGD(COMP_SVC, "GetOneCfgFile battery_config.json");
 
     Json::CharReaderBuilder readerBuilder;
     std::ifstream ifsConf;
@@ -94,7 +94,7 @@ bool BatteryConfig::OpenFile(std::ifstream& ifsConf, const std::string& configPa
     if (!configPath.empty()) {
         ifsConf.open(configPath);
         isOpen = ifsConf.is_open();
-        BATTERY_HILOGD(COMP_SVC, "open %{private}s file is %{public}d", configPath.c_str(), isOpen);
+        BATTERY_HILOGD(COMP_SVC, "open configPath file is %{public}d", isOpen);
     }
     RETURN_IF_WITH_RET(isOpen, true);
 
