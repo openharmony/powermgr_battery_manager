@@ -50,7 +50,7 @@ bool ChargerAnimation::InitConfig()
     std::vector<std::string> layoutFiles {UI_CFG_FILE};
     std::vector<Updater::UxPageInfo> pageInfos {};
     if (!Updater::LayoutParser::GetInstance().LoadLayout(layoutFiles, pageInfos)) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "load layout error: %{private}s", UI_CFG_FILE);
+        BATTERY_HILOGE(FEATURE_CHARGING, "load layout error");
         return false;
     }
 
