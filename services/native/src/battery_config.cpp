@@ -87,7 +87,7 @@ bool BatteryConfig::OpenFile(std::ifstream& ifsConf, const std::string& configPa
     if (!configPath.empty()) {
         ifsConf.open(configPath);
         isOpen = ifsConf.is_open();
-        BATTERY_HILOGD(COMP_SVC, "open %{private}s file is %{public}d", configPath.c_str(), isOpen);
+        BATTERY_HILOGD(COMP_SVC, "open file is %{public}d", isOpen);
     }
     RETURN_IF_WITH_RET(isOpen, true);
 
