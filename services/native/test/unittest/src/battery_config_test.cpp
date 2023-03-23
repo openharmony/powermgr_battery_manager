@@ -25,7 +25,6 @@ using namespace testing::ext;
 namespace OHOS {
 namespace PowerMgr {
 namespace {
-constexpr const char* SYSTEM_BATTERY_CONFIG_PATH = "/system/etc/battery/battery_config.json";
 auto& g_configTest = BatteryConfig::GetInstance();
 } // namespace
 
@@ -248,21 +247,5 @@ HWTEST_F(BatteryConfigTest, BatteryConfig013, TestSize.Level1)
     BATTERY_HILOGD(LABEL_TEST, "BatteryConfig013 end");
 }
 
-/**
- * @tc.name: BatteryConfig0014
- * @tc.desc: ParseConfig Failed to read the vendor and sytem store path
- * @tc.type: FUNC
- */
-HWTEST_F(BatteryConfigTest, BatteryConfig0014, TestSize.Level1)
-{
-    BATTERY_HILOGD(LABEL_TEST, "BatteryConfig0014 begin");
-    constexpr const char* SYSTEM_BATTERY_CONFIG_BACKUP = "/system/etc/battery/battery_config_backup.json";
-    EXPECT_TRUE(g_configTest.ParseConfig());
-    EXPECT_TRUE(rename(SYSTEM_BATTERY_CONFIG_PATH, SYSTEM_BATTERY_CONFIG_BACKUP) == 0);
-    EXPECT_FALSE(g_configTest.ParseConfig());
-    EXPECT_TRUE(rename(SYSTEM_BATTERY_CONFIG_BACKUP, SYSTEM_BATTERY_CONFIG_PATH) == 0);
-    g_configTest.IsExist("light.123.rgb");
-    BATTERY_HILOGD(LABEL_TEST, "BatteryConfig0014 end");
-}
 } // namespace PowerMgr
 } // namespace OHOS

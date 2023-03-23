@@ -54,6 +54,10 @@ bool BatteryConfig::ParseConfig()
 {
     char buf[MAX_PATH_LEN];
     char* path = GetOneCfgFile(BATTERY_CONFIG_PATH, buf, MAX_PATH_LEN);
+    if (path == NULL) {
+        BATTERY_HILOGW(COMP_SVC, "GetOneCfgFile battery_config.json is NULL");
+        return false;
+    }
     BATTERY_HILOGD(COMP_SVC, "GetOneCfgFile battery_config.json");
 
     Json::CharReaderBuilder readerBuilder;
