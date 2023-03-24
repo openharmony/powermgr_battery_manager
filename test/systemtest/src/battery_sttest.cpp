@@ -191,14 +191,14 @@ static int32_t ReadRedLedSysfs()
         HDF_LOGE("%{public}s: failed to open sys red led path %{public}s", __func__, g_redLedsNode.c_str());
         fd = open(redLedPath.c_str(), O_RDWR);
         if (fd < HDF_SUCCESS) {
-            HDF_LOGE("%{public}s: failed to open created red led path %{public}s", __func__, redLedPath.c_str());
+            HDF_LOGE("%{public}s: failed to open created red led path", __func__);
             return -1;
         }
     }
 
     readSize = read(fd, buf, sizeof(buf) - 1);
     if (readSize < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, redLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to read red led path", __func__);
         close(fd);
     }
 
@@ -224,14 +224,14 @@ static int32_t ReadGreenLedSysfs()
         HDF_LOGE("%{public}s: failed to open sys green led path %{public}s", __func__, g_greenLedsNode.c_str());
         fd = open(greenLedPath.c_str(), O_RDWR);
         if (fd < HDF_SUCCESS) {
-            HDF_LOGE("%{public}s: failed to open created green led path %{public}s", __func__, greenLedPath.c_str());
+            HDF_LOGE("%{public}s: failed to open created green led path", __func__);
             return -1;
         }
     }
 
     readSize = read(fd, buf, sizeof(buf) - 1);
     if (readSize < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, greenLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to read green led path", __func__);
         close(fd);
     }
 
@@ -257,14 +257,14 @@ static int32_t ReadBlueLedSysfs()
         HDF_LOGE("%{public}s: failed to open sys blue led path %{public}s", __func__, g_blueLedsNode.c_str());
         fd = open(blueLedPath.c_str(), O_RDWR);
         if (fd < HDF_SUCCESS) {
-            HDF_LOGE("%{public}s: failed to open created blue led path %{public}s", __func__, blueLedPath.c_str());
+            HDF_LOGE("%{public}s: failed to open created blue led path", __func__);
             return -1;
         }
     }
 
     readSize = read(fd, buf, sizeof(buf) - 1);
     if (readSize < HDF_SUCCESS) {
-        HDF_LOGE("%{public}s: failed to read %{public}s", __func__, blueLedPath.c_str());
+        HDF_LOGE("%{public}s: failed to read blue led path", __func__);
         close(fd);
     }
 

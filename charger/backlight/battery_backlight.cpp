@@ -130,7 +130,7 @@ std::string BatteryBacklight::CreateFile(std::string path, std::string content) 
     HDF_LOGI("%{public}s enter", __func__);
     std::ofstream stream(path.c_str());
     if (!stream.is_open()) {
-        HDF_LOGD("%{public}s: Cannot create file %{public}s", __func__, path.c_str());
+        HDF_LOGD("%{public}s: Cannot create file", __func__);
         return nullptr;
     }
     stream << content.c_str() << std::endl;
@@ -175,7 +175,6 @@ int BatteryBacklight::HandleBacklight(const unsigned int backlight) const
     char* pathGroup = nullptr;
     unsigned int bufferLen;
     std::string devicePath = BACKLIGHT_BASE_PATH + "/" + g_backlightNode + "/" + "brightness";
-    HDF_LOGI("%{public}s: backlight devicepath is %{public}s", __func__, devicePath.c_str());
     InitDevicePah(devicePath);
 
     HDF_LOGI("%{public}s: backlight value is %{public}d", __func__, backlight);
@@ -196,7 +195,7 @@ int BatteryBacklight::HandleBacklight(const unsigned int backlight) const
             fclose(fp);
         }
         if (writeFile <= 0) {
-            HDF_LOGD("%{public}s: failed to set backlight path=%{pusblic}s.", __func__, path);
+            HDF_LOGD("%{public}s: failed to set backlight.", __func__);
         }
         path = nullptr;
     }
