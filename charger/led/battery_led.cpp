@@ -190,13 +190,11 @@ void BatteryLed::WriteLedInfoToSys(const int redbrightness, const int greenbrigh
     std::string redLedPath = LEDS_BASE_PATH + "/" + g_redLedsNode + "/" + "brightness";
     std::string greenLedPath = LEDS_BASE_PATH + "/" + g_greenLedsNode + "/" + "brightness";
     std::string blueLedPath = LEDS_BASE_PATH + "/" + g_blueLedsNode + "/" + "brightness";
-    HDF_LOGD("%{public}s: redLedPath is %{public}s, greenLedPath is %{public}s, blueLedPath is %{public}s", __func__,
-        redLedPath.c_str(), greenLedPath.c_str(), blueLedPath.c_str());
     InitMockLedFile(redLedPath, greenLedPath, blueLedPath);
 
     file = fopen(redLedPath.c_str(), "w");
     if (file == nullptr) {
-        HDF_LOGD("%{public}s: red led file open failed. redLedPath is %{public}s", __func__, redLedPath.c_str());
+        HDF_LOGD("%{public}s: red led file open failed.", __func__);
         return;
     }
     int ret = fprintf(file, "%d\n", redbrightness);
@@ -210,7 +208,7 @@ void BatteryLed::WriteLedInfoToSys(const int redbrightness, const int greenbrigh
 
     file = fopen(greenLedPath.c_str(), "w");
     if (file == nullptr) {
-        HDF_LOGD("%{public}s: green led file open failed. greenLedPath is %{public}s", __func__, greenLedPath.c_str());
+        HDF_LOGD("%{public}s: green led file open failed.", __func__);
         return;
     }
     ret = fprintf(file, "%d\n", greenbrightness);
@@ -229,7 +227,7 @@ void BatteryLed::WriteLedInfoToSys(const int redbrightness, const int greenbrigh
     }
     ret = fprintf(file, "%d\n", bluebrightness);
     if (ret < 0) {
-        HDF_LOGD("%{public}s: blue led file fprintf failed. blueLedPath is %{public}s", __func__, blueLedPath.c_str());
+        HDF_LOGD("%{public}s: blue led file fprintf failed.", __func__);
     }
     ret = fclose(file);
     if (ret < 0) {
@@ -245,7 +243,7 @@ std::string BatteryLed::CreateFile(std::string path, std::string content) const
     HDF_LOGI("%{public}s enter", __func__);
     std::ofstream stream(path.c_str());
     if (!stream.is_open()) {
-        HDF_LOGD("%{public}s: Cannot create file %{public}s", __func__, path.c_str());
+        HDF_LOGD("%{public}s: Cannot create file", __func__);
         return nullptr;
     }
     stream << content.c_str() << std::endl;
