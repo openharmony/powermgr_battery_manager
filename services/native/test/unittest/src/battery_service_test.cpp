@@ -414,7 +414,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService020, TestSize.Level1)
  * @tc.name: BatteryService021
  * @tc.desc: Test functions ChangePath
  * @tc.type: FUNC
- * @tc.require: issueI6KRS8
+ * @tc.require: issueI6O3E1
  */
 static HWTEST_F(BatteryServiceTest, BatteryService021, TestSize.Level1)
 {
@@ -429,7 +429,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService021, TestSize.Level1)
 
     if (!g_isMock) {
         ret = g_service->ChangePath("/sys/class/power_supply");
-        EXPECT_FALSE(ret);
+        EXPECT_TRUE(ret);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryService021 end.");
 }
