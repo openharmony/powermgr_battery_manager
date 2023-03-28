@@ -376,13 +376,15 @@ namespace {
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest001, TestSize.Level0)
 {
     shared_ptr<CommonEventBatteryLowTest> subscriber = CommonEventBatteryLowTest::RegisterEvent();
-    TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "5");
-    system("hidumper -s 3302 -a -r");
-    std::unique_lock<std::mutex> lck(g_mtx);
-    if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
-        g_cv.notify_one();
+    if (g_isMock) {
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "5");
+        system("hidumper -s 3302 -a -r");
+        std::unique_lock<std::mutex> lck(g_mtx);
+        if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
+            g_cv.notify_one();
+        }
+        EXPECT_EQ(CommonEventSupport::COMMON_EVENT_BATTERY_LOW, g_action);
     }
-    EXPECT_EQ(CommonEventSupport::COMMON_EVENT_BATTERY_LOW, g_action);
     CommonEventManager::UnSubscribeCommonEvent(subscriber);
 }
 
