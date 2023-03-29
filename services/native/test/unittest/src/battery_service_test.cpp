@@ -427,6 +427,11 @@ static HWTEST_F(BatteryServiceTest, BatteryService021, TestSize.Level1)
     ret = g_service->ChangePath("/data/service/el0/battery");
     EXPECT_TRUE(ret);
 
+    if (!g_isMock) {
+        ret = g_service->ChangePath("/sys/class/power_supply");
+        EXPECT_TRUE(ret);
+    }
+
     BATTERY_HILOGD(LABEL_TEST, "BatteryService021 end.");
 }
 
