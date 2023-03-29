@@ -13,18 +13,18 @@
 
 domain: BATTERY
 
-BATTERY_CHANGED:
+CHANGED:
     __BASE: {type: STATISTIC, level: MINOR, tag: PowerStats, desc: battery information}
     LEVEL: {type: INT32, desc: battery capacity}
     CHARGER: {type: INT32, desc: charger type}
     VOLTAGE: {type: INT32, desc: battery voltage}
     HEALTH: {type: INT32, desc: battery health status}
     TEMPERATURE: {type: INT32, desc: battery temperature}
-BATTERY_ADJUST:
+ADJUST:
     __BASE: {type: STATISTIC, level: MINOR, tag: PowerStats, desc: battery adjust}
     DELTASOCLOGGER: {type: INT32, desc: deltaSocLogger}
     DELTAGASGUAGELOGGER: {type: INT32, desc: deltaGasGuageLogger}
     SLEEPGASGUAGELOGGER: {type: INT32, desc: sleepGasGuageLogger}
-BATTERY_SLEEP_CURRENT:
+SLEEP_CURRENT:
     __BASE: {type: STATISTIC, level: MINOR, tag: PowerStats, desc: battery current at sleep}
     CURRENT: {type: INT32, desc: battery current}
