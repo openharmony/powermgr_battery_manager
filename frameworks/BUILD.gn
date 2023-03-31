@@ -15,9 +15,9 @@ import("//build/ohos.gni")
 
 group("battery_napi") {
   deps = [
-    "napi:battery",
-    "napi:batteryinfo",
-    "napi:charger",
+    "js/napi:battery",
+    "js/napi:batteryinfo",
+    "js/napi:charger",
   ]
 }
 
