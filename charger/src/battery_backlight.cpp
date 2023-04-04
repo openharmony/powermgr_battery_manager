@@ -16,7 +16,6 @@
 #include "battery_backlight.h"
 
 #include "charger_log.h"
-#include "display_type.h"
 #include "hdf_base.h"
 
 namespace OHOS {
@@ -27,16 +26,16 @@ constexpr uint32_t BACKLIGHT_ON = 128;
 
 BatteryBacklight::BatteryBacklight()
 {
-    if (DeviceInitialize(&displayDevice_) != HDF_SUCCESS) {
-        return;
+    if (composer_ == nullptr) {
+        composer_.reset(IDisplayComposerInterface::Get());
+        if (composer_ == nullptr) {
+            return;
+        }
     }
 }
 
 BatteryBacklight::~BatteryBacklight()
 {
-    if (displayDevice_ != nullptr) {
-        DeviceUninitialize(displayDevice_);
-    }
 }
 
 void BatteryBacklight::TurnOnScreen()
@@ -44,8 +43,8 @@ void BatteryBacklight::TurnOnScreen()
     if (screenState_ != SCREEN_ON) {
         BATTERY_HILOGD(FEATURE_CHARGING, "turn on screen");
         uint32_t devId = 0;
-        displayDevice_->SetDisplayPowerStatus(devId, POWER_STATUS_ON);
-        displayDevice_->SetDisplayBacklight(devId, BACKLIGHT_ON);
+        composer_->SetDisplayPowerStatus(devId, POWER_STATUS_ON);
+        composer_->SetDisplayBacklight(devId, BACKLIGHT_ON);
         screenState_ = SCREEN_ON;
     }
 }
@@ -55,7 +54,7 @@ void BatteryBacklight::TurnOffScreen()
     if (screenState_ != SCREEN_OFF) {
         BATTERY_HILOGD(FEATURE_CHARGING, "turn off screen");
         uint32_t devId = 0;
-        displayDevice_->SetDisplayPowerStatus(devId, POWER_STATUS_OFF);
+        composer_->SetDisplayPowerStatus(devId, POWER_STATUS_OFF);
         screenState_ = SCREEN_OFF;
     }
 }
