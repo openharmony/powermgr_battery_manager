@@ -60,7 +60,7 @@
                 "base_group": [],
                 "fwk_group": [
                     "//base/powermgr/battery_manager/frameworks:battery_napi",
-                    "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client"
+                    "//base/powermgr/battery_manager/interfaces/inner_api:batterysrv_client"
                 ],
                 "service_group": [
                     "//base/powermgr/battery_manager/sa_profile:batterymgr_sa_profile",
@@ -70,22 +70,22 @@
                     "//base/powermgr/battery_manager/charger:resources_service"
                 ]
             },
-            "inner_kits": [
+            "inner_api": [
                 {
-                    "name": "//base/powermgr/battery_manager/interfaces/innerkits:batterysrv_client",
+                    "name": "//base/powermgr/battery_manager/interfaces/inner_api:batterysrv_client",
                     "header": {
                       "header_files": [
                         "battery_info.h",
                         "battery_srv_client.h",
                         "ibattery_srv.h"
                       ],
-                      "header_base": "//base/powermgr/battery_manager/interfaces/innerkits/native/include"
+                      "header_base": "//base/powermgr/battery_manager/interfaces/inner_api/native/include"
                     }
                   }
             ],
             "test": [
                 "//base/powermgr/battery_manager/frameworks:battery_frameworks_unittest",
-                "//base/powermgr/battery_manager/services/native/test:unittest",
+                "//base/powermgr/battery_manager/test:battery_unittest",
                 "//base/powermgr/battery_manager/test:battery_systemtest",
                 "//base/powermgr/battery_manager/test:battery_fuzzertest"
             ]

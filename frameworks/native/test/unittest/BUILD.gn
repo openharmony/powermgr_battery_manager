@@ -30,7 +30,7 @@ ohos_unittest("test_batteryclient") {
   configs = [ "${battery_utils}:utils_config" ]
 
   deps = [
-    "${battery_innerkits}:batterysrv_client",
+    "${battery_inner_api}:batterysrv_client",
     "//third_party/googletest:gtest_main",
   ]
 
@@ -61,7 +61,7 @@ ohos_unittest("test_batteryclient_death") {
   configs = [ "${battery_utils}:utils_config" ]
 
   deps = [
-    "${battery_innerkits}:batterysrv_client",
+    "${battery_inner_api}:batterysrv_client",
     "//third_party/googletest:gtest_main",
   ]
 
