@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef POWERMGR_INNERKITS_IBATTERY_SRV_H
-#define POWERMGR_INNERKITS_IBATTERY_SRV_H
+#ifndef POWERMGR_INNER_API_IBATTERY_SRV_H
+#define POWERMGR_INNER_API_IBATTERY_SRV_H
 
 #include <string>
 #include "iremote_broker.h"
@@ -62,4 +62,4 @@ public:
 } // space PowerMgr
 } // namespace OHOS
 
-#endif // POWERMGR_INNERKITS_IBATTERY_SRV_H
+#endif // POWERMGR_INNER_API_IBATTERY_SRV_H

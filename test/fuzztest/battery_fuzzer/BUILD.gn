@@ -30,7 +30,7 @@ ohos_fuzztest("BatteryFuzzTest") {
     "-fno-omit-frame-pointer",
   ]
   sources = [ "./battery_fuzzer_test.cpp" ]
-  deps = [ "${battery_innerkits}:batterysrv_client" ]
+  deps = [ "${battery_inner_api}:batterysrv_client" ]
 
   external_deps = [
     "c_utils:utils",

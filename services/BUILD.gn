@@ -24,7 +24,7 @@ config("batterysrv_public_config") {
   include_dirs = [
     "native/include",
     "${battery_service_zidl}/include",
-    "${battery_innerkits}/native/include",
+    "${battery_inner_api}/native/include",
     "//base/hiviewdfx/hicollie/interfaces/native/innerkits/include/xcollie",
     "//base/powermgr/power_manager/utils/permission/include",
   ]
