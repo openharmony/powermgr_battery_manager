@@ -16,7 +16,7 @@ import("//base/powermgr/battery_manager/batterymgr.gni")
 config("batterysrv_public_config") {
   include_dirs = [
     "include",
-    "${battery_innerkits}/native/include",
+    "${battery_inner_api}/native/include",
     "//base/hiviewdfx/hicollie/interfaces/native/innerkits/include/xcollie",
   ]
 }
