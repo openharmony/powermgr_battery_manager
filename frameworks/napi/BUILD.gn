@@ -16,7 +16,7 @@ import("//base/powermgr/battery_manager/batterymgr.gni")
 ohos_shared_library("batteryinfo") {
   sources = [ "battery_info.cpp" ]
   configs = [ "${battery_utils}:utils_config" ]
-  deps = [ "${battery_innerkits}:batterysrv_client" ]
+  deps = [ "${battery_inner_api}:batterysrv_client" ]
   external_deps = [
     "hiviewdfx_hilog_native:libhilog",
     "napi:ace_napi",
@@ -31,7 +31,7 @@ ohos_shared_library("batteryinfo") {
 ohos_shared_library("charger") {
   sources = [ "charger.cpp" ]
   configs = [ "${battery_utils}:utils_config" ]
-  deps = [ "${battery_innerkits}:batterysrv_client" ]
+  deps = [ "${battery_inner_api}:batterysrv_client" ]
   external_deps = [
     "hiviewdfx_hilog_native:libhilog",
     "napi:ace_napi",
@@ -46,7 +46,7 @@ ohos_shared_library("charger") {
 ohos_shared_library("battery") {
   sources = [ "system_battery.cpp" ]
   configs = [ "${battery_utils}:utils_config" ]
-  deps = [ "${battery_innerkits}:batterysrv_client" ]
+  deps = [ "${battery_inner_api}:batterysrv_client" ]
   external_deps = [
     "hiviewdfx_hilog_native:libhilog",
     "napi:ace_napi",
