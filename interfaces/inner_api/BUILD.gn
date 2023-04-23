@@ -26,7 +26,10 @@ ohos_shared_library("batterysrv_client") {
     "${battery_service_zidl}/src/battery_srv_proxy.cpp",
   ]
 
-  configs = [ "${battery_utils}:utils_config" ]
+  configs = [
+    "${battery_utils}:utils_config",
+    "${battery_utils}:coverage_flags",
+  ]
 
   public_configs = [ ":batterysrv_public_config" ]
 

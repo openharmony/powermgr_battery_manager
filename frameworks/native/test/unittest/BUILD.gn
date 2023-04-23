@@ -27,7 +27,10 @@ ohos_unittest("test_batteryclient") {
     "src/battery_client_test.cpp",
   ]
 
-  configs = [ "${battery_utils}:utils_config" ]
+  configs = [
+    "${battery_utils}:utils_config",
+    "${battery_utils}:coverage_flags",
+  ]
 
   deps = [
     "${battery_inner_api}:batterysrv_client",
@@ -58,7 +61,10 @@ ohos_unittest("test_batteryclient_death") {
     "src/battery_client_death_recipient_test.cpp",
   ]
 
-  configs = [ "${battery_utils}:utils_config" ]
+  configs = [
+    "${battery_utils}:utils_config",
+    "${battery_utils}:coverage_flags",
+  ]
 
   deps = [
     "${battery_inner_api}:batterysrv_client",

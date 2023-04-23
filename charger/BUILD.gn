@@ -56,7 +56,10 @@ ohos_executable("charger") {
     "src/power_supply_provider.cpp",
   ]
 
-  configs = [ ":batteryd_private_config" ]
+  configs = [
+    ":batteryd_private_config",
+    "./../utils:coverage_flags",
+  ]
 
   deps = [
     "//base/update/updater/services/ui:libui",
