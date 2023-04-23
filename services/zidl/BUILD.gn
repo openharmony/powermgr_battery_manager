@@ -27,6 +27,7 @@ ohos_shared_library("batterysrv_stub") {
   configs = [
     "${battery_utils}:utils_config",
     ":batterysrv_public_config",
+    "${battery_utils}:coverage_flags",
   ]
 
   external_deps = [

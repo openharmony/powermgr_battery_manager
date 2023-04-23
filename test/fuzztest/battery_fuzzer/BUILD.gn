@@ -23,6 +23,9 @@ ohos_fuzztest("BatteryFuzzTest") {
       "//base/powermgr/battery_manager/test/fuzztest/battery_fuzzer"
 
   include_dirs = [ "./" ]
+
+  configs = [ "${battery_utils}:coverage_flags" ]
+
   cflags = [
     "-g",
     "-O0",
