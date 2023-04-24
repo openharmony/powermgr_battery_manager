@@ -24,11 +24,14 @@
 #include "component/img_view_adapter.h"
 #include "component/text_label_adapter.h"
 #include "layout/layout_parser.h"
+#include "config_policy_utils.h"
 
 namespace OHOS {
 namespace PowerMgr {
 namespace {
-constexpr const char* UI_CFG_FILE = "/system/etc/charger/resources/animation.json";
+constexpr const char* UI_CONFIG_FILE = "etc/charger/resources/animation.json";
+constexpr const char* VENDOR_UI_CONFIG_FILE = "/vendor/etc/charger/resources/animation.json";
+constexpr const char* SYSTEM_UI_CONFIG_FILE = "/system/etc/charger/resources/animation.json";
 constexpr const char* FONT_PATH = "/system/etc/charger/resources/";
 constexpr const char* CHARGER_ANIMATION_PAGE_ID = "Charger:Animation";
 constexpr const char* CHARGER_ANIMATION_COM_ID = "Charging_Animation_Image";
@@ -47,10 +50,27 @@ bool ChargerAnimation::InitConfig()
     Updater::GraphicEngine::GetInstance().Init(WHITE_BGCOLOR, OHOS::ColorMode::ARGB8888, FONT_PATH);
     InitRootView();
 
-    std::vector<std::string> layoutFiles {UI_CFG_FILE};
+    std::vector<std::string> ruleFiles;
+    char buf[MAX_PATH_LEN];
+    char* path = GetOneCfgFile(UI_CONFIG_FILE, buf, MAX_PATH_LEN);
+    if (path != nullptr && *path != '\0') {
+        ruleFiles.push_back(path);
+    }
+    ruleFiles.push_back(VENDOR_UI_CONFIG_FILE);
+    ruleFiles.push_back(SYSTEM_UI_CONFIG_FILE);
+
     std::vector<Updater::UxPageInfo> pageInfos {};
-    if (!Updater::LayoutParser::GetInstance().LoadLayout(layoutFiles, pageInfos)) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "load layout error");
+    bool isMatch = false;
+    for (auto configPathItem : ruleFiles) {
+        std::vector<std::string> layoutFiles {configPathItem};
+        if (Updater::LayoutParser::GetInstance().LoadLayout(layoutFiles, pageInfos)) {
+            isMatch = true;
+            break;
+        }
+        BATTERY_HILOGE(FEATURE_CHARGING, "load layout %{public}s error", configPathItem.c_str());
+    }
+
+    if (!isMatch) {
         return false;
     }
 
