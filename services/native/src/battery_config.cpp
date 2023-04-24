@@ -25,6 +25,7 @@ namespace {
 constexpr const char* BATTERY_CONFIG_PATH = "etc/battery/battery_config.json";
 constexpr const char* SYSTEM_BATTERY_CONFIG_PATH = "/system/etc/battery/battery_config.json";
 constexpr const char* VENDOR_BATTERY_CONFIG_PATH = "/vendor/etc/battery/battery_config.json";
+constexpr const char* BATTERY_CONFIG_EXCEPTION_PATH = "";
 constexpr int32_t MAP_KEY_INDEX = 0;
 constexpr int32_t BEGIN_SOC_INDEX = 0;
 constexpr int32_t END_SOC_INDEX = 1;
@@ -54,9 +55,9 @@ bool BatteryConfig::ParseConfig()
 {
     char buf[MAX_PATH_LEN];
     char* path = GetOneCfgFile(BATTERY_CONFIG_PATH, buf, MAX_PATH_LEN);
-    if (path == NULL) {
+    if (path == nullptr || *path == '\0') {
         BATTERY_HILOGW(COMP_SVC, "GetOneCfgFile battery_config.json is NULL");
-        return false;
+        path = const_cast<char*>(BATTERY_CONFIG_EXCEPTION_PATH);
     }
     BATTERY_HILOGD(COMP_SVC, "GetOneCfgFile battery_config.json");
 
