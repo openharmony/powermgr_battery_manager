@@ -19,3 +19,15 @@ config("utils_config") {
     "//commonlibrary/c_utils/base/include",
   ]
 }
+
+declare_args() {
+  battery_manager_feature_coverage = false
+}
+
+config("coverage_flags") {
+  if (battery_manager_feature_coverage) {
+    cflags = [ "--coverage" ]
+    cflags_cc = [ "--coverage" ]
+    ldflags = [ "--coverage" ]
+  }
+}

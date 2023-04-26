@@ -44,6 +44,7 @@ ohos_shared_library("batteryservice") {
   configs = [
     "${battery_utils}:utils_config",
     ":batterysrv_private_config",
+    "${battery_utils}:coverage_flags",
   ]
 
   public_configs = [ ":batterysrv_public_config" ]

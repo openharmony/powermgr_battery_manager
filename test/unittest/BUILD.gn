@@ -52,6 +52,7 @@ ohos_unittest("test_battery") {
   configs = [
     "${battery_utils}:utils_config",
     ":module_private_config",
+    "${battery_utils}:coverage_flags",
   ]
 
   deps = [
@@ -88,6 +89,7 @@ ohos_unittest("test_battery_proxy_mock_iremoteobject") {
     ":module_mock_private_config",
     ":module_private_config",
     "${battery_utils}:utils_config",
+    "${battery_utils}:coverage_flags",
   ]
 
   deps = [ "//third_party/googletest:gtest_main" ]
@@ -120,6 +122,7 @@ ohos_unittest("test_battery_proxy_mock_messageparcel_write_error") {
     ":module_mock_private_config",
     ":module_private_config",
     "${battery_utils}:utils_config",
+    "${battery_utils}:coverage_flags",
   ]
 
   deps = [ "//third_party/googletest:gtest_main" ]
@@ -153,6 +156,7 @@ ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
     ":module_mock_private_config",
     ":module_private_config",
     "${battery_utils}:utils_config",
+    "${battery_utils}:coverage_flags",
   ]
 
   deps = [ "//third_party/googletest:gtest_main" ]
@@ -185,6 +189,7 @@ ohos_unittest("test_battery_proxy_mock_parcel_read_error") {
     ":module_mock_private_config",
     ":module_private_config",
     "${battery_utils}:utils_config",
+    "${battery_utils}:coverage_flags",
   ]
 
   deps = [ "//third_party/googletest:gtest_main" ]
@@ -214,6 +219,7 @@ ohos_unittest("test_batterywakeup") {
   configs = [
     "${battery_utils}:utils_config",
     ":module_private_config",
+    "${battery_utils}:coverage_flags",
   ]
 
   deps = [

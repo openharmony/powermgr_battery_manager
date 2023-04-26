@@ -30,7 +30,10 @@ ohos_shared_library("batteryinfo") {
 
 ohos_shared_library("charger") {
   sources = [ "charger.cpp" ]
-  configs = [ "${battery_utils}:utils_config" ]
+  configs = [
+    "${battery_utils}:utils_config",
+    "${battery_utils}:coverage_flags",
+  ]
   deps = [ "${battery_inner_api}:batterysrv_client" ]
   external_deps = [
     "hiviewdfx_hilog_native:libhilog",
@@ -45,7 +48,10 @@ ohos_shared_library("charger") {
 
 ohos_shared_library("battery") {
   sources = [ "system_battery.cpp" ]
-  configs = [ "${battery_utils}:utils_config" ]
+  configs = [
+    "${battery_utils}:utils_config",
+    "${battery_utils}:coverage_flags",
+  ]
   deps = [ "${battery_inner_api}:batterysrv_client" ]
   external_deps = [
     "hiviewdfx_hilog_native:libhilog",
