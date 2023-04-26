@@ -39,6 +39,7 @@ ohos_systemtest("test_systemtest") {
   configs = [
     "${battery_utils}:utils_config",
     ":module_private_config",
+    "${battery_utils}:coverage_flags",
   ]
 
   deps = [
@@ -74,6 +75,7 @@ ohos_systemtest("test_charger_offline_shutdown") {
   configs = [
     "${battery_utils}:utils_config",
     ":module_private_config",
+    "${battery_utils}:coverage_flags",
   ]
 
   deps = [
@@ -98,6 +100,7 @@ ohos_systemtest("test_battery_dialog") {
   configs = [
     "${battery_utils}:utils_config",
     ":module_private_config",
+    "${battery_utils}:coverage_flags",
   ]
 
   deps = [
@@ -137,6 +140,7 @@ ohos_systemtest("test_battery_event_systemtest") {
   configs = [
     "${battery_utils}:utils_config",
     ":module_private_config",
+    "${battery_utils}:coverage_flags",
   ]
 
   deps = [
