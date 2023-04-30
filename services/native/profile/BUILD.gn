@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//base/powermgr/battery_manager/batterymgr.gni")
+import("../../../batterymgr.gni")
 
 ## Install battery_config.json to /system/etc/battery/battery_config.json
 ohos_prebuilt_etc("battery_config") {

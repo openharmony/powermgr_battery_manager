@@ -11,13 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//base/powermgr/battery_manager/batterymgr.gni")
+import("../../batterymgr.gni")
 
 ohos_shared_library("batteryinfo") {
   sources = [ "battery_info.cpp" ]
   configs = [ "${battery_utils}:utils_config" ]
   deps = [ "${battery_inner_api}:batterysrv_client" ]
   external_deps = [
+    "c_utils:utils",
     "hiviewdfx_hilog_native:libhilog",
     "napi:ace_napi",
   ]
@@ -36,6 +37,7 @@ ohos_shared_library("charger") {
   ]
   deps = [ "${battery_inner_api}:batterysrv_client" ]
   external_deps = [
+    "c_utils:utils",
     "hiviewdfx_hilog_native:libhilog",
     "napi:ace_napi",
   ]
@@ -54,6 +56,7 @@ ohos_shared_library("battery") {
   ]
   deps = [ "${battery_inner_api}:batterysrv_client" ]
   external_deps = [
+    "c_utils:utils",
     "hiviewdfx_hilog_native:libhilog",
     "napi:ace_napi",
   ]

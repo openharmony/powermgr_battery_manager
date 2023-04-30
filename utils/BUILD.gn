@@ -11,13 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//base/powermgr/battery_manager/batterymgr.gni")
+import("../batterymgr.gni")
 
 config("utils_config") {
-  include_dirs = [
-    "native/include",
-    "//commonlibrary/c_utils/base/include",
-  ]
+  include_dirs = [ "native/include" ]
 }
 
 declare_args() {
