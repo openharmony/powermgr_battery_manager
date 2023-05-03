@@ -16,11 +16,6 @@ import("//build/ohos.gni")
 config("batteryd_private_config") {
   include_dirs = [
     "include",
-    "//foundation/graphic/ui/frameworks",
-    "//foundation/graphic/ui/interfaces/kits",
-    "//foundation/graphic/ui/interfaces/innerkits",
-    "//foundation/graphic/utils/interfaces/kits",
-    "//foundation/graphic/utils/interfaces/innerkits",
     "//base/update/updater/utils/include",
     "//base/update/updater/utils/json",
     "//base/update/updater/services",
@@ -60,7 +55,6 @@ ohos_executable("charger") {
 
   deps = [
     "//base/update/updater/services/ui:libui",
-    "//foundation/graphic/ui/ext/updater:libupdater_layout",
     "//third_party/cJSON:cjson",
     "//third_party/jsoncpp:jsoncpp",
     "//third_party/libdrm:libdrm",
@@ -78,6 +72,7 @@ ohos_executable("charger") {
     "graphic_chipsetsdk:buffer_handle",
     "init:libbegetutil",
     "ipc:ipc_core",
+    "ui_lite:libupdater_layout",
   ]
 
   part_name = "battery_manager"
