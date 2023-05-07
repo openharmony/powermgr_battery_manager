@@ -11,16 +11,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#####################hydra-fuzz###################
-import("//base/powermgr/battery_manager/batterymgr.gni")
 import("//build/config/features.gni")
 import("//build/test.gni")
+
+#####################hydra-fuzz###################
+import("../../../batterymgr.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("BatteryFuzzTest") {
   module_out_path = "${module_output_path}"
-  fuzz_config_file =
-      "//base/powermgr/battery_manager/test/fuzztest/battery_fuzzer"
+  fuzz_config_file = "${battery_manager_path}/test/fuzztest/battery_fuzzer"
 
   include_dirs = [ "./" ]
 

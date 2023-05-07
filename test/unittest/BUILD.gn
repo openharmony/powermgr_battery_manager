@@ -11,8 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//base/powermgr/battery_manager/batterymgr.gni")
 import("//build/test.gni")
+import("../../batterymgr.gni")
 
 ###############################################################################
 config("module_private_config") {
@@ -223,7 +223,7 @@ ohos_unittest("test_batterywakeup") {
   ]
 
   deps = [
-    "//base/powermgr/battery_manager/services:batteryservice",
+    "${battery_service}:batteryservice",
     "//third_party/googletest:gtest_main",
   ]
 

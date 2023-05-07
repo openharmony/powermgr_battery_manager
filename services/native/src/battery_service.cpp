@@ -34,7 +34,7 @@
 #include "battery_log.h"
 #include "power_mgr_client.h"
 #include "power_common.h"
-#include "watchdog.h"
+#include "xcollie/watchdog.h"
 
 using namespace OHOS::HDI::Battery;
 using namespace OHOS::AAFwk;

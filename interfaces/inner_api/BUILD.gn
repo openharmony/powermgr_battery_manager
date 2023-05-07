@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//base/powermgr/battery_manager/batterymgr.gni")
+import("../../batterymgr.gni")
 
 config("batterysrv_public_config") {
   include_dirs = [
@@ -42,5 +42,6 @@ ohos_shared_library("batterysrv_client") {
   install_images = [ system_base_dir ]
   relative_install_dir = "platformsdk"
 
+  subsystem_name = "powermgr"
   part_name = "battery_manager"
 }

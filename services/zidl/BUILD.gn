@@ -11,13 +11,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//base/powermgr/battery_manager/batterymgr.gni")
+import("../../batterymgr.gni")
 
 config("batterysrv_public_config") {
   include_dirs = [
     "include",
     "${battery_inner_api}/native/include",
-    "//base/hiviewdfx/hicollie/interfaces/native/innerkits/include/xcollie",
   ]
 }
 
@@ -37,5 +36,6 @@ ohos_shared_library("batterysrv_stub") {
     "ipc:ipc_core",
   ]
 
+  subsystem_name = "powermgr"
   part_name = "battery_manager"
 }

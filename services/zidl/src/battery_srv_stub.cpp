@@ -16,8 +16,8 @@
 #include "battery_srv_stub.h"
 
 #include "errors.h"
-#include "xcollie.h"
-#include "xcollie_define.h"
+#include "xcollie/xcollie.h"
+#include "xcollie/xcollie_define.h"
 #include "ipc_object_stub.h"
 #include "message_parcel.h"
 #include "battery_info.h"
