@@ -11,8 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//base/powermgr/battery_manager/batterymgr.gni")
 import("//build/test.gni")
+import("../../../../batterymgr.gni")
 
 ##############################unittest##########################################
 ohos_unittest("test_batteryclient") {

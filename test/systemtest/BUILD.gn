@@ -11,8 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//base/powermgr/battery_manager/batterymgr.gni")
 import("//build/test.gni")
+import("../../batterymgr.gni")
 
 ###############################################################################
 config("module_private_config") {
@@ -105,7 +105,7 @@ ohos_systemtest("test_battery_dialog") {
 
   deps = [
     "${battery_inner_api}:batterysrv_client",
-    "//base/powermgr/battery_manager/services:batteryservice",
+    "${battery_service}:batteryservice",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
@@ -146,7 +146,6 @@ ohos_systemtest("test_battery_event_systemtest") {
   deps = [
     "${battery_inner_api}:batterysrv_client",
     "${battery_manager_path}/services:batteryservice",
-    "//foundation/arkui/ace_engine/interfaces/inner_api/ui_service_manager:ui_service_mgr",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
   ]
