@@ -642,6 +642,9 @@ BatteryCapacityLevel BatteryService::GetCapacityLevel()
 
 int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args)
 {
+    if (!Permission::IsSystem()) {
+        return ERR_PERMISSION_DENIED;
+    }
     g_service = DelayedSpSingleton<BatteryService>::GetInstance();
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     if ((args.empty()) || (args[0].size() != HELP_DUMP_PARAM)) {
