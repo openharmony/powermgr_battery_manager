@@ -34,3 +34,8 @@ group("battery_unittest") {
     "unittest:test_batterywakeup",
   ]
 }
+
+group("battery_benchmarktest") {
+  testonly = true
+  deps = [ "benchmarktest:BatteryBenchmarkTest" ]
+}
