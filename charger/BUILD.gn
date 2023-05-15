@@ -75,8 +75,15 @@ ohos_executable("charger") {
     "graphic_chipsetsdk:buffer_handle",
     "init:libbegetutil",
     "ipc:ipc_core",
-    "ui_lite:libupdater_layout",
   ]
+
+  if (defined(global_parts_info.arkui_ui_lite)) {
+    defines += [ "ENABLE_UI_LITE" ]
+    external_deps += [ "ui_lite:libupdater_layout" ]
+  } else {
+    sources = []
+    sources += [ "src/charger.cpp" ]
+  }
 
   part_name = "battery_manager"
 }
