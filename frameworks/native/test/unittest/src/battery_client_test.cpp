@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -41,6 +41,7 @@ using namespace std;
 namespace {
 bool g_isMock = false;
 constexpr int32_t BATTERY_EMERGENCY_THRESHOLD = 5;
+constexpr int32_t BATTERY_DEFAULT_THRESHOLD = 10;
 constexpr int32_t BATTERY_LOW_THRESHOLD = 20;
 constexpr int32_t BATTERY_NORMAL_THRESHOLD = 90;
 constexpr int32_t BATTERY_HIGH_THRESHOLD = 99;
@@ -63,20 +64,20 @@ void BatteryClientTest::TearDownTestCase(void)
 
 void BatteryClientTest::SetUp(void)
 {
-    g_info.SetCapacity(100);
+    g_info.SetCapacity(BATTERY_HIGH_FULL);
     g_info.SetPresent(false);
-    g_info.SetVoltage(10);
-    g_info.SetTemperature(10);
+    g_info.SetVoltage(BATTERY_DEFAULT_THRESHOLD);
+    g_info.SetTemperature(BATTERY_DEFAULT_THRESHOLD);
     g_info.SetHealthState(BatteryHealthState::HEALTH_STATE_GOOD);
     g_info.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_USB);
-    g_info.SetPluggedMaxCurrent(10);
-    g_info.SetPluggedMaxVoltage(10);
+    g_info.SetPluggedMaxCurrent(BATTERY_DEFAULT_THRESHOLD);
+    g_info.SetPluggedMaxVoltage(BATTERY_DEFAULT_THRESHOLD);
     g_info.SetChargeState(BatteryChargeState::CHARGE_STATE_DISABLE);
-    g_info.SetChargeCounter(10);
-    g_info.SetTotalEnergy(10);
-    g_info.SetCurAverage(10);
-    g_info.SetNowCurrent(10);
-    g_info.SetRemainEnergy(10);
+    g_info.SetChargeCounter(BATTERY_DEFAULT_THRESHOLD);
+    g_info.SetTotalEnergy(BATTERY_DEFAULT_THRESHOLD);
+    g_info.SetCurAverage(BATTERY_DEFAULT_THRESHOLD);
+    g_info.SetNowCurrent(BATTERY_DEFAULT_THRESHOLD);
+    g_info.SetRemainEnergy(BATTERY_DEFAULT_THRESHOLD);
     g_info.SetTechnology("test");
 }
 
