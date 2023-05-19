@@ -62,7 +62,7 @@ HWTEST_F(BatteryDumpTest, BatteryDump002, TestSize.Level1)
 
 /**
  * @tc.name: BatteryDump003
- * @tc.desc: Dump parameter is -r, ResetPlugged
+ * @tc.desc: Dump parameter is -r, Reset
  * @tc.type: FUNC
  * @tc.require: issueI5YZR1
  */
@@ -130,8 +130,7 @@ static HWTEST_F(BatteryDumpTest, BatteryDump007, TestSize.Level1)
 {
     int32_t fd = 1;
     std::vector<std::u16string> args;
-    g_service->Dump(fd, args);
-    EXPECT_EQ(g_service->Dump(fd, args), ERR_NO_INIT);
+    EXPECT_EQ(g_service->Dump(fd, args), ERR_OK);
 }
 
 /**
@@ -150,7 +149,7 @@ HWTEST_F(BatteryDumpTest, BatteryDump008, TestSize.Level1)
 
 /**
  * @tc.name: BatteryDump009
- * @tc.desc: Dump parameter is -h, DumpBatteryHelp
+ * @tc.desc: Dump parameter is empty, MockUnplugged
  * @tc.type: FUNC
  * @tc.require: issueI5YZR1
  */
@@ -159,14 +158,12 @@ HWTEST_F(BatteryDumpTest, BatteryDump009, TestSize.Level1)
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     int32_t fd = 1;
     std::vector<std::u16string> args;
-    std::u16string arg = u"-h";
-    args.push_back(arg);
-    EXPECT_TRUE(batteryDump.DumpBatteryHelp(fd, args));
+    EXPECT_FALSE(batteryDump.MockUnplugged(fd, g_service, args));
 }
 
 /**
  * @tc.name: BatteryDump010
- * @tc.desc: Dump parameter is empty, GDumpBatteryHelp
+ * @tc.desc: Dump parameter is empty, Reset
  * @tc.type: FUNC
  * @tc.require: issueI5YZR1
  */
@@ -175,35 +172,68 @@ HWTEST_F(BatteryDumpTest, BatteryDump010, TestSize.Level1)
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     int32_t fd = 1;
     std::vector<std::u16string> args;
-    EXPECT_FALSE(batteryDump.DumpBatteryHelp(fd, args));
+    EXPECT_FALSE(batteryDump.Reset(fd, g_service, args));
 }
 
 /**
  * @tc.name: BatteryDump011
- * @tc.desc: Dump parameter is empty, MockUnplugged
+ * @tc.desc: Test functions Dump, capacity cmd normal
  * @tc.type: FUNC
- * @tc.require: issueI5YZR1
+ * @tc.require: issueI6Z8RB
  */
-HWTEST_F(BatteryDumpTest, BatteryDump011, TestSize.Level1)
+static HWTEST_F(BatteryDumpTest, BatteryDump011, TestSize.Level1)
 {
-    BatteryDump& batteryDump = BatteryDump::GetInstance();
     int32_t fd = 1;
     std::vector<std::u16string> args;
-    EXPECT_FALSE(batteryDump.MockUnplugged(fd, g_service, args));
+    std::u16string argParam = u"--capacity";
+    std::u16string argCapacity = u"20";
+    args.push_back(argParam);
+    args.push_back(argCapacity);
+    EXPECT_EQ(g_service->Dump(fd, args), ERR_OK);
 }
 
 /**
  * @tc.name: BatteryDump012
- * @tc.desc: Dump parameter is empty, ResetPlugged
+ * @tc.desc: Test functions Dump, capacity cmd invalid
+ * @tc.type: FUNC
+ * @tc.require: issueI6Z8RB
+ */
+static HWTEST_F(BatteryDumpTest, BatteryDump012, TestSize.Level1)
+{
+    int32_t fd = 1;
+    std::vector<std::u16string> args;
+    std::u16string arg = u"--capacity";
+    args.push_back(arg);
+    EXPECT_EQ(g_service->Dump(fd, args), ERR_NO_INIT);
+}
+
+/**
+ * @tc.name: BatteryDump013
+ * @tc.desc: Test functions Dump, capacity out of range
+ * @tc.type: FUNC
+ * @tc.require: issueI6Z8RB
+ */
+static HWTEST_F(BatteryDumpTest, BatteryDump013, TestSize.Level1)
+{
+    int32_t fd = 1;
+    std::vector<std::u16string> args;
+    std::u16string arg = u"--capacity 200";
+    args.push_back(arg);
+    EXPECT_EQ(g_service->Dump(fd, args), ERR_NO_INIT);
+}
+
+/**
+ * @tc.name: BatteryDump014
+ * @tc.desc: Dump parameter is empty, Capacity
  * @tc.type: FUNC
  * @tc.require: issueI5YZR1
  */
-HWTEST_F(BatteryDumpTest, BatteryDump013, TestSize.Level1)
+HWTEST_F(BatteryDumpTest, BatteryDump014, TestSize.Level1)
 {
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     int32_t fd = 1;
     std::vector<std::u16string> args;
-    EXPECT_FALSE(batteryDump.ResetPlugged(fd, g_service, args));
+    EXPECT_FALSE(batteryDump.MockCapacity(fd, g_service, args));
 }
 } // namespace PowerMgr
 } // namespace OHOS
