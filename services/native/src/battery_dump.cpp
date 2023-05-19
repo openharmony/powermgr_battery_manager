@@ -25,26 +25,20 @@ namespace OHOS {
 namespace PowerMgr {
 namespace {
 constexpr uint32_t MS_NS = 1000000;
+constexpr int32_t CAPACITY_DUMP_PARAM_SIZE = 2;
+constexpr int32_t CAPACITY_LIMIT_MIN = 0;
+constexpr int32_t CAPACITY_LIMIT_MAX = 100;
 }
 
-bool BatteryDump::DumpBatteryHelp(int32_t fd, const std::vector<std::u16string> &args)
-{
-    if ((args.empty()) || (args[0].compare(u"-h") != 0)) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "args cannot be empty or invalid");
-        return false;
-    }
-    DumpHelp(fd);
-    return true;
-}
-
-void BatteryDump::DumpHelp(int32_t fd)
+void BatteryDump::DumpBatteryHelp(int32_t fd)
 {
     dprintf(fd, "Usage:\n");
     dprintf(fd, "      -h: dump help\n");
     dprintf(fd, "      -i: dump battery info\n");
     dprintf(fd, "      -d: show low power diaolog\n");
     dprintf(fd, "      -u: unplug battery charging state\n");
-    dprintf(fd, "      -r: reset battery charging state\n");
+    dprintf(fd, "      -r: reset battery state\n");
+    dprintf(fd, "      --capacity <capacity>: set battery capacity, the capacity range [0, 100]\n");
 }
 
 void BatteryDump::DumpCurrentTime(int32_t fd)
@@ -65,7 +59,7 @@ void BatteryDump::DumpCurrentTime(int32_t fd)
 bool BatteryDump::GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args)
 {
     if ((args.empty()) || (args[0].compare(u"-i") != 0)) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "args cannot be empty or invalid");
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "args cannot be empty or invalid");
         return false;
     }
     DumpCurrentTime(fd);
@@ -105,22 +99,54 @@ bool BatteryDump::GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, cons
 bool BatteryDump::MockUnplugged(int32_t fd, sptr<BatteryService>& service, const std::vector<std::u16string>& args)
 {
     if ((args.empty()) || (args[0].compare(u"-u") != 0)) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "args cannot be empty or invalid");
+        BATTERY_HILOGW(FEATURE_CHARGING, "args cannot be empty or invalid");
         return false;
     }
-    service->MockUnplugged(true);
+    service->MockUnplugged();
     dprintf(fd, "unplugged battery charging state \n");
     return true;
 }
 
-bool BatteryDump::ResetPlugged(int32_t fd, sptr<BatteryService>& service, const std::vector<std::u16string>& args)
+bool BatteryDump::Reset(int32_t fd, sptr<BatteryService>& service, const std::vector<std::u16string>& args)
 {
     if ((args.empty()) || (args[0].compare(u"-r") != 0)) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "args cannot be empty or invalid");
+        BATTERY_HILOGW(FEATURE_CHARGING, "args cannot be empty or invalid");
         return false;
     }
-    service->MockUnplugged(false);
-    dprintf(fd, "reset battery charging state \n");
+    service->Reset();
+    dprintf(fd, "reset battery state \n");
+    return true;
+}
+
+bool BatteryDump::ShowBatteryDialog(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args)
+{
+    if ((args.empty()) || (args[0].compare(u"-d") != 0)) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "args cannot be empty or invalid");
+        return false;
+    }
+    service->ShowBatteryDialog();
+    dprintf(fd, "show low power dialog \n");
+    return true;
+}
+
+bool BatteryDump::MockCapacity(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args)
+{
+    if ((args.empty()) || args.size() != CAPACITY_DUMP_PARAM_SIZE || (args[0].compare(u"--capacity") != 0)) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "args cannot be empty or invalid");
+        return false;
+    }
+    int32_t capacity = 0;
+    std::string capacityStr = Str16ToStr8(args[1]);
+    if (!StrToInt(capacityStr, capacity)) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "capacity convert failed");
+        return false;
+    }
+    if (capacity < CAPACITY_LIMIT_MIN || capacity > CAPACITY_LIMIT_MAX) {
+        dprintf(fd, "capacity out of range\n");
+        return true;
+    }
+    service->MockCapacity(capacity);
+    dprintf(fd, "battery capacity %d \n", capacity);
     return true;
 }
 }  // namespace PowerMgr
