@@ -156,7 +156,7 @@ ohos_systemtest("test_battery_event_systemtest") {
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_1.2",
-    "drivers_interface_input:hdi_input",
+    "drivers_interface_input:libinput_proxy_1.0",
     "drivers_interface_light:liblight_proxy_1.0",
     "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
