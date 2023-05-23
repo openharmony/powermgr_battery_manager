@@ -18,8 +18,7 @@
 #include "charger_log.h"
 #include "charger_animation.h"
 #include "init_reboot.h"
-#include "input_manager.h"
-#include "input_type.h"
+#include "v1_0/iinput_interfaces.h"
 #include <cinttypes>
 #include <linux/netlink.h>
 #include <parameters.h>
@@ -35,17 +34,19 @@ constexpr int32_t BACKLIGHT_OFF_TIME_MS = 10000;
 constexpr int32_t VIBRATE_TIME_MS = 75;
 const std::string REBOOT_CMD = "";
 const std::string SHUTDOWN_CMD = "shutdown";
+constexpr uint32_t INDEV_TYPE_UNKNOWN = 39;
 } // namespace
 
 std::unique_ptr<ChargerAnimation> ChargerThread::animation_ = nullptr;
 bool ChargerThread::isChargeStateChanged_ = false;
 bool ChargerThread::isConfigParse_ = false;
 int32_t ChargerThread::lackPowerCapacity_ = -1;
-InputEventCb g_callback = {nullptr};
+sptr<HDI::Input::V1_0::IInputCallback> g_callback {nullptr};
+sptr<HDI::Input::V1_0::IInputInterfaces> ChargerThread::inputInterface = nullptr;
 
 struct KeyState {
-    bool up;
-    bool down;
+    bool isUp;
+    bool isDown;
     int64_t timestamp;
 };
 struct KeyState g_keys[KEY_MAX + 1] = {};
@@ -55,6 +56,68 @@ static int64_t GetCurrentTime()
     timespec tm {};
     clock_gettime(CLOCK_MONOTONIC, &tm);
     return tm.tv_sec * SEC_TO_MSEC + (tm.tv_nsec / NSEC_TO_MSEC);
+}
+
+int32_t ChargerThread::HdfInputEventCallback::EventPkgCallback(
+    const std::vector<HDI::Input::V1_0::EventPackage>& pkgs, uint32_t devIndex)
+{
+    (void)devIndex;
+    if (pkgs.empty()) {
+        BATTERY_HILOGE(FEATURE_CHARGING, "pkgs is empty");
+        return HDF_FAILURE;
+    }
+    for (uint32_t i = 0; i < pkgs.size(); i++) {
+        struct input_event ev = {
+            .type = static_cast<__u16>(pkgs[i].type),
+            .code = static_cast<__u16>(pkgs[i].code),
+            .value = pkgs[i].value,
+        };
+        HandleInputEvent(&ev);
+    }
+    return HDF_SUCCESS;
+}
+
+int32_t ChargerThread::HdfInputEventCallback::HotPlugCallback(const HotPlugEvent &event)
+{
+    return HDF_SUCCESS;
+}
+
+void ChargerThread::HdfInputEventCallback::SetKeyState(int32_t code, int32_t value, int64_t now)
+{
+    bool isDown = !!value;
+
+    if (code > KEY_MAX) {
+        BATTERY_HILOGW(FEATURE_CHARGING, "code lager than KEY_MAX: %{public}d", code);
+        return;
+    }
+
+    if (g_keys[code].isDown == isDown) {
+        BATTERY_HILOGW(FEATURE_CHARGING, "PowerKey is already down");
+        return;
+    }
+
+    if (isDown) {
+        g_keys[code].timestamp = now;
+    }
+
+    g_keys[code].isDown = isDown;
+    g_keys[code].isUp = true;
+}
+
+void ChargerThread::HdfInputEventCallback::HandleInputEvent(const struct input_event* iev)
+{
+    input_event ev {};
+    ev.type = iev->type;
+    ev.code = iev->code;
+    ev.value = iev->value;
+    BATTERY_HILOGD(FEATURE_CHARGING, "ev.type=%{public}u, ev.code=%{public}u, ev.value=%{public}d"
+        , ev.type, ev.code, ev.value);
+
+    if (ev.type != EV_KEY) {
+        BATTERY_HILOGW(FEATURE_CHARGING, "Wrong type");
+        return;
+    }
+    SetKeyState(ev.code, ev.value, GetCurrentTime());
 }
 
 void ChargerThread::HandleStates()
@@ -241,7 +304,7 @@ void ChargerThread::HandlePowerKey(int32_t keycode, int64_t now)
 {
     if (keycode == KEY_POWER) {
         static bool turnOnByKeydown = false;
-        if (g_keys[keycode].down) {
+        if (g_keys[keycode].isDown) {
             int64_t rebootTime = g_keys[keycode].timestamp + REBOOT_TIME;
             if (now >= rebootTime) {
                 BATTERY_HILOGW(FEATURE_CHARGING, "reboot machine");
@@ -255,7 +318,7 @@ void ChargerThread::HandlePowerKey(int32_t keycode, int64_t now)
                 backlightWait_ = now - 1;
                 turnOnByKeydown = true;
             }
-        } else if (g_keys[keycode].up) {
+        } else if (g_keys[keycode].isUp) {
             if (backlight_->GetScreenState() == BatteryBacklight::SCREEN_ON && !turnOnByKeydown) {
                 backlight_->TurnOffScreen();
                 animation_->AnimationStop();
@@ -267,95 +330,45 @@ void ChargerThread::HandlePowerKey(int32_t keycode, int64_t now)
                 backlightWait_ = now - 1;
                 UpdateAnimation(chargeState_, capacity_);
             }
-            g_keys[keycode].up = false;
+            g_keys[keycode].isUp = false;
             turnOnByKeydown = false;
         }
     }
 }
 
-void ChargerThread::SetKeyState(int32_t code, int32_t value, int64_t now)
-{
-    bool down = !!value;
-
-    if (code > KEY_MAX) {
-        return;
-    }
-
-    if (g_keys[code].down == down) {
-        return;
-    }
-
-    if (down) {
-        g_keys[code].timestamp = now;
-    }
-
-    g_keys[code].down = down;
-    g_keys[code].up = true;
-}
-
-void ChargerThread::HandleInputEvent(const struct input_event* iev)
-{
-    input_event ev {};
-    ev.type = iev->type;
-    ev.code = iev->code;
-    ev.value = iev->value;
-    BATTERY_HILOGD(FEATURE_CHARGING, "ev.type=%{public}u, ev.code=%{public}u, ev.value=%{public}d"
-        , ev.type, ev.code, ev.value);
-
-    if (ev.type != EV_KEY) {
-        return;
-    }
-    SetKeyState(ev.code, ev.value, GetCurrentTime());
-}
-
-void ChargerThread::EventPkgCallback(const InputEventPackage** pkgs, uint32_t count, uint32_t devIndex)
-{
-    (void)devIndex;
-    if (pkgs == nullptr || *pkgs == nullptr) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "pkgs or *pkgs is nullptr");
-        return;
-    }
-    for (uint32_t i = 0; i < count; i++) {
-        struct input_event ev = {
-            .type = static_cast<__u16>(pkgs[i]->type),
-            .code = static_cast<__u16>(pkgs[i]->code),
-            .value = pkgs[i]->value,
-        };
-        HandleInputEvent(&ev);
-    }
-}
-
 void ChargerThread::InitInput()
 {
-    IInputInterface* inputInterface = nullptr;
-    int32_t ret = GetInputInterface(&inputInterface);
-    if (ret != INPUT_SUCCESS) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "get input driver interface failed, ret=%{public}d", ret);
-        return;
-    }
+    inputInterface = nullptr;
+    inputInterface = HDI::Input::V1_0::IInputInterfaces::Get(true);
 
     const uint32_t POWERKEY_INPUT_DEVICE = 2;
-    ret = inputInterface->iInputManager->OpenInputDevice(POWERKEY_INPUT_DEVICE);
-    if (ret != INPUT_SUCCESS) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "open device failed, index=%{public}u, ret=%{public}d",
-            POWERKEY_INPUT_DEVICE, ret);
+    int32_t ret = inputInterface->OpenInputDevice(POWERKEY_INPUT_DEVICE);
+    if (ret != HDF_SUCCESS) {
+        BATTERY_HILOGE(FEATURE_CHARGING, "open device failed, index=%{public}u, ret=%{public}d"
+            , POWERKEY_INPUT_DEVICE, ret);
         return;
     }
 
-    uint32_t devType = InputDevType::INDEV_TYPE_UNKNOWN;
-    ret = inputInterface->iInputController->GetDeviceType(POWERKEY_INPUT_DEVICE, &devType);
-    if (ret != INPUT_SUCCESS) {
+    uint32_t devType = INDEV_TYPE_UNKNOWN;
+    ret = inputInterface->GetDeviceType(POWERKEY_INPUT_DEVICE, devType);
+    if (ret != HDF_SUCCESS) {
         BATTERY_HILOGE(
             FEATURE_CHARGING, "get device type failed, index=%{public}u, ret=%{public}d", POWERKEY_INPUT_DEVICE, ret);
         return;
     }
 
     /* first param is powerkey input device, refer to device node '/dev/hdf_input_event2', so pass 2 */
-    g_callback.EventPkgCallback = EventPkgCallback;
-    ret = inputInterface->iInputReporter->RegisterReportCallback(POWERKEY_INPUT_DEVICE, &g_callback);
-    if (ret != INPUT_SUCCESS) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "register callback failed, index=%{public}u, ret=%{public}d",
-            POWERKEY_INPUT_DEVICE, ret);
+    if (g_callback == nullptr) {
+        g_callback = new (std::nothrow) HdfInputEventCallback();
+    }
+    if (g_callback == nullptr) {
+        BATTERY_HILOGE(FEATURE_CHARGING, "The callback_ is nullptr");
+        return;
+    }
+    ret = inputInterface->RegisterReportCallback(POWERKEY_INPUT_DEVICE, g_callback);
+    if (ret != HDF_SUCCESS) {
+        BATTERY_HILOGE(FEATURE_CHARGING, "register callback failed, index=%{public}u, ret=%{public}d"
+            , POWERKEY_INPUT_DEVICE, ret);
         return;
     }
 }
