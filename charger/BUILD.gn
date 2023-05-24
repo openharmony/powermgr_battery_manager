@@ -70,7 +70,7 @@ ohos_executable("charger") {
     "drivers_interface_battery:libbattery_proxy_1.2",
     "drivers_interface_display:display_composer_idl_headers",
     "drivers_interface_display:libdisplay_composer_hdi_impl",
-    "drivers_interface_input:hdi_input",
+    "drivers_interface_input:libinput_proxy_1.0",
     "drivers_interface_light:liblight_proxy_1.0",
     "graphic_chipsetsdk:buffer_handle",
     "init:libbegetutil",
