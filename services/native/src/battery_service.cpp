@@ -44,7 +44,6 @@ namespace PowerMgr {
 namespace {
 constexpr const char* BATTERY_SERVICE_NAME = "BatteryService";
 constexpr const char* BATTERY_HDI_NAME = "battery_interface_service";
-constexpr int32_t HELP_DUMP_PARAM = 2;
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
 constexpr uint32_t RETRY_TIME = 1000;
 sptr<BatteryService> g_service;
@@ -171,7 +170,7 @@ void BatteryService::InitConfig()
 
 int32_t BatteryService::HandleBatteryCallbackEvent(const V1_2::BatteryInfo& event)
 {
-    if (isMockUnplugged_) {
+    if (isMockUnplugged_ || isMockCapacity_) {
         return ERR_OK;
     }
 
@@ -662,58 +661,79 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
     }
     g_service = DelayedSpSingleton<BatteryService>::GetInstance();
     BatteryDump& batteryDump = BatteryDump::GetInstance();
-    if ((args.empty()) || (args[0].size() != HELP_DUMP_PARAM)) {
-        BATTERY_HILOGD(FEATURE_BATT_INFO, "param cannot be empty or the length is not 2");
-        dprintf(fd, "cmd param number is not equal to 2\n");
-        batteryDump.DumpHelp(fd);
-        return ERR_NO_INIT;
-    }
-    if (args[0].compare(u"-d") == 0) {
-        ShowBatteryDialog();
-        dprintf(fd, "show low power dialog \n");
+    if ((args.empty()) || (args[0].compare(u"-h") == 0)) {
+        batteryDump.DumpBatteryHelp(fd);
         return ERR_OK;
     }
 
-    bool helpRet = batteryDump.DumpBatteryHelp(fd, args);
     bool getBatteryInfo = batteryDump.GetBatteryInfo(fd, g_service, args);
     bool unplugged = batteryDump.MockUnplugged(fd, g_service, args);
-    bool reset = batteryDump.ResetPlugged(fd, g_service, args);
-    bool total = helpRet + getBatteryInfo + unplugged + reset;
+    bool mockedCapacity = batteryDump.MockCapacity(fd, g_service, args);
+    bool reset = batteryDump.Reset(fd, g_service, args);
+    bool showedDialog = batteryDump.ShowBatteryDialog(fd, g_service, args);
+    bool total = getBatteryInfo + unplugged + mockedCapacity + reset + showedDialog;
     if (!total) {
-        dprintf(fd, "cmd param is error\n");
-        batteryDump.DumpHelp(fd);
+        dprintf(fd, "cmd param is invalid\n");
+        batteryDump.DumpBatteryHelp(fd);
         return ERR_NO_INIT;
     }
 
     return ERR_OK;
 }
 
-void BatteryService::MockUnplugged(bool isUnplugged)
+void BatteryService::MockUnplugged()
 {
     V1_2::BatteryInfo event;
     if (!iBatteryInterface_) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
     }
-
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);
-    if (isUnplugged) {
-        batteryInfo_.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_NONE);
-        batteryInfo_.SetPluggedMaxCurrent(0);
-        batteryInfo_.SetPluggedMaxVoltage(0);
-        batteryInfo_.SetChargeState(BatteryChargeState::CHARGE_STATE_NONE);
-        HandleBatteryInfo();
-        isMockUnplugged_ = true;
-    } else {
-        isMockUnplugged_ = false;
-        HandleBatteryInfo();
-    }
+    batteryInfo_.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_NONE);
+    batteryInfo_.SetPluggedMaxCurrent(0);
+    batteryInfo_.SetPluggedMaxVoltage(0);
+    batteryInfo_.SetChargeState(BatteryChargeState::CHARGE_STATE_NONE);
+    HandleBatteryInfo();
+    isMockUnplugged_ = true;
 }
 
 bool BatteryService::IsMockUnplugged()
 {
     return isMockUnplugged_;
+}
+
+void BatteryService::MockCapacity(int32_t capacity)
+{
+    V1_2::BatteryInfo event;
+    if (!iBatteryInterface_) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
+        return;
+    }
+    iBatteryInterface_->GetBatteryInfo(event);
+    ConvertingEvent(event);
+    batteryInfo_.SetCapacity(capacity);
+    HandleBatteryInfo();
+    isMockCapacity_ = true;
+}
+
+bool BatteryService::IsMockCapacity()
+{
+    return isMockCapacity_;
+}
+
+void BatteryService::Reset()
+{
+    V1_2::BatteryInfo event;
+    if (!iBatteryInterface_) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
+        return;
+    }
+    isMockUnplugged_ = false;
+    isMockCapacity_ = false;
+    iBatteryInterface_->GetBatteryInfo(event);
+    ConvertingEvent(event);
+    HandleBatteryInfo();
 }
 } // namespace PowerMgr
 } // namespace OHOS

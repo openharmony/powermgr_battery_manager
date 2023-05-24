@@ -82,7 +82,10 @@ public:
     bool RegisterHdiStatusListener();
     bool RegisterBatteryHdiCallback();
     bool IsMockUnplugged();
-    void MockUnplugged(bool isUnplugged);
+    void MockUnplugged();
+    bool IsMockCapacity();
+    void MockCapacity(int32_t capacity);
+    void Reset();
     bool ShowBatteryDialog();
     bool DestoryBatteryDialog();
 private:
@@ -111,6 +114,7 @@ private:
     sptr<HdiServiceStatusListener::IServStatListener> hdiServStatListener_ { nullptr };
     bool isLowPower_ { false };
     bool isMockUnplugged_ { false };
+    bool isMockCapacity_ { false };
     bool chargeFlag_ { false };
     int32_t commEventRetryTimes_ { 0 };
     int32_t lastCapacity_ { 0 };
