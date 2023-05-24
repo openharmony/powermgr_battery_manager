@@ -30,11 +30,12 @@ class BatteryDump : public Singleton<BatteryDump> {
 public:
     BatteryDump() = default;
     virtual ~BatteryDump() = default;
-    bool DumpBatteryHelp(int32_t fd, const std::vector<std::u16string> &args);
-    void DumpHelp(int32_t fd);
+    void DumpBatteryHelp(int32_t fd);
     bool GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
     bool MockUnplugged(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
-    bool ResetPlugged(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
+    bool Reset(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
+    bool ShowBatteryDialog(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
+    bool MockCapacity(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
 
 private:
     void DumpCurrentTime(int32_t fd);

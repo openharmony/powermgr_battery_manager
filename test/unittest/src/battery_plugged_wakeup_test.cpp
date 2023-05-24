@@ -64,14 +64,14 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest001, TestSize.Level0)
     BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest001 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
         powerMgrClient.SuspendDevice();
         bool isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_TRUE(isScreenOnNow);
     }
@@ -89,13 +89,13 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest002, TestSize.Level0)
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
         powerMgrClient.SuspendDevice();
         bool isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_TRUE(isScreenOnNow);
     }
@@ -112,14 +112,14 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest003, TestSize.Level0)
     BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest003 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
         powerMgrClient.SuspendDevice();
         bool isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "Wireless");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_TRUE(isScreenOnNow);
     }
@@ -137,13 +137,13 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest004, TestSize.Level0)
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "Wireless");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
         powerMgrClient.SuspendDevice();
         bool isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_TRUE(isScreenOnNow);
     }
@@ -160,14 +160,14 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest005, TestSize.Level0)
     BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest005 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
         powerMgrClient.SuspendDevice();
         bool isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "Mains");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_TRUE(isScreenOnNow);
     }
@@ -185,13 +185,13 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest006, TestSize.Level0)
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "Mains");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
         powerMgrClient.SuspendDevice();
         bool isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_TRUE(isScreenOnNow);
     }
@@ -208,14 +208,14 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest007, TestSize.Level0)
     BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest007 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
         powerMgrClient.SuspendDevice();
         bool isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "Unknown");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
     }
@@ -233,13 +233,13 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest008, TestSize.Level0)
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "Unknown");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
         powerMgrClient.SuspendDevice();
         bool isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
     }
@@ -256,13 +256,13 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest009, TestSize.Level0)
     BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest009 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         auto& powerMgrClient = OHOS::PowerMgr::PowerMgrClient::GetInstance();
         powerMgrClient.SuspendDevice();
         bool isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
-        g_service->MockUnplugged(false);
+        g_service->Reset();
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
     }

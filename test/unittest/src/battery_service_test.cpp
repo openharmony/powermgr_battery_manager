@@ -209,15 +209,15 @@ static HWTEST_F(BatteryServiceTest, BatteryService008, TestSize.Level1)
 
 /**
  * @tc.name: BatteryService009
- * @tc.desc: Test functions MockUnplugged, with parameter is false
+ * @tc.desc: Test functions MockUnplugged
  * @tc.type: FUNC
  * @tc.require: issueI5YZR1
  */
 static HWTEST_F(BatteryServiceTest, BatteryService009, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryService009 start.");
-    g_service->MockUnplugged(false);
-    EXPECT_EQ(g_service->IsMockUnplugged(), false);
+    g_service->MockUnplugged();
+    EXPECT_EQ(g_service->IsMockUnplugged(), true);
     BATTERY_HILOGD(LABEL_TEST, "BatteryService009 end.");
 }
 

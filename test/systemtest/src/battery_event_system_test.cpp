@@ -16,6 +16,7 @@
 #include "battery_event_system_test.h"
 
 #include "battery_info.h"
+#include "battery_srv_client.h"
 #include "common_event_data.h"
 #include "common_event_manager.h"
 #include "common_event_subscribe_info.h"
@@ -46,6 +47,8 @@ namespace {
 std::condition_variable g_cv;
 std::mutex g_mtx;
 std::string g_action = "";
+int32_t g_capacity = -1;
+int32_t g_chargeState = -1;
 constexpr int64_t TIME_OUT = 1;
 bool g_isMock = false;
 const int32_t RETRY_TIMES = 2;
@@ -167,6 +170,20 @@ CommonEventChargeTypeChangedTest::CommonEventChargeTypeChangedTest(const CommonE
 {
 }
 
+class CommonEventDumpCapacityTest : public CommonEventSubscriber {
+public:
+    CommonEventDumpCapacityTest() = default;
+    explicit CommonEventDumpCapacityTest(const CommonEventSubscribeInfo& subscriberInfo);
+    virtual ~CommonEventDumpCapacityTest() {};
+    virtual void OnReceiveEvent(const CommonEventData& data);
+    static shared_ptr<CommonEventDumpCapacityTest> RegisterEvent();
+};
+
+CommonEventDumpCapacityTest::CommonEventDumpCapacityTest(const CommonEventSubscribeInfo& subscriberInfo)
+    : CommonEventSubscriber(subscriberInfo)
+{
+}
+
 void CommonEventBatteryChangedTest::OnReceiveEvent(const CommonEventData& data)
 {
     g_action = data.GetWant().GetAction();
@@ -223,6 +240,15 @@ void CommonEventBatteryConnectTest::OnReceiveEvent(const CommonEventData& data)
 void CommonEventChargeTypeChangedTest::OnReceiveEvent(const CommonEventData& data)
 {
     g_action = data.GetWant().GetAction();
+    g_cv.notify_one();
+}
+
+void CommonEventDumpCapacityTest::OnReceiveEvent(const CommonEventData& data)
+{
+    int defaultCapacity = -1;
+    int defaultChargeState = -1;
+    g_capacity = data.GetWant().GetIntParam(KEY_CAPACITY, defaultCapacity);
+    g_chargeState = data.GetWant().GetIntParam(KEY_CHARGE_STATE, defaultChargeState);
     g_cv.notify_one();
 }
 
@@ -345,6 +371,22 @@ shared_ptr<CommonEventChargeTypeChangedTest> CommonEventChargeTypeChangedTest::R
     matchingSkills.AddEvent(CommonEventSupport::COMMON_EVENT_CHARGE_TYPE_CHANGED);
     CommonEventSubscribeInfo subscribeInfo(matchingSkills);
     auto subscriberPtr = std::make_shared<CommonEventChargeTypeChangedTest>(subscribeInfo);
+    for (int32_t tryTimes = 0; tryTimes < RETRY_TIMES; tryTimes++) {
+        succeed = CommonEventManager::SubscribeCommonEvent(subscriberPtr);
+    }
+    if (!succeed) {
+        return nullptr;
+    }
+    return subscriberPtr;
+}
+
+shared_ptr<CommonEventDumpCapacityTest> CommonEventDumpCapacityTest::RegisterEvent()
+{
+    bool succeed = false;
+    MatchingSkills matchingSkills;
+    matchingSkills.AddEvent(CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED);
+    CommonEventSubscribeInfo subscribeInfo(matchingSkills);
+    auto subscriberPtr = std::make_shared<CommonEventDumpCapacityTest>(subscribeInfo);
     for (int32_t tryTimes = 0; tryTimes < RETRY_TIMES; tryTimes++) {
         succeed = CommonEventManager::SubscribeCommonEvent(subscriberPtr);
     }
@@ -516,6 +558,41 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
     if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
         g_cv.notify_one();
     }
+    auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
+    EXPECT_TRUE(ret);
+}
+
+/*
+ * @tc.number: BatteryEventSystemTest009
+ * @tc.name: BatteryEventSystemTest
+ * @tc.desc: Test capacity dump, Verify the receive the common event
+ * @tc.require: issueI6Z8RB
+ */
+HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
+{
+    shared_ptr<CommonEventDumpCapacityTest> subscriber = CommonEventDumpCapacityTest::RegisterEvent();
+    int32_t capacity = 20;
+    std::string cmdStr = "hidumper -s 3302 -a";
+    cmdStr.append(" \"--capacity ").append(ToString(capacity)).append("\"");
+    system(cmdStr.c_str());
+    std::unique_lock<std::mutex> lck(g_mtx);
+    if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
+        g_cv.notify_one();
+    }
+    EXPECT_EQ(g_capacity, capacity);
+
+    system("hidumper -s 3302 -a -u");
+    if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
+        g_cv.notify_one();
+    }
+    EXPECT_EQ(g_chargeState, static_cast<int32_t>(BatteryChargeState::CHARGE_STATE_NONE));
+
+    system("hidumper -s 3302 -a -r");
+    if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
+        g_cv.notify_one();
+    }
+    EXPECT_EQ(g_capacity, BatterySrvClient::GetInstance().GetCapacity());
+    EXPECT_EQ(g_chargeState, static_cast<int32_t>(BatterySrvClient::GetInstance().GetChargingStatus()));
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
 }
