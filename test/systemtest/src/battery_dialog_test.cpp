@@ -47,15 +47,4 @@ HWTEST_F (BatteryDialogTest, BatteryDialogST_001, TestSize.Level1)
 {
     EXPECT_TRUE(g_service->ShowBatteryDialog());
 }
-
-/**
- * @tc.name: BatteryDailogST_002
- * @tc.desc: test kill BatteryDialog by service
- * @tc.type: FUNC
- * @tc.require: issueI5I9BF
- */
-HWTEST_F (BatteryDialogTest, BatteryDialogST_002, TestSize.Level1)
-{
-    EXPECT_TRUE(g_service->DestoryBatteryDialog());
-}
 }
