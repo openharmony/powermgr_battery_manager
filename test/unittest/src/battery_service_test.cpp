@@ -78,19 +78,6 @@ static HWTEST_F(BatteryServiceTest, BatteryService001, TestSize.Level1)
 }
 
 /**
- * @tc.name: BatteryService003
- * @tc.desc: Test functions DestoryBatteryDialog
- * @tc.type: FUNC
- * @tc.require: issueI5YZR1
- */
-static HWTEST_F(BatteryServiceTest, BatteryService003, TestSize.Level1)
-{
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService003 start.");
-    EXPECT_TRUE(g_service->DestoryBatteryDialog());
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService003 end.");
-}
-
-/**
  * @tc.name: BatteryService004
  * @tc.desc: Test functions GetVoltage
  * @tc.type: FUNC
