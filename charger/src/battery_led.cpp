@@ -63,11 +63,11 @@ void BatteryLed::TurnOn(uint32_t color)
     if (!available_) {
         return;
     }
-    struct HdfLightEffect effect = {
-        .lightColor.colorValue.rgbColor.r = static_cast<uint8_t>((color >> MOVE_RIGHT_16) & 0xFF),
-        .lightColor.colorValue.rgbColor.g = static_cast<uint8_t>((color >> MOVE_RIGHT_8) & 0xFF),
-        .lightColor.colorValue.rgbColor.b = static_cast<uint8_t>(color & 0xFF),
-    };
+    struct HdfLightEffect effect;
+    effect.lightColor.colorValue.rgbColor.r = static_cast<uint8_t>((color >> MOVE_RIGHT_16) & 0xFF);
+    effect.lightColor.colorValue.rgbColor.g = static_cast<uint8_t>((color >> MOVE_RIGHT_8) & 0xFF);
+    effect.lightColor.colorValue.rgbColor.b = static_cast<uint8_t>(color & 0xFF);
+    
     BATTERY_HILOGD(FEATURE_CHARGING, "battery light color is %{public}d", color);
     int32_t ret = batteryLight_->TurnOnLight(HdfLightId::HDF_LIGHT_ID_BATTERY, effect);
     if (ret < HDF_SUCCESS) {

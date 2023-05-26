@@ -21,15 +21,15 @@
 #include "iremote_object.h"
 
 namespace OHOS {
-MessageParcel::MessageParcel() :
-    Parcel(), writeRawDataFd_(-1), readRawDataFd_(-1),
+MessageParcel::MessageParcel()
+    : Parcel(), writeRawDataFd_(-1), readRawDataFd_(-1),
     kernelMappedWrite_(nullptr), kernelMappedRead_(nullptr),
     rawData_(nullptr), rawDataSize_(0)
 {
 }
 
-MessageParcel::MessageParcel(Allocator* allocator) :
-    Parcel(allocator), writeRawDataFd_(-1), readRawDataFd_(-1),
+MessageParcel::MessageParcel(Allocator* allocator)
+    : Parcel(allocator), writeRawDataFd_(-1), readRawDataFd_(-1),
     kernelMappedWrite_(nullptr), kernelMappedRead_(nullptr),
     rawData_(nullptr), rawDataSize_(0)
 {
