@@ -1,0 +1,12 @@
+{
+    "process": "foundation",
+    "systemability": [
+        {
+            "name": 3302,
+            "libpath": "libbatteryservice.z.so",
+            "run-on-create": true,
+            "distributed": false,
+            "dump_level": 1
+        }
+    ]
+}
