@@ -49,11 +49,13 @@ std::mutex g_mtx;
 std::string g_action = "";
 int32_t g_capacity = -1;
 int32_t g_chargeState = -1;
+int32_t g_capacityLevel = -1;
 constexpr int64_t TIME_OUT = 1;
 bool g_isMock = false;
 const int32_t RETRY_TIMES = 2;
 const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";
 const std::string KEY_CAPACITY = BatteryInfo::COMMON_EVENT_KEY_CAPACITY;
+const std::string KEY_CAPACITY_LEVEL = BatteryInfo::COMMON_EVENT_KEY_CAPACITY_LEVEL;
 const std::string KEY_CHARGE_STATE = BatteryInfo::COMMON_EVENT_KEY_CHARGE_STATE;
 const std::string KEY_PLUGGED_MAX_VOLTAGE = BatteryInfo::COMMON_EVENT_KEY_PLUGGED_MAX_VOLTAGE;
 } // namespace
@@ -246,8 +248,10 @@ void CommonEventChargeTypeChangedTest::OnReceiveEvent(const CommonEventData& dat
 void CommonEventDumpCapacityTest::OnReceiveEvent(const CommonEventData& data)
 {
     int defaultCapacity = -1;
+    int defaultCapacityLevel = -1;
     int defaultChargeState = -1;
     g_capacity = data.GetWant().GetIntParam(KEY_CAPACITY, defaultCapacity);
+    g_capacityLevel = data.GetWant().GetIntParam(KEY_CAPACITY_LEVEL, defaultCapacityLevel);
     g_chargeState = data.GetWant().GetIntParam(KEY_CHARGE_STATE, defaultChargeState);
     g_cv.notify_one();
 }
@@ -572,7 +576,8 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
 {
     shared_ptr<CommonEventDumpCapacityTest> subscriber = CommonEventDumpCapacityTest::RegisterEvent();
     int32_t capacity = 20;
-    std::string cmdStr = "hidumper -s 3302 -a";
+    std::string baseCmdStr = "hidumper -s 3302 -a";
+    std::string cmdStr = baseCmdStr;
     cmdStr.append(" \"--capacity ").append(ToString(capacity)).append("\"");
     system(cmdStr.c_str());
     std::unique_lock<std::mutex> lck(g_mtx);
@@ -580,12 +585,29 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
         g_cv.notify_one();
     }
     EXPECT_EQ(g_capacity, capacity);
+    EXPECT_EQ(capacity, BatterySrvClient::GetInstance().GetCapacity());
+    EXPECT_EQ(g_capacityLevel, static_cast<int32_t>(BatteryCapacityLevel::LEVEL_LOW));
+    EXPECT_TRUE(BatteryCapacityLevel::LEVEL_LOW == BatterySrvClient::GetInstance().GetCapacityLevel());
+
+    capacity = 50;
+    cmdStr = baseCmdStr;
+    cmdStr.append(" \"--capacity ").append(ToString(capacity)).append("\"");
+    system(cmdStr.c_str());
+    if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
+        g_cv.notify_one();
+    }
+    EXPECT_EQ(g_capacity, capacity);
+    EXPECT_EQ(capacity, BatterySrvClient::GetInstance().GetCapacity());
+    EXPECT_EQ(g_capacityLevel, static_cast<int32_t>(BatteryCapacityLevel::LEVEL_NORMAL));
+    EXPECT_TRUE(BatteryCapacityLevel::LEVEL_NORMAL == BatterySrvClient::GetInstance().GetCapacityLevel());
 
     system("hidumper -s 3302 -a -u");
     if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
         g_cv.notify_one();
     }
     EXPECT_EQ(g_chargeState, static_cast<int32_t>(BatteryChargeState::CHARGE_STATE_NONE));
+    EXPECT_TRUE(BatteryPluggedType::PLUGGED_TYPE_NONE == BatterySrvClient::GetInstance().GetPluggedType());
+    EXPECT_TRUE(BatteryChargeState::CHARGE_STATE_NONE == BatterySrvClient::GetInstance().GetChargingStatus());
 
     system("hidumper -s 3302 -a -r");
     if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
