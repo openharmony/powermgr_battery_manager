@@ -110,8 +110,8 @@ void ChargerThread::HdfInputEventCallback::HandleInputEvent(const struct input_e
     ev.type = iev->type;
     ev.code = iev->code;
     ev.value = iev->value;
-    BATTERY_HILOGD(FEATURE_CHARGING, "ev.type=%{public}u, ev.code=%{public}u, ev.value=%{public}d"
-        , ev.type, ev.code, ev.value);
+    BATTERY_HILOGD(FEATURE_CHARGING, "ev.type=%{public}u, ev.code=%{public}u, ev.value=%{public}d",
+        ev.type, ev.code, ev.value);
 
     if (ev.type != EV_KEY) {
         BATTERY_HILOGW(FEATURE_CHARGING, "Wrong type");
