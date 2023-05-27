@@ -399,8 +399,11 @@ void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeS
 
 int32_t BatteryService::GetCapacity()
 {
-    int capacity = BATTERY_FULL_CAPACITY;
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    if (isMockCapacity_) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "Return mock battery capacity");
+        return batteryInfo_.GetCapacity();
+    }
+    int32_t capacity = BATTERY_FULL_CAPACITY;
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
@@ -422,14 +425,15 @@ bool BatteryService::ChangePath(const std::string path)
 
 BatteryChargeState BatteryService::GetChargingStatus()
 {
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    if (isMockUnplugged_) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "Return mock charge status");
+        return batteryInfo_.GetChargeState();
+    }
     V1_2::BatteryChargeState chargeState = V1_2::BatteryChargeState(0);
-
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return BatteryChargeState(chargeState);
     }
-
     iBatteryInterface_->GetChargeState(chargeState);
     return BatteryChargeState(chargeState);
 }
@@ -450,13 +454,15 @@ BatteryHealthState BatteryService::GetHealthStatus()
 
 BatteryPluggedType BatteryService::GetPluggedType()
 {
+    if (isMockUnplugged_) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "Return mock plugged type");
+        return batteryInfo_.GetPluggedType();
+    }
     V1_2::BatteryPluggedType pluggedType = V1_2::BatteryPluggedType(0);
-
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return BatteryPluggedType(pluggedType);
     }
-
     iBatteryInterface_->GetPluggedType(pluggedType);
     return BatteryPluggedType(pluggedType);
 }
@@ -690,12 +696,12 @@ void BatteryService::MockUnplugged()
     }
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);
+    isMockUnplugged_ = true;
     batteryInfo_.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_NONE);
     batteryInfo_.SetPluggedMaxCurrent(0);
     batteryInfo_.SetPluggedMaxVoltage(0);
     batteryInfo_.SetChargeState(BatteryChargeState::CHARGE_STATE_NONE);
     HandleBatteryInfo();
-    isMockUnplugged_ = true;
 }
 
 bool BatteryService::IsMockUnplugged()
@@ -712,9 +718,9 @@ void BatteryService::MockCapacity(int32_t capacity)
     }
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);
+    isMockCapacity_ = true;
     batteryInfo_.SetCapacity(capacity);
     HandleBatteryInfo();
-    isMockCapacity_ = true;
 }
 
 bool BatteryService::IsMockCapacity()
