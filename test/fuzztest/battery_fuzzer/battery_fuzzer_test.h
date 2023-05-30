@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,22 +19,5 @@
 #define BATTERY_FUZZER_TEST_H
 
 #define FUZZ_PROJECT_NAME "battery_fuzzer"
-
-enum class ApiNumber {
-    NUM_ZERO = 0,
-    NUM_ONE,
-    NUM_TWO,
-    NUM_THREE,
-    NUM_FOUR,
-    NUM_FIVE,
-    NUM_SIX,
-    NUM_SEVEN,
-    NUM_EIGHT,
-    NUM_NINE,
-    NUM_TEN,
-    NUM_ELEVEN,
-    NUM_TWELVE,
-    NUM_END
-};
 
 #endif
