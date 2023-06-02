@@ -43,5 +43,6 @@ ohos_shared_library("batterysrv_client") {
   relative_install_dir = "platformsdk"
 
   subsystem_name = "powermgr"
+  innerapi_tags = [ "platformsdk" ]
   part_name = "battery_manager"
 }
