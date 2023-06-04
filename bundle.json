@@ -30,9 +30,9 @@
             "components": [
                 "ability_base",
                 "ability_runtime",
-                "ace_engine",
                 "bundle_framework",
                 "common_event_service",
+                "config_policy",
                 "c_utils",
                 "drivers_interface_battery",
                 "eventhandler",
@@ -41,18 +41,14 @@
                 "hisysevent_native",
                 "hiviewdfx_hilog_native",
                 "ipc",
-                "multimedia_image_framework",
+                "miscdevice",
                 "napi",
                 "power_manager",
                 "safwk",
                 "samgr"
             ],
             "third_party": [
-                "libdrm",
-                "libpng",
-                "googletest",
-                "jsoncpp",
-                "node"
+                "jsoncpp"
             ]
         },
         "build": {
