@@ -62,6 +62,7 @@ ohos_shared_library("batteryservice") {
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "miscdevice:light_interface_native",
+    "power_manager:power_sysparam",
     "power_manager:powermgr_client",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
