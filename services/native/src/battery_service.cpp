@@ -15,26 +15,29 @@
 
 #include "battery_service.h"
 
-#include <ctime>
 #include <cstdio>
+#include <ctime>
 #include <functional>
-#include <ipc_skeleton.h>
+#include <new>
+
 #include "ability_manager_client.h"
 #include "errors.h"
-#include "new"
-#include "permission.h"
-#include "system_ability_definition.h"
-#include "iremote_object.h"
-#include "v1_2/ibattery_callback.h"
 #include "hdf_device_class.h"
 #include "hdf_service_status.h"
+#include "ipc_skeleton.h"
+#include "iremote_object.h"
+#include "permission.h"
+#include "power_common.h"
+#include "power_mgr_client.h"
+#include "sysparam.h"
+#include "system_ability_definition.h"
+#include "xcollie/watchdog.h"
+
 #include "battery_callback.h"
 #include "battery_config.h"
 #include "battery_dump.h"
 #include "battery_log.h"
-#include "power_mgr_client.h"
-#include "power_common.h"
-#include "xcollie/watchdog.h"
+#include "v1_2/ibattery_callback.h"
 
 using namespace OHOS::HDI::Battery;
 using namespace OHOS::AAFwk;
@@ -49,7 +52,9 @@ constexpr uint32_t RETRY_TIME = 1000;
 sptr<BatteryService> g_service;
 BatteryPluggedType g_lastPluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
 static PowerMgrClient& g_powerMgrClient = PowerMgrClient::GetInstance();
+SysParam::BootCompletedCallback g_bootCompletedCallback;
 }
+std::atomic_bool BatteryService::isBootCompleted_ = false;
 
 const bool G_REGISTER_RESULT = SystemAbility::MakeAndRegisterAbility(
     DelayedSpSingleton<BatteryService>::GetInstance().GetRefPtr());
@@ -113,7 +118,16 @@ bool BatteryService::Init()
     if (!batteryNotify_) {
         batteryNotify_ = std::make_unique<BatteryNotify>();
     }
+    RegisterBootCompletedCallback();
     return true;
+}
+
+void BatteryService::RegisterBootCompletedCallback()
+{
+    g_bootCompletedCallback = []() {
+        isBootCompleted_ = true;
+    };
+    SysParam::RegisterBootCompletedCallback(g_bootCompletedCallback);
 }
 
 void BatteryService::OnAddSystemAbility(int32_t systemAbilityId, const std::string& deviceId)
@@ -272,6 +286,7 @@ void BatteryService::OnStop()
     eventRunner_.reset();
     handler_.reset();
     ready_ = false;
+    isBootCompleted_ = false;
 
     if (iBatteryInterface_ != nullptr) {
         iBatteryInterface_->UnRegister();
@@ -662,6 +677,9 @@ BatteryCapacityLevel BatteryService::GetCapacityLevel()
 
 int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args)
 {
+    if (!isBootCompleted_) {
+        return ERR_NO_INIT;
+    }
     if (!Permission::IsSystem()) {
         return ERR_PERMISSION_DENIED;
     }

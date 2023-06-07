@@ -16,6 +16,7 @@
 #ifndef POWERMGR_BATTERY_SERVICE_H
 #define POWERMGR_BATTERY_SERVICE_H
 
+#include <atomic>
 #include <cstdint>
 #include <mutex>
 #include <iosfwd>
@@ -91,6 +92,7 @@ public:
 private:
     bool Init();
     void WakeupDevice(BatteryChargeState chargeState);
+    void RegisterBootCompletedCallback();
     int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_2::BatteryInfo& event);
     void ConvertingEvent(const OHOS::HDI::Battery::V1_2::BatteryInfo &event);
     void HandleBatteryInfo();
@@ -104,6 +106,7 @@ private:
     bool IsUnplugged(BatteryPluggedType pluggedType);
     void WakeupDevice(BatteryPluggedType pluggedType);
     bool ready_ { false };
+    static std::atomic_bool isBootCompleted_;
     std::mutex mutex_;
     std::shared_ptr<AppExecFwk::EventRunner> eventRunner_ { nullptr };
     std::shared_ptr<BatteryServiceEventHandler> handler_ { nullptr };
