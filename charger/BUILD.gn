@@ -14,22 +14,7 @@
 import("//build/ohos.gni")
 
 config("batteryd_private_config") {
-  include_dirs = [
-    "include",
-    "//base/update/updater/utils/include",
-    "//base/update/updater/utils/json",
-    "//base/update/updater/services",
-    "//base/update/updater/interfaces/kits/include",
-    "//base/update/updater/services/include/log",
-    "//base/update/updater/services/include",
-    "//base/update/updater/services/ui",
-    "//base/update/updater/services/ui/include",
-    "//base/update/updater/services/ui/control",
-    "//base/update/updater/services/ui/driver",
-    "//base/update/updater/services/ui/view",
-    "//base/update/updater/services/ui/view/layout",
-    "//base/update/updater/services/ui/language",
-  ]
+  include_dirs = [ "include" ]
 }
 
 ohos_executable("charger") {
@@ -57,7 +42,6 @@ ohos_executable("charger") {
   ]
 
   deps = [
-    "//base/update/updater/services/ui:libui",
     "//third_party/cJSON:cjson",
     "//third_party/jsoncpp:jsoncpp",
     "//third_party/libdrm:libdrm",
@@ -75,6 +59,9 @@ ohos_executable("charger") {
     "graphic_chipsetsdk:buffer_handle",
     "init:libbegetutil",
     "ipc:ipc_core",
+    "updater:libui",
+    "updater:libupdater",
+    "updater:libutils",
   ]
 
   if (defined(global_parts_info.arkui_ui_lite)) {
