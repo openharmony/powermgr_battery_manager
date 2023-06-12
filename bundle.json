@@ -37,7 +37,7 @@
                 "drivers_interface_battery",
                 "eventhandler",
                 "hdf_core",
-                "hicollie_native",
+                "hicollie",
                 "hisysevent_native",
                 "hiviewdfx_hilog_native",
                 "ipc",
