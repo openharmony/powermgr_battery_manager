@@ -190,12 +190,6 @@ void BatteryNotify::ChangedEventDeprecated(Want& want, const BatteryInfo& info) 
 
 bool BatteryNotify::PublishLowEvent(const BatteryInfo& info) const
 {
-    Want want;
-    want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_LOW);
-    CommonEventData data;
-    data.SetWant(want);
-    CommonEventPublishInfo publishInfo;
-    publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
     if (info.GetCapacity() > lowCapacity_) {
@@ -207,6 +201,12 @@ bool BatteryNotify::PublishLowEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_LOW);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(false);
     data.SetCode(info.GetCapacity());
     BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher capacity=%{public}d", info.GetCapacity());
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
@@ -219,12 +219,6 @@ bool BatteryNotify::PublishLowEvent(const BatteryInfo& info) const
 
 bool BatteryNotify::PublishOkayEvent(const BatteryInfo& info) const
 {
-    Want want;
-    want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_OKAY);
-    CommonEventData data;
-    data.SetWant(want);
-    CommonEventPublishInfo publishInfo;
-    publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
     if (info.GetCapacity() <= lowCapacity_) {
@@ -236,6 +230,12 @@ bool BatteryNotify::PublishOkayEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_OKAY);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(false);
     data.SetCode(info.GetCapacity());
     BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher capacity=%{public}d", info.GetCapacity());
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
@@ -248,12 +248,6 @@ bool BatteryNotify::PublishOkayEvent(const BatteryInfo& info) const
 
 bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
 {
-    Want want;
-    want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_CONNECTED);
-    CommonEventData data;
-    data.SetWant(want);
-    CommonEventPublishInfo publishInfo;
-    publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
     if ((info.GetPluggedType() == BatteryPluggedType::PLUGGED_TYPE_NONE) ||
@@ -266,6 +260,12 @@ bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_CONNECTED);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(false);
     data.SetCode(static_cast<int32_t>(info.GetPluggedType()));
     BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher pluggedtype=%{public}u",
         static_cast<uint32_t>(info.GetPluggedType()));
@@ -280,12 +280,6 @@ bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
 
 bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const
 {
-    Want want;
-    want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_DISCONNECTED);
-    CommonEventData data;
-    data.SetWant(want);
-    CommonEventPublishInfo publishInfo;
-    publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
     if ((info.GetPluggedType() != BatteryPluggedType::PLUGGED_TYPE_NONE) &&
@@ -298,6 +292,12 @@ bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_DISCONNECTED);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(false);
     data.SetCode(static_cast<int32_t>(info.GetPluggedType()));
     BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher pluggedtype=%{public}u",
         static_cast<uint32_t>(info.GetPluggedType()));
@@ -312,12 +312,6 @@ bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const
 
 bool BatteryNotify::PublishChargingEvent(const BatteryInfo& info) const
 {
-    Want want;
-    want.SetAction(CommonEventSupport::COMMON_EVENT_CHARGING);
-    CommonEventData data;
-    data.SetWant(want);
-    CommonEventPublishInfo publishInfo;
-    publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
     if (info.GetChargeState() != BatteryChargeState::CHARGE_STATE_ENABLE) {
@@ -329,6 +323,12 @@ bool BatteryNotify::PublishChargingEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_CHARGING);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(false);
     data.SetCode(static_cast<int32_t>(info.GetChargeState()));
     BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher chargeState=%{public}u",
         static_cast<uint32_t>(info.GetChargeState()));
@@ -343,12 +343,6 @@ bool BatteryNotify::PublishChargingEvent(const BatteryInfo& info) const
 
 bool BatteryNotify::PublishDischargingEvent(const BatteryInfo& info) const
 {
-    Want want;
-    want.SetAction(CommonEventSupport::COMMON_EVENT_DISCHARGING);
-    CommonEventData data;
-    data.SetWant(want);
-    CommonEventPublishInfo publishInfo;
-    publishInfo.SetOrdered(false);
     bool isSuccess = true;
 
     if (info.GetChargeState() == BatteryChargeState::CHARGE_STATE_ENABLE) {
@@ -360,6 +354,12 @@ bool BatteryNotify::PublishDischargingEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
+    Want want;
+    want.SetAction(CommonEventSupport::COMMON_EVENT_DISCHARGING);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(false);
     data.SetCode(static_cast<int32_t>(info.GetChargeState()));
     BATTERY_HILOGD(FEATURE_BATT_INFO, "publisher chargeState=%{public}u",
         static_cast<uint32_t>(info.GetChargeState()));
