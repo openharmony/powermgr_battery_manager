@@ -57,7 +57,7 @@ ohos_shared_library("batteryservice") {
     "eventhandler:libeventhandler",
     "hdf_core:libhdi",
     "hdf_core:libpub_utils",
-    "hicollie_native:libhicollie",
+    "hicollie:libhicollie",
     "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
