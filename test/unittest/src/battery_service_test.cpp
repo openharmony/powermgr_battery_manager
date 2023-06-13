@@ -334,6 +334,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService018, TestSize.Level1)
     std::vector<std::u16string> args;
     std::u16string arg = u"-u";
     args.push_back(arg);
+    g_service->isBootCompleted_ = true;
     EXPECT_EQ(g_service->Dump(fd, args), ERR_OK);
 
     EXPECT_EQ(g_service->HandleBatteryCallbackEvent(event), ERR_OK);

@@ -14,9 +14,15 @@
  */
 
 #include "battery_dump_test.h"
-#include "battery_dump.h"
-#include "power_common.h"
 #include <memory>
+
+#define private   public
+#define protected public
+#include "battery_dump.h"
+#include "battery_service.h"
+#undef private
+#undef protected
+#include "power_common.h"
 
 using namespace testing::ext;
 
@@ -28,6 +34,7 @@ sptr<BatteryService> g_service;
 void BatteryDumpTest::SetUpTestCase()
 {
     g_service = DelayedSpSingleton<BatteryService>::GetInstance();
+    g_service->isBootCompleted_ = true;
 }
 
 /**
