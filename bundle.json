@@ -20,7 +20,10 @@
             "SystemCapability.PowerManager.BatteryManager.Extension"
         ],
         "features": [],
-        "adapted_system_type": [ "standard" ],
+        "adapted_system_type": [
+            "small",
+            "standard"
+        ],
         "rom": "1024KB",
         "ram": "2048KB",
         "hisysevent_config": [
