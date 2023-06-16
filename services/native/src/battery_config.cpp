@@ -29,9 +29,11 @@ constexpr const char* BATTERY_CONFIG_EXCEPTION_PATH = "";
 constexpr int32_t MAP_KEY_INDEX = 0;
 constexpr int32_t BEGIN_SOC_INDEX = 0;
 constexpr int32_t END_SOC_INDEX = 1;
+constexpr int32_t MAX_SOC_RANGE = 2;
 constexpr int32_t RED_INDEX = 0;
 constexpr int32_t GREEN_INDEX = 1;
 constexpr int32_t BLUE_INDEX = 2;
+constexpr int32_t MAX_RGB_RANGE = 3;
 constexpr int32_t MAX_DEPTH = 5;
 constexpr int32_t MIN_DEPTH = 1;
 constexpr uint32_t MOVE_LEFT_16 = 16;
@@ -133,6 +135,15 @@ void BatteryConfig::ParseLightConf(std::string level)
         return;
     }
 
+    if (soc.size() != MAX_SOC_RANGE || !soc[BEGIN_SOC_INDEX].isInt() || !soc[END_SOC_INDEX].isInt()) {
+        BATTERY_HILOGW(COMP_SVC, "The battery light %{public}s soc data type error.", level.c_str());
+        return;
+    }
+    if (rgb.size() != MAX_RGB_RANGE || !rgb[RED_INDEX].isUInt() || !rgb[GREEN_INDEX].isUInt() ||
+        !rgb[BLUE_INDEX].isUInt()) {
+        BATTERY_HILOGW(COMP_SVC, "The battery light %{public}s rgb data type error.", level.c_str());
+        return;
+    }
     BatteryConfig::LightConf lightConf = {
         .beginSoc = soc[BEGIN_SOC_INDEX].asInt(),
         .endSoc = soc[END_SOC_INDEX].asInt(),
