@@ -196,14 +196,18 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const V1_2::BatteryInfo& even
 
 void BatteryService::ConvertingEvent(const V1_2::BatteryInfo& event)
 {
-    batteryInfo_.SetCapacity(event.capacity);
+    if (!isMockCapacity_) {
+        batteryInfo_.SetCapacity(event.capacity);
+    }
+    if (!isMockUnplugged_) {
+        batteryInfo_.SetPluggedType(BatteryPluggedType(event.pluggedType));
+        batteryInfo_.SetPluggedMaxCurrent(event.pluggedMaxCurrent);
+        batteryInfo_.SetPluggedMaxVoltage(event.pluggedMaxVoltage);
+        batteryInfo_.SetChargeState(BatteryChargeState(event.chargeState));
+    }
     batteryInfo_.SetVoltage(event.voltage);
     batteryInfo_.SetTemperature(event.temperature);
     batteryInfo_.SetHealthState(BatteryHealthState(event.healthState));
-    batteryInfo_.SetPluggedType(BatteryPluggedType(event.pluggedType));
-    batteryInfo_.SetPluggedMaxCurrent(event.pluggedMaxCurrent);
-    batteryInfo_.SetPluggedMaxVoltage(event.pluggedMaxVoltage);
-    batteryInfo_.SetChargeState(BatteryChargeState(event.chargeState));
     batteryInfo_.SetChargeCounter(event.chargeCounter);
     batteryInfo_.SetTotalEnergy(event.totalEnergy);
     batteryInfo_.SetCurAverage(event.curAverage);
@@ -712,9 +716,9 @@ void BatteryService::MockUnplugged()
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
     }
+    isMockUnplugged_ = true;
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);
-    isMockUnplugged_ = true;
     batteryInfo_.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_NONE);
     batteryInfo_.SetPluggedMaxCurrent(0);
     batteryInfo_.SetPluggedMaxVoltage(0);
@@ -734,9 +738,9 @@ void BatteryService::MockCapacity(int32_t capacity)
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
     }
+    isMockCapacity_ = true;
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);
-    isMockCapacity_ = true;
     batteryInfo_.SetCapacity(capacity);
     HandleBatteryInfo();
 }

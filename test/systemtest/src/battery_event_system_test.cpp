@@ -569,7 +569,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
 /*
  * @tc.number: BatteryEventSystemTest009
  * @tc.name: BatteryEventSystemTest
- * @tc.desc: Test capacity dump, Verify the receive the common event
+ * @tc.desc: Test capacity and unplugged dump, verify the receive the common event
  * @tc.require: issueI6Z8RB
  */
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
@@ -589,6 +589,16 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
     EXPECT_EQ(g_capacityLevel, static_cast<int32_t>(BatteryCapacityLevel::LEVEL_LOW));
     EXPECT_TRUE(BatteryCapacityLevel::LEVEL_LOW == BatterySrvClient::GetInstance().GetCapacityLevel());
 
+    system("hidumper -s 3302 -a -u");
+    if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
+        g_cv.notify_one();
+    }
+    EXPECT_EQ(g_chargeState, static_cast<int32_t>(BatteryChargeState::CHARGE_STATE_NONE));
+    EXPECT_TRUE(BatteryPluggedType::PLUGGED_TYPE_NONE == BatterySrvClient::GetInstance().GetPluggedType());
+    EXPECT_TRUE(BatteryChargeState::CHARGE_STATE_NONE == BatterySrvClient::GetInstance().GetChargingStatus());
+    EXPECT_EQ(g_capacity, capacity);
+    EXPECT_EQ(capacity, BatterySrvClient::GetInstance().GetCapacity());
+
     capacity = 50;
     cmdStr = baseCmdStr;
     cmdStr.append(" \"--capacity ").append(ToString(capacity)).append("\"");
@@ -600,11 +610,6 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
     EXPECT_EQ(capacity, BatterySrvClient::GetInstance().GetCapacity());
     EXPECT_EQ(g_capacityLevel, static_cast<int32_t>(BatteryCapacityLevel::LEVEL_NORMAL));
     EXPECT_TRUE(BatteryCapacityLevel::LEVEL_NORMAL == BatterySrvClient::GetInstance().GetCapacityLevel());
-
-    system("hidumper -s 3302 -a -u");
-    if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
-        g_cv.notify_one();
-    }
     EXPECT_EQ(g_chargeState, static_cast<int32_t>(BatteryChargeState::CHARGE_STATE_NONE));
     EXPECT_TRUE(BatteryPluggedType::PLUGGED_TYPE_NONE == BatterySrvClient::GetInstance().GetPluggedType());
     EXPECT_TRUE(BatteryChargeState::CHARGE_STATE_NONE == BatterySrvClient::GetInstance().GetChargingStatus());
