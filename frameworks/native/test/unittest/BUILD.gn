@@ -40,7 +40,6 @@ ohos_unittest("test_batteryclient") {
   external_deps = [
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
-    "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
@@ -74,7 +73,6 @@ ohos_unittest("test_batteryclient_death") {
   external_deps = [
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
-    "eventhandler:libeventhandler",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
