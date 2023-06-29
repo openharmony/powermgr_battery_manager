@@ -29,6 +29,7 @@
 #include "permission.h"
 #include "power_common.h"
 #include "power_mgr_client.h"
+#include "ffrt_utils.h"
 #include "sysparam.h"
 #include "system_ability_definition.h"
 #include "xcollie/watchdog.h"
@@ -50,6 +51,7 @@ constexpr const char* BATTERY_HDI_NAME = "battery_interface_service";
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
 constexpr uint32_t RETRY_TIME = 1000;
 sptr<BatteryService> g_service;
+FFRTQueue g_queue("battery_service");
 BatteryPluggedType g_lastPluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
 static PowerMgrClient& g_powerMgrClient = PowerMgrClient::GetInstance();
 SysParam::BootCompletedCallback g_bootCompletedCallback;
@@ -97,23 +99,6 @@ void BatteryService::OnStart()
 
 bool BatteryService::Init()
 {
-    if (!eventRunner_) {
-        eventRunner_ = AppExecFwk::EventRunner::Create(BATTERY_SERVICE_NAME);
-        if (eventRunner_ == nullptr) {
-            BATTERY_HILOGE(COMP_SVC, "Init failed due to create EventRunner");
-            return false;
-        }
-    }
-    if (!handler_) {
-        handler_ = std::make_shared<BatteryServiceEventHandler>(eventRunner_,
-            DelayedSpSingleton<BatteryService>::GetInstance());
-        if (handler_ == nullptr) {
-            BATTERY_HILOGE(COMP_SVC, "Init failed due to create handler error");
-            return false;
-        }
-        HiviewDFX::Watchdog::GetInstance().AddThread("BatteryServiceEventHandler", handler_);
-    }
-
     InitConfig();
     if (!batteryNotify_) {
         batteryNotify_ = std::make_unique<BatteryNotify>();
@@ -247,7 +232,10 @@ bool BatteryService::RegisterHdiStatusListener()
     hdiServiceMgr_ = OHOS::HDI::ServiceManager::V1_0::IServiceManager::Get();
     if (hdiServiceMgr_ == nullptr) {
         BATTERY_HILOGW(COMP_SVC, "hdi service manager is nullptr, Try again after %{public}u second", RETRY_TIME);
-        SendEvent(BatteryServiceEventHandler::EVENT_RETRY_REGISTER_HDI_STATUS_LISTENER, RETRY_TIME);
+        FFRTTask retryTask = [this] {
+            return RegisterHdiStatusListener();
+        };
+        FFRTUtils::SubmitDelayTask(retryTask, RETRY_TIME, g_queue);
         return false;
     }
 
@@ -256,7 +244,10 @@ bool BatteryService::RegisterHdiStatusListener()
             RETURN_IF(status.serviceName != BATTERY_HDI_NAME || status.deviceClass != DEVICE_CLASS_DEFAULT);
 
             if (status.status == SERVIE_STATUS_START) {
-                SendEvent(BatteryServiceEventHandler::EVENT_REGISTER_BATTERY_HDI_CALLBACK, 0);
+                FFRTTask task = [this] {
+                    return RegisterBatteryHdiCallback();
+                };
+                FFRTUtils::SubmitTask(task);
                 BATTERY_HILOGD(COMP_SVC, "battery interface service start");
             } else if (status.status == SERVIE_STATUS_STOP && iBatteryInterface_) {
                 iBatteryInterface_->UnRegister();
@@ -269,17 +260,13 @@ bool BatteryService::RegisterHdiStatusListener()
     int32_t status = hdiServiceMgr_->RegisterServiceStatusListener(hdiServStatListener_, DEVICE_CLASS_DEFAULT);
     if (status != ERR_OK) {
         BATTERY_HILOGW(COMP_SVC, "Register hdi failed, Try again after %{public}u second", RETRY_TIME);
-        SendEvent(BatteryServiceEventHandler::EVENT_RETRY_REGISTER_HDI_STATUS_LISTENER, RETRY_TIME);
+        FFRTTask retryTask = [this] {
+            return RegisterHdiStatusListener();
+        };
+        FFRTUtils::SubmitDelayTask(retryTask, RETRY_TIME, g_queue);
         return false;
     }
     return true;
-}
-
-void BatteryService::SendEvent(int32_t event, int64_t delayTime)
-{
-    RETURN_IF_WITH_LOG(handler_ == nullptr, "handler is nullptr");
-    handler_->RemoveEvent(event);
-    handler_->SendEvent(event, 0, delayTime);
 }
 
 void BatteryService::OnStop()
@@ -287,8 +274,6 @@ void BatteryService::OnStop()
     if (!ready_) {
         return;
     }
-    eventRunner_.reset();
-    handler_.reset();
     ready_ = false;
     isBootCompleted_ = false;
 

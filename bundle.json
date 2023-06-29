@@ -41,7 +41,7 @@
                 "drivers_interface_display",
                 "drivers_interface_input",
                 "drivers_interface_light",
-                "eventhandler",
+                "ffrt",
                 "graphic_chipsetsdk",
                 "hdf_core",
                 "hicollie",
