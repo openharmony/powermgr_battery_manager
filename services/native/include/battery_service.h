@@ -35,7 +35,6 @@
 #include "v1_2/types.h"
 #include "battery_info.h"
 #include "battery_light.h"
-#include "battery_service_event_handler.h"
 #include "battery_notify.h"
 #include "battery_srv_stub.h"
 
@@ -54,11 +53,6 @@ public:
     bool IsServiceReady() const
     {
         return ready_;
-    }
-
-    std::shared_ptr<BatteryServiceEventHandler> GetHandler() const
-    {
-        return handler_;
     }
 
     int32_t Dump(int fd, const std::vector<std::u16string> &args) override;
@@ -96,7 +90,6 @@ private:
     int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_2::BatteryInfo& event);
     void ConvertingEvent(const OHOS::HDI::Battery::V1_2::BatteryInfo &event);
     void HandleBatteryInfo();
-    void SendEvent(int32_t event, int64_t delayTime);
     void CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState);
     void HandlePopupEvent(int32_t capacity);
     void HandleCapacity(int32_t capacity, BatteryChargeState chargeState);
@@ -108,8 +101,6 @@ private:
     bool ready_ { false };
     static std::atomic_bool isBootCompleted_;
     std::mutex mutex_;
-    std::shared_ptr<AppExecFwk::EventRunner> eventRunner_ { nullptr };
-    std::shared_ptr<BatteryServiceEventHandler> handler_ { nullptr };
     std::unique_ptr<BatteryNotify> batteryNotify_ { nullptr };
     BatteryLight batteryLight_;
     sptr<HDI::Battery::V1_2::IBatteryInterface> iBatteryInterface_ { nullptr };
