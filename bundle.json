@@ -38,20 +38,29 @@
                 "config_policy",
                 "c_utils",
                 "drivers_interface_battery",
+                "drivers_interface_display",
+                "drivers_interface_input",
+                "drivers_interface_light",
                 "eventhandler",
+                "graphic_chipsetsdk",
                 "hdf_core",
                 "hicollie",
                 "hisysevent_native",
                 "hiviewdfx_hilog_native",
                 "ipc",
+                "init",
                 "miscdevice",
                 "napi",
                 "power_manager",
                 "safwk",
-                "samgr"
+                "samgr",
+                "ui_lite"
             ],
             "third_party": [
-                "jsoncpp"
+                "cjson",
+                "jsoncpp",
+                "libdrm",
+                "libpng"
             ]
         },
         "build": {
