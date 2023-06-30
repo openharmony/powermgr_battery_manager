@@ -25,23 +25,6 @@ namespace OHOS {
 namespace PowerMgr {
 class IBatterySrv : public IRemoteBroker {
 public:
-    enum {
-        BATT_GET_CAPACITY = 0,
-        BATT_GET_CHARGING_STATUS,
-        BATT_GET_HEALTH_STATUS,
-        BATT_GET_PLUG_TYPE,
-        BATT_GET_VOLTAGE,
-        BATT_GET_PRESENT,
-        BATT_GET_TEMPERATURE,
-        BATT_GET_TECHNOLOGY,
-        BATT_GET_BATTERY_LEVEL,
-        BATT_GET_REMAINING_CHARGE_TIME,
-        BATT_GET_BATTERY_TOTAL_ENERGY,
-        BATT_GET_BATTERY_CURRENT_AVERAGE,
-        BATT_GET_BATTERY_CURRENT_NOW,
-        BATT_GET_BATTERY_REMAIN_ENERGY
-    };
-
     virtual int32_t GetCapacity() = 0;
     virtual BatteryChargeState GetChargingStatus() = 0;
     virtual BatteryHealthState GetHealthStatus() = 0;

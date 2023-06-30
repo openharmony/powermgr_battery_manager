@@ -19,6 +19,7 @@
 #include "parcel.h"
 
 #include "battery_log.h"
+#include "battery_manager_ipc_interface_code.h"
 #include "battery_service.h"
 #include "battery_srv_proxy.h"
 #include "ibattery_srv.h"
@@ -73,8 +74,8 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub001, TestSize.Level1)
 static HWTEST_F(BatterySrvStubTest, BatterySrvStub002, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatterySrvStub002 start.");
-    uint32_t begin = static_cast<uint32_t>(IBatterySrv::BATT_GET_CAPACITY);
-    uint32_t end = static_cast<uint32_t>(IBatterySrv::BATT_GET_BATTERY_REMAIN_ENERGY);
+    uint32_t begin = static_cast<uint32_t>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_CAPACITY);
+    uint32_t end = static_cast<uint32_t>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_REMAIN_ENERGY);
     for (uint32_t code = begin; code <= end; ++code) {
         g_data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor());
         int32_t ret = g_service->OnRemoteRequest(code, g_data, g_reply, g_option);
