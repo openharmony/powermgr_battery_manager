@@ -57,7 +57,7 @@ ohos_systemtest("test_systemtest") {
     "hdf_core:libhdf_utils",
     "hdf_core:libhdi",
     "hdf_core:libpub_utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
@@ -84,7 +84,7 @@ ohos_systemtest("test_charger_offline_shutdown") {
 
   external_deps = [
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
   ]
@@ -117,8 +117,8 @@ ohos_systemtest("test_battery_dialog") {
     "drivers_interface_battery:battery_idl_headers",
     "drivers_interface_light:liblight_proxy_1.0",
     "hdf_core:libhdi",
-    "hiviewdfx_hilog_native:libhilog",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
+    "hilog:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
@@ -156,7 +156,7 @@ ohos_systemtest("test_battery_event_systemtest") {
     "drivers_interface_battery:libbattery_proxy_1.2",
     "drivers_interface_input:libinput_proxy_1.0",
     "drivers_interface_light:liblight_proxy_1.0",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
