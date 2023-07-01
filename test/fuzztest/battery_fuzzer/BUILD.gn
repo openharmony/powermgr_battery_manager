@@ -48,7 +48,7 @@ ohos_fuzztest("BatteryFuzzTest") {
     "drivers_interface_battery:libbattery_proxy_1.2",
     "hdf_core:libhdi",
     "hdf_core:libpub_utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
   ]

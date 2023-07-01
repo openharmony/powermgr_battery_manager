@@ -68,7 +68,7 @@ ohos_unittest("test_battery") {
     "drivers_interface_battery:libbattery_proxy_1.2",
     "drivers_interface_light:liblight_proxy_1.0",
     "hdf_core:libhdi",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_single",
   ]
 }
@@ -97,8 +97,8 @@ ohos_unittest("test_battery_proxy_mock_iremoteobject") {
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
-    "hisysevent_native:libhisysevent",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
@@ -129,8 +129,8 @@ ohos_unittest("test_battery_proxy_mock_messageparcel_write_error") {
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
-    "hisysevent_native:libhisysevent",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
@@ -162,8 +162,8 @@ ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
-    "hisysevent_native:libhisysevent",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
@@ -194,8 +194,8 @@ ohos_unittest("test_battery_proxy_mock_parcel_read_error") {
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
-    "hisysevent_native:libhisysevent",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
@@ -226,7 +226,7 @@ ohos_unittest("test_batterywakeup") {
     "drivers_interface_battery:libbattery_proxy_1.2",
     "drivers_interface_light:liblight_proxy_1.0",
     "hdf_core:libhdi",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
     "power_manager:powermgr_client",
   ]
@@ -254,6 +254,6 @@ ohos_unittest("test_mock_battery_config") {
 
   external_deps = [
     "config_policy:configpolicy_util",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
   ]
 }

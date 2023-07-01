@@ -32,7 +32,7 @@ ohos_shared_library("batterysrv_stub") {
   external_deps = [
     "c_utils:utils",
     "hicollie:libhicollie",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
   ]
 
