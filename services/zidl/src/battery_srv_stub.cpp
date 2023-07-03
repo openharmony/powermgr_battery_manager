@@ -22,6 +22,7 @@
 #include "message_parcel.h"
 #include "battery_info.h"
 #include "battery_log.h"
+#include "battery_manager_ipc_interface_code.h"
 #include "power_mgr_errors.h"
 #include "power_common.h"
 #include "string_ex.h"
@@ -50,46 +51,46 @@ int32_t BatterySrvStub::CheckRequestCode(const uint32_t code, MessageParcel& dat
     MessageOption& option)
 {
     switch (code) {
-        case static_cast<int>(IBatterySrv::BATT_GET_CAPACITY): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_CAPACITY): {
             return GetCapacityStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_CHARGING_STATUS): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_CHARGING_STATUS): {
             return GetChargingStatusStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_HEALTH_STATUS): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_HEALTH_STATUS): {
             return GetHealthStatusStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_PLUG_TYPE): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_PLUG_TYPE): {
             return GetPluggedTypeStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_VOLTAGE): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_VOLTAGE): {
             return GetVoltageStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_PRESENT): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_PRESENT): {
             return GetPresentStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_TEMPERATURE): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_TEMPERATURE): {
             return GetBatteryTemperatureStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_BATTERY_LEVEL): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_LEVEL): {
             return GetBatteryCapacityLevelStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_REMAINING_CHARGE_TIME): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_REMAINING_CHARGE_TIME): {
             return GetRemainingChargeTimeStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_TECHNOLOGY): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_TECHNOLOGY): {
             return GetTechnologyStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_BATTERY_CURRENT_NOW): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_CURRENT_NOW): {
             return GetNowCurrentStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_BATTERY_REMAIN_ENERGY): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_REMAIN_ENERGY): {
             return GetRemainEnergyStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_BATTERY_TOTAL_ENERGY): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_TOTAL_ENERGY): {
             return GetTotalEnergyStub(reply);
         }
-        case static_cast<int>(IBatterySrv::BATT_GET_BATTERY_CURRENT_AVERAGE): {
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_CURRENT_AVERAGE): {
             return GetCurrentAverageStub(reply);
         }
         default: {
