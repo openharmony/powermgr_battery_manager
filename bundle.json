@@ -17,7 +17,8 @@
         "subsystem": "powermgr",
         "syscap": [
             "SystemCapability.PowerManager.BatteryManager.Core",
-            "SystemCapability.PowerManager.BatteryManager.Extension"
+            "SystemCapability.PowerManager.BatteryManager.Extension",
+            "SystemCapability.PowerManager.BatteryManager.Lite"
         ],
         "features": [],
         "adapted_system_type": [
