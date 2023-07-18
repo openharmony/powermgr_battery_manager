@@ -17,11 +17,9 @@
 #define BATTERY_SERVICE_SUBSCRIBER_H
 
 #include <cstdint>
-#include "common_event_data.h"
-#include "common_event_manager.h"
-#include "common_event_support.h"
-#include "ipc_object_stub.h"
-#include "battery_config.h"
+
+#include "want.h"
+
 #include "battery_info.h"
 
 namespace OHOS {
