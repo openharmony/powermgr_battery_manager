@@ -18,25 +18,27 @@
 
 #include <atomic>
 #include <cstdint>
-#include <mutex>
 #include <iosfwd>
-#include <string>
 #include <memory>
+#include <shared_mutex>
+#include <string>
 #include <vector>
-#include "refbase.h"
+
 #include "event_runner.h"
-#include "sp_singleton.h"
-#include "system_ability.h"
 #include "hdi_service_status_listener.h"
 #include "iservmgr_hdi.h"
 #include "iservstat_listener_hdi.h"
-#include "ibattery_srv.h"
-#include "v1_2/ibattery_interface.h"
-#include "v1_2/types.h"
+#include "refbase.h"
+#include "system_ability.h"
+
 #include "battery_info.h"
 #include "battery_light.h"
 #include "battery_notify.h"
 #include "battery_srv_stub.h"
+#include "ibattery_srv.h"
+#include "sp_singleton.h"
+#include "v1_2/ibattery_interface.h"
+#include "v1_2/types.h"
 
 namespace OHOS {
 namespace PowerMgr {
@@ -100,7 +102,7 @@ private:
     void WakeupDevice(BatteryPluggedType pluggedType);
     bool ready_ { false };
     static std::atomic_bool isBootCompleted_;
-    std::mutex mutex_;
+    std::shared_mutex mutex_;
     std::unique_ptr<BatteryNotify> batteryNotify_ { nullptr };
     BatteryLight batteryLight_;
     sptr<HDI::Battery::V1_2::IBatteryInterface> iBatteryInterface_ { nullptr };

@@ -125,6 +125,7 @@ void BatteryService::OnAddSystemAbility(int32_t systemAbilityId, const std::stri
 
 bool BatteryService::RegisterBatteryHdiCallback()
 {
+    std::lock_guard<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         iBatteryInterface_ = V1_2::IBatteryInterface::Get();
         BATTERY_HILOGE(COMP_SVC, "failed to get battery hdi interface");
@@ -240,9 +241,10 @@ bool BatteryService::RegisterHdiStatusListener()
     }
 
     hdiServStatListener_ = new HdiServiceStatusListener(HdiServiceStatusListener::StatusCallback(
-        [&](const OHOS::HDI::ServiceManager::V1_0::ServiceStatus &status) {
+        [this](const OHOS::HDI::ServiceManager::V1_0::ServiceStatus &status) {
             RETURN_IF(status.serviceName != BATTERY_HDI_NAME || status.deviceClass != DEVICE_CLASS_DEFAULT);
 
+            std::lock_guard<std::shared_mutex> lock(mutex_);
             if (status.status == SERVIE_STATUS_START) {
                 FFRTTask task = [this] {
                     return RegisterBatteryHdiCallback();
@@ -277,6 +279,7 @@ void BatteryService::OnStop()
     ready_ = false;
     isBootCompleted_ = false;
 
+    std::lock_guard<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ != nullptr) {
         iBatteryInterface_->UnRegister();
         iBatteryInterface_ = nullptr;
@@ -385,8 +388,7 @@ void BatteryService::HandleTemperature(int32_t temperature)
     auto& powerMgrClient = PowerMgrClient::GetInstance();
     if (((temperature <= lowTemperature_) || (temperature >= highTemperature_)) &&
         (highTemperature_ != lowTemperature_)) {
-        std::string reason = "TemperatureOutOfRange";
-        powerMgrClient.ShutDownDevice(reason);
+        powerMgrClient.ShutDownDevice("TemperatureOutOfRange");
     }
 }
 
@@ -396,8 +398,7 @@ void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeS
     if ((capacity <= shutdownCapacityThreshold_) &&
         ((chargeState == BatteryChargeState::CHARGE_STATE_NONE) ||
          (chargeState == BatteryChargeState::CHARGE_STATE_BUTT))) {
-        std::string reason = "LowCapacity";
-        powerMgrClient.ShutDownDevice(reason);
+        powerMgrClient.ShutDownDevice("LowCapacity");
     }
 }
 
@@ -407,11 +408,12 @@ int32_t BatteryService::GetCapacity()
         BATTERY_HILOGD(FEATURE_BATT_INFO, "Return mock battery capacity");
         return batteryInfo_.GetCapacity();
     }
-    int32_t capacity = BATTERY_FULL_CAPACITY;
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
     }
+    int32_t capacity = BATTERY_FULL_CAPACITY;
     iBatteryInterface_->GetCapacity(capacity);
     return capacity;
 }
@@ -419,6 +421,7 @@ int32_t BatteryService::GetCapacity()
 bool BatteryService::ChangePath(const std::string path)
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return false;
@@ -433,6 +436,7 @@ BatteryChargeState BatteryService::GetChargingStatus()
         BATTERY_HILOGD(FEATURE_BATT_INFO, "Return mock charge status");
         return batteryInfo_.GetChargeState();
     }
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     V1_2::BatteryChargeState chargeState = V1_2::BatteryChargeState(0);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
@@ -445,8 +449,8 @@ BatteryChargeState BatteryService::GetChargingStatus()
 BatteryHealthState BatteryService::GetHealthStatus()
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     V1_2::BatteryHealthState healthState = V1_2::BatteryHealthState(0);
-
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return BatteryHealthState(healthState);
@@ -462,6 +466,7 @@ BatteryPluggedType BatteryService::GetPluggedType()
         BATTERY_HILOGD(FEATURE_BATT_INFO, "Return mock plugged type");
         return batteryInfo_.GetPluggedType();
     }
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     V1_2::BatteryPluggedType pluggedType = V1_2::BatteryPluggedType(0);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
@@ -473,20 +478,20 @@ BatteryPluggedType BatteryService::GetPluggedType()
 
 int32_t BatteryService::GetVoltage()
 {
-    int voltage;
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
     }
-
+    int32_t voltage = INVALID_BATT_INT_VALUE;
     iBatteryInterface_->GetVoltage(voltage);
     return voltage;
 }
 
 bool BatteryService::GetPresent()
 {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     bool present = false;
-
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return present;
@@ -498,6 +503,7 @@ bool BatteryService::GetPresent()
 
 std::string BatteryService::GetTechnology()
 {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return "";
@@ -510,23 +516,24 @@ std::string BatteryService::GetTechnology()
 
 int32_t BatteryService::GetBatteryTemperature()
 {
-    int temperature;
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
     }
+    int32_t temperature = INVALID_BATT_INT_VALUE;
     iBatteryInterface_->GetTemperature(temperature);
     return temperature;
 }
 
 int32_t BatteryService::GetTotalEnergy()
 {
-    int32_t totalEnergy = -1;
+    int32_t totalEnergy = INVALID_BATT_INT_VALUE;
     if (!Permission::IsSystem()) {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "GetTotalEnergy totalEnergy: %{public}d", totalEnergy);
         return totalEnergy;
     }
-
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
@@ -537,23 +544,25 @@ int32_t BatteryService::GetTotalEnergy()
 
 int32_t BatteryService::GetCurrentAverage()
 {
-    int curAverage;
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
     }
+    int32_t curAverage = INVALID_BATT_INT_VALUE;
     iBatteryInterface_->GetCurrentAverage(curAverage);
     return curAverage;
 }
 
 int32_t BatteryService::GetNowCurrent()
 {
-    int32_t nowCurr = -1;
+    int32_t nowCurr = INVALID_BATT_INT_VALUE;
     if (!Permission::IsSystem()) {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "GetNowCurrent nowCurr: %{public}d", nowCurr);
         return nowCurr;
     }
 
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
@@ -564,12 +573,12 @@ int32_t BatteryService::GetNowCurrent()
 
 int32_t BatteryService::GetRemainEnergy()
 {
-    int32_t remainEnergy = -1;
+    int32_t remainEnergy = INVALID_BATT_INT_VALUE;
     if (!Permission::IsSystem()) {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "GetRemainEnergy remainEnergy: %{public}d", remainEnergy);
         return remainEnergy;
     }
-
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ERR_NO_INIT;
@@ -580,8 +589,8 @@ int32_t BatteryService::GetRemainEnergy()
 
 ChargeType BatteryService::GetChargeType()
 {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     V1_2::ChargeType chargeType = V1_2::ChargeType::CHARGE_TYPE_NONE;
-
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ChargeType(chargeType);
@@ -696,12 +705,13 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
 
 void BatteryService::MockUnplugged()
 {
-    V1_2::BatteryInfo event;
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (!iBatteryInterface_) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
     }
     isMockUnplugged_ = true;
+    V1_2::BatteryInfo event;
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);
     batteryInfo_.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_NONE);
@@ -718,12 +728,13 @@ bool BatteryService::IsMockUnplugged()
 
 void BatteryService::MockCapacity(int32_t capacity)
 {
-    V1_2::BatteryInfo event;
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (!iBatteryInterface_) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
     }
     isMockCapacity_ = true;
+    V1_2::BatteryInfo event;
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);
     batteryInfo_.SetCapacity(capacity);
@@ -737,13 +748,14 @@ bool BatteryService::IsMockCapacity()
 
 void BatteryService::Reset()
 {
-    V1_2::BatteryInfo event;
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (!iBatteryInterface_) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
     }
     isMockUnplugged_ = false;
     isMockCapacity_ = false;
+    V1_2::BatteryInfo event;
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);
     HandleBatteryInfo();
