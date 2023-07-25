@@ -55,10 +55,11 @@
                 "power_manager",
                 "safwk",
                 "samgr",
-                "ui_lite"
+                "ui_lite",
+                "updater"
             ],
             "third_party": [
-                "cjson",
+                "cJson",
                 "jsoncpp",
                 "libdrm",
                 "libpng"
