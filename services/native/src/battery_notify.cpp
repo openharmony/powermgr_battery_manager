@@ -65,6 +65,8 @@ int32_t BatteryNotify::PublishEvents(const BatteryInfo& info)
     bool isAllSuccess = true;
     bool ret = PublishChangedEvent(info);
     isAllSuccess &= ret;
+    ret = PublishChangedEventInner(info);
+    isAllSuccess &= ret;
     ret = PublishLowEvent(info);
     isAllSuccess &= ret;
     ret = PublishOkayEvent(info);
@@ -139,20 +141,12 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PRESENT, info.IsPresent());
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_TECHNOLOGY, info.GetTechnology());
 
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_MAX_CURRENT, info.GetPluggedMaxCurrent());
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_MAX_VOLTAGE, info.GetPluggedMaxVoltage());
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_NOW_CURRENT, info.GetNowCurrent());
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CHARGE_COUNTER, info.GetChargeCounter());
-
     sptr<BatteryService> batterySrv = DelayedSpSingleton<BatteryService>::GetInstance();
     auto capacityLevel = batterySrv->GetCapacityLevel();
     if (capacityLevel != g_lastCapacityLevel) {
         want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CAPACITY_LEVEL, static_cast<int32_t>(capacityLevel));
-        // The old way of broadcasting
-        want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CAPACITY_LEVEL), static_cast<int32_t>(capacityLevel));
         g_lastCapacityLevel = capacityLevel;
     }
-    ChangedEventDeprecated(want, info);
 
     want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED);
     CommonEventData data;
@@ -172,20 +166,26 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
     return isSuccess;
 }
 
-void BatteryNotify::ChangedEventDeprecated(Want& want, const BatteryInfo& info) const
+bool BatteryNotify::PublishChangedEventInner(const BatteryInfo& info) const
 {
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CAPACITY), info.GetCapacity());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_VOLTAGE), info.GetVoltage());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_TEMPERATURE), info.GetTemperature());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_HEALTH_STATE), static_cast<int32_t>(info.GetHealthState()));
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_TYPE), static_cast<int32_t>(info.GetPluggedType()));
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_CURRENT), info.GetPluggedMaxCurrent());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_MAX_VOLTAGE), info.GetPluggedMaxVoltage());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CHARGE_STATE), static_cast<int32_t>(info.GetChargeState()));
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_CHARGE_COUNTER), info.GetChargeCounter());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PRESENT), info.IsPresent());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_TECHNOLOGY), info.GetTechnology());
-    want.SetParam(ToString(BatteryInfo::COMMON_EVENT_CODE_PLUGGED_NOW_CURRENT), info.GetNowCurrent());
+    Want want;
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_MAX_CURRENT, info.GetPluggedMaxCurrent());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_MAX_VOLTAGE, info.GetPluggedMaxVoltage());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_NOW_CURRENT, info.GetNowCurrent());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CHARGE_COUNTER, info.GetChargeCounter());
+
+    want.SetAction(BatteryInfo::COMMON_EVENT_BATTERY_CHANGED_INNER);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(false);
+
+    bool isSuccess = true;
+    isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
+    if (!isSuccess) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "failed to publish BATTERY_CHANGED_INNER event");
+    }
+    return isSuccess;
 }
 
 bool BatteryNotify::PublishLowEvent(const BatteryInfo& info) const

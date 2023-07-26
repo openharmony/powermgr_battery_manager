@@ -31,8 +31,8 @@ public:
     int32_t PublishEvents(const BatteryInfo& info);
 
 private:
-    void ChangedEventDeprecated(OHOS::AAFwk::Want& want, const BatteryInfo& info) const;
     bool PublishChangedEvent(const BatteryInfo& info) const;
+    bool PublishChangedEventInner(const BatteryInfo& info) const;
     bool PublishLowEvent(const BatteryInfo& info) const;
     bool PublishOkayEvent(const BatteryInfo& info) const;
     bool PublishPowerConnectedEvent(const BatteryInfo& info) const;
