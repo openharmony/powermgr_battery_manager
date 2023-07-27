@@ -50,8 +50,10 @@ constexpr const char* BATTERY_SERVICE_NAME = "BatteryService";
 constexpr const char* BATTERY_HDI_NAME = "battery_interface_service";
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
 constexpr uint32_t RETRY_TIME = 1000;
+constexpr uint32_t SHUTDOWN_DELAY_TIME_MS = 60000;
 sptr<BatteryService> g_service;
 FFRTQueue g_queue("battery_service");
+FFRTHandle g_lowCapacityShutdownHandle = nullptr;
 BatteryPluggedType g_lastPluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
 static PowerMgrClient& g_powerMgrClient = PowerMgrClient::GetInstance();
 SysParam::BootCompletedCallback g_bootCompletedCallback;
@@ -219,7 +221,6 @@ void BatteryService::HandleBatteryInfo()
 
     batteryLight_.UpdateColor(batteryInfo_.GetChargeState(), batteryInfo_.GetCapacity());
     WakeupDevice(batteryInfo_.GetPluggedType());
-    HandlePopupEvent(batteryInfo_.GetCapacity());
     CalculateRemainingChargeTime(batteryInfo_.GetCapacity(), batteryInfo_.GetChargeState());
 
     batteryNotify_->PublishEvents(batteryInfo_);
@@ -311,6 +312,10 @@ bool BatteryService::IsNowPlugged(BatteryPluggedType pluggedType)
 bool BatteryService::IsPlugged(BatteryPluggedType pluggedType)
 {
     if (!IsLastPlugged() && IsNowPlugged(pluggedType)) {
+        if (g_lowCapacityShutdownHandle != nullptr) {
+            FFRTUtils::CancelTask(g_lowCapacityShutdownHandle, g_queue);
+            g_lowCapacityShutdownHandle = nullptr;
+        }
         return true;
     }
     return false;
@@ -332,57 +337,6 @@ void BatteryService::WakeupDevice(BatteryPluggedType pluggedType)
     g_lastPluggedType = pluggedType;
 }
 
-void BatteryService::HandlePopupEvent(int32_t capacity)
-{
-    if ((capacity < warnCapacity_) && !isLowPower_) {
-        ShowBatteryDialog();
-        g_powerMgrClient.RefreshActivity(UserActivityType::USER_ACTIVITY_TYPE_ATTENTION);
-        isLowPower_ = true;
-        return;
-        }
-    if (capacity >= warnCapacity_ && isLowPower_) {
-        DestoryBatteryDialog();
-        isLowPower_ = false;
-        return;
-    }
-}
-
-bool BatteryService::ShowBatteryDialog()
-{
-    BATTERY_HILOGD(COMP_SVC, "ShowBatteryDialog start.");
-    auto client = AbilityManagerClient::GetInstance();
-    if (client == nullptr) {
-        return false;
-    }
-    AAFwk::Want want;
-    want.SetElementName("com.ohos.powerdialog", "BatteryServiceExtAbility");
-    int32_t result = client->StartAbility(want);
-    if (result != 0) {
-        BATTERY_HILOGE(COMP_SVC, "ShowBatteryDialog failed, result = %{public}d", result);
-        return false;
-    }
-    BATTERY_HILOGD(COMP_SVC, "ShowBatteryDialog success.");
-    return true;
-}
-
-bool BatteryService::DestoryBatteryDialog()
-{
-    BATTERY_HILOGD(COMP_SVC, "DestoryBatteryDialog start.");
-    auto client = AbilityManagerClient::GetInstance();
-    if (client == nullptr) {
-        return false;
-    }
-    AAFwk::Want want;
-    want.SetElementName("com.ohos.powerdialog", "BatteryServiceExtAbility");
-    int32_t result = client->StopServiceAbility(want);
-    if (result != 0) {
-        BATTERY_HILOGE(COMP_SVC, "DestoryBatteryDialog failed, result = %{public}d", result);
-        return false;
-    }
-    BATTERY_HILOGD(COMP_SVC, "DestoryBatteryDialog success.");
-    return true;
-}
-
 void BatteryService::HandleTemperature(int32_t temperature)
 {
     auto& powerMgrClient = PowerMgrClient::GetInstance();
@@ -396,9 +350,13 @@ void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeS
 {
     auto& powerMgrClient = PowerMgrClient::GetInstance();
     if ((capacity <= shutdownCapacityThreshold_) &&
+        (g_lowCapacityShutdownHandle == nullptr) &&
         ((chargeState == BatteryChargeState::CHARGE_STATE_NONE) ||
          (chargeState == BatteryChargeState::CHARGE_STATE_BUTT))) {
-        powerMgrClient.ShutDownDevice("LowCapacity");
+        FFRTTask task = [&] {
+            powerMgrClient.ShutDownDevice("LowCapacity");
+        };
+        g_lowCapacityShutdownHandle = FFRTUtils::SubmitDelayTask(task, SHUTDOWN_DELAY_TIME_MS, g_queue);
     }
 }
 
@@ -692,8 +650,7 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
     bool unplugged = batteryDump.MockUnplugged(fd, g_service, args);
     bool mockedCapacity = batteryDump.MockCapacity(fd, g_service, args);
     bool reset = batteryDump.Reset(fd, g_service, args);
-    bool showedDialog = batteryDump.ShowBatteryDialog(fd, g_service, args);
-    bool total = getBatteryInfo + unplugged + mockedCapacity + reset + showedDialog;
+    bool total = getBatteryInfo + unplugged + mockedCapacity + reset;
     if (!total) {
         dprintf(fd, "cmd param is invalid\n");
         batteryDump.DumpBatteryHelp(fd);
