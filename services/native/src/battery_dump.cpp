@@ -35,7 +35,6 @@ void BatteryDump::DumpBatteryHelp(int32_t fd)
     dprintf(fd, "Usage:\n");
     dprintf(fd, "      -h: dump help\n");
     dprintf(fd, "      -i: dump battery info\n");
-    dprintf(fd, "      -d: show low power diaolog\n");
     dprintf(fd, "      -u: unplug battery charging state\n");
     dprintf(fd, "      -r: reset battery state\n");
     dprintf(fd, "      --capacity <capacity>: set battery capacity, the capacity range [0, 100]\n");
@@ -115,17 +114,6 @@ bool BatteryDump::Reset(int32_t fd, sptr<BatteryService>& service, const std::ve
     }
     service->Reset();
     dprintf(fd, "reset battery state \n");
-    return true;
-}
-
-bool BatteryDump::ShowBatteryDialog(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args)
-{
-    if ((args.empty()) || (args[0].compare(u"-d") != 0)) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "args cannot be empty or invalid");
-        return false;
-    }
-    service->ShowBatteryDialog();
-    dprintf(fd, "show low power dialog \n");
     return true;
 }
 
