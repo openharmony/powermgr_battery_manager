@@ -83,8 +83,6 @@ public:
     bool IsMockCapacity();
     void MockCapacity(int32_t capacity);
     void Reset();
-    bool ShowBatteryDialog();
-    bool DestoryBatteryDialog();
 private:
     bool Init();
     void WakeupDevice(BatteryChargeState chargeState);
@@ -93,7 +91,6 @@ private:
     void ConvertingEvent(const OHOS::HDI::Battery::V1_2::BatteryInfo &event);
     void HandleBatteryInfo();
     void CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState);
-    void HandlePopupEvent(int32_t capacity);
     void HandleCapacity(int32_t capacity, BatteryChargeState chargeState);
     bool IsLastPlugged();
     bool IsNowPlugged(BatteryPluggedType pluggedType);
