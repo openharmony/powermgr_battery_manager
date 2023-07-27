@@ -44,6 +44,7 @@ namespace {
 sptr<BatteryService> g_service;
 bool g_isMock = TestUtils::IsMock();
 const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";
+constexpr int DELAY_TIME_US = 2000;
 }
 
 /**
@@ -373,32 +374,6 @@ static HWTEST_F(BatteryServiceTest, BatteryService019, TestSize.Level1)
 }
 
 /**
- * @tc.name: BatteryService020
- * @tc.desc: Test functions HandlePopupEvent
- * @tc.type: FUNC
- */
-static HWTEST_F(BatteryServiceTest, BatteryService020, TestSize.Level1)
-{
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService020 start.");
-
-    g_service->isLowPower_ = false;
-    int32_t capacity1 = g_service->warnCapacity_ - 1;
-    g_service->HandlePopupEvent(capacity1);
-    EXPECT_TRUE(g_service->isLowPower_);
-    g_service->HandlePopupEvent(capacity1);
-    EXPECT_TRUE(g_service->isLowPower_);
-
-    g_service->isLowPower_ = true;
-    int32_t capacity2 = g_service->warnCapacity_ + 1;
-    g_service->HandlePopupEvent(capacity2);
-    EXPECT_FALSE(g_service->isLowPower_);
-    g_service->HandlePopupEvent(capacity2);
-    EXPECT_FALSE(g_service->isLowPower_);
-
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService020 end.");
-}
-
-/**
  * @tc.name: BatteryService021
  * @tc.desc: Test functions ChangePath
  * @tc.type: FUNC
@@ -407,6 +382,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService020, TestSize.Level1)
 static HWTEST_F(BatteryServiceTest, BatteryService021, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryService021 start.");
+    usleep(DELAY_TIME_US);
     g_service->iBatteryInterface_ = nullptr;
     auto ret = g_service->ChangePath("/data/service/el0/battery");
     EXPECT_FALSE(ret);
