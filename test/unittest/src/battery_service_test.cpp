@@ -47,6 +47,11 @@ const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";
 constexpr int DELAY_TIME_US = 2000;
 }
 
+void BatteryServiceTest::TearDownTestCase(void)
+{
+    g_service->Reset();
+}
+
 /**
  * @tc.name: BatteryService000
  * @tc.desc: Test functions DelayedSpSingleton GetInstance
