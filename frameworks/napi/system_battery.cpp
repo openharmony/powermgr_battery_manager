@@ -250,7 +250,7 @@ static napi_value GetStatus(napi_env env, napi_callback_info info)
         },
         reinterpret_cast<void*>(asyncInfo.get()),
         &asyncInfo->asyncWork);
-    NAPI_CALL(env, napi_queue_async_work(env, asyncInfo->asyncWork));
+    NAPI_CALL(env, napi_queue_async_work_with_qos(env, asyncInfo->asyncWork, napi_qos_utility));
     asyncInfo.release();
     return nullptr;
 }
