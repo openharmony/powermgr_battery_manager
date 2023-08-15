@@ -80,7 +80,7 @@
                     "//base/powermgr/battery_manager/charger:resources_service"
                 ]
             },
-            "inner_api": [
+            "inner_kits": [
                 {
                     "name": "//base/powermgr/battery_manager/interfaces/inner_api:batterysrv_client",
                     "header": {
