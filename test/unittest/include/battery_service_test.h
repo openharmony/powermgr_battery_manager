@@ -22,6 +22,7 @@ namespace OHOS {
 namespace PowerMgr {
 class BatteryServiceTest : public testing::Test {
 public:
+    static void TearDownTestCase();
     int32_t ReadFile(const char* path, char* buf, size_t size);
     int32_t WriteFile(const char* path, char* buf, size_t size);
 };
