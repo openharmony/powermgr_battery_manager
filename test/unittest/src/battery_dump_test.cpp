@@ -82,21 +82,6 @@ HWTEST_F(BatteryDumpTest, BatteryDump003, TestSize.Level1)
     EXPECT_EQ(g_service->Dump(fd, args), ERR_OK);
 }
 
-/**
- * @tc.name: BatteryDump004
- * @tc.desc: Test functions Dump
- * @tc.type: FUNC
- * @tc.require: issueI5YZR1
- */
-static HWTEST_F(BatteryDumpTest, BatteryDump004, TestSize.Level1)
-{
-    int32_t fd = 1;
-    std::vector<std::u16string> args;
-    std::u16string arg = u"-d";
-    args.push_back(arg);
-    EXPECT_EQ(g_service->Dump(fd, args), ERR_OK);
-}
-
 /*
  * @tc.name: BatteryDump005
  * @tc.desc: Test functions Dump

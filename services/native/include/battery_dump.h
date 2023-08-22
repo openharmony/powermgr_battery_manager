@@ -34,7 +34,6 @@ public:
     bool GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
     bool MockUnplugged(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
     bool Reset(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
-    bool ShowBatteryDialog(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
     bool MockCapacity(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
 
 private:
