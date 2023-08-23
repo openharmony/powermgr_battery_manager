@@ -434,6 +434,8 @@ public:
     static constexpr const char* COMMON_EVENT_KEY_PLUGGED_NOW_CURRENT = "nowCurrent";
     static constexpr const char* COMMON_EVENT_KEY_CHARGE_COUNTER = "chargeCounter";
 
+    //Inner events used by battery_manager and thermal_manger
+    static constexpr const char* COMMON_EVENT_BATTERY_CHANGED_INNER = "usual.event.BATTERY_CHANGED_INNER";
 private:
     bool present_ = INVALID_BATT_BOOL_VALUE;
     int32_t capacity_ = INVALID_BATT_INT_VALUE;
