@@ -65,6 +65,8 @@ int32_t BatteryNotify::PublishEvents(const BatteryInfo& info)
     bool isAllSuccess = true;
     bool ret = PublishChangedEvent(info);
     isAllSuccess &= ret;
+    ret = PublishChangedEventInner(info);
+    isAllSuccess &= ret;
     ret = PublishLowEvent(info);
     isAllSuccess &= ret;
     ret = PublishOkayEvent(info);
@@ -139,17 +141,12 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PRESENT, info.IsPresent());
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_TECHNOLOGY, info.GetTechnology());
 
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_MAX_CURRENT, info.GetPluggedMaxCurrent());
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_MAX_VOLTAGE, info.GetPluggedMaxVoltage());
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_NOW_CURRENT, info.GetNowCurrent());
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CHARGE_COUNTER, info.GetChargeCounter());
-
     sptr<BatteryService> batterySrv = DelayedSpSingleton<BatteryService>::GetInstance();
     auto capacityLevel = batterySrv->GetCapacityLevel();
     if (capacityLevel != g_lastCapacityLevel) {
         want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CAPACITY_LEVEL, static_cast<int32_t>(capacityLevel));
         g_lastCapacityLevel = capacityLevel;
-    };
+    }
 
     want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED);
     CommonEventData data;
@@ -165,6 +162,28 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "failed to publish BATTERY_CHANGED event");
+    }
+    return isSuccess;
+}
+
+bool BatteryNotify::PublishChangedEventInner(const BatteryInfo& info) const
+{
+    Want want;
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_MAX_CURRENT, info.GetPluggedMaxCurrent());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_MAX_VOLTAGE, info.GetPluggedMaxVoltage());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_NOW_CURRENT, info.GetNowCurrent());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CHARGE_COUNTER, info.GetChargeCounter());
+
+    want.SetAction(BatteryInfo::COMMON_EVENT_BATTERY_CHANGED_INNER);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(false);
+
+    bool isSuccess = true;
+    isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
+    if (!isSuccess) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "failed to publish BATTERY_CHANGED_INNER event");
     }
     return isSuccess;
 }
