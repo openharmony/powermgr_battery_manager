@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -32,35 +32,35 @@ namespace PowerMgr {
 BatterySrvClient::BatterySrvClient() {}
 BatterySrvClient::~BatterySrvClient() {}
 
-ErrCode BatterySrvClient::Connect()
+sptr<IBatterySrv> BatterySrvClient::Connect()
 {
     std::lock_guard<std::mutex> lock(mutex_);
     if (proxy_ != nullptr) {
-        return ERR_OK;
+        return proxy_;
     }
     sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (sysMgr == nullptr) {
         BATTERY_HILOGW(COMP_FWK, "Failed to get Registry");
-        return E_GET_SYSTEM_ABILITY_MANAGER_FAILED;
+        return nullptr;
     }
     sptr<IRemoteObject> remoteObject_ = sysMgr->CheckSystemAbility(POWER_MANAGER_BATT_SERVICE_ID);
     if (remoteObject_ == nullptr) {
         BATTERY_HILOGW(COMP_FWK, "GetSystemAbility failed");
-        return E_GET_POWER_SERVICE_FAILED;
+        return nullptr;
     }
 
     deathRecipient_ = sptr<IRemoteObject::DeathRecipient>(new BatterySrvDeathRecipient());
     if (deathRecipient_ == nullptr) {
         BATTERY_HILOGW(COMP_FWK, "Failed to create BatterySrvDeathRecipient");
-        return ERR_NO_MEMORY;
+        return nullptr;
     }
     if ((remoteObject_->IsProxyObject()) && (!remoteObject_->AddDeathRecipient(deathRecipient_))) {
         BATTERY_HILOGW(COMP_FWK, "Add death recipient to BatterySrv failed");
-        return E_ADD_DEATH_RECIPIENT_FAILED;
+        return nullptr;
     }
 
     proxy_ = iface_cast<IBatterySrv>(remoteObject_);
-    return ERR_OK;
+    return proxy_;
 }
 
 void BatterySrvClient::ResetProxy(const wptr<IRemoteObject>& remote)
@@ -86,106 +86,93 @@ void BatterySrvClient::BatterySrvDeathRecipient::OnRemoteDied(const wptr<IRemote
 
 int32_t BatterySrvClient::GetCapacity()
 {
-    int32_t capacity = INVALID_BATT_INT_VALUE;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, capacity);
-    capacity = proxy_->GetCapacity();
-    return capacity;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_INT_VALUE);
+    return proxy->GetCapacity();
 }
 
 BatteryChargeState BatterySrvClient::GetChargingStatus()
 {
-    BatteryChargeState chargingState = BatteryChargeState::CHARGE_STATE_BUTT;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, chargingState);
-    chargingState = proxy_->GetChargingStatus();
-    return chargingState;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, BatteryChargeState::CHARGE_STATE_BUTT);
+    return proxy->GetChargingStatus();
 }
 
 BatteryHealthState BatterySrvClient::GetHealthStatus()
 {
-    BatteryHealthState healthStatus = BatteryHealthState::HEALTH_STATE_BUTT;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, healthStatus);
-    healthStatus = proxy_->GetHealthStatus();
-    return healthStatus;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, BatteryHealthState::HEALTH_STATE_BUTT);
+    return proxy->GetHealthStatus();
 }
 
 BatteryPluggedType BatterySrvClient::GetPluggedType()
 {
-    BatteryPluggedType pluggedType = BatteryPluggedType::PLUGGED_TYPE_BUTT;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, pluggedType);
-    pluggedType = proxy_->GetPluggedType();
-    return pluggedType;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, BatteryPluggedType::PLUGGED_TYPE_BUTT);
+    return proxy->GetPluggedType();
 }
 
 int32_t BatterySrvClient::GetVoltage()
 {
-    int32_t voltage = INVALID_BATT_INT_VALUE;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, voltage);
-    voltage = proxy_->GetVoltage();
-    return voltage;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_INT_VALUE);
+    return proxy->GetVoltage();
 }
 
 bool BatterySrvClient::GetPresent()
 {
-    bool present = INVALID_BATT_BOOL_VALUE;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, present);
-    present = proxy_->GetPresent();
-    return present;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_BOOL_VALUE);
+    return proxy->GetPresent();
 }
 
 std::string BatterySrvClient::GetTechnology()
 {
-    std::string technology;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, technology);
-    technology = proxy_->GetTechnology();
-    return technology;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, "");
+    return proxy->GetTechnology();
 }
 
 int32_t BatterySrvClient::GetBatteryTemperature()
 {
-    int32_t temperature = INVALID_BATT_TEMP_VALUE;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, temperature);
-    temperature = proxy_->GetBatteryTemperature();
-    return temperature;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_TEMP_VALUE);
+    return proxy->GetBatteryTemperature();
 }
 
 int32_t BatterySrvClient::GetNowCurrent()
 {
-    int32_t nowCurrent = INVALID_BATT_INT_VALUE;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, nowCurrent);
-    nowCurrent = proxy_->GetNowCurrent();
-    return nowCurrent;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_INT_VALUE);
+    return proxy->GetNowCurrent();
 }
 
 int32_t BatterySrvClient::GetRemainEnergy()
 {
-    int32_t remainEnergy = INVALID_BATT_INT_VALUE;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, remainEnergy);
-    remainEnergy = proxy_->GetRemainEnergy();
-    return remainEnergy;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_INT_VALUE);
+    return proxy->GetRemainEnergy();
 }
 
 int32_t BatterySrvClient::GetTotalEnergy()
 {
-    int32_t totalEnergy = INVALID_BATT_INT_VALUE;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, totalEnergy);
-    totalEnergy = proxy_->GetTotalEnergy();
-    return totalEnergy;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_INT_VALUE);
+    return proxy->GetTotalEnergy();
 }
 
 BatteryCapacityLevel BatterySrvClient::GetCapacityLevel()
 {
-    BatteryCapacityLevel level = BatteryCapacityLevel::LEVEL_NONE;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, level);
-    level = proxy_->GetCapacityLevel();
-    return level;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, BatteryCapacityLevel::LEVEL_NONE);
+    return proxy->GetCapacityLevel();
 }
 
 int64_t BatterySrvClient::GetRemainingChargeTime()
 {
-    int64_t time = INVALID_REMAINING_CHARGE_TIME_VALUE;
-    RETURN_IF_WITH_RET(Connect() != ERR_OK, time);
-    time = proxy_->GetRemainingChargeTime();
-    return time;
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, INVALID_REMAINING_CHARGE_TIME_VALUE);
+    return proxy->GetRemainingChargeTime();
 }
 }  // namespace PowerMgr
 }  // namespace OHOS

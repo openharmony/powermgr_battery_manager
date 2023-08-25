@@ -714,7 +714,7 @@ HWTEST_F(BatteryClientTest, BatteryClient020, TestSize.Level1)
         BATTERY_HILOGD(LABEL_TEST, "GetSystemAbility failed");
         return;
     }
-    EXPECT_EQ(BatterySrvClient.Connect(), ERR_OK);
+    EXPECT_NE(BatterySrvClient.Connect(), nullptr);
     BatterySrvClient.ResetProxy(remoteObj);
     EXPECT_NE(BatterySrvClient.proxy_, nullptr);
 
