@@ -59,7 +59,7 @@
                 "updater"
             ],
             "third_party": [
-                "cJson",
+                "cJSON",
                 "jsoncpp",
                 "libdrm",
                 "libpng"
