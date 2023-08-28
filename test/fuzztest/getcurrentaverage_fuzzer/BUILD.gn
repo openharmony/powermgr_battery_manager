@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+# Copyright (c) 2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,11 +18,12 @@ import("//build/test.gni")
 import("../../../batterymgr.gni")
 
 ##############################fuzztest##########################################
-ohos_fuzztest("BatteryFuzzTest") {
+ohos_fuzztest("GetCurrentAverageFuzzTest") {
   module_out_path = "${module_output_path}"
-  fuzz_config_file = "${battery_manager_path}/test/fuzztest/battery_fuzzer"
+  fuzz_config_file =
+      "${battery_manager_path}/test/fuzztest/getcurrentaverage_fuzzer"
 
-  include_dirs = [ "./" ]
+  include_dirs = [ "../battery_utils/" ]
 
   configs = [
     "${battery_utils}:coverage_flags",
@@ -35,9 +36,11 @@ ohos_fuzztest("BatteryFuzzTest") {
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "./battery_fuzzer_test.cpp" ]
+  sources = [
+    "../battery_utils/battery_fuzzer_test.cpp",
+    "./getcurrentaverage_fuzzer_test.cpp",
+  ]
   deps = [
-    "${battery_inner_api}:batterysrv_client",
     "${battery_service_zidl}:batterysrv_stub",
     "${battery_service}:batteryservice",
     "//third_party/jsoncpp:jsoncpp",
@@ -53,15 +56,3 @@ ohos_fuzztest("BatteryFuzzTest") {
     "safwk:system_ability_fwk",
   ]
 }
-
-###############################################################################
-group("fuzztest") {
-  testonly = true
-  deps = []
-
-  deps += [
-    # deps file
-    ":BatteryFuzzTest",
-  ]
-}
-###############################################################################
