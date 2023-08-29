@@ -13,6 +13,39 @@
 
 import("//build/ohos.gni")
 
+if (!defined(global_parts_info) ||
+    defined(global_parts_info.hdf_drivers_interface_display)) {
+  has_drivers_interface_display_part = true
+} else {
+  has_drivers_interface_display_part = false
+}
+
+if (!defined(global_parts_info) ||
+    defined(global_parts_info.hdf_drivers_interface_light)) {
+  has_drivers_interface_light_part = true
+} else {
+  has_drivers_interface_light_part = false
+}
+
+if (!defined(global_parts_info) ||
+    defined(global_parts_info.graphic_graphic_chipsetsdk)) {
+  has_graphic_chipsetsdk_part = true
+} else {
+  has_graphic_chipsetsdk_part = false
+}
+
+if (!defined(global_parts_info) || defined(global_parts_info.arkui_ui_lite)) {
+  has_ui_lite_part = true
+} else {
+  has_ui_lite_part = false
+}
+
+if (!defined(global_parts_info) || defined(global_parts_info.updater_updater)) {
+  has_updater_part = true
+} else {
+  has_updater_part = false
+}
+
 ability_runtime_path = "//foundation/ability/ability_runtime"
 ability_runtime_napi_path = "${ability_runtime_path}/frameworks/js/napi"
 ability_runtime_inner_api_path = "${ability_runtime_path}/interfaces/inner_api"
