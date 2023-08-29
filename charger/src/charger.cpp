@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#ifdef ENABLE_UI_LITE
+#ifdef ENABLE_CHARGER
 #include "charger_thread.h"
 #endif
 
@@ -23,7 +23,7 @@
 int main(int argc, char** argv)
 {
     using namespace OHOS;
-#ifdef ENABLE_UI_LITE
+#ifdef ENABLE_CHARGER
     using namespace OHOS::PowerMgr;
     BATTERY_HILOGD(FEATURE_CHARGING, "starting battery charger");
     std::unique_ptr<ChargerThread> chargerThread = std::make_unique<ChargerThread>();
