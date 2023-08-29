@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import("//build/ohos.gni")
+import("../batterymgr.gni")
 
 config("batteryd_private_config") {
   include_dirs = [ "include" ]
@@ -52,21 +53,24 @@ ohos_executable("charger") {
     "c_utils:utils",
     "config_policy:configpolicy_util",
     "drivers_interface_battery:libbattery_proxy_1.2",
-    "drivers_interface_display:display_composer_idl_headers",
-    "drivers_interface_display:libdisplay_composer_hdi_impl",
     "drivers_interface_input:libinput_proxy_1.0",
-    "drivers_interface_light:liblight_proxy_1.0",
-    "graphic_chipsetsdk:buffer_handle",
     "init:libbegetutil",
     "ipc:ipc_core",
-    "updater:libui",
-    "updater:libupdater",
-    "updater:libutils",
   ]
 
-  if (defined(global_parts_info.arkui_ui_lite)) {
-    defines += [ "ENABLE_UI_LITE" ]
-    external_deps += [ "ui_lite:libupdater_layout" ]
+  if (has_drivers_interface_display_part && has_drivers_interface_light_part &&
+      has_graphic_chipsetsdk_part && has_ui_lite_part && has_updater_part) {
+    defines += [ "ENABLE_CHARGER" ]
+    external_deps += [
+      "drivers_interface_display:display_composer_idl_headers",
+      "drivers_interface_display:libdisplay_composer_hdi_impl",
+      "drivers_interface_light:liblight_proxy_1.0",
+      "graphic_chipsetsdk:buffer_handle",
+      "ui_lite:libupdater_layout",
+      "updater:libui",
+      "updater:libupdater",
+      "updater:libutils",
+    ]
   } else {
     sources = []
     sources += [ "src/charger.cpp" ]
