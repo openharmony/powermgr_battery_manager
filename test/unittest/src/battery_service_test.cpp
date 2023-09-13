@@ -358,35 +358,13 @@ static HWTEST_F(BatteryServiceTest, BatteryService018, TestSize.Level1)
 
 /**
  * @tc.name: BatteryService019
- * @tc.desc: Test functions OnStop
- * @tc.type: FUNC
- */
-static HWTEST_F(BatteryServiceTest, BatteryService019, TestSize.Level1)
-{
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService019 start.");
-    g_service->ready_ = true;
-    g_service->OnStop();
-    EXPECT_FALSE(g_service->ready_);
-
-    g_service->ready_ = true;
-    g_service->iBatteryInterface_ = nullptr;
-    g_service->hdiServiceMgr_ = nullptr;
-    g_service->OnStop();
-    EXPECT_FALSE(g_service->ready_);
-    g_service->OnStart();
-
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService019 end.");
-}
-
-/**
- * @tc.name: BatteryService021
  * @tc.desc: Test functions ChangePath
  * @tc.type: FUNC
  * @tc.require: issueI6O3E1
  */
-static HWTEST_F(BatteryServiceTest, BatteryService021, TestSize.Level1)
+static HWTEST_F(BatteryServiceTest, BatteryService019, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService021 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService019 start.");
     usleep(DELAY_TIME_US);
     g_service->iBatteryInterface_ = nullptr;
     auto ret = g_service->ChangePath("/data/service/el0/battery");
@@ -401,17 +379,17 @@ static HWTEST_F(BatteryServiceTest, BatteryService021, TestSize.Level1)
         EXPECT_TRUE(ret);
     }
 
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService021 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService019 end.");
 }
 
 /**
- * @tc.name: BatteryService022
+ * @tc.name: BatteryService020
  * @tc.desc: Test functions CalculateRemainingChargeTime
  * @tc.type: FUNC
  */
-static HWTEST_F(BatteryServiceTest, BatteryService022, TestSize.Level1)
+static HWTEST_F(BatteryServiceTest, BatteryService020, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService022 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService020 start.");
     g_service->CalculateRemainingChargeTime(101, BatteryChargeState::CHARGE_STATE_DISABLE);
     EXPECT_FALSE(g_service->chargeFlag_);
 
@@ -424,17 +402,17 @@ static HWTEST_F(BatteryServiceTest, BatteryService022, TestSize.Level1)
     g_service->chargeFlag_ = true;
     g_service->CalculateRemainingChargeTime(51, BatteryChargeState::CHARGE_STATE_ENABLE);
 
-        BATTERY_HILOGD(LABEL_TEST, "BatteryService022 end.");
+        BATTERY_HILOGD(LABEL_TEST, "BatteryService020 end.");
 }
 
 /**
- * @tc.name: BatteryService023
+ * @tc.name: BatteryService021
  * @tc.desc: Test functions GetCapacityLevel
  * @tc.type: FUNC
  */
-static HWTEST_F(BatteryServiceTest, BatteryService023, TestSize.Level1)
+static HWTEST_F(BatteryServiceTest, BatteryService021, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService023 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService021 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "1");
         auto level = g_service->GetCapacityLevel();
@@ -470,18 +448,40 @@ static HWTEST_F(BatteryServiceTest, BatteryService023, TestSize.Level1)
 
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "50");
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService023 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService021 end.");
 }
 
 /**
- * @tc.name: BatteryService024
+ * @tc.name: BatteryService022
  * @tc.desc: Test functions GetChargeType
  * @tc.type: FUNC
  */
-static HWTEST_F(BatteryServiceTest, BatteryService024, TestSize.Level1)
+static HWTEST_F(BatteryServiceTest, BatteryService022, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService024 start.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService022 start.");
     ChargeType chargeType = g_service->GetChargeType();
     EXPECT_TRUE(chargeType >= ChargeType::NONE && chargeType <= ChargeType::WIRELESS_SUPER_QUICK);
-    BATTERY_HILOGD(LABEL_TEST, "BatteryService024 end.");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService022 end.");
+}
+
+/**
+ * @tc.name: BatteryService023
+ * @tc.desc: Test functions OnStop
+ * @tc.type: FUNC
+ */
+static HWTEST_F(BatteryServiceTest, BatteryService023, TestSize.Level1)
+{
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService023 start.");
+    g_service->ready_ = true;
+    g_service->OnStop();
+    EXPECT_FALSE(g_service->ready_);
+
+    g_service->ready_ = true;
+    g_service->iBatteryInterface_ = nullptr;
+    g_service->hdiServiceMgr_ = nullptr;
+    g_service->OnStop();
+    EXPECT_FALSE(g_service->ready_);
+    g_service->OnStart();
+
+    BATTERY_HILOGD(LABEL_TEST, "BatteryService023 end.");
 }
