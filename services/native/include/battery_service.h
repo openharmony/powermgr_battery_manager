@@ -83,6 +83,7 @@ public:
     bool IsMockCapacity();
     void MockCapacity(int32_t capacity);
     void Reset();
+    void VibratorInit();
 private:
     bool Init();
     void WakeupDevice(BatteryChargeState chargeState);
