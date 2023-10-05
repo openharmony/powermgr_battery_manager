@@ -63,6 +63,7 @@ ohos_shared_library("batteryservice") {
     "miscdevice:light_interface_native",
     "power_manager:power_ffrt",
     "power_manager:power_sysparam",
+    "power_manager:power_vibrator",
     "power_manager:powermgr_client",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
@@ -76,5 +77,6 @@ group("service") {
   deps = [
     ":batteryservice",
     "native/profile:battery_config",
+    "native/profile:battery_vibrator_config",
   ]
 }
