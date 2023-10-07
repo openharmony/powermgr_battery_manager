@@ -51,6 +51,9 @@ private:
     int32_t GetTotalEnergyStub(MessageParcel& reply);
     int32_t GetCurrentAverageStub(MessageParcel& reply);
     int32_t CheckRequestCode(const uint32_t code, MessageParcel& data, MessageParcel& reply, MessageOption& option);
+    int32_t SetChargeConfigStub(MessageParcel& data, MessageParcel& reply);
+    int32_t GetChargeConfigStub(MessageParcel& data, MessageParcel& reply);
+    int32_t SupportChargeConfigStub(MessageParcel& data, MessageParcel& reply);
 };
 } // namespace PowerMgr
 } // namespace OHOS
