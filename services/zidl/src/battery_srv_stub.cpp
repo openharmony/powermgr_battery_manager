@@ -93,6 +93,15 @@ int32_t BatterySrvStub::CheckRequestCode(const uint32_t code, MessageParcel& dat
         case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_CURRENT_AVERAGE): {
             return GetCurrentAverageStub(reply);
         }
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::SET_BATTERY_CONFIG): {
+            return SetChargeConfigStub(data, reply);
+        }
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::GET_BATTERY_CONFIG): {
+            return GetChargeConfigStub(data, reply);
+        }
+        case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::SUPPORT_BATTERY_CONFIG): {
+            return SupportChargeConfigStub(data, reply);
+        }
         default: {
             return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
         }
@@ -190,6 +199,43 @@ int32_t BatterySrvStub::GetCurrentAverageStub(MessageParcel& reply)
 {
     int32_t ret = GetCurrentAverage();
     WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    return ERR_OK;
+}
+
+int32_t BatterySrvStub::SetChargeConfigStub(MessageParcel& data, MessageParcel& reply)
+{
+    std::u16string sceneName;
+    READ_PARCEL_WITH_RET(data, String16, sceneName, E_READ_PARCEL_ERROR);
+    std::string tempSceneName = Str16ToStr8(sceneName);
+
+    std::u16string value;
+    READ_PARCEL_WITH_RET(data, String16, value, E_READ_PARCEL_ERROR);
+    std::string tempValue = Str16ToStr8(value);
+
+    int32_t ret = SetBatteryConfig(tempSceneName, tempValue);
+    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    return ERR_OK;
+}
+
+int32_t BatterySrvStub::GetChargeConfigStub(MessageParcel& data, MessageParcel& reply)
+{
+    std::u16string sceneName;
+    READ_PARCEL_WITH_RET(data, String16, sceneName, E_READ_PARCEL_ERROR);
+    std::string tempSceneName = Str16ToStr8(sceneName);
+
+    std::string result = GetBatteryConfig(tempSceneName);
+    WRITE_PARCEL_WITH_RET(reply, String16, Str8ToStr16(result), E_WRITE_PARCEL_ERROR);
+    return ERR_OK;
+}
+
+int32_t BatterySrvStub::SupportChargeConfigStub(MessageParcel& data, MessageParcel& reply)
+{
+    std::u16string sceneName;
+    READ_PARCEL_WITH_RET(data, String16, sceneName, E_READ_PARCEL_ERROR);
+    std::string tempSceneName = Str16ToStr8(sceneName);
+
+    bool result = IsBatteryConfigSupported(tempSceneName);
+    WRITE_PARCEL_WITH_RET(reply, Bool, result, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 } // namespace PowerMgr
