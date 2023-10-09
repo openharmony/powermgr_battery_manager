@@ -91,17 +91,18 @@ private:
 #endif
     class BatterySrvDeathRecipient : public IRemoteObject::DeathRecipient {
     public:
-        BatterySrvDeathRecipient() = default;
+        explicit BatterySrvDeathRecipient(BatterySrvClient& client) : client_(client) {}
         virtual ~BatterySrvDeathRecipient() = default;
         void OnRemoteDied(const wptr<IRemoteObject>& remote);
     private:
         DISALLOW_COPY_AND_MOVE(BatterySrvDeathRecipient);
+        BatterySrvClient& client_;
     };
 
     sptr<IBatterySrv> Connect();
+    void ResetProxy(const wptr<IRemoteObject>& remote);
     sptr<IBatterySrv> proxy_ {nullptr};
     sptr<IRemoteObject::DeathRecipient> deathRecipient_ {nullptr};
-    void ResetProxy(const wptr<IRemoteObject>& remote);
     std::mutex mutex_;
 };
 } // namespace PowerMgr
