@@ -40,31 +40,37 @@ sptr<IBatterySrv> BatterySrvClient::Connect()
     }
     sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (sysMgr == nullptr) {
-        BATTERY_HILOGW(COMP_FWK, "Failed to get Registry");
+        BATTERY_HILOGE(COMP_FWK, "Failed to get Registry");
         return nullptr;
     }
     sptr<IRemoteObject> remoteObject_ = sysMgr->CheckSystemAbility(POWER_MANAGER_BATT_SERVICE_ID);
     if (remoteObject_ == nullptr) {
-        BATTERY_HILOGW(COMP_FWK, "GetSystemAbility failed");
+        BATTERY_HILOGE(COMP_FWK, "GetSystemAbility failed");
         return nullptr;
     }
-
-    deathRecipient_ = sptr<IRemoteObject::DeathRecipient>(new BatterySrvDeathRecipient());
-    if (deathRecipient_ == nullptr) {
-        BATTERY_HILOGW(COMP_FWK, "Failed to create BatterySrvDeathRecipient");
+    sptr<IRemoteObject::DeathRecipient> drt = new(std::nothrow) BatterySrvDeathRecipient(*this);
+    if (drt == nullptr) {
+        BATTERY_HILOGE(COMP_FWK, "Failed to create BatterySrvDeathRecipient");
         return nullptr;
     }
-    if ((remoteObject_->IsProxyObject()) && (!remoteObject_->AddDeathRecipient(deathRecipient_))) {
-        BATTERY_HILOGW(COMP_FWK, "Add death recipient to BatterySrv failed");
+    if ((remoteObject_->IsProxyObject()) && (!remoteObject_->AddDeathRecipient(drt))) {
+        BATTERY_HILOGE(COMP_FWK, "Add death recipient to BatterySrv failed");
         return nullptr;
     }
 
     proxy_ = iface_cast<IBatterySrv>(remoteObject_);
+    deathRecipient_ = drt;
+    BATTERY_HILOGI(COMP_FWK, "Connecting PowerMgrService success");
     return proxy_;
 }
 
 void BatterySrvClient::ResetProxy(const wptr<IRemoteObject>& remote)
 {
+    if (remote == nullptr) {
+        BATTERY_HILOGE(COMP_FWK, "OnRemoteDied failed, remote is nullptr");
+        return;
+    }
+
     std::lock_guard<std::mutex> lock(mutex_);
     RETURN_IF(proxy_ == nullptr);
     auto serviceRemote = proxy_->AsObject();
@@ -76,12 +82,8 @@ void BatterySrvClient::ResetProxy(const wptr<IRemoteObject>& remote)
 
 void BatterySrvClient::BatterySrvDeathRecipient::OnRemoteDied(const wptr<IRemoteObject>& remote)
 {
-    BATTERY_HILOGW(COMP_FWK, "BateryService Died");
-    if (remote == nullptr) {
-        BATTERY_HILOGE(COMP_FWK, "remote is nullptr");
-        return;
-    }
-    BatterySrvClient::GetInstance().ResetProxy(remote);
+    BATTERY_HILOGW(COMP_FWK, "Recv death notice, BateryService Died");
+    client_.ResetProxy(remote);
 }
 
 int32_t BatterySrvClient::GetCapacity()

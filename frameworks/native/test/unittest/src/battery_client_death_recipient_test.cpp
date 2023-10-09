@@ -47,7 +47,7 @@ HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient001, TestSi
 
     wptr<IRemoteObject> remoteObj = nullptr;
     std::shared_ptr<IRemoteObject::DeathRecipient> deathRecipient =
-        std::make_shared<BatterySrvClient::BatterySrvDeathRecipient>();
+        std::make_shared<BatterySrvClient::BatterySrvDeathRecipient>(batterySrvClient);
     EXPECT_NE(deathRecipient, nullptr);
     deathRecipient->OnRemoteDied(remoteObj);
     EXPECT_NE(batterySrvClient.proxy_, nullptr);
@@ -78,7 +78,7 @@ HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient002, TestSi
 
     {
         std::shared_ptr<IRemoteObject::DeathRecipient> deathRecipient =
-            std::make_shared<BatterySrvClient::BatterySrvDeathRecipient>();
+            std::make_shared<BatterySrvClient::BatterySrvDeathRecipient>(batterySrvClient);
         EXPECT_NE(deathRecipient, nullptr);
         deathRecipient->OnRemoteDied(remoteObj);
         deathRecipient = nullptr;
