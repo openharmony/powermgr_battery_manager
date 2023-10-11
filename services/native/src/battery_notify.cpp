@@ -29,6 +29,7 @@
 #include "battery_config.h"
 #include "battery_log.h"
 #include "battery_service.h"
+#include "power_vibrator.h"
 
 using namespace OHOS::AAFwk;
 using namespace OHOS::EventFwk;
@@ -259,7 +260,7 @@ bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
     if (g_batteryConnectOnce) {
         return isSuccess;
     }
-
+    StartVibrator();
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_CONNECTED);
     CommonEventData data;
@@ -276,6 +277,13 @@ bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
 
     g_batteryConnectOnce = true;
     return isSuccess;
+}
+
+void BatteryNotify::StartVibrator() const
+{
+    std::shared_ptr<PowerVibrator> vibrator = PowerVibrator::GetInstance();
+    std::string scene = "start_charge";
+    vibrator->StartVibrator(scene);
 }
 
 bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const

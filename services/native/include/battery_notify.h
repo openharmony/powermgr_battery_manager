@@ -35,6 +35,7 @@ private:
     bool PublishChangedEventInner(const BatteryInfo& info) const;
     bool PublishLowEvent(const BatteryInfo& info) const;
     bool PublishOkayEvent(const BatteryInfo& info) const;
+    void StartVibrator() const;
     bool PublishPowerConnectedEvent(const BatteryInfo& info) const;
     bool PublishPowerDisconnectedEvent(const BatteryInfo& info) const;
     bool PublishChargingEvent(const BatteryInfo& info) const;
