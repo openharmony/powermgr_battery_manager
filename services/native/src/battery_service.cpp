@@ -38,6 +38,7 @@
 #include "battery_config.h"
 #include "battery_dump.h"
 #include "battery_log.h"
+#include "power_vibrator.h"
 #include "v1_2/ibattery_callback.h"
 
 using namespace OHOS::HDI::Battery;
@@ -51,6 +52,9 @@ constexpr const char* BATTERY_HDI_NAME = "battery_interface_service";
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
 constexpr uint32_t RETRY_TIME = 1000;
 constexpr uint32_t SHUTDOWN_DELAY_TIME_MS = 60000;
+const std::string BATTERY_VIBRATOR_CONFIG_FILE = "etc/battery/battery_vibrator.json";
+const std::string VENDOR_BATTERY_VIBRATOR_CONFIG_FILE = "/vendor/etc/battery/battery_vibrator.json";
+const std::string SYSTEM_BATTERY_VIBRATOR_CONFIG_FILE = "/system/etc/battery/battery_vibrator.json";
 sptr<BatteryService> g_service;
 FFRTQueue g_queue("battery_service");
 FFRTHandle g_lowCapacityShutdownHandle = nullptr;
@@ -105,6 +109,7 @@ bool BatteryService::Init()
     if (!batteryNotify_) {
         batteryNotify_ = std::make_unique<BatteryNotify>();
     }
+    VibratorInit();
     RegisterBootCompletedCallback();
     return true;
 }
@@ -717,5 +722,13 @@ void BatteryService::Reset()
     ConvertingEvent(event);
     HandleBatteryInfo();
 }
+
+void BatteryService::VibratorInit()
+{
+    std::shared_ptr<PowerVibrator> vibrator = PowerVibrator::GetInstance();
+    vibrator->LoadConfig(BATTERY_VIBRATOR_CONFIG_FILE,
+        VENDOR_BATTERY_VIBRATOR_CONFIG_FILE, SYSTEM_BATTERY_VIBRATOR_CONFIG_FILE);
+}
+
 } // namespace PowerMgr
 } // namespace OHOS

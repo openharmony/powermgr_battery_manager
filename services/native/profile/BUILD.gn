@@ -20,3 +20,11 @@ ohos_prebuilt_etc("battery_config") {
   part_name = "${batterymgr_native_part_name}"
   subsystem_name = "powermgr"
 }
+
+## Install battery_vibrator.json to /system/etc/battery/battery_vibrator.json
+ohos_prebuilt_etc("battery_vibrator_config") {
+  source = "battery_vibrator.json"
+  relative_install_dir = "battery"
+  part_name = "${batterymgr_native_part_name}"
+  subsystem_name = "powermgr"
+}
