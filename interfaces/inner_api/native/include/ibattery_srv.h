@@ -39,6 +39,9 @@ public:
     virtual int32_t GetBatteryTemperature() = 0;
     virtual BatteryCapacityLevel GetCapacityLevel() = 0;
     virtual int64_t GetRemainingChargeTime() = 0;
+    virtual int32_t SetBatteryConfig(const std::string& sceneName, const std::string& value)  = 0;
+    virtual std::string GetBatteryConfig(const std::string& sceneName)  = 0;
+    virtual bool IsBatteryConfigSupported(const std::string& featureName)  = 0;
 public:
     DECLARE_INTERFACE_DESCRIPTOR(u"ohos.powermgr.IBatterySrv");
 };

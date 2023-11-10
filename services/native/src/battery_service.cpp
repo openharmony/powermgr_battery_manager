@@ -393,6 +393,69 @@ bool BatteryService::ChangePath(const std::string path)
     return true;
 }
 
+int32_t BatteryService::SetBatteryConfig(const std::string& sceneName, const std::string& value)
+{
+    if (!Permission::IsSystem()) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "SetBatteryConfig failed, System permission intercept");
+        return INVALID_BATT_INT_VALUE;
+    }
+
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
+        return ERR_NO_INIT;
+    }
+    return iBatteryInterface_->SetBatteryConfig(sceneName, value);
+}
+
+std::string BatteryService::GetBatteryConfig(const std::string& sceneName)
+{
+    if (!Permission::IsSystem()) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "GetBatteryConfig failed, System permission intercept");
+        return "";
+    }
+
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
+        return "";
+    }
+
+    std::string result;
+    int32_t ret = iBatteryInterface_->GetBatteryConfig(sceneName, result);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "get charge config failed, key:%{public}s", sceneName.c_str());
+        return "";
+    }
+
+    return result;
+}
+
+bool BatteryService::IsBatteryConfigSupported(const std::string& sceneName)
+{
+    if (!Permission::IsSystem()) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "IsBatteryConfigSupported failed, System permission intercept");
+        return false;
+    }
+
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
+        return false;
+    }
+
+    bool result = false;
+    int32_t ret = iBatteryInterface_->IsBatteryConfigSupported(sceneName, result);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "get support charge config failed, key:%{public}s", sceneName.c_str());
+        return false;
+    }
+    return result;
+}
+
 BatteryChargeState BatteryService::GetChargingStatus()
 {
     if (isMockUnplugged_) {

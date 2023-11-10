@@ -50,6 +50,9 @@ public:
     virtual int32_t GetBatteryTemperature() override;
     virtual BatteryCapacityLevel GetCapacityLevel() override;
     virtual int64_t GetRemainingChargeTime() override;
+    virtual int32_t SetBatteryConfig(const std::string& sceneName, const std::string& value) override;
+    virtual std::string GetBatteryConfig(const std::string& sceneName) override;
+    virtual bool IsBatteryConfigSupported(const std::string& sceneName) override;
 private:
     static inline BrokerDelegator<BatterySrvProxy> delegator_;
 };

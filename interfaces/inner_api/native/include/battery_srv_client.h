@@ -85,6 +85,18 @@ public:
      * Return the remaining charge time
      */
     int64_t GetRemainingChargeTime();
+    /**
+     * set charge config
+     */
+    int32_t SetBatteryConfig(const std::string& sceneName, const std::string& value);
+    /**
+     * get charge config
+     */
+    std::string GetBatteryConfig(const std::string& sceneName);
+    /**
+     * is support charge config
+     */
+    bool IsBatteryConfigSupported(const std::string& sceneName);
 
 #ifndef BATTERYMGR_DEATHRECIPIENT_UNITTEST
 private:
