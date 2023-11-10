@@ -176,5 +176,26 @@ int64_t BatterySrvClient::GetRemainingChargeTime()
     RETURN_IF_WITH_RET(proxy == nullptr, INVALID_REMAINING_CHARGE_TIME_VALUE);
     return proxy->GetRemainingChargeTime();
 }
+
+int32_t BatterySrvClient::SetBatteryConfig(const std::string& sceneName, const std::string& value)
+{
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_INT_VALUE);
+    return proxy->SetBatteryConfig(sceneName, value);
+}
+
+std::string BatterySrvClient::GetBatteryConfig(const std::string& sceneName)
+{
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, "");
+    return proxy->GetBatteryConfig(sceneName);
+}
+
+bool BatterySrvClient::IsBatteryConfigSupported(const std::string& sceneName)
+{
+    auto proxy = Connect();
+    RETURN_IF_WITH_RET(proxy == nullptr, false);
+    return proxy->IsBatteryConfigSupported(sceneName);
+}
 }  // namespace PowerMgr
 }  // namespace OHOS

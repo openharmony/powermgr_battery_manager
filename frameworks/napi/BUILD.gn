@@ -14,7 +14,10 @@
 import("../../batterymgr.gni")
 
 ohos_shared_library("batteryinfo") {
-  sources = [ "battery_info.cpp" ]
+  sources = [
+    "battery_info.cpp",
+    "napi_utils.cpp",
+  ]
   configs = [ "${battery_utils}:utils_config" ]
   deps = [ "${battery_inner_api}:batterysrv_client" ]
   external_deps = [

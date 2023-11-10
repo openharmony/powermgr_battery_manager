@@ -21,6 +21,7 @@
 #include "battery_log.h"
 #include "battery_manager_ipc_interface_code.h"
 #include "power_common.h"
+#include "power_mgr_errors.h"
 #include "string_ex.h"
 
 namespace OHOS {
@@ -374,6 +375,90 @@ int32_t BatterySrvProxy::GetRemainEnergy()
     int32_t remainEnergy = INVALID_BATT_INT_VALUE;
     READ_PARCEL_WITH_RET(reply, Int32, remainEnergy, INVALID_BATT_INT_VALUE);
     return remainEnergy;
+}
+
+int32_t BatterySrvProxy::SetBatteryConfig(const std::string& sceneName, const std::string& value)
+{
+    sptr<IRemoteObject> remote = Remote();
+    RETURN_IF_WITH_RET(remote == nullptr, INVALID_BATT_INT_VALUE);
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
+        return INVALID_BATT_INT_VALUE;
+    }
+
+    WRITE_PARCEL_WITH_RET(data, String16, Str8ToStr16(sceneName), E_WRITE_PARCEL_ERROR);
+    WRITE_PARCEL_WITH_RET(data, String16, Str8ToStr16(value), E_WRITE_PARCEL_ERROR);
+
+    int ret = remote->SendRequest(
+        static_cast<int>(PowerMgr::BatterySrvInterfaceCode::SET_BATTERY_CONFIG),
+        data, reply, option);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        return INVALID_BATT_INT_VALUE;
+    }
+
+    READ_PARCEL_WITH_RET(reply, Int32, ret, INVALID_BATT_INT_VALUE);
+    return ret;
+}
+
+std::string BatterySrvProxy::GetBatteryConfig(const std::string& sceneName)
+{
+    sptr<IRemoteObject> remote = Remote();
+    RETURN_IF_WITH_RET(remote == nullptr, "");
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
+        return "";
+    }
+
+    WRITE_PARCEL_WITH_RET(data, String16, Str8ToStr16(sceneName), "");
+
+    int ret = remote->SendRequest(
+        static_cast<int>(PowerMgr::BatterySrvInterfaceCode::GET_BATTERY_CONFIG),
+        data, reply, option);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        return "";
+    }
+
+    std::u16string result;
+    READ_PARCEL_WITH_RET(reply, String16, result, "");
+    return Str16ToStr8(result);
+}
+
+bool BatterySrvProxy::IsBatteryConfigSupported(const std::string& sceneName)
+{
+    sptr<IRemoteObject> remote = Remote();
+    RETURN_IF_WITH_RET(remote == nullptr, false);
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
+        return false;
+    }
+
+    WRITE_PARCEL_WITH_RET(data, String16, Str8ToStr16(sceneName), false);
+
+    int ret = remote->SendRequest(
+        static_cast<int>(PowerMgr::BatterySrvInterfaceCode::SUPPORT_BATTERY_CONFIG),
+        data, reply, option);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        return false;
+    }
+
+    bool result = false;
+    READ_PARCEL_WITH_RET(reply, Bool, result, false);
+    return result;
 }
 } // namespace PowerMgr
 } // namespace OHOS

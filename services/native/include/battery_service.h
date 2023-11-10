@@ -74,6 +74,9 @@ public:
     int64_t GetRemainingChargeTime() override;
     ChargeType GetChargeType();
     bool ChangePath(const std::string path);
+    int32_t SetBatteryConfig(const std::string& sceneName, const std::string& value) override;
+    std::string GetBatteryConfig(const std::string& sceneName) override;
+    bool IsBatteryConfigSupported(const std::string& sceneName) override;
     void InitConfig();
     void HandleTemperature(int32_t temperature);
     bool RegisterHdiStatusListener();
