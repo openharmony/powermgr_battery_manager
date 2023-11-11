@@ -194,9 +194,9 @@ bool BatteryConfig::ParseUeventConf()
 {
     if (config_["uevent"].isNull() || !config_["uevent"].isObject()) {
         BATTERY_HILOGW(COMP_HDI, "ueventConfig is invalid");
-        return;
+        return false;
     }
-    ueventMap_.clear();
+    ueventActionMap_.clear();
     Json::Value::Members members = config_["uevent"].getMemberNames();
     for (auto iter = members.begin(); iter != members.end(); iter++) {
         std::string key = *iter;
@@ -205,7 +205,7 @@ bool BatteryConfig::ParseUeventConf()
             BATTERY_HILOGW(COMP_SVC, "The uevent conf is invalid, key=%{public}s", key.c_str());
             continue;
         }
-        std::vector<std::string> ueventList;
+        std::vector<std::pair<std::string, std::string>> ueventList;
         Json::Value::Members ObjMembers = valueObj.getMemberNames();
         for (auto it = ObjMembers.begin(); it != ObjMembers.end(); it++) {
             std::string event = *it;
@@ -213,13 +213,15 @@ bool BatteryConfig::ParseUeventConf()
                 BATTERY_HILOGW(COMP_SVC, "The uevent conf is invalid, key=%{public}s", key.c_str());
                 continue;
             }
-            std::string act = valueObj[event].asString()
-            ueventList.push_back(std::make_pair<std::string, std::string>(event, act));
+            std::string act = valueObj[event].asString();
+            ueventList.push_back(std::make_pair(event, act));
         }
         ueventActionMap_.emplace(*iter, ueventList);
-        BATTERY_HILOGI(COMP_SVC, "%{public}s size: %{public}u", key.c_str(), ueventList.size());
+        BATTERY_HILOGI(COMP_SVC, "%{public}s size: %{public}d", key.c_str(),
+            static_cast<int32_t>(ueventList.size()));
     }
-    BATTERY_HILOGI(COMP_SVC, "The uevent config size: %{public}u", ueventActionMap_.size());
+    BATTERY_HILOGI(COMP_SVC, "The uevent config size: %{public}d", static_cast<int32_t>(ueventActionMap_.size()));
+    return true;
 }
 } // namespace PowerMgr
 } // namespace OHOS
