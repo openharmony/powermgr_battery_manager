@@ -209,6 +209,7 @@ void BatteryService::ConvertingEvent(const V1_2::BatteryInfo& event)
     batteryInfo_.SetTechnology(event.technology);
     batteryInfo_.SetNowCurrent(event.curNow);
     batteryInfo_.SetChargeType(GetChargeType());
+    batteryInfo_.SetUevent(event.uevent);
 }
 
 void BatteryService::HandleBatteryInfo()
@@ -217,12 +218,13 @@ void BatteryService::HandleBatteryInfo()
         "healthState=%{public}d, pluggedType=%{public}d, pluggedMaxCurrent=%{public}d, "
         "pluggedMaxVoltage=%{public}d, chargeState=%{public}d, chargeCounter=%{public}d, present=%{public}d, "
         "technology=%{public}s, currNow=%{public}d, totalEnergy=%{public}d, curAverage=%{public}d, "
-        "remainEnergy=%{public}d, chargeType=%{public}d", batteryInfo_.GetCapacity(), batteryInfo_.GetVoltage(),
-        batteryInfo_.GetTemperature(), batteryInfo_.GetHealthState(), batteryInfo_.GetPluggedType(),
-        batteryInfo_.GetPluggedMaxCurrent(), batteryInfo_.GetPluggedMaxVoltage(), batteryInfo_.GetChargeState(),
-        batteryInfo_.GetChargeCounter(), batteryInfo_.IsPresent(), batteryInfo_.GetTechnology().c_str(),
-        batteryInfo_.GetNowCurrent(), batteryInfo_.GetTotalEnergy(), batteryInfo_.GetCurAverage(),
-        batteryInfo_.GetRemainEnergy(), batteryInfo_.GetChargeType());
+        "remainEnergy=%{public}d, chargeType=%{public}d, event=%{public}s", batteryInfo_.GetCapacity(),
+        batteryInfo_.GetVoltage(), batteryInfo_.GetTemperature(), batteryInfo_.GetHealthState(),
+        batteryInfo_.GetPluggedType(), batteryInfo_.GetPluggedMaxCurrent(), batteryInfo_.GetPluggedMaxVoltage(),
+        batteryInfo_.GetChargeState(), batteryInfo_.GetChargeCounter(), batteryInfo_.IsPresent(),
+        batteryInfo_.GetTechnology().c_str(), batteryInfo_.GetNowCurrent(), batteryInfo_.GetTotalEnergy(),
+        batteryInfo_.GetCurAverage(), batteryInfo_.GetRemainEnergy(), batteryInfo_.GetChargeType(),
+        batteryInfo_.GetUevent().c_str());
 
     batteryLight_.UpdateColor(batteryInfo_.GetChargeState(), batteryInfo_.GetCapacity());
     WakeupDevice(batteryInfo_.GetPluggedType());

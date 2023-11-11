@@ -31,6 +31,7 @@ public:
     int32_t PublishEvents(const BatteryInfo& info);
 
 private:
+    void HandleUevent(const BatteryInfo& info);
     bool PublishChangedEvent(const BatteryInfo& info) const;
     bool PublishChangedEventInner(const BatteryInfo& info) const;
     bool PublishLowEvent(const BatteryInfo& info) const;
