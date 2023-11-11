@@ -311,6 +311,11 @@ public:
         chargeType_ = chargeType;
     }
 
+    void SetUevent(const std::string& uevent)
+    {
+        uevent_ = uevent;
+    }
+
     const int32_t& GetCapacity() const
     {
         return capacity_;
@@ -391,6 +396,11 @@ public:
         return chargeType_;
     }
 
+    const std::string& GetUevent() const
+    {
+        return uevent_;
+    }
+
     bool operator==(const BatteryInfo& info)
     {
         bool eq = (present_ == info.IsPresent()) &&
@@ -408,6 +418,7 @@ public:
             (remainEnergy_ == info.GetRemainEnergy()) &&
             (chargeState_ == info.GetChargeState()) &&
             (technology_ == info.GetTechnology()) &&
+            (uevent_ == info.GetUevent()) &&
             (chargeType_ == info.GetChargeType());
         return eq;
     }
@@ -433,6 +444,7 @@ public:
     static constexpr const char* COMMON_EVENT_KEY_PLUGGED_MAX_VOLTAGE = "maxVoltage";
     static constexpr const char* COMMON_EVENT_KEY_PLUGGED_NOW_CURRENT = "nowCurrent";
     static constexpr const char* COMMON_EVENT_KEY_CHARGE_COUNTER = "chargeCounter";
+    static constexpr const char* COMMON_EVENT_KEY_UEVENT = "uevent";
 
     //Inner events used by battery_manager and thermal_manger
     static constexpr const char* COMMON_EVENT_BATTERY_CHANGED_INNER = "usual.event.BATTERY_CHANGED_INNER";
@@ -453,6 +465,7 @@ private:
     BatteryPluggedType pluggedType_ = BatteryPluggedType::PLUGGED_TYPE_BUTT;
     BatteryChargeState chargeState_ = BatteryChargeState::CHARGE_STATE_BUTT;
     std::string technology_ = INVALID_STRING_VALUE;
+    std::string uevent_ = INVALID_STRING_VALUE;
 };
 } // namespace PowerMgr
 } // namespace OHOS
