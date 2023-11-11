@@ -107,7 +107,7 @@ void BatteryNotify::HandleUevent(const BatteryInfo& info)
         for (auto& event : eventInfo.second) {
             std::regex rString(event.first);
             if (std::regex_match(ueventName, rString)) {
-                BATTERY_HILOGD(COMP_SVC, "%{public}s decision", ueventName.c_str());
+                BATTERY_HILOGI(COMP_SVC, "%{public}s decision", ueventName.c_str());
                 if (event.second == SHUTDOWN) {
                     PowerMgrClient::GetInstance().ShutDownDevice(ueventName);
                 } else if (event.second == REBOOT) {
