@@ -52,7 +52,7 @@ ohos_executable("charger") {
   external_deps = [
     "c_utils:utils",
     "config_policy:configpolicy_util",
-    "drivers_interface_battery:libbattery_proxy_1.2",
+    "drivers_interface_battery:libbattery_proxy_2.0",
     "drivers_interface_input:libinput_proxy_1.0",
     "init:libbegetutil",
     "ipc:ipc_core",

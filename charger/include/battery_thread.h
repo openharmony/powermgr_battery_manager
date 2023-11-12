@@ -22,7 +22,7 @@
 #include <thread>
 #include <vector>
 #include "power_supply_provider.h"
-#include "v1_2/ibattery_callback.h"
+#include "v2_0/ibattery_callback.h"
 
 namespace OHOS {
 namespace PowerMgr {

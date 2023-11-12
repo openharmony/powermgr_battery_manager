@@ -39,7 +39,7 @@
 #include "battery_dump.h"
 #include "battery_log.h"
 #include "power_vibrator.h"
-#include "v1_2/ibattery_callback.h"
+#include "v2_0/ibattery_callback.h"
 
 using namespace OHOS::HDI::Battery;
 using namespace OHOS::AAFwk;
@@ -134,11 +134,11 @@ bool BatteryService::RegisterBatteryHdiCallback()
 {
     std::lock_guard<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
-        iBatteryInterface_ = V1_2::IBatteryInterface::Get();
+        iBatteryInterface_ = V2_0::IBatteryInterface::Get();
         BATTERY_HILOGE(COMP_SVC, "failed to get battery hdi interface");
         RETURN_IF_WITH_RET(iBatteryInterface_ == nullptr, false);
     }
-    sptr<V1_2::IBatteryCallback> callback = new BatteryCallback();
+    sptr<V2_0::IBatteryCallback> callback = new BatteryCallback();
     ErrCode ret = iBatteryInterface_->Register(callback);
     if (ret < 0) {
         BATTERY_HILOGE(COMP_SVC, "register callback failed");
@@ -175,7 +175,7 @@ void BatteryService::InitConfig()
         fullCapacityThreshold_);
 }
 
-int32_t BatteryService::HandleBatteryCallbackEvent(const V1_2::BatteryInfo& event)
+int32_t BatteryService::HandleBatteryCallbackEvent(const V2_0::BatteryInfo& event)
 {
     if (isMockUnplugged_ || isMockCapacity_) {
         return ERR_OK;
@@ -187,7 +187,7 @@ int32_t BatteryService::HandleBatteryCallbackEvent(const V1_2::BatteryInfo& even
     return ERR_OK;
 }
 
-void BatteryService::ConvertingEvent(const V1_2::BatteryInfo& event)
+void BatteryService::ConvertingEvent(const V2_0::BatteryInfo& event)
 {
     if (!isMockCapacity_) {
         batteryInfo_.SetCapacity(event.capacity);
@@ -465,7 +465,7 @@ BatteryChargeState BatteryService::GetChargingStatus()
         return batteryInfo_.GetChargeState();
     }
     std::shared_lock<std::shared_mutex> lock(mutex_);
-    V1_2::BatteryChargeState chargeState = V1_2::BatteryChargeState(0);
+    V2_0::BatteryChargeState chargeState = V2_0::BatteryChargeState(0);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return BatteryChargeState(chargeState);
@@ -478,7 +478,7 @@ BatteryHealthState BatteryService::GetHealthStatus()
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     std::shared_lock<std::shared_mutex> lock(mutex_);
-    V1_2::BatteryHealthState healthState = V1_2::BatteryHealthState(0);
+    V2_0::BatteryHealthState healthState = V2_0::BatteryHealthState(0);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return BatteryHealthState(healthState);
@@ -495,7 +495,7 @@ BatteryPluggedType BatteryService::GetPluggedType()
         return batteryInfo_.GetPluggedType();
     }
     std::shared_lock<std::shared_mutex> lock(mutex_);
-    V1_2::BatteryPluggedType pluggedType = V1_2::BatteryPluggedType(0);
+    V2_0::BatteryPluggedType pluggedType = V2_0::BatteryPluggedType(0);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return BatteryPluggedType(pluggedType);
@@ -618,7 +618,7 @@ int32_t BatteryService::GetRemainEnergy()
 ChargeType BatteryService::GetChargeType()
 {
     std::shared_lock<std::shared_mutex> lock(mutex_);
-    V1_2::ChargeType chargeType = V1_2::ChargeType::CHARGE_TYPE_NONE;
+    V2_0::ChargeType chargeType = V2_0::ChargeType::CHARGE_TYPE_NONE;
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return ChargeType(chargeType);
@@ -738,7 +738,7 @@ void BatteryService::MockUnplugged()
         return;
     }
     isMockUnplugged_ = true;
-    V1_2::BatteryInfo event;
+    V2_0::BatteryInfo event;
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);
     batteryInfo_.SetPluggedType(BatteryPluggedType::PLUGGED_TYPE_NONE);
@@ -761,7 +761,7 @@ void BatteryService::MockCapacity(int32_t capacity)
         return;
     }
     isMockCapacity_ = true;
-    V1_2::BatteryInfo event;
+    V2_0::BatteryInfo event;
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);
     batteryInfo_.SetCapacity(capacity);
@@ -782,7 +782,7 @@ void BatteryService::Reset()
     }
     isMockUnplugged_ = false;
     isMockCapacity_ = false;
-    V1_2::BatteryInfo event;
+    V2_0::BatteryInfo event;
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);
     HandleBatteryInfo();

@@ -27,7 +27,7 @@ namespace {
 sptr<BatteryService> g_service;
 }
 
-int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_2::BatteryInfo& event)
+int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V2_0::BatteryInfo& event)
 {
     return ERR_OK;
 }
@@ -50,14 +50,14 @@ void BatteryCallbackTest::TearDownTestCase()
  */
 HWTEST_F(BatteryCallbackTest, BatteryCallback001, TestSize.Level1)
 {
-    sptr<HDI::Battery::V1_2::IBatteryInterface> iBatteryInterface;
-    iBatteryInterface = HDI::Battery::V1_2::IBatteryInterface::Get();
-    sptr<HDI::Battery::V1_2::IBatteryCallback> callback = new BatteryCallback();
+    sptr<HDI::Battery::V2_0::IBatteryInterface> iBatteryInterface;
+    iBatteryInterface = HDI::Battery::V2_0::IBatteryInterface::Get();
+    sptr<HDI::Battery::V2_0::IBatteryCallback> callback = new BatteryCallback();
     EXPECT_EQ(iBatteryInterface->Register(callback), HDF_SUCCESS);
 
     BatteryCallback::BatteryEventCallback eventCb = std::bind(&HandleBatteryCallbackEvent, std::placeholders::_1);
     EXPECT_EQ(BatteryCallback::RegisterBatteryEvent(eventCb), HDF_SUCCESS);
-    HDI::Battery::V1_2::BatteryInfo event;
+    HDI::Battery::V2_0::BatteryInfo event;
     iBatteryInterface->GetBatteryInfo(event);
     EXPECT_NE(callback->Update(event), HDF_FAILURE);
 }
@@ -71,8 +71,8 @@ HWTEST_F(BatteryCallbackTest, BatteryCallback002, TestSize.Level1)
 {
     BatteryCallback::BatteryEventCallback eventCb = nullptr;
     EXPECT_EQ(BatteryCallback::RegisterBatteryEvent(eventCb), HDF_SUCCESS);
-    HDI::Battery::V1_2::BatteryInfo event;
-    sptr<HDI::Battery::V1_2::IBatteryCallback> callback = new BatteryCallback();
+    HDI::Battery::V2_0::BatteryInfo event;
+    sptr<HDI::Battery::V2_0::IBatteryCallback> callback = new BatteryCallback();
     EXPECT_EQ(callback->Update(event), HDF_FAILURE);
 }
 } // namespace PowerMgr

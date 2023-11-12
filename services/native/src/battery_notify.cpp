@@ -106,20 +106,21 @@ void BatteryNotify::HandleUevent(const BatteryInfo& info)
         }
         for (auto& event : eventInfo.second) {
             std::regex rString(event.first);
-            if (std::regex_match(ueventName, rString)) {
-                BATTERY_HILOGI(COMP_SVC, "%{public}s decision", ueventName.c_str());
-                if (event.second == SHUTDOWN) {
-                    PowerMgrClient::GetInstance().ShutDownDevice(ueventName);
-                } else if (event.second == REBOOT) {
-                    PowerMgrClient::GetInstance().RebootDevice(ueventName);
-                } else {
-                    PublishChangedEvent(info);
-                }
-                return;
+            if (!std::regex_match(ueventName, rString)) {
+                continue;
             }
+            BATTERY_HILOGI(COMP_SVC, "%{public}s decision %{public}s",
+                ueventName.c_str(), event.second.c_str());
+            if (event.second == SHUTDOWN) {
+                PowerMgrClient::GetInstance().ShutDownDevice(ueventName);
+            } else if (event.second == REBOOT) {
+                PowerMgrClient::GetInstance().RebootDevice(ueventName);
+            } else {
+                PublishChangedEvent(info);
+            }
+            return;
         }
     }
-    
     BATTERY_HILOGE(COMP_SVC, "undefine uevent name%{public}s", ueventName.c_str());
 }
 

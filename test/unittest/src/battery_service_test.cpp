@@ -196,7 +196,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService008, TestSize.Level1)
     EXPECT_FALSE(g_service->ready_);
 
     g_service->OnStart();
-    g_service->iBatteryInterface_ = V1_2::IBatteryInterface::Get();
+    g_service->iBatteryInterface_ = V2_0::IBatteryInterface::Get();
     BATTERY_HILOGD(LABEL_TEST, "BatteryService008 end.");
 }
 
@@ -332,7 +332,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService017, TestSize.Level1)
 static HWTEST_F(BatteryServiceTest, BatteryService018, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryService018 start.");
-    V1_2::BatteryInfo event;
+    V2_0::BatteryInfo event;
     event.capacity = 90; // Prevent shutdown
     EXPECT_EQ(g_service->HandleBatteryCallbackEvent(event), ERR_OK);
 
@@ -370,7 +370,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService019, TestSize.Level1)
     auto ret = g_service->ChangePath("/data/service/el0/battery");
     EXPECT_FALSE(ret);
 
-    g_service->iBatteryInterface_ = V1_2::IBatteryInterface::Get();
+    g_service->iBatteryInterface_ = V2_0::IBatteryInterface::Get();
     ret = g_service->ChangePath("/data/service/el0/battery");
     EXPECT_TRUE(ret);
 
