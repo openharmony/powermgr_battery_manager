@@ -22,7 +22,7 @@
 #include <map>
 #include <vector>
 #include "batteryd_api.h"
-#include "v1_2/ibattery_interface.h"
+#include "v2_0/ibattery_interface.h"
 
 namespace OHOS {
 namespace PowerMgr {

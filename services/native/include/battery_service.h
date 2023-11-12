@@ -37,8 +37,8 @@
 #include "battery_srv_stub.h"
 #include "ibattery_srv.h"
 #include "sp_singleton.h"
-#include "v1_2/ibattery_interface.h"
-#include "v1_2/types.h"
+#include "v2_0/ibattery_interface.h"
+#include "v2_0/types.h"
 
 namespace OHOS {
 namespace PowerMgr {
@@ -91,8 +91,8 @@ private:
     bool Init();
     void WakeupDevice(BatteryChargeState chargeState);
     void RegisterBootCompletedCallback();
-    int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V1_2::BatteryInfo& event);
-    void ConvertingEvent(const OHOS::HDI::Battery::V1_2::BatteryInfo &event);
+    int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V2_0::BatteryInfo& event);
+    void ConvertingEvent(const OHOS::HDI::Battery::V2_0::BatteryInfo &event);
     void HandleBatteryInfo();
     void CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState);
     void HandleCapacity(int32_t capacity, BatteryChargeState chargeState);
@@ -106,7 +106,7 @@ private:
     std::shared_mutex mutex_;
     std::unique_ptr<BatteryNotify> batteryNotify_ { nullptr };
     BatteryLight batteryLight_;
-    sptr<HDI::Battery::V1_2::IBatteryInterface> iBatteryInterface_ { nullptr };
+    sptr<HDI::Battery::V2_0::IBatteryInterface> iBatteryInterface_ { nullptr };
     sptr<OHOS::HDI::ServiceManager::V1_0::IServiceManager> hdiServiceMgr_ { nullptr };
     sptr<HdiServiceStatusListener::IServStatListener> hdiServStatListener_ { nullptr };
     bool isLowPower_ { false };
