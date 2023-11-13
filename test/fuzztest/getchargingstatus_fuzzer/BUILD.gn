@@ -48,7 +48,7 @@ ohos_fuzztest("GetChargingStatusFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
-    "drivers_interface_battery:libbattery_proxy_1.2",
+    "drivers_interface_battery:libbattery_proxy_2.0",
     "hdf_core:libhdi",
     "hdf_core:libpub_utils",
     "hilog:libhilog",

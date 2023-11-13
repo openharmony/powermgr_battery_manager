@@ -35,6 +35,7 @@ struct BatterydInfo {
     int32_t remainEnergy_;
     int8_t present_;
     std::string technology_;
+    std::string uevent_;
 };
 
 #endif // BATTERYD_API_H

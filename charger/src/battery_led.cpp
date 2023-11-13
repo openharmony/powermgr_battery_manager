@@ -16,7 +16,7 @@
 #include "battery_led.h"
 #include "charger_log.h"
 
-using namespace OHOS::HDI::Battery::V1_2;
+using namespace OHOS::HDI::Battery::V2_0;
 using namespace OHOS::HDI::Light::V1_0;
 using namespace std;
 

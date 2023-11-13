@@ -18,18 +18,18 @@
 
 #include <functional>
 #include <cstdint>
-#include "v1_2/types.h"
-#include "v1_2/ibattery_callback.h"
+#include "v2_0/types.h"
+#include "v2_0/ibattery_callback.h"
 
 namespace OHOS {
 namespace PowerMgr {
-class BatteryCallback : public HDI::Battery::V1_2::IBatteryCallback {
+class BatteryCallback : public HDI::Battery::V2_0::IBatteryCallback {
 public:
     BatteryCallback() {}
     virtual ~BatteryCallback() {}
-    using BatteryEventCallback = std::function<int32_t(const HDI::Battery::V1_2::BatteryInfo& event)>;
+    using BatteryEventCallback = std::function<int32_t(const HDI::Battery::V2_0::BatteryInfo& event)>;
     static int32_t RegisterBatteryEvent(const BatteryEventCallback& eventCb);
-    int32_t Update(const HDI::Battery::V1_2::BatteryInfo& event) override;
+    int32_t Update(const HDI::Battery::V2_0::BatteryInfo& event) override;
 private:
     static BatteryEventCallback eventCb_;
 };
