@@ -361,7 +361,8 @@ bool BatteryNotify::PublishChargingEvent(const BatteryInfo& info) const
 {
     bool isSuccess = true;
 
-    if (info.GetChargeState() != BatteryChargeState::CHARGE_STATE_ENABLE) {
+    if ((info.GetChargeState() != BatteryChargeState::CHARGE_STATE_ENABLE) &&
+        (info.GetChargeState() != BatteryChargeState::CHARGE_STATE_FULL)) {
         g_batteryChargingOnce = false;
         return isSuccess;
     }
@@ -392,7 +393,8 @@ bool BatteryNotify::PublishDischargingEvent(const BatteryInfo& info) const
 {
     bool isSuccess = true;
 
-    if (info.GetChargeState() == BatteryChargeState::CHARGE_STATE_ENABLE) {
+    if ((info.GetChargeState() == BatteryChargeState::CHARGE_STATE_ENABLE) ||
+        (info.GetChargeState() == BatteryChargeState::CHARGE_STATE_FULL)) {
         g_batteryDischargingOnce = false;
         return isSuccess;
     }
