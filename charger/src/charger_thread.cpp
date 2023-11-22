@@ -340,6 +340,10 @@ void ChargerThread::InitInput()
 {
     inputInterface = nullptr;
     inputInterface = HDI::Input::V1_0::IInputInterfaces::Get(true);
+    if (inputInterface == nullptr) {
+        BATTERY_HILOGE(FEATURE_CHARGING, "inputInterface is null");
+        return;
+    }
 
     const uint32_t POWERKEY_INPUT_DEVICE = 2;
     int32_t ret = inputInterface->OpenInputDevice(POWERKEY_INPUT_DEVICE);
