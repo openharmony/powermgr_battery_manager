@@ -59,7 +59,7 @@ ohos_executable("charger") {
   ]
 
   if (has_drivers_interface_display_part && has_drivers_interface_light_part &&
-      has_graphic_chipsetsdk_part && has_ui_lite_part && has_updater_part) {
+      has_graphic_chipsetsdk_part && has_ui_lite_part && !has_updater_part) {
     defines += [ "ENABLE_CHARGER" ]
     external_deps += [
       "drivers_interface_display:display_composer_idl_headers",
