@@ -353,5 +353,27 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify020, TestSize.Level1)
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
 }
+
+/**
+ * @tc.name: BatteryNotify021
+ * @tc.desc: Test PublishUEvent
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify021, TestSize.Level1)
+{
+    const string uevent1 = "TEST_BATTERY_UNDER_VOLTAGE=3";
+    g_batteryInfo->SetUevent(uevent1);
+    EXPECT_EQ(g_batteryInfo->GetUevent(), uevent1);
+
+    const string uevent2 = "BATTERY_UNDER_VOLTAGE=3";
+    g_batteryInfo->SetUevent(uevent2);
+    auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
+    EXPECT_EQ(ret, ERR_OK);
+
+    const string uevent3 = "XXXBATTERY_UNDER_VOLTAGE=1";
+    g_batteryInfo->SetUevent(uevent3);
+    ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
+    EXPECT_EQ(ret, ERR_OK);
+}
 } // namespace PowerMgr
 } // namespace OHOS
