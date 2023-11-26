@@ -145,6 +145,7 @@ bool BatteryService::RegisterBatteryHdiCallback()
         return false;
     }
 
+    SetLowBatteryThres();
     BatteryCallback::BatteryEventCallback eventCb =
         std::bind(&BatteryService::HandleBatteryCallbackEvent, this, std::placeholders::_1);
     BatteryCallback::RegisterBatteryEvent(eventCb);
@@ -393,6 +394,16 @@ bool BatteryService::ChangePath(const std::string path)
     }
     iBatteryInterface_->ChangePath(path);
     return true;
+}
+
+void BatteryService::SetLowBatteryThres()
+{
+    if (iBatteryInterface_ == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
+        return false;
+    }
+    const std::string thresNode = "low_battery_thres";
+    iBatteryInterface_->SetBatteryConfig(thresNode, std::to_string(shutdownCapacityThreshold_));
 }
 
 int32_t BatteryService::SetBatteryConfig(const std::string& sceneName, const std::string& value)

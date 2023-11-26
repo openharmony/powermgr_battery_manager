@@ -74,6 +74,7 @@ public:
     int64_t GetRemainingChargeTime() override;
     ChargeType GetChargeType();
     bool ChangePath(const std::string path);
+    void SetLowBatteryThres();
     int32_t SetBatteryConfig(const std::string& sceneName, const std::string& value) override;
     std::string GetBatteryConfig(const std::string& sceneName) override;
     bool IsBatteryConfigSupported(const std::string& sceneName) override;
