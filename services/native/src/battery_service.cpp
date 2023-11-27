@@ -400,7 +400,7 @@ void BatteryService::SetLowBatteryThres()
 {
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
-        return false;
+        return;
     }
     const std::string thresNode = "low_battery_thres";
     iBatteryInterface_->SetBatteryConfig(thresNode, std::to_string(shutdownCapacityThreshold_));
