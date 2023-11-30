@@ -16,6 +16,7 @@
         "name": "battery_manager",
         "subsystem": "powermgr",
         "syscap": [
+            "SystemCapability.PowerMgr.BatteryManager",
             "SystemCapability.PowerManager.BatteryManager.Core",
             "SystemCapability.PowerManager.BatteryManager.Extension",
             "SystemCapability.PowerManager.BatteryManager.Lite"
