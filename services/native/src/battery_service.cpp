@@ -145,7 +145,6 @@ bool BatteryService::RegisterBatteryHdiCallback()
         return false;
     }
 
-    SetLowBatteryThres();
     BatteryCallback::BatteryEventCallback eventCb =
         std::bind(&BatteryService::HandleBatteryCallbackEvent, this, std::placeholders::_1);
     BatteryCallback::RegisterBatteryEvent(eventCb);
@@ -256,7 +255,11 @@ bool BatteryService::RegisterHdiStatusListener()
             std::lock_guard<std::shared_mutex> lock(mutex_);
             if (status.status == SERVIE_STATUS_START) {
                 FFRTTask task = [this] {
-                    return RegisterBatteryHdiCallback();
+                    (void)RegisterBatteryHdiCallback();
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+                    SetLowCapacityThreshold();
+#endif
+                    return;
                 };
                 FFRTUtils::SubmitTask(task);
                 BATTERY_HILOGD(COMP_SVC, "battery interface service start");
@@ -396,15 +399,18 @@ bool BatteryService::ChangePath(const std::string path)
     return true;
 }
 
-void BatteryService::SetLowBatteryThres()
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+void BatteryService::SetLowCapacityThreshold()
 {
-    if (iBatteryInterface_ == nullptr) {
+    const std::string thers = "low_battery_thers";
+	if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
     }
-    const std::string thresNode = "low_battery_thres";
-    iBatteryInterface_->SetBatteryConfig(thresNode, std::to_string(shutdownCapacityThreshold_));
+    BATTERY_HILOGI(FEATURE_BATT_INFO, "set low capacity thres: shutdownCapacityThreshold_ = %{public}d", shutdownCapacityThreshold_);
+    iBatteryInterface_->SetBatteryConfig(thers, std::to_string(shutdownCapacityThreshold_));
 }
+#endif
 
 int32_t BatteryService::SetBatteryConfig(const std::string& sceneName, const std::string& value)
 {
