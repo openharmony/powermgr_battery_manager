@@ -404,7 +404,7 @@ void BatteryService::SetLowCapacityThreshold()
 {
     const std::string thers = "low_battery_thers";
 	if (iBatteryInterface_ == nullptr) {
-        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
+            BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
     }
     BATTERY_HILOGI(FEATURE_BATT_INFO, "set low capacity thres: shutdownCapacityThreshold_ = %{public}d", shutdownCapacityThreshold_);
