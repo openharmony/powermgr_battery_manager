@@ -403,7 +403,7 @@ bool BatteryService::ChangePath(const std::string path)
 void BatteryService::SetLowCapacityThreshold()
 {
     const std::string thers = "low_battery_thers";
-	if (iBatteryInterface_ == nullptr) {
+    if (iBatteryInterface_ == nullptr) {
             BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
     }
