@@ -101,6 +101,9 @@ private:
     bool IsPlugged(BatteryPluggedType pluggedType);
     bool IsUnplugged(BatteryPluggedType pluggedType);
     void WakeupDevice(BatteryPluggedType pluggedType);
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+    void SetLowCapacityThreshold();
+#endif
     bool ready_ { false };
     static std::atomic_bool isBootCompleted_;
     std::shared_mutex mutex_;

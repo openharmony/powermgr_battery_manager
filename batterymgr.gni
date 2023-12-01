@@ -13,6 +13,10 @@
 
 import("//build/ohos.gni")
 
+declare_args() {
+  battery_manager_feature_set_low_capacity_threshold = false
+}
+
 if (!defined(global_parts_info) ||
     defined(global_parts_info.hdf_drivers_interface_display)) {
   has_drivers_interface_display_part = true
