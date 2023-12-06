@@ -85,9 +85,8 @@ int32_t BatterySrvStub::CheckRequestCode(const uint32_t code, MessageParcel& dat
             return GetChargeConfigStub(data, reply);
         case static_cast<int>(PowerMgr::BatterySrvInterfaceCode::SUPPORT_BATTERY_CONFIG):
             return SupportChargeConfigStub(data, reply);
-        default: {
+        default:
             return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
-        }
     }
 }
 
