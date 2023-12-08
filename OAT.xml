@@ -19,7 +19,7 @@
         <filefilterlist>
             <filefilter name="binaryFileTypePolicyFilter" desc="Filters for binary file policies">
 			    <filteritem type="filename" name="*.png" desc="The framework image"/>
-                <filteritem type="filepath" name="charger/resources/HarmonyOS_Sans_SC_Regular_Small.ttf" desc="charger font library"/>
+                <filteritem type="filepath" name="charger/resources/ChargerAnimation_Sans_SC_Regular_Small.ttf" desc="charger font library"/>
             </filefilter>
         </filefilterlist>
     </oatconfig>

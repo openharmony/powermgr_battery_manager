@@ -15,7 +15,10 @@ import("//build/ohos.gni")
 import("../batterymgr.gni")
 
 config("batteryd_private_config") {
-  include_dirs = [ "include" ]
+  include_dirs = [
+    "include",
+    "//third_party/json/include",
+  ]
 }
 
 ohos_executable("charger") {
@@ -26,6 +29,7 @@ ohos_executable("charger") {
   ]
 
   sources = [
+    "src/animation_config.cpp",
     "src/battery_backlight.cpp",
     "src/battery_config.cpp",
     "src/battery_led.cpp",
@@ -33,7 +37,11 @@ ohos_executable("charger") {
     "src/battery_vibrate.cpp",
     "src/charger.cpp",
     "src/charger_animation.cpp",
+    "src/charger_graphic_engine.cpp",
     "src/charger_thread.cpp",
+    "src/dev/drm_driver.cpp",
+    "src/dev/fbdev_driver.cpp",
+    "src/dev/graphic_dev.cpp",
     "src/power_supply_provider.cpp",
   ]
 
@@ -59,7 +67,7 @@ ohos_executable("charger") {
   ]
 
   if (has_drivers_interface_display_part && has_drivers_interface_light_part &&
-      has_graphic_surface_part && has_ui_lite_part && !has_updater_part) {
+      has_graphic_surface_part && has_ui_lite_part) {
     defines += [ "ENABLE_CHARGER" ]
     external_deps += [
       "drivers_interface_display:display_composer_idl_headers",
@@ -67,9 +75,6 @@ ohos_executable("charger") {
       "drivers_interface_light:liblight_proxy_1.0",
       "graphic_surface:buffer_handle",
       "ui_lite:libupdater_layout",
-      "updater:libui",
-      "updater:libupdater",
-      "updater:libutils",
     ]
   } else {
     sources = []
