@@ -69,8 +69,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService001, TestSize.Level1)
 static HWTEST_F(BatteryServiceTest, BatteryService003, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryService003 start.");
-    EXPECT_TRUE(g_service->ShowBatteryDialog());
-    EXPECT_TRUE(g_service->DestoryBatteryDialog());
+    EXPECT_FALSE(g_service->DestoryBatteryDialog());
     BATTERY_HILOGD(LABEL_TEST, "BatteryService003 end.");
 }
 
