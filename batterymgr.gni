@@ -32,10 +32,10 @@ if (!defined(global_parts_info) ||
 }
 
 if (!defined(global_parts_info) ||
-    defined(global_parts_info.graphic_graphic_chipsetsdk)) {
-  has_graphic_chipsetsdk_part = true
+    defined(global_parts_info.graphic_graphic_surface)) {
+  has_graphic_surface_part = true
 } else {
-  has_graphic_chipsetsdk_part = false
+  has_graphic_surface_part = false
 }
 
 if (!defined(global_parts_info) || defined(global_parts_info.arkui_ui_lite)) {
