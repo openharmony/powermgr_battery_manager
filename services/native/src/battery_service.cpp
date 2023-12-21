@@ -214,7 +214,7 @@ void BatteryService::ConvertingEvent(const V2_0::BatteryInfo& event)
 
 void BatteryService::HandleBatteryInfo()
 {
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "capacity=%{public}d, voltage=%{public}d, temperature=%{public}d, "
+    BATTERY_HILOGI(FEATURE_BATT_INFO, "capacity=%{public}d, voltage=%{public}d, temperature=%{public}d, "
         "healthState=%{public}d, pluggedType=%{public}d, pluggedMaxCurrent=%{public}d, "
         "pluggedMaxVoltage=%{public}d, chargeState=%{public}d, chargeCounter=%{public}d, present=%{public}d, "
         "technology=%{public}s, currNow=%{public}d, totalEnergy=%{public}d, curAverage=%{public}d, "
@@ -728,6 +728,10 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
         return ERR_PERMISSION_DENIED;
     }
     g_service = DelayedSpSingleton<BatteryService>::GetInstance();
+    if (!g_service) {
+        return ERR_NO_INIT;
+    }
+    g_service->OnStart();
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     if ((args.empty()) || (args[0].compare(u"-h") == 0)) {
         batteryDump.DumpBatteryHelp(fd);
