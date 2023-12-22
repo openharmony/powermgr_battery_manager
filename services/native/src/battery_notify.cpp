@@ -67,7 +67,7 @@ int32_t BatteryNotify::PublishEvents(const BatteryInfo& info)
             return ERR_NO_INIT;
         }
     }
-    if (info.GetUevent() != POWER_SUPPLY) {
+    if (info.GetUevent() != POWER_SUPPLY && info.GetUevent() != "") {
         HandleUevent(info);
         return ERR_OK;
     }
