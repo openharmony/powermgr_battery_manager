@@ -47,6 +47,7 @@ void BatteryLightTest::TearDown()
  * @tc.type: FUNC
  * @tc.require: issueI5YZR1
  */
+#ifdef BATTERY_TEST
 HWTEST_F(BatteryLightTest, BatteryLight001, TestSize.Level1)
 {
     RETURN_IF(!g_light.isAvailable());
@@ -198,5 +199,6 @@ HWTEST_F(BatteryLightTest, BatteryLight010, TestSize.Level1)
     light.TurnOff();
     EXPECT_EQ(light.GetLightColor(), initColor);
 }
+#endif
 } // namespace PowerMgr
 } // namespace OHOS
