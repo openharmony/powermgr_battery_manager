@@ -575,7 +575,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
 {
     shared_ptr<CommonEventDumpCapacityTest> subscriber = CommonEventDumpCapacityTest::RegisterEvent();
-    int32_t capacity = 20;
+    int32_t capacity = 2;
     std::string baseCmdStr = "hidumper -s 3302 -a";
     std::string cmdStr = baseCmdStr;
     cmdStr.append(" \"--capacity ").append(ToString(capacity)).append("\"");
@@ -586,8 +586,8 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
     }
     EXPECT_EQ(g_capacity, capacity);
     EXPECT_EQ(capacity, BatterySrvClient::GetInstance().GetCapacity());
-    EXPECT_EQ(g_capacityLevel, static_cast<int32_t>(BatteryCapacityLevel::LEVEL_LOW));
-    EXPECT_TRUE(BatteryCapacityLevel::LEVEL_LOW == BatterySrvClient::GetInstance().GetCapacityLevel());
+    EXPECT_EQ(g_capacityLevel, static_cast<int32_t>(BatteryCapacityLevel::LEVEL_CRITICAL));
+    EXPECT_TRUE(BatteryCapacityLevel::LEVEL_CRITICAL == BatterySrvClient::GetInstance().GetCapacityLevel());
 
     system("hidumper -s 3302 -a -u");
     if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
@@ -599,7 +599,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
     EXPECT_EQ(g_capacity, capacity);
     EXPECT_EQ(capacity, BatterySrvClient::GetInstance().GetCapacity());
 
-    capacity = 50;
+    capacity = 91;
     cmdStr = baseCmdStr;
     cmdStr.append(" \"--capacity ").append(ToString(capacity)).append("\"");
     system(cmdStr.c_str());
@@ -608,8 +608,8 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
     }
     EXPECT_EQ(g_capacity, capacity);
     EXPECT_EQ(capacity, BatterySrvClient::GetInstance().GetCapacity());
-    EXPECT_EQ(g_capacityLevel, static_cast<int32_t>(BatteryCapacityLevel::LEVEL_NORMAL));
-    EXPECT_TRUE(BatteryCapacityLevel::LEVEL_NORMAL == BatterySrvClient::GetInstance().GetCapacityLevel());
+    EXPECT_EQ(g_capacityLevel, static_cast<int32_t>(BatteryCapacityLevel::LEVEL_HIGH));
+    EXPECT_TRUE(BatteryCapacityLevel::LEVEL_HIGH == BatterySrvClient::GetInstance().GetCapacityLevel());
     EXPECT_EQ(g_chargeState, static_cast<int32_t>(BatteryChargeState::CHARGE_STATE_NONE));
     EXPECT_TRUE(BatteryPluggedType::PLUGGED_TYPE_NONE == BatterySrvClient::GetInstance().GetPluggedType());
     EXPECT_TRUE(BatteryChargeState::CHARGE_STATE_NONE == BatterySrvClient::GetInstance().GetChargingStatus());
