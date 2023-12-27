@@ -55,7 +55,7 @@ constexpr uint32_t SHUTDOWN_DELAY_TIME_MS = 60000;
 const std::string BATTERY_VIBRATOR_CONFIG_FILE = "etc/battery/battery_vibrator.json";
 const std::string VENDOR_BATTERY_VIBRATOR_CONFIG_FILE = "/vendor/etc/battery/battery_vibrator.json";
 const std::string SYSTEM_BATTERY_VIBRATOR_CONFIG_FILE = "/system/etc/battery/battery_vibrator.json";
-sptr<BatteryService> g_service;
+sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 FFRTQueue g_queue("battery_service");
 FFRTHandle g_lowCapacityShutdownHandle = nullptr;
 BatteryPluggedType g_lastPluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
@@ -727,17 +727,12 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
     if (!Permission::IsSystem()) {
         return ERR_PERMISSION_DENIED;
     }
-    g_service = DelayedSpSingleton<BatteryService>::GetInstance();
-    if (!g_service) {
-        return ERR_NO_INIT;
-    }
-    g_service->OnStart();
+
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     if ((args.empty()) || (args[0].compare(u"-h") == 0)) {
         batteryDump.DumpBatteryHelp(fd);
         return ERR_OK;
     }
-
     bool getBatteryInfo = batteryDump.GetBatteryInfo(fd, g_service, args);
     bool unplugged = batteryDump.MockUnplugged(fd, g_service, args);
     bool mockedCapacity = batteryDump.MockCapacity(fd, g_service, args);
