@@ -50,6 +50,7 @@ OHOS::PowerMgr::BatteryCapacityLevel g_lastCapacityLevel = OHOS::PowerMgr::Batte
 const std::string POWER_SUPPLY = "SUBSYSTEM=power_supply";
 const std::string SHUTDOWN = "shutdown";
 const std::string REBOOT = "reboot";
+sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 
 BatteryNotify::BatteryNotify()
 {
@@ -181,8 +182,7 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_TECHNOLOGY, info.GetTechnology());
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_UEVENT, info.GetUevent());
 
-    sptr<BatteryService> batterySrv = DelayedSpSingleton<BatteryService>::GetInstance();
-    auto capacityLevel = batterySrv->GetCapacityLevel();
+    auto capacityLevel = g_service->GetCapacityLevel();
     if (capacityLevel != g_lastCapacityLevel) {
         want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CAPACITY_LEVEL, static_cast<int32_t>(capacityLevel));
         g_lastCapacityLevel = capacityLevel;
