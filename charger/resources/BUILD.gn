@@ -476,7 +476,7 @@ ohos_prebuilt_etc("resources_config65") {
 }
 
 ohos_prebuilt_etc("charger_font") {
-  source = "HarmonyOS_Sans_SC_Regular_Small.ttf"
+  source = "ChargerAnimation_Sans_SC_Regular_Small.ttf"
   relative_install_dir = "charger/resources"
   part_name = "battery_manager"
   subsystem_name = "powermgr"
