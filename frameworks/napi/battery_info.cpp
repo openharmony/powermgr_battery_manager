@@ -218,10 +218,10 @@ static napi_value GetBatteryConfig(napi_env env, napi_callback_info info)
     }
 
     std::string sceneName = NapiUtils::GetStringFromNapi(env, argv[INDEX_0]);
-    BATTERY_HILOGI(COMP_FWK, "get charge config, sceneName: %{public}s", sceneName.c_str());
+    BATTERY_HILOGD(COMP_FWK, "get charge config, sceneName: %{public}s", sceneName.c_str());
 
     std::string result = g_battClient.GetBatteryConfig(sceneName);
-    BATTERY_HILOGI(COMP_FWK, "get charge config, sceneValue: %{public}s", result.c_str());
+    BATTERY_HILOGD(COMP_FWK, "get charge config, sceneValue: %{public}s", result.c_str());
     
     napi_value napiValue;
     NAPI_CALL(env, napi_create_string_utf8(env, result.c_str(), result.size(), &napiValue));
