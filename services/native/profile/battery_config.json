@@ -14,7 +14,7 @@
         }
     },
     "temperature": {
-        "high": 600,
+        "high": 680,
         "low": -500
     },
     "soc": {
