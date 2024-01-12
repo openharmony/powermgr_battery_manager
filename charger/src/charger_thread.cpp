@@ -348,8 +348,8 @@ void ChargerThread::InitInput()
     const uint32_t POWERKEY_INPUT_DEVICE = 2;
     int32_t ret = inputInterface->OpenInputDevice(POWERKEY_INPUT_DEVICE);
     if (ret != HDF_SUCCESS) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "open device failed, index=%{public}u, ret=%{public}d"
-            , POWERKEY_INPUT_DEVICE, ret);
+        BATTERY_HILOGE(FEATURE_CHARGING, "open device failed, index=%{public}u, ret=%{public}d",
+            POWERKEY_INPUT_DEVICE, ret);
         return;
     }
 
@@ -371,8 +371,8 @@ void ChargerThread::InitInput()
     }
     ret = inputInterface->RegisterReportCallback(POWERKEY_INPUT_DEVICE, g_callback);
     if (ret != HDF_SUCCESS) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "register callback failed, index=%{public}u, ret=%{public}d"
-            , POWERKEY_INPUT_DEVICE, ret);
+        BATTERY_HILOGE(FEATURE_CHARGING, "register callback failed, index=%{public}u, ret=%{public}d",
+            POWERKEY_INPUT_DEVICE, ret);
         return;
     }
 }
