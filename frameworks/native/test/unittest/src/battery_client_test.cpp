@@ -720,4 +720,61 @@ HWTEST_F(BatteryClientTest, BatteryClient020, TestSize.Level1)
 
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient020 end.");
 }
+
+/**
+ * @tc.name: BatteryClient021
+ * @tc.desc: Test IBatterySrv interface SetBatteryConfig
+ * @tc.type: FUNC
+ */
+HWTEST_F (BatteryClientTest, BatteryClient021, TestSize.Level1)
+{
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient021 start.");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+
+    string sceneName = "testScene";
+    string value = "";
+    auto ret = BatterySrvClient.SetBatteryConfig(sceneName, value);
+    EXPECT_NE(ret, 0);
+
+    sceneName = "wireless";
+    value = BatterySrvClient.GetBatteryConfig(sceneName);
+    if (!value.empty()) {
+        ret = BatterySrvClient.SetBatteryConfig(sceneName, value);
+        EXPECT_EQ(ret, 0);
+    }
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient021 end.");
+}
+
+/**
+ * @tc.name: BatteryClient022
+ * @tc.desc: Test IBatterySrv interface GetBatteryConfig
+ * @tc.type: FUNC
+ */
+HWTEST_F (BatteryClientTest, BatteryClient022, TestSize.Level1)
+{
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient022 start.");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+
+    string sceneName = "testScene";
+    string value = BatterySrvClient.GetBatteryConfig(sceneName);
+    EXPECT_EQ(value, "");
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient022 end.");
+}
+
+/**
+ * @tc.name: BatteryClient023
+ * @tc.desc: Test IBatterySrv interface IsBatteryConfigSupported
+ * @tc.type: FUNC
+ */
+HWTEST_F (BatteryClientTest, BatteryClient023, TestSize.Level1)
+{
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient023 start.");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+
+    string sceneName = "testScene1";
+    bool ret = BatterySrvClient.IsBatteryConfigSupported(sceneName);
+    EXPECT_FALSE(ret);
+    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient023 end.");
+}
+
 } // namespace
