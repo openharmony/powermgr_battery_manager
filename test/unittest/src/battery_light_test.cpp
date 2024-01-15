@@ -20,20 +20,69 @@
 #include "power_common.h"
 #include <memory>
 
-using namespace testing::ext;
-
 namespace OHOS {
 namespace PowerMgr {
+using namespace testing::ext;
+using namespace Security::AccessToken;
+using Security::AccessToken::AccessTokenID;
+
 namespace {
 BatteryLight g_light;
+uint64_t g_token;
+PermissionDef g_infoManagerTestPermDef = {
+    .permissionName = "ohos.permission.SYSTEM_LIGHT_CONTROL",
+    .bundleName = "accesstoken_test",
+    .grantMode = 1,
+    .label = "label",
+    .labelId = 1,
+    .description = "test battery light",
+    .descriptionId = 1,
+    .availableLevel = APL_NORMAL
+};
+
+PermissionStateFull g_infoManagerTestState = {
+    .grantFlags = {1},
+    .grantStatus = {PermissionState::PERMISSION_GRANTED},
+    .isGeneral = true,
+    .permissionName = "ohos.permission.SYSTEM_LIGHT_CONTROL",
+    .resDeviceID = {"local"}
+};
+
+HapPolicyParams g_infoManagerTestPolicyPrams = {
+    .apl = APL_NORMAL,
+    .domain = "test.domain",
+    .permList = {g_infoManagerTestPermDef},
+    .permStateList = {g_infoManagerTestState}
+};
+
+HapInfoParams g_infoManagerTestInfoParms = {
+    .bundleName = "batterylight_test",
+    .userID = 1,
+    .instIndex = 0,
+    .appIDDesc = "BatteryLightTest"
+};
 } // namespace
+
+AccessTokenID BatteryLightTest::tokenID_ = 0;
 
 void BatteryLightTest::SetUpTestCase()
 {
+    AccessTokenIDEx tokenIdEx = {0};
+    tokenIdEx = AccessTokenKit::AllocHapToken(g_infoManagerTestInfoParms, g_infoManagerTestPolicyPrams);
+    tokenID_ = tokenIdEx.tokenIdExStruct.tokenID;
+    ASSERT_NE(0, tokenID_);
+    g_token = GetSelfTokenID();
+    ASSERT_EQ(0, SetSelfTokenID(tokenID_));
     BatteryConfig::GetInstance().ParseConfig();
     g_light.InitLight();
     g_light.TurnOff();
     GTEST_LOG_(INFO) << "The current device supports Light: " << g_light.isAvailable();
+}
+
+void BatteryLightTest::TearDownTestCase()
+{
+    AccessTokenKit::DeleteToken(tokenID_);
+    SetSelfTokenID(g_token);
 }
 
 void BatteryLightTest::TearDown()
