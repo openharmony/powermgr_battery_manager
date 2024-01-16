@@ -17,13 +17,19 @@
 #define BATTERY_LIGHT_TEST_H
 
 #include <gtest/gtest.h>
+#include "accesstoken_kit.h"
+#include "nativetoken_kit.h"
+#include "token_setproc.h"
 
 namespace OHOS {
 namespace PowerMgr {
 class BatteryLightTest : public testing::Test {
 public:
     static void SetUpTestCase();
+    static void TearDownTestCase();
     void TearDown();
+private:
+    static Security::AccessToken::AccessTokenID tokenID_;
 };
 } // namespace PowerMgr
 } // namespace OHOS
