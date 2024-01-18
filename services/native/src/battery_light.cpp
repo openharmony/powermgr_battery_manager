@@ -37,7 +37,6 @@ void BatteryLight::InitLight()
     LightInfo* lightInfo = nullptr;
     int32_t count = 0;
     int32_t ret = OHOS::Sensors::GetLightList(&lightInfo, count);
-
     if (ret < ERR_OK || lightInfo == nullptr || count <= 0) {
         BATTERY_HILOGW(FEATURE_BATT_LIGHT, "Light info is null");
         return;
