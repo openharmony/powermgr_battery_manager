@@ -100,6 +100,7 @@ void BatteryService::OnStart()
         return;
     }
     AddSystemAbilityListener(MISCDEVICE_SERVICE_ABILITY_ID);
+    InitBatteryInfo();
     ready_ = true;
 }
 
@@ -210,6 +211,24 @@ void BatteryService::ConvertingEvent(const V2_0::BatteryInfo& event)
     batteryInfo_.SetNowCurrent(event.curNow);
     batteryInfo_.SetChargeType(GetChargeType());
     batteryInfo_.SetUevent(event.uevent);
+}
+
+void BatteryService::InitBatteryInfo()
+{
+    batteryInfo_.SetCapacity(GetCapacity());
+    batteryInfo_.SetPluggedType(GetPluggedType());
+    batteryInfo_.SetChargeState(GetChargingStatus());
+    batteryInfo_.SetVoltage(GetVoltage());
+    batteryInfo_.SetTemperature(GetBatteryTemperature());
+    batteryInfo_.SetHealthState(GetHealthStatus());
+    batteryInfo_.SetTotalEnergy(GetTotalEnergy());
+    batteryInfo_.SetCurAverage(GetCurrentAverage());
+    batteryInfo_.SetRemainEnergy(GetRemainEnergy());
+    batteryInfo_.SetPresent(GetPresent());
+    batteryInfo_.SetTechnology(GetTechnology());
+    batteryInfo_.SetNowCurrent(GetNowCurrent());
+    batteryInfo_.SetChargeType(GetChargeType());
+    HandleBatteryInfo();
 }
 
 void BatteryService::HandleBatteryInfo()
