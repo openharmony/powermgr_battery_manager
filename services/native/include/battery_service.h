@@ -93,6 +93,7 @@ private:
     void RegisterBootCompletedCallback();
     int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V2_0::BatteryInfo& event);
     void ConvertingEvent(const OHOS::HDI::Battery::V2_0::BatteryInfo &event);
+    void InitBatteryInfo();
     void HandleBatteryInfo();
     void CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState);
     void HandleCapacity(int32_t capacity, BatteryChargeState chargeState);
