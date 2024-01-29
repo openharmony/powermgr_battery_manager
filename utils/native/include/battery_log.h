@@ -20,8 +20,6 @@
 
 namespace OHOS {
 namespace PowerMgr {
-#define FILENAME         (__builtin_strrchr("/" __FILE__, '/') + 1)
-#define FORMAT(fmt, ...) "[%{public}s:%{public}d] %{public}s# " fmt, FILENAME, __LINE__, __FUNCTION__, ##__VA_ARGS__
 
 #ifdef BATTERY_HILOGF
 #undef BATTERY_HILOGF
@@ -80,24 +78,34 @@ enum BatteryManagerLogDomain {
     DOMAIN_END = BATTERY_DOMAIN_ID_END, // Max to 0xD002940, keep the sequence and length same as BatteryManagerLogLabel
 };
 
-// Keep the sequence and length same as BatteryManagerLogDomain
-static constexpr OHOS::HiviewDFX::HiLogLabel BATTERY_LABEL[LABEL_END] = {
-    {LOG_CORE, DOMAIN_APP,                "BatteryApp"     },
-    {LOG_CORE, DOMAIN_FRAMEWORK,          "BatteryFwk"     },
-    {LOG_CORE, DOMAIN_SERVICE,            "BatterySvc"     },
-    {LOG_CORE, DOMAIN_HDI,                "BatteryHdi"     },
-    {LOG_CORE, DOMAIN_DRIVER,             "BatteryDrv"     },
-    {LOG_CORE, DOMAIN_FEATURE_CHARGING,   "BatteryCharging"},
-    {LOG_CORE, DOMAIN_FEATURE_BATT_INFO,  "BatteryInfo"    },
-    {LOG_CORE, DOMAIN_FEATURE_BATT_LIGHT, "BatteryLight"   },
-    {LOG_CORE, DOMAIN_TEST,               "BatteryTest"    },
+struct BatteryManagerLogLabelDomain {
+    uint32_t domainId;
+    const char* tag;
 };
 
-#define BATTERY_HILOGF(domain, ...) (void)OHOS::HiviewDFX::HiLog::Fatal(BATTERY_LABEL[domain], FORMAT(__VA_ARGS__))
-#define BATTERY_HILOGE(domain, ...) (void)OHOS::HiviewDFX::HiLog::Error(BATTERY_LABEL[domain], FORMAT(__VA_ARGS__))
-#define BATTERY_HILOGW(domain, ...) (void)OHOS::HiviewDFX::HiLog::Warn(BATTERY_LABEL[domain], FORMAT(__VA_ARGS__))
-#define BATTERY_HILOGI(domain, ...) (void)OHOS::HiviewDFX::HiLog::Info(BATTERY_LABEL[domain], FORMAT(__VA_ARGS__))
-#define BATTERY_HILOGD(domain, ...) (void)OHOS::HiviewDFX::HiLog::Debug(BATTERY_LABEL[domain], FORMAT(__VA_ARGS__))
+// Keep the sequence and length same as BatteryManagerLogDomain
+static const BatteryManagerLogLabelDomain BATTERY_LABEL[LABEL_END] = {
+    {DOMAIN_APP,                "BatteryApp"     },
+    {DOMAIN_FRAMEWORK,          "BatteryFwk"     },
+    {DOMAIN_SERVICE,            "BatterySvc"     },
+    {DOMAIN_HDI,                "BatteryHdi"     },
+    {DOMAIN_DRIVER,             "BatteryDrv"     },
+    {DOMAIN_FEATURE_CHARGING,   "BatteryCharging"},
+    {DOMAIN_FEATURE_BATT_INFO,  "BatteryInfo"    },
+    {DOMAIN_FEATURE_BATT_LIGHT, "BatteryLight"   },
+    {DOMAIN_TEST,               "BatteryTest"    },
+};
+
+#define BATTERY_HILOGF(domain, ...) \
+    ((void)HILOG_IMPL(LOG_CORE, LOG_FATAL, BATTERY_LABEL[domain].domainId, BATTERY_LABEL[domain].tag, ##__VA_ARGS__))
+#define BATTERY_HILOGE(domain, ...) \
+    ((void)HILOG_IMPL(LOG_CORE, LOG_ERROR, BATTERY_LABEL[domain].domainId, BATTERY_LABEL[domain].tag, ##__VA_ARGS__))
+#define BATTERY_HILOGW(domain, ...) \
+    ((void)HILOG_IMPL(LOG_CORE, LOG_WARN, BATTERY_LABEL[domain].domainId, BATTERY_LABEL[domain].tag, ##__VA_ARGS__))
+#define BATTERY_HILOGI(domain, ...) \
+    ((void)HILOG_IMPL(LOG_CORE, LOG_INFO, BATTERY_LABEL[domain].domainId, BATTERY_LABEL[domain].tag, ##__VA_ARGS__))
+#define BATTERY_HILOGD(domain, ...) \
+    ((void)HILOG_IMPL(LOG_CORE, LOG_DEBUG, BATTERY_LABEL[domain].domainId, BATTERY_LABEL[domain].tag, ##__VA_ARGS__))
 } // namespace PowerMgr
 } // namespace OHOS
 
