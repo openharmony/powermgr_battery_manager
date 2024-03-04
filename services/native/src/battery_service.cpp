@@ -342,10 +342,6 @@ bool BatteryService::IsNowPlugged(BatteryPluggedType pluggedType)
 bool BatteryService::IsPlugged(BatteryPluggedType pluggedType)
 {
     if (!IsLastPlugged() && IsNowPlugged(pluggedType)) {
-        if (g_lowCapacityShutdownHandle != nullptr) {
-            FFRTUtils::CancelTask(g_lowCapacityShutdownHandle, g_queue);
-            g_lowCapacityShutdownHandle = nullptr;
-        }
         return true;
     }
     return false;
@@ -357,6 +353,11 @@ bool BatteryService::IsUnplugged(BatteryPluggedType pluggedType)
         return true;
     }
     return false;
+}
+
+bool BatteryService::IsCharging(BatteryChargeState chargeState)
+{
+    return chargeState == BatteryChargeState::CHARGE_STATE_ENABLE;
 }
 
 void BatteryService::WakeupDevice(BatteryPluggedType pluggedType)
@@ -383,10 +384,18 @@ void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeS
         (g_lowCapacityShutdownHandle == nullptr) &&
         ((chargeState == BatteryChargeState::CHARGE_STATE_NONE) ||
          (chargeState == BatteryChargeState::CHARGE_STATE_BUTT))) {
+        BATTERY_HILOGI(COMP_SVC, "HandleCapacity begin to submit task");
         FFRTTask task = [&] {
+            BATTERY_HILOGI(COMP_SVC, "HandleCapacity begin to shutdown");
             powerMgrClient.ShutDownDevice("LowCapacity");
         };
         g_lowCapacityShutdownHandle = FFRTUtils::SubmitDelayTask(task, SHUTDOWN_DELAY_TIME_MS, g_queue);
+    }
+
+    if (IsCharging(chargeState) && g_lowCapacityShutdownHandle != nullptr) {
+        BATTERY_HILOGI(COMP_SVC, "HandleCapacity cancel shutdown task");
+        FFRTUtils::CancelTask(g_lowCapacityShutdownHandle, g_queue);
+        g_lowCapacityShutdownHandle = nullptr;
     }
 }
 
