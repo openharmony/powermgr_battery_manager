@@ -17,7 +17,6 @@ import("../batterymgr.gni")
 config("batteryd_private_config") {
   include_dirs = [
     "include",
-    "//third_party/json/include",
   ]
 }
 
@@ -51,19 +50,20 @@ ohos_executable("charger") {
   ]
 
   deps = [
-    "//third_party/cJSON:cjson",
-    "//third_party/jsoncpp:jsoncpp",
     "//third_party/libdrm:libdrm",
-    "//third_party/libpng:libpng",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "cJSON:cjson",
     "config_policy:configpolicy_util",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "drivers_interface_input:libinput_proxy_1.0",
     "init:libbegetutil",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
+    "jsoncpp:jsoncpp",
+    "libpng:libpng",
   ]
 
   if (has_drivers_interface_display_part && has_drivers_interface_light_part &&
