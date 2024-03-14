@@ -15,9 +15,7 @@ import("//build/ohos.gni")
 import("../batterymgr.gni")
 
 config("batteryd_private_config") {
-  include_dirs = [
-    "include",
-  ]
+  include_dirs = [ "include" ]
 }
 
 ohos_executable("charger") {
@@ -49,13 +47,9 @@ ohos_executable("charger") {
     "./../utils:coverage_flags",
   ]
 
-  deps = [
-    "//third_party/libdrm:libdrm",
-  ]
-
   external_deps = [
-    "c_utils:utils",
     "cJSON:cjson",
+    "c_utils:utils",
     "config_policy:configpolicy_util",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "drivers_interface_input:libinput_proxy_1.0",
@@ -63,6 +57,7 @@ ohos_executable("charger") {
     "ipc:ipc_core",
     "json:nlohmann_json_static",
     "jsoncpp:jsoncpp",
+    "libdrm:libdrm",
     "libpng:libpng",
   ]
 

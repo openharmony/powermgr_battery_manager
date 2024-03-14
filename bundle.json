@@ -62,12 +62,6 @@
                 "safwk",
                 "samgr",
                 "ui_lite"
-            ],
-            "third_party": [
-                "cJSON",
-                "jsoncpp",
-                "libdrm",
-                "libpng"
             ]
         },
         "build": {

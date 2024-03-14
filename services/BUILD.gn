@@ -45,9 +45,7 @@ ohos_shared_library("batteryservice") {
 
   public_configs = [ ":batterysrv_public_config" ]
 
-  deps = [
-    "${battery_service_zidl}:batterysrv_stub",
-  ]
+  deps = [ "${battery_service_zidl}:batterysrv_stub" ]
 
   external_deps = [ "power_manager:power_permission" ]
   external_deps += [
