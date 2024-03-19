@@ -50,6 +50,7 @@ OHOS::PowerMgr::BatteryCapacityLevel g_lastCapacityLevel = OHOS::PowerMgr::Batte
 const std::string POWER_SUPPLY = "SUBSYSTEM=power_supply";
 const std::string SHUTDOWN = "shutdown";
 const std::string REBOOT = "reboot";
+const std::string SEND_COMMONEVENT = "sendcommonevent";
 sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 
 BatteryNotify::BatteryNotify()
@@ -59,7 +60,7 @@ BatteryNotify::BatteryNotify()
     BATTERY_HILOGI(COMP_SVC, "Low broadcast power=%{public}d", lowCapacity_);
 }
 
-int32_t BatteryNotify::PublishEvents(const BatteryInfo& info)
+int32_t BatteryNotify::PublishEvents(BatteryInfo& info)
 {
     if (g_commonEventInitSuccess) {
         BATTERY_HILOGI(COMP_SVC, "common event service ability init success");
@@ -96,33 +97,27 @@ int32_t BatteryNotify::PublishEvents(const BatteryInfo& info)
     return isAllSuccess ? ERR_OK : ERR_NO_INIT;
 }
 
-void BatteryNotify::HandleUevent(const BatteryInfo& info)
+void BatteryNotify::HandleUevent(BatteryInfo& info)
 {
-    std::string ueventName = info.GetUevent();
-    auto& batteryConfig = BatteryConfig::GetInstance();
-    const UeventMap& ueventActionMap = batteryConfig.GetUeventActionMap();
-    for (auto& eventInfo : ueventActionMap) {
-        if (eventInfo.first == POWER_SUPPLY) {
-            continue;
-        }
-        for (auto& event : eventInfo.second) {
-            std::regex rString(event.first);
-            if (!std::regex_match(ueventName, rString)) {
-                continue;
-            }
-            BATTERY_HILOGI(COMP_SVC, "%{public}s decision %{public}s",
-                ueventName.c_str(), event.second.c_str());
-            if (event.second == SHUTDOWN) {
-                PowerMgrClient::GetInstance().ShutDownDevice(ueventName);
-            } else if (event.second == REBOOT) {
-                PowerMgrClient::GetInstance().RebootDevice(ueventName);
-            } else {
-                PublishChangedEvent(info);
-            }
-            return;
+    std::string uevent = info.GetUevent();
+    auto pos = uevent.rfind('$');
+    if (pos != std::string::npos) {
+        std::string ueventName = uevent.substr(0, pos);
+        std::string ueventAct = uevent.substr(++pos);
+        BATTERY_HILOGI(COMP_SVC, "%{public}s decision %{public}s",
+            ueventName.c_str(), ueventAct.c_str());
+        if (ueventAct == SHUTDOWN) {
+            PowerMgrClient::GetInstance().ShutDownDevice(ueventName);
+        } else if (ueventAct == REBOOT) {
+            PowerMgrClient::GetInstance().RebootDevice(ueventName);
+        } else if (ueventAct == SEND_COMMONEVENT) {
+            info.SetUevent(ueventName);
+            PublishChangedEvent(info);
+        } else {
+            BATTERY_HILOGE(COMP_SVC, "undefine uevent act %{public}s", ueventAct.c_str());
         }
     }
-    BATTERY_HILOGE(COMP_SVC, "undefine uevent name%{public}s", ueventName.c_str());
+    BATTERY_HILOGI(COMP_SVC, "handle uevent info %{public}s", uevent.c_str());
 }
 
 bool BatteryNotify::PublishChargeTypeChangedEvent(const BatteryInfo& info)

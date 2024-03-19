@@ -28,10 +28,10 @@ class BatteryNotify {
 public:
     BatteryNotify();
     ~BatteryNotify() = default;
-    int32_t PublishEvents(const BatteryInfo& info);
+    int32_t PublishEvents(BatteryInfo& info);
 
 private:
-    void HandleUevent(const BatteryInfo& info);
+    void HandleUevent(BatteryInfo& info);
     bool PublishChangedEvent(const BatteryInfo& info) const;
     bool PublishChangedEventInner(const BatteryInfo& info) const;
     bool PublishLowEvent(const BatteryInfo& info) const;
