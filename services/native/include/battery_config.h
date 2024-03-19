@@ -27,7 +27,6 @@
 
 namespace OHOS {
 namespace PowerMgr {
-using UeventMap = std::map<std::string, std::vector<std::pair<std::string, std::string>>>;
 class BatteryConfig : public NoCopyable {
 public:
     struct LightConf {
@@ -40,11 +39,6 @@ public:
     bool IsExist(std::string key) const;
     int32_t GetInt(std::string key, int32_t defVal = 0) const;
     const std::vector<LightConf>& GetLightConf() const;
-    bool ParseUeventConf();
-    UeventMap GetUeventActionMap()
-    {
-        return ueventActionMap_;
-    }
 
 private:
     bool OpenFile(std::ifstream& ifsConf, const std::string& configPath);
@@ -57,7 +51,6 @@ private:
     std::vector<BatteryConfig::LightConf> lightConf_;
     static std::mutex mutex_;
     static std::shared_ptr<BatteryConfig> instance_;
-    UeventMap ueventActionMap_;
 };
 } // namespace PowerMgr
 } // namespace OHOS
