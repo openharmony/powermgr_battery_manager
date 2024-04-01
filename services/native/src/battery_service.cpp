@@ -444,11 +444,11 @@ void BatteryService::SetLowCapacityThreshold()
 int32_t BatteryService::SetBatteryConfig(const std::string& sceneName, const std::string& value)
 {
     if (!Permission::IsSystem()) {
-        BATTERY_HILOGD(FEATURE_BATT_INFO, "SetBatteryConfig failed, System permission intercept");
+        BATTERY_HILOGI(FEATURE_BATT_INFO, "SetBatteryConfig failed, System permission intercept");
         return INVALID_BATT_INT_VALUE;
     }
 
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    BATTERY_HILOGI(FEATURE_BATT_INFO, "Enter SetBatteryConfig");
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
@@ -460,11 +460,11 @@ int32_t BatteryService::SetBatteryConfig(const std::string& sceneName, const std
 std::string BatteryService::GetBatteryConfig(const std::string& sceneName)
 {
     if (!Permission::IsSystem()) {
-        BATTERY_HILOGD(FEATURE_BATT_INFO, "GetBatteryConfig failed, System permission intercept");
+        BATTERY_HILOGI(FEATURE_BATT_INFO, "GetBatteryConfig failed, System permission intercept");
         return "";
     }
 
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    BATTERY_HILOGI(FEATURE_BATT_INFO, "Enter GetBatteryConfig");
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
@@ -484,11 +484,11 @@ std::string BatteryService::GetBatteryConfig(const std::string& sceneName)
 bool BatteryService::IsBatteryConfigSupported(const std::string& sceneName)
 {
     if (!Permission::IsSystem()) {
-        BATTERY_HILOGD(FEATURE_BATT_INFO, "IsBatteryConfigSupported failed, System permission intercept");
+        BATTERY_HILOGI(FEATURE_BATT_INFO, "IsBatteryConfigSupported failed, System permission intercept");
         return false;
     }
 
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
+    BATTERY_HILOGI(FEATURE_BATT_INFO, "Enter IsBatteryConfigSupported");
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
