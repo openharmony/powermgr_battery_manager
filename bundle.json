@@ -23,7 +23,6 @@
             "battery_manager_feature_set_low_capacity_threshold"
         ],
         "adapted_system_type": [
-            "small",
             "standard"
         ],
         "rom": "1024KB",
