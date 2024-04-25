@@ -23,7 +23,6 @@
             "battery_manager_feature_set_low_capacity_threshold"
         ],
         "adapted_system_type": [
-            "small",
             "standard"
         ],
         "rom": "1024KB",
@@ -38,8 +37,8 @@
                 "bundle_framework",
                 "common_event_service",
                 "config_policy",
-                "c_utils",
                 "cJSON",
+                "c_utils",
                 "drivers_interface_battery",
                 "drivers_interface_display",
                 "drivers_interface_input",
