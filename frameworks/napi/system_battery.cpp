@@ -239,7 +239,9 @@ static napi_value GetStatus(napi_env env, napi_callback_info info)
         env,
         nullptr,
         resource,
-        [](napi_env env, void *data) {},
+        [](napi_env env, void *data) {
+	    BATTERY_HILOGD(FEATURE_BATT_INFO, "async_work callback function is called");
+	},
         [](napi_env env, napi_status status, void *data) {
             SystemBattery *asyncInfo = reinterpret_cast<SystemBattery*>(data);
             if (asyncInfo != nullptr) {
