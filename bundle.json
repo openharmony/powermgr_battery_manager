@@ -37,6 +37,7 @@
                 "bundle_framework",
                 "common_event_service",
                 "config_policy",
+                "cJSON",
                 "c_utils",
                 "drivers_interface_battery",
                 "drivers_interface_display",
@@ -50,18 +51,16 @@
                 "hilog",
                 "ipc",
                 "init",
+                "json",
+                "jsoncpp",
+                "libdrm",
+                "libpng",
                 "miscdevice",
                 "napi",
                 "power_manager",
                 "safwk",
                 "samgr",
                 "ui_lite"
-            ],
-            "third_party": [
-                "cJSON",
-                "jsoncpp",
-                "libdrm",
-                "libpng"
             ]
         },
         "build": {
