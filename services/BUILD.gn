@@ -45,10 +45,7 @@ ohos_shared_library("batteryservice") {
 
   public_configs = [ ":batterysrv_public_config" ]
 
-  deps = [
-    "${battery_service_zidl}:batterysrv_stub",
-    "//third_party/jsoncpp:jsoncpp",
-  ]
+  deps = [ "${battery_service_zidl}:batterysrv_stub" ]
 
   external_deps = [ "power_manager:power_permission" ]
   external_deps += [
@@ -67,6 +64,7 @@ ohos_shared_library("batteryservice") {
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "ipc:ipc_core",
+    "jsoncpp:jsoncpp",
     "miscdevice:light_interface_native",
     "power_manager:power_ffrt",
     "power_manager:power_sysparam",
