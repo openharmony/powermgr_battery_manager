@@ -464,7 +464,7 @@ std::string BatteryService::GetBatteryConfig(const std::string& sceneName)
         return "";
     }
 
-    BATTERY_HILOGI(FEATURE_BATT_INFO, "Enter GetBatteryConfig");
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter GetBatteryConfig");
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
