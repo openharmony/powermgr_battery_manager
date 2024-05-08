@@ -434,6 +434,7 @@ public:
     static constexpr const char* COMMON_EVENT_KEY_HEALTH_STATE = "healthState";
     static constexpr const char* COMMON_EVENT_KEY_PLUGGED_TYPE = "pluggedType";
     static constexpr const char* COMMON_EVENT_KEY_VOLTAGE = "voltage";
+    static constexpr const char* COMMON_EVENT_KEY_PLUGGED_NOW_CURRENT = "nowCurrent";
     static constexpr const char* COMMON_EVENT_KEY_TECHNOLOGY = "technology";
     static constexpr const char* COMMON_EVENT_KEY_TEMPERATURE = "temperature";
     static constexpr const char* COMMON_EVENT_KEY_PRESENT = "present";
@@ -442,7 +443,6 @@ public:
     // Used by native only
     static constexpr const char* COMMON_EVENT_KEY_PLUGGED_MAX_CURRENT = "maxCurrent";
     static constexpr const char* COMMON_EVENT_KEY_PLUGGED_MAX_VOLTAGE = "maxVoltage";
-    static constexpr const char* COMMON_EVENT_KEY_PLUGGED_NOW_CURRENT = "nowCurrent";
     static constexpr const char* COMMON_EVENT_KEY_CHARGE_COUNTER = "chargeCounter";
     static constexpr const char* COMMON_EVENT_KEY_UEVENT = "uevent";
 
