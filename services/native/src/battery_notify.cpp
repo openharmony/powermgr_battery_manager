@@ -107,7 +107,8 @@ void BatteryNotify::HandleUevent(BatteryInfo& info)
         BATTERY_HILOGI(COMP_SVC, "%{public}s decision %{public}s",
             ueventName.c_str(), ueventAct.c_str());
         if (ueventAct == SHUTDOWN) {
-            PowerMgrClient::GetInstance().ShutDownDevice(ueventName);
+            const std::string reason = "POWEROFF_CHARGE_DISABLE";
+            PowerMgrClient::GetInstance().ShutDownDevice(reason);
         } else if (ueventAct == REBOOT) {
             PowerMgrClient::GetInstance().RebootDevice(ueventName);
         } else if (ueventAct == SEND_COMMONEVENT) {
