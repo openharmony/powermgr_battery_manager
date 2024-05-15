@@ -93,131 +93,131 @@ int32_t BatterySrvStub::CheckRequestCode(const uint32_t code, MessageParcel& dat
 int32_t BatterySrvStub::GetCapacityStub(MessageParcel& reply)
 {
     int32_t ret = GetCapacity();
-    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
 int32_t BatterySrvStub::GetChargingStatusStub(MessageParcel& reply)
 {
     BatteryChargeState ret = GetChargingStatus();
-    WRITE_PARCEL_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
 int32_t BatterySrvStub::GetHealthStatusStub(MessageParcel& reply)
 {
     BatteryHealthState ret = GetHealthStatus();
-    WRITE_PARCEL_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
 int32_t BatterySrvStub::GetPluggedTypeStub(MessageParcel& reply)
 {
     BatteryPluggedType ret = GetPluggedType();
-    WRITE_PARCEL_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
 int32_t BatterySrvStub::GetVoltageStub(MessageParcel& reply)
 {
     int32_t ret = GetVoltage();
-    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
 int32_t BatterySrvStub::GetPresentStub(MessageParcel& reply)
 {
     bool ret = GetPresent();
-    WRITE_PARCEL_WITH_RET(reply, Bool, ret, E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Bool, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
 int32_t BatterySrvStub::GetTechnologyStub(MessageParcel& reply)
 {
     std::u16string ret = Str8ToStr16(GetTechnology());
-    WRITE_PARCEL_WITH_RET(reply, String16, ret, E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, String16, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
 int32_t BatterySrvStub::GetBatteryTemperatureStub(MessageParcel& reply)
 {
     int32_t ret = GetBatteryTemperature();
-    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
 int32_t BatterySrvStub::GetBatteryCapacityLevelStub(MessageParcel& reply)
 {
     BatteryCapacityLevel ret = GetCapacityLevel();
-    WRITE_PARCEL_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Uint32, static_cast<uint32_t>(ret), E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
 int64_t BatterySrvStub::GetRemainingChargeTimeStub(MessageParcel& reply)
 {
     int64_t ret = GetRemainingChargeTime();
-    WRITE_PARCEL_WITH_RET(reply, Int64, ret, E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int64, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 int32_t BatterySrvStub::GetNowCurrentStub(MessageParcel& reply)
 {
     int32_t ret = GetNowCurrent();
-    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 int32_t BatterySrvStub::GetRemainEnergyStub(MessageParcel& reply)
 {
     int32_t ret = GetRemainEnergy();
-    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 int32_t BatterySrvStub::GetTotalEnergyStub(MessageParcel& reply)
 {
     int32_t ret = GetTotalEnergy();
-    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 int32_t BatterySrvStub::GetCurrentAverageStub(MessageParcel& reply)
 {
     int32_t ret = GetCurrentAverage();
-    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
 int32_t BatterySrvStub::SetChargeConfigStub(MessageParcel& data, MessageParcel& reply)
 {
     std::u16string sceneName;
-    READ_PARCEL_WITH_RET(data, String16, sceneName, E_READ_PARCEL_ERROR);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(data, String16, sceneName, E_READ_PARCEL_ERROR);
     std::string tempSceneName = Str16ToStr8(sceneName);
 
     std::u16string value;
-    READ_PARCEL_WITH_RET(data, String16, value, E_READ_PARCEL_ERROR);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(data, String16, value, E_READ_PARCEL_ERROR);
     std::string tempValue = Str16ToStr8(value);
 
     int32_t ret = SetBatteryConfig(tempSceneName, tempValue);
-    WRITE_PARCEL_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
 int32_t BatterySrvStub::GetChargeConfigStub(MessageParcel& data, MessageParcel& reply)
 {
     std::u16string sceneName;
-    READ_PARCEL_WITH_RET(data, String16, sceneName, E_READ_PARCEL_ERROR);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(data, String16, sceneName, E_READ_PARCEL_ERROR);
     std::string tempSceneName = Str16ToStr8(sceneName);
 
     std::string result = GetBatteryConfig(tempSceneName);
-    WRITE_PARCEL_WITH_RET(reply, String16, Str8ToStr16(result), E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, String16, Str8ToStr16(result), E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
 int32_t BatterySrvStub::SupportChargeConfigStub(MessageParcel& data, MessageParcel& reply)
 {
     std::u16string sceneName;
-    READ_PARCEL_WITH_RET(data, String16, sceneName, E_READ_PARCEL_ERROR);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(data, String16, sceneName, E_READ_PARCEL_ERROR);
     std::string tempSceneName = Str16ToStr8(sceneName);
 
     bool result = IsBatteryConfigSupported(tempSceneName);
-    WRITE_PARCEL_WITH_RET(reply, Bool, result, E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Bool, result, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 } // namespace PowerMgr
