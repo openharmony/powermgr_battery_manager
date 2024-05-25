@@ -488,7 +488,7 @@ bool BatteryService::IsBatteryConfigSupported(const std::string& sceneName)
         return false;
     }
 
-    BATTERY_HILOGI(FEATURE_BATT_INFO, "Enter IsBatteryConfigSupported");
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter IsBatteryConfigSupported");
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
