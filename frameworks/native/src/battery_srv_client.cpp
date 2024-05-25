@@ -60,7 +60,7 @@ sptr<IBatterySrv> BatterySrvClient::Connect()
 
     proxy_ = iface_cast<IBatterySrv>(remoteObject_);
     deathRecipient_ = drt;
-    BATTERY_HILOGD(COMP_FWK, "Connecting PowerMgrService success");
+    BATTERY_HILOGI(COMP_FWK, "Connecting PowerMgrService success, pid=%{public}d", getpid());
     return proxy_;
 }
 
