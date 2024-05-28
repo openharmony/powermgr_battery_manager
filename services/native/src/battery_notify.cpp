@@ -169,7 +169,6 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
     Want want;
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CAPACITY, info.GetCapacity());
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_VOLTAGE, info.GetVoltage());
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_NOW_CURRENT, info.GetNowCurrent());
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_TEMPERATURE, info.GetTemperature());
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_HEALTH_STATE, static_cast<int32_t>(info.GetHealthState()));
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_TYPE, static_cast<int32_t>(info.GetPluggedType()));
