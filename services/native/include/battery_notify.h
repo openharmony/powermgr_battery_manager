@@ -43,6 +43,7 @@ private:
     bool PublishDischargingEvent(const BatteryInfo& info) const;
     bool PublishChargeTypeChangedEvent(const BatteryInfo& info);
     bool IsCommonEventServiceAbilityExist() const;
+    bool PublishCustomEvent(const BatteryInfo& info) const;
 
     int32_t lowCapacity_ = -1;
     ChargeType batteryInfoChargeType_ = ChargeType::NONE;
