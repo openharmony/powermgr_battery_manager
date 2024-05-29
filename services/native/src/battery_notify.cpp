@@ -51,6 +51,8 @@ const std::string POWER_SUPPLY = "SUBSYSTEM=power_supply";
 const std::string SHUTDOWN = "shutdown";
 const std::string REBOOT = "reboot";
 const std::string SEND_COMMONEVENT = "sendcommonevent";
+const std::string SEND_CUSTOMEVENT = "sendcustomevent";
+const std::string NAME_CUSTOME_EVENT = "usual.event.battery.custom";
 sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 
 BatteryNotify::BatteryNotify()
@@ -114,6 +116,9 @@ void BatteryNotify::HandleUevent(BatteryInfo& info)
         } else if (ueventAct == SEND_COMMONEVENT) {
             info.SetUevent(ueventName);
             PublishChangedEvent(info);
+        } else if (ueventAct == SEND_CUSTOMEVENT) {
+            info.SetUevent(ueventName);
+            PublishCustomEvent(info);
         } else {
             BATTERY_HILOGE(COMP_SVC, "undefine uevent act %{public}s", ueventAct.c_str());
         }
@@ -414,6 +419,23 @@ bool BatteryNotify::PublishDischargingEvent(const BatteryInfo& info) const
     }
 
     g_batteryDischargingOnce = true;
+    return isSuccess;
+}
+
+bool BatteryNotify::PublishCustomEvent(const BatteryInfo& info) const
+{
+    Want want;
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_UEVENT, info.GetUevent());
+    want.SetAction(NAME_CUSTOME_EVENT);
+    CommonEventData data;
+    data.SetWant(want);
+    CommonEventPublishInfo publishInfo;
+    publishInfo.SetOrdered(false);
+
+    bool isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
+    if (!isSuccess) {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "failed to publish battery custom event");
+    }
     return isSuccess;
 }
 } // namespace PowerMgr
