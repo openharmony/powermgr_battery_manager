@@ -631,11 +631,6 @@ int32_t BatteryService::GetCurrentAverage()
 int32_t BatteryService::GetNowCurrent()
 {
     int32_t nowCurr = INVALID_BATT_INT_VALUE;
-    if (!Permission::IsSystem()) {
-        BATTERY_HILOGD(FEATURE_BATT_INFO, "GetNowCurrent nowCurr: %{public}d", nowCurr);
-        return nowCurr;
-    }
-
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
