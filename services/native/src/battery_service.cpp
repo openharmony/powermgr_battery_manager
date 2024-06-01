@@ -100,7 +100,6 @@ void BatteryService::OnStart()
         return;
     }
     AddSystemAbilityListener(MISCDEVICE_SERVICE_ABILITY_ID);
-    InitBatteryInfo();
     ready_ = true;
 }
 
@@ -278,6 +277,7 @@ bool BatteryService::RegisterHdiStatusListener()
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
                     SetLowCapacityThreshold();
 #endif
+                    InitBatteryInfo();
                     return;
                 };
                 FFRTUtils::SubmitTask(task);
@@ -408,7 +408,7 @@ int32_t BatteryService::GetCapacity()
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
-        return ERR_NO_INIT;
+        return batteryInfo_.GetCapacity();
     }
     int32_t capacity = BATTERY_FULL_CAPACITY;
     iBatteryInterface_->GetCapacity(capacity);
@@ -593,7 +593,7 @@ int32_t BatteryService::GetBatteryTemperature()
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
-        return ERR_NO_INIT;
+        return batteryInfo_.GetTemperature();
     }
     int32_t temperature = INVALID_BATT_INT_VALUE;
     iBatteryInterface_->GetTemperature(temperature);
@@ -610,7 +610,7 @@ int32_t BatteryService::GetTotalEnergy()
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
-        return ERR_NO_INIT;
+        return batteryInfo_.GetTotalEnergy();
     }
     iBatteryInterface_->GetTotalEnergy(totalEnergy);
     return totalEnergy;
@@ -621,7 +621,7 @@ int32_t BatteryService::GetCurrentAverage()
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
-        return ERR_NO_INIT;
+        return batteryInfo_.GetCurAverage();
     }
     int32_t curAverage = INVALID_BATT_INT_VALUE;
     iBatteryInterface_->GetCurrentAverage(curAverage);
@@ -639,7 +639,7 @@ int32_t BatteryService::GetNowCurrent()
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
-        return ERR_NO_INIT;
+        return batteryInfo_.GetNowCurrent();
     }
     iBatteryInterface_->GetCurrentNow(nowCurr);
     return nowCurr;
@@ -655,7 +655,7 @@ int32_t BatteryService::GetRemainEnergy()
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
-        return ERR_NO_INIT;
+        return batteryInfo_.GetRemainEnergy();
     }
     iBatteryInterface_->GetRemainEnergy(remainEnergy);
     return remainEnergy;
