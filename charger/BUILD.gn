@@ -64,8 +64,8 @@ ohos_executable("charger") {
       has_graphic_surface_part && has_ui_lite_part) {
     defines += [ "ENABLE_CHARGER" ]
     external_deps += [
-      "drivers_interface_display:display_composer_idl_headers",
       "drivers_interface_display:libdisplay_composer_hdi_impl",
+      "drivers_interface_display:libdisplay_composer_proxy_1.0",
       "drivers_interface_light:liblight_proxy_1.0",
       "graphic_surface:buffer_handle",
       "libdrm:libdrm",
