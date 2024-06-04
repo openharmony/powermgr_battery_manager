@@ -47,7 +47,7 @@ int32_t BatterySrvProxy::GetCapacity()
         return INVALID_BATT_INT_VALUE;
     }
     int32_t capacity = INVALID_BATT_INT_VALUE;
-    READ_PARCEL_WITH_RET(reply, Int32, capacity, INVALID_BATT_INT_VALUE);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int32, capacity, INVALID_BATT_INT_VALUE);
     return capacity;
 }
 
@@ -72,7 +72,7 @@ BatteryChargeState BatterySrvProxy::GetChargingStatus()
         return BatteryChargeState::CHARGE_STATE_BUTT;
     }
     uint32_t chargingState = static_cast<uint32_t>(BatteryChargeState::CHARGE_STATE_BUTT);
-    READ_PARCEL_WITH_RET(reply, Uint32, chargingState, BatteryChargeState::CHARGE_STATE_BUTT);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Uint32, chargingState, BatteryChargeState::CHARGE_STATE_BUTT);
     return static_cast<BatteryChargeState>(chargingState);
 }
 
@@ -97,7 +97,7 @@ BatteryHealthState BatterySrvProxy::GetHealthStatus()
         return BatteryHealthState::HEALTH_STATE_BUTT;
     }
     uint32_t healthStatus = static_cast<uint32_t>(BatteryHealthState::HEALTH_STATE_BUTT);
-    READ_PARCEL_WITH_RET(reply, Uint32, healthStatus, BatteryHealthState::HEALTH_STATE_BUTT);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Uint32, healthStatus, BatteryHealthState::HEALTH_STATE_BUTT);
     return static_cast<BatteryHealthState>(healthStatus);
 }
 
@@ -122,7 +122,7 @@ BatteryPluggedType BatterySrvProxy::GetPluggedType()
         return BatteryPluggedType::PLUGGED_TYPE_BUTT;
     }
     uint32_t pluggedType = static_cast<uint32_t>(BatteryPluggedType::PLUGGED_TYPE_BUTT);
-    READ_PARCEL_WITH_RET(reply, Uint32, pluggedType, BatteryPluggedType::PLUGGED_TYPE_BUTT);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Uint32, pluggedType, BatteryPluggedType::PLUGGED_TYPE_BUTT);
     return static_cast<BatteryPluggedType>(pluggedType);
 }
 
@@ -147,7 +147,7 @@ int32_t BatterySrvProxy::GetVoltage()
         return INVALID_BATT_INT_VALUE;
     }
     int32_t voltage = INVALID_BATT_INT_VALUE;
-    READ_PARCEL_WITH_RET(reply, Int32, voltage, INVALID_BATT_INT_VALUE);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int32, voltage, INVALID_BATT_INT_VALUE);
     return voltage;
 }
 
@@ -172,7 +172,7 @@ bool BatterySrvProxy::GetPresent()
         return INVALID_BATT_BOOL_VALUE;
     }
     bool present = INVALID_BATT_BOOL_VALUE;
-    READ_PARCEL_WITH_RET(reply, Bool, present, INVALID_BATT_BOOL_VALUE);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Bool, present, INVALID_BATT_BOOL_VALUE);
     return present;
 }
 
@@ -197,7 +197,7 @@ std::string BatterySrvProxy::GetTechnology()
         return INVALID_STRING_VALUE;
     }
     std::u16string technology = Str8ToStr16(INVALID_STRING_VALUE);
-    READ_PARCEL_WITH_RET(reply, String16, technology, INVALID_STRING_VALUE);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, String16, technology, INVALID_STRING_VALUE);
     return Str16ToStr8(technology);
 }
 
@@ -222,7 +222,7 @@ int32_t BatterySrvProxy::GetBatteryTemperature()
         return INVALID_BATT_TEMP_VALUE;
     }
     int32_t temperature = INVALID_BATT_TEMP_VALUE;
-    READ_PARCEL_WITH_RET(reply, Int32, temperature, INVALID_BATT_TEMP_VALUE);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int32, temperature, INVALID_BATT_TEMP_VALUE);
     return temperature;
 }
 
@@ -247,7 +247,7 @@ BatteryCapacityLevel BatterySrvProxy::GetCapacityLevel()
         return BatteryCapacityLevel::LEVEL_NONE;
     }
     uint32_t level = static_cast<uint32_t>(BatteryCapacityLevel::LEVEL_NONE);
-    READ_PARCEL_WITH_RET(reply, Uint32, level, BatteryCapacityLevel::LEVEL_NONE);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Uint32, level, BatteryCapacityLevel::LEVEL_NONE);
     return static_cast<BatteryCapacityLevel>(level);
 }
 
@@ -273,7 +273,7 @@ int64_t BatterySrvProxy::GetRemainingChargeTime()
         return INVALID_REMAINING_CHARGE_TIME_VALUE;
     }
     int64_t time = INVALID_REMAINING_CHARGE_TIME_VALUE;
-    READ_PARCEL_WITH_RET(reply, Int64, time, INVALID_REMAINING_CHARGE_TIME_VALUE);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int64, time, INVALID_REMAINING_CHARGE_TIME_VALUE);
     return time;
 }
 
@@ -298,7 +298,7 @@ int32_t BatterySrvProxy::GetTotalEnergy()
         return INVALID_BATT_INT_VALUE;
     }
     int32_t totalEnergy = INVALID_BATT_INT_VALUE;
-    READ_PARCEL_WITH_RET(reply, Int32, totalEnergy, INVALID_BATT_INT_VALUE);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int32, totalEnergy, INVALID_BATT_INT_VALUE);
     return totalEnergy;
 }
 
@@ -323,7 +323,7 @@ int32_t BatterySrvProxy::GetCurrentAverage()
         return INVALID_BATT_INT_VALUE;
     }
     int32_t curAverage = INVALID_BATT_INT_VALUE;
-    READ_PARCEL_WITH_RET(reply, Int32, curAverage, INVALID_BATT_INT_VALUE);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int32, curAverage, INVALID_BATT_INT_VALUE);
     return curAverage;
 }
 
@@ -348,7 +348,7 @@ int32_t BatterySrvProxy::GetNowCurrent()
         return INVALID_BATT_INT_VALUE;
     }
     int32_t nowCurr = INVALID_BATT_INT_VALUE;
-    READ_PARCEL_WITH_RET(reply, Int32, nowCurr, INVALID_BATT_INT_VALUE);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int32, nowCurr, INVALID_BATT_INT_VALUE);
     return nowCurr;
 }
 
@@ -373,7 +373,7 @@ int32_t BatterySrvProxy::GetRemainEnergy()
         return INVALID_BATT_INT_VALUE;
     }
     int32_t remainEnergy = INVALID_BATT_INT_VALUE;
-    READ_PARCEL_WITH_RET(reply, Int32, remainEnergy, INVALID_BATT_INT_VALUE);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int32, remainEnergy, INVALID_BATT_INT_VALUE);
     return remainEnergy;
 }
 
@@ -390,8 +390,8 @@ int32_t BatterySrvProxy::SetBatteryConfig(const std::string& sceneName, const st
         return INVALID_BATT_INT_VALUE;
     }
 
-    WRITE_PARCEL_WITH_RET(data, String16, Str8ToStr16(sceneName), E_WRITE_PARCEL_ERROR);
-    WRITE_PARCEL_WITH_RET(data, String16, Str8ToStr16(value), E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(data, String16, Str8ToStr16(sceneName), E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(data, String16, Str8ToStr16(value), E_WRITE_PARCEL_ERROR);
 
     int ret = remote->SendRequest(
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::SET_BATTERY_CONFIG),
@@ -401,7 +401,7 @@ int32_t BatterySrvProxy::SetBatteryConfig(const std::string& sceneName, const st
         return INVALID_BATT_INT_VALUE;
     }
 
-    READ_PARCEL_WITH_RET(reply, Int32, ret, INVALID_BATT_INT_VALUE);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int32, ret, INVALID_BATT_INT_VALUE);
     return ret;
 }
 
@@ -418,7 +418,7 @@ std::string BatterySrvProxy::GetBatteryConfig(const std::string& sceneName)
         return "";
     }
 
-    WRITE_PARCEL_WITH_RET(data, String16, Str8ToStr16(sceneName), "");
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(data, String16, Str8ToStr16(sceneName), "");
 
     int ret = remote->SendRequest(
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::GET_BATTERY_CONFIG),
@@ -429,7 +429,7 @@ std::string BatterySrvProxy::GetBatteryConfig(const std::string& sceneName)
     }
 
     std::u16string result;
-    READ_PARCEL_WITH_RET(reply, String16, result, "");
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, String16, result, "");
     return Str16ToStr8(result);
 }
 
@@ -446,7 +446,7 @@ bool BatterySrvProxy::IsBatteryConfigSupported(const std::string& sceneName)
         return false;
     }
 
-    WRITE_PARCEL_WITH_RET(data, String16, Str8ToStr16(sceneName), false);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(data, String16, Str8ToStr16(sceneName), false);
 
     int ret = remote->SendRequest(
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::SUPPORT_BATTERY_CONFIG),
@@ -457,7 +457,7 @@ bool BatterySrvProxy::IsBatteryConfigSupported(const std::string& sceneName)
     }
 
     bool result = false;
-    READ_PARCEL_WITH_RET(reply, Bool, result, false);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Bool, result, false);
     return result;
 }
 } // namespace PowerMgr
