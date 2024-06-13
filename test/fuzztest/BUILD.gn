@@ -20,6 +20,7 @@ group("fuzztest") {
 
   deps += [
     # deps file
+    "getbatteryconfig_fuzzer:GetBatteryConfigFuzzTest",
     "getbatterytemperature_fuzzer:GetBatteryTemperatureFuzzTest",
     "getcapacity_fuzzer:GetCapacityFuzzTest",
     "getcapacitylevel_fuzzer:GetCapacityLevelFuzzTest",
@@ -34,5 +35,7 @@ group("fuzztest") {
     "gettechnology_fuzzer:GetTechnologyFuzzTest",
     "gettotalenergy_fuzzer:GetTotalEnergyFuzzTest",
     "getvoltage_fuzzer:GetVoltageFuzzTest",
+    "isbatteryconfigsupported_fuzzer:IsBatteryConfigSupportedFuzzTest",
+    "setbatteryconfig_fuzzer:SetBatteryConfigFuzzTest",
   ]
 }
