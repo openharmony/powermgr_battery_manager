@@ -177,7 +177,7 @@ void BatteryService::InitConfig()
 
 int32_t BatteryService::HandleBatteryCallbackEvent(const V2_0::BatteryInfo& event)
 {
-    if (isMockUnplugged_ || isMockCapacity_) {
+    if (isMockUnplugged_ || isMockCapacity_ || isMockUevent_) {
         return ERR_OK;
     }
 
@@ -209,7 +209,9 @@ void BatteryService::ConvertingEvent(const V2_0::BatteryInfo& event)
     batteryInfo_.SetTechnology(event.technology);
     batteryInfo_.SetNowCurrent(event.curNow);
     batteryInfo_.SetChargeType(GetChargeType());
-    batteryInfo_.SetUevent(event.uevent);
+    if (!isMockUevent_) {
+        batteryInfo_.SetUevent(event.uevent);
+    }
 }
 
 void BatteryService::InitBatteryInfo()
@@ -764,8 +766,9 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
     bool getBatteryInfo = batteryDump.GetBatteryInfo(fd, g_service, args);
     bool unplugged = batteryDump.MockUnplugged(fd, g_service, args);
     bool mockedCapacity = batteryDump.MockCapacity(fd, g_service, args);
+    bool mockedUevent = batteryDump.MockUevent(fd, g_service, args);
     bool reset = batteryDump.Reset(fd, g_service, args);
-    bool total = getBatteryInfo + unplugged + mockedCapacity + reset;
+    bool total = getBatteryInfo + unplugged + mockedCapacity + mockedUevent + reset;
     if (!total) {
         dprintf(fd, "cmd param is invalid\n");
         batteryDump.DumpBatteryHelp(fd);
@@ -818,6 +821,21 @@ bool BatteryService::IsMockCapacity()
     return isMockCapacity_;
 }
 
+void BatteryService::MockUevent(const std::string& uevent)
+{
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (!iBatteryInterface_) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
+        return;
+    }
+    isMockUevent_ = true;
+    V2_0::BatteryInfo event;
+    iBatteryInterface_->GetBatteryInfo(event);
+    ConvertingEvent(event);
+    batteryInfo_.SetUevent(uevent);
+    HandleBatteryInfo();
+}
+
 void BatteryService::Reset()
 {
     std::shared_lock<std::shared_mutex> lock(mutex_);
@@ -827,6 +845,7 @@ void BatteryService::Reset()
     }
     isMockUnplugged_ = false;
     isMockCapacity_ = false;
+    isMockUevent_ = false;
     V2_0::BatteryInfo event;
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);

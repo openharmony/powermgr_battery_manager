@@ -35,6 +35,7 @@ public:
     bool MockUnplugged(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
     bool Reset(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
     bool MockCapacity(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
+    bool MockUevent(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
 
 private:
     void DumpCurrentTime(int32_t fd);
