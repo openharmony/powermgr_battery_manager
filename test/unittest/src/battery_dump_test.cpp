@@ -227,5 +227,49 @@ HWTEST_F(BatteryDumpTest, BatteryDump014, TestSize.Level1)
     std::vector<std::u16string> args;
     EXPECT_FALSE(batteryDump.MockCapacity(fd, g_service, args));
 }
+
+/**
+ * @tc.name: BatteryDump015
+ * @tc.desc: Dump parameter is empty, Uevent
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryDumpTest, BatteryDump015, TestSize.Level1)
+{
+    BatteryDump& batteryDump = BatteryDump::GetInstance();
+    int32_t fd = 1;
+    std::vector<std::u16string> args;
+    EXPECT_FALSE(batteryDump.MockUevent(fd, g_service, args));
+}
+
+/**
+ * @tc.name: BatteryDump016
+ * @tc.desc: Test functions Dump, Uevent cmd normal
+ * @tc.type: FUNC
+ */
+static HWTEST_F(BatteryDumpTest, BatteryDump016, TestSize.Level1)
+{
+    int32_t fd = 1;
+    std::vector<std::u16string> args;
+    std::u16string argParam = u"--uevent";
+    std::u16string argCapacity = u"BATTERY_UNDER_VOLTAGE=3$sendcommonevent";
+    args.push_back(argParam);
+    args.push_back(argCapacity);
+    EXPECT_EQ(g_service->Dump(fd, args), ERR_OK);
+}
+
+/**
+ * @tc.name: BatteryDump017
+ * @tc.desc: Test functions Dump, Uevent cmd invalid
+ * @tc.type: FUNC
+ */
+static HWTEST_F(BatteryDumpTest, BatteryDump017, TestSize.Level1)
+{
+    int32_t fd = 1;
+    std::vector<std::u16string> args;
+    std::u16string arg = u"--uevent";
+    args.push_back(arg);
+    EXPECT_EQ(g_service->Dump(fd, args), ERR_NO_INIT);
+}
+
 } // namespace PowerMgr
 } // namespace OHOS
