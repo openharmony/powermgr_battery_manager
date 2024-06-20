@@ -85,6 +85,7 @@ public:
     void MockUnplugged();
     bool IsMockCapacity();
     void MockCapacity(int32_t capacity);
+    void MockUevent(const std::string& uevent);
     void Reset();
     void VibratorInit();
 private:
@@ -117,6 +118,7 @@ private:
     bool isLowPower_ { false };
     bool isMockUnplugged_ { false };
     bool isMockCapacity_ { false };
+    bool isMockUevent_ { false };
     bool chargeFlag_ { false };
     int32_t commEventRetryTimes_ { 0 };
     int32_t lastCapacity_ { 0 };

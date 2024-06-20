@@ -28,6 +28,7 @@ constexpr uint32_t MS_NS = 1000000;
 constexpr int32_t CAPACITY_DUMP_PARAM_SIZE = 2;
 constexpr int32_t CAPACITY_LIMIT_MIN = 0;
 constexpr int32_t CAPACITY_LIMIT_MAX = 100;
+constexpr int32_t UEVENT_DUMP_PARAM_SIZE = 2;
 }
 
 void BatteryDump::DumpBatteryHelp(int32_t fd)
@@ -38,6 +39,7 @@ void BatteryDump::DumpBatteryHelp(int32_t fd)
     dprintf(fd, "      -u: unplug battery charging state\n");
     dprintf(fd, "      -r: reset battery state\n");
     dprintf(fd, "      --capacity <capacity>: set battery capacity, the capacity range [0, 100]\n");
+    dprintf(fd, "      --uevent <uevent>: set battery uevent\n");
 }
 
 void BatteryDump::DumpCurrentTime(int32_t fd)
@@ -135,6 +137,18 @@ bool BatteryDump::MockCapacity(int32_t fd, sptr<BatteryService> &service, const 
     }
     service->MockCapacity(capacity);
     dprintf(fd, "battery capacity %d \n", capacity);
+    return true;
+}
+
+bool BatteryDump::MockUevent(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args)
+{
+    if ((args.empty()) || args.size() != UEVENT_DUMP_PARAM_SIZE || (args[0].compare(u"--uevent") != 0)) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "args cannot be empty or invalid");
+        return false;
+    }
+    std::string uevent = Str16ToStr8(args[1]);
+    service->MockUevent(uevent);
+    dprintf(fd, "battery uevent %s \n", uevent.c_str());
     return true;
 }
 }  // namespace PowerMgr
