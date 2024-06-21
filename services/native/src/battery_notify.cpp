@@ -62,9 +62,7 @@ BatteryNotify::BatteryNotify()
 
 int32_t BatteryNotify::PublishEvents(BatteryInfo& info)
 {
-    if (g_commonEventInitSuccess) {
-        BATTERY_HILOGI(COMP_SVC, "common event service ability init success");
-    } else {
+    if (!g_commonEventInitSuccess) {
         if (!IsCommonEventServiceAbilityExist()) {
             return ERR_NO_INIT;
         }
@@ -161,7 +159,11 @@ bool BatteryNotify::IsCommonEventServiceAbilityExist() const
         return false;
     }
 
-    g_commonEventInitSuccess = true;
+    if (!g_commonEventInitSuccess) {
+        BATTERY_HILOGI(COMP_SVC, "common event service ability init success");
+        g_commonEventInitSuccess = true;
+    }
+
     return true;
 }
 
