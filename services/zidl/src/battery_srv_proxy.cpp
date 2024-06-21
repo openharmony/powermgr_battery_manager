@@ -43,7 +43,7 @@ int32_t BatterySrvProxy::GetCapacity()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_CAPACITY),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return INVALID_BATT_INT_VALUE;
     }
     int32_t capacity = INVALID_BATT_INT_VALUE;
@@ -68,7 +68,7 @@ BatteryChargeState BatterySrvProxy::GetChargingStatus()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_CHARGING_STATUS),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return BatteryChargeState::CHARGE_STATE_BUTT;
     }
     uint32_t chargingState = static_cast<uint32_t>(BatteryChargeState::CHARGE_STATE_BUTT);
@@ -93,7 +93,7 @@ BatteryHealthState BatterySrvProxy::GetHealthStatus()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_HEALTH_STATUS),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return BatteryHealthState::HEALTH_STATE_BUTT;
     }
     uint32_t healthStatus = static_cast<uint32_t>(BatteryHealthState::HEALTH_STATE_BUTT);
@@ -118,7 +118,7 @@ BatteryPluggedType BatterySrvProxy::GetPluggedType()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_PLUG_TYPE),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return BatteryPluggedType::PLUGGED_TYPE_BUTT;
     }
     uint32_t pluggedType = static_cast<uint32_t>(BatteryPluggedType::PLUGGED_TYPE_BUTT);
@@ -143,7 +143,7 @@ int32_t BatterySrvProxy::GetVoltage()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_VOLTAGE),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return INVALID_BATT_INT_VALUE;
     }
     int32_t voltage = INVALID_BATT_INT_VALUE;
@@ -168,7 +168,7 @@ bool BatterySrvProxy::GetPresent()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_PRESENT),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return INVALID_BATT_BOOL_VALUE;
     }
     bool present = INVALID_BATT_BOOL_VALUE;
@@ -193,7 +193,7 @@ std::string BatterySrvProxy::GetTechnology()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_TECHNOLOGY),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return INVALID_STRING_VALUE;
     }
     std::u16string technology = Str8ToStr16(INVALID_STRING_VALUE);
@@ -218,7 +218,7 @@ int32_t BatterySrvProxy::GetBatteryTemperature()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_TEMPERATURE),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return INVALID_BATT_TEMP_VALUE;
     }
     int32_t temperature = INVALID_BATT_TEMP_VALUE;
@@ -243,7 +243,7 @@ BatteryCapacityLevel BatterySrvProxy::GetCapacityLevel()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_LEVEL),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return BatteryCapacityLevel::LEVEL_NONE;
     }
     uint32_t level = static_cast<uint32_t>(BatteryCapacityLevel::LEVEL_NONE);
@@ -294,7 +294,7 @@ int32_t BatterySrvProxy::GetTotalEnergy()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_TOTAL_ENERGY),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return INVALID_BATT_INT_VALUE;
     }
     int32_t totalEnergy = INVALID_BATT_INT_VALUE;
@@ -319,7 +319,7 @@ int32_t BatterySrvProxy::GetCurrentAverage()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_CURRENT_AVERAGE),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return INVALID_BATT_INT_VALUE;
     }
     int32_t curAverage = INVALID_BATT_INT_VALUE;
@@ -344,7 +344,7 @@ int32_t BatterySrvProxy::GetNowCurrent()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_CURRENT_NOW),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return INVALID_BATT_INT_VALUE;
     }
     int32_t nowCurr = INVALID_BATT_INT_VALUE;
@@ -369,7 +369,7 @@ int32_t BatterySrvProxy::GetRemainEnergy()
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_REMAIN_ENERGY),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return INVALID_BATT_INT_VALUE;
     }
     int32_t remainEnergy = INVALID_BATT_INT_VALUE;
@@ -397,7 +397,7 @@ int32_t BatterySrvProxy::SetBatteryConfig(const std::string& sceneName, const st
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::SET_BATTERY_CONFIG),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return INVALID_BATT_INT_VALUE;
     }
 
@@ -424,7 +424,7 @@ std::string BatterySrvProxy::GetBatteryConfig(const std::string& sceneName)
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::GET_BATTERY_CONFIG),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return "";
     }
 
@@ -452,7 +452,7 @@ bool BatterySrvProxy::IsBatteryConfigSupported(const std::string& sceneName)
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::SUPPORT_BATTERY_CONFIG),
         data, reply, option);
     if (ret != ERR_OK) {
-        BATTERY_HILOGW(FEATURE_BATT_INFO, "SendRequest failed, error code: %{public}d", ret);
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
         return false;
     }
 
