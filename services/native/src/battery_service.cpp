@@ -443,67 +443,66 @@ void BatteryService::SetLowCapacityThreshold()
 }
 #endif
 
-int32_t BatteryService::SetBatteryConfig(const std::string& sceneName, const std::string& value)
+BatteryError BatteryService::SetBatteryConfig(const std::string& sceneName, const std::string& value)
 {
     if (!Permission::IsSystem()) {
         BATTERY_HILOGI(FEATURE_BATT_INFO, "SetBatteryConfig failed, System permission intercept");
-        return INVALID_BATT_INT_VALUE;
+        return BatteryError::ERR_SYSTEM_API_DENIED;
     }
 
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter SetBatteryConfig");
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
-        return ERR_NO_INIT;
+        return BatteryError::ERR_FAILURE;
     }
-    return iBatteryInterface_->SetBatteryConfig(sceneName, value);
+    return iBatteryInterface_->SetBatteryConfig(sceneName, value) == ERR_OK ?
+        BatteryError::ERR_OK : BatteryError::ERR_FAILURE;
 }
 
-std::string BatteryService::GetBatteryConfig(const std::string& sceneName)
+BatteryError BatteryService::GetBatteryConfig(const std::string& sceneName, std::string& result)
 {
     if (!Permission::IsSystem()) {
         BATTERY_HILOGI(FEATURE_BATT_INFO, "GetBatteryConfig failed, System permission intercept");
-        return "";
+        return BatteryError::ERR_SYSTEM_API_DENIED;
     }
 
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter GetBatteryConfig");
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
-        return "";
+        return BatteryError::ERR_FAILURE;
     }
 
-    std::string result;
     int32_t ret = iBatteryInterface_->GetBatteryConfig(sceneName, result);
     if (ret != ERR_OK) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "get charge config failed, key:%{public}s", sceneName.c_str());
-        return "";
+        return BatteryError::ERR_FAILURE;
     }
 
-    return result;
+    return BatteryError::ERR_OK;
 }
 
-bool BatteryService::IsBatteryConfigSupported(const std::string& sceneName)
+BatteryError BatteryService::IsBatteryConfigSupported(const std::string& sceneName, bool& result)
 {
     if (!Permission::IsSystem()) {
         BATTERY_HILOGI(FEATURE_BATT_INFO, "IsBatteryConfigSupported failed, System permission intercept");
-        return false;
+        return BatteryError::ERR_SYSTEM_API_DENIED;
     }
 
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter IsBatteryConfigSupported");
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
-        return false;
+        return BatteryError::ERR_FAILURE;
     }
 
-    bool result = false;
     int32_t ret = iBatteryInterface_->IsBatteryConfigSupported(sceneName, result);
     if (ret != ERR_OK) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "get support charge config failed, key:%{public}s", sceneName.c_str());
-        return false;
+        return BatteryError::ERR_FAILURE;
     }
-    return result;
+    return BatteryError::ERR_OK;
 }
 
 BatteryChargeState BatteryService::GetChargingStatus()
