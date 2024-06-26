@@ -20,6 +20,7 @@
 #include "iremote_broker.h"
 #include "iremote_object.h"
 #include "battery_info.h"
+#include "battery_srv_errors.h"
 
 namespace OHOS {
 namespace PowerMgr {
@@ -39,9 +40,9 @@ public:
     virtual int32_t GetBatteryTemperature() = 0;
     virtual BatteryCapacityLevel GetCapacityLevel() = 0;
     virtual int64_t GetRemainingChargeTime() = 0;
-    virtual int32_t SetBatteryConfig(const std::string& sceneName, const std::string& value)  = 0;
-    virtual std::string GetBatteryConfig(const std::string& sceneName)  = 0;
-    virtual bool IsBatteryConfigSupported(const std::string& featureName)  = 0;
+    virtual BatteryError SetBatteryConfig(const std::string& sceneName, const std::string& value) = 0;
+    virtual BatteryError GetBatteryConfig(const std::string& sceneName, std::string& result) = 0;
+    virtual BatteryError IsBatteryConfigSupported(const std::string& featureName, bool& result)  = 0;
 public:
     DECLARE_INTERFACE_DESCRIPTOR(u"ohos.powermgr.IBatterySrv");
 };

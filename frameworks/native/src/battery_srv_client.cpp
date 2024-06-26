@@ -177,25 +177,25 @@ int64_t BatterySrvClient::GetRemainingChargeTime()
     return proxy->GetRemainingChargeTime();
 }
 
-int32_t BatterySrvClient::SetBatteryConfig(const std::string& sceneName, const std::string& value)
+BatteryError BatterySrvClient::SetBatteryConfig(const std::string& sceneName, const std::string& value)
 {
     auto proxy = Connect();
-    RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_INT_VALUE);
+    RETURN_IF_WITH_RET(proxy == nullptr, BatteryError::ERR_CONNECTION_FAIL);
     return proxy->SetBatteryConfig(sceneName, value);
 }
 
-std::string BatterySrvClient::GetBatteryConfig(const std::string& sceneName)
+BatteryError BatterySrvClient::GetBatteryConfig(const std::string& sceneName, std::string& result)
 {
     auto proxy = Connect();
-    RETURN_IF_WITH_RET(proxy == nullptr, "");
-    return proxy->GetBatteryConfig(sceneName);
+    RETURN_IF_WITH_RET(proxy == nullptr, BatteryError::ERR_CONNECTION_FAIL);
+    return proxy->GetBatteryConfig(sceneName, result);
 }
 
-bool BatterySrvClient::IsBatteryConfigSupported(const std::string& sceneName)
+BatteryError BatterySrvClient::IsBatteryConfigSupported(const std::string& sceneName, bool& result)
 {
     auto proxy = Connect();
-    RETURN_IF_WITH_RET(proxy == nullptr, false);
-    return proxy->IsBatteryConfigSupported(sceneName);
+    RETURN_IF_WITH_RET(proxy == nullptr, BatteryError::ERR_CONNECTION_FAIL);
+    return proxy->IsBatteryConfigSupported(sceneName, result);
 }
 }  // namespace PowerMgr
 }  // namespace OHOS
