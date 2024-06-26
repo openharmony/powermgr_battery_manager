@@ -240,12 +240,11 @@ HWTEST_F(BatteryLightTest, BatteryLight009, TestSize.Level1)
 HWTEST_F(BatteryLightTest, BatteryLight010, TestSize.Level1)
 {
     BatteryLight light;
-    uint32_t initColor = light.GetLightColor();
-    GTEST_LOG_(INFO) << "initial:" << initColor;
+    GTEST_LOG_(INFO) << "initial:" << light.GetLightColor();
     light.TurnOn(123);
-    EXPECT_EQ(light.GetLightColor(), initColor);
+    EXPECT_EQ(light.GetLightColor(), BatteryConfigTest::LIGHT_OFF);
     light.TurnOff();
-    EXPECT_EQ(light.GetLightColor(), initColor);
+    EXPECT_EQ(light.GetLightColor(), BatteryConfigTest::LIGHT_OFF);
 }
 } // namespace PowerMgr
 } // namespace OHOS
