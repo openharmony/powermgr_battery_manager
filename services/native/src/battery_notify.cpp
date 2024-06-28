@@ -52,7 +52,7 @@ const std::string SHUTDOWN = "shutdown";
 const std::string REBOOT = "reboot";
 const std::string SEND_COMMONEVENT = "sendcommonevent";
 const std::string SEND_CUSTOMEVENT = "sendcustomevent";
-const std::string NAME_CUSTOME_EVENT = "usual.event.battery.custom";
+const std::string BATTERY_CUSTOM_EVENT = "usual.event.battery.custom";
 sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 
 BatteryNotify::BatteryNotify()
@@ -426,7 +426,7 @@ bool BatteryNotify::PublishCustomEvent(const BatteryInfo& info) const
 {
     Want want;
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_UEVENT, info.GetUevent());
-    want.SetAction(NAME_CUSTOME_EVENT);
+    want.SetAction(BATTERY_CUSTOM_EVENT);
     CommonEventData data;
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
