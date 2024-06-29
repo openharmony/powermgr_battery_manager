@@ -194,8 +194,8 @@ int32_t BatterySrvStub::SetChargeConfigStub(MessageParcel& data, MessageParcel& 
     RETURN_IF_READ_PARCEL_FAILED_WITH_RET(data, String16, value, E_READ_PARCEL_ERROR);
     std::string tempValue = Str16ToStr8(value);
 
-    int32_t ret = SetBatteryConfig(tempSceneName, tempValue);
-    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int32, ret, E_WRITE_PARCEL_ERROR);
+    BatteryError error = SetBatteryConfig(tempSceneName, tempValue);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int32, static_cast<int32_t>(error), E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
 
@@ -205,7 +205,9 @@ int32_t BatterySrvStub::GetChargeConfigStub(MessageParcel& data, MessageParcel& 
     RETURN_IF_READ_PARCEL_FAILED_WITH_RET(data, String16, sceneName, E_READ_PARCEL_ERROR);
     std::string tempSceneName = Str16ToStr8(sceneName);
 
-    std::string result = GetBatteryConfig(tempSceneName);
+    std::string result;
+    BatteryError error = GetBatteryConfig(tempSceneName, result);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int32, static_cast<int32_t>(error), E_WRITE_PARCEL_ERROR);
     RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, String16, Str8ToStr16(result), E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }
@@ -216,7 +218,9 @@ int32_t BatterySrvStub::SupportChargeConfigStub(MessageParcel& data, MessageParc
     RETURN_IF_READ_PARCEL_FAILED_WITH_RET(data, String16, sceneName, E_READ_PARCEL_ERROR);
     std::string tempSceneName = Str16ToStr8(sceneName);
 
-    bool result = IsBatteryConfigSupported(tempSceneName);
+    bool result = false;
+    BatteryError error = IsBatteryConfigSupported(tempSceneName, result);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Int32, static_cast<int32_t>(error), E_WRITE_PARCEL_ERROR);
     RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(reply, Bool, result, E_WRITE_PARCEL_ERROR);
     return ERR_OK;
 }

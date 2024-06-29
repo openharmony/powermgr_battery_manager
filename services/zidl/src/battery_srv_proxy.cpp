@@ -377,88 +377,93 @@ int32_t BatterySrvProxy::GetRemainEnergy()
     return remainEnergy;
 }
 
-int32_t BatterySrvProxy::SetBatteryConfig(const std::string& sceneName, const std::string& value)
+BatteryError BatterySrvProxy::SetBatteryConfig(const std::string& sceneName, const std::string& value)
 {
     sptr<IRemoteObject> remote = Remote();
-    RETURN_IF_WITH_RET(remote == nullptr, INVALID_BATT_INT_VALUE);
+    RETURN_IF_WITH_RET(remote == nullptr, BatteryError::ERR_CONNECTION_FAIL);
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
-        return INVALID_BATT_INT_VALUE;
+        return BatteryError::ERR_CONNECTION_FAIL;
     }
 
-    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(data, String16, Str8ToStr16(sceneName), E_WRITE_PARCEL_ERROR);
-    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(data, String16, Str8ToStr16(value), E_WRITE_PARCEL_ERROR);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(data, String16, Str8ToStr16(sceneName), BatteryError::ERR_CONNECTION_FAIL);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(data, String16, Str8ToStr16(value), BatteryError::ERR_CONNECTION_FAIL);
 
     int ret = remote->SendRequest(
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::SET_BATTERY_CONFIG),
         data, reply, option);
     if (ret != ERR_OK) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
-        return INVALID_BATT_INT_VALUE;
+        return BatteryError::ERR_CONNECTION_FAIL;
     }
 
-    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int32, ret, INVALID_BATT_INT_VALUE);
-    return ret;
+    int32_t error;
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int32, error, BatteryError::ERR_CONNECTION_FAIL);
+    return static_cast<BatteryError>(error);
 }
 
-std::string BatterySrvProxy::GetBatteryConfig(const std::string& sceneName)
+BatteryError BatterySrvProxy::GetBatteryConfig(const std::string& sceneName, std::string& result)
 {
     sptr<IRemoteObject> remote = Remote();
-    RETURN_IF_WITH_RET(remote == nullptr, "");
+    RETURN_IF_WITH_RET(remote == nullptr, BatteryError::ERR_CONNECTION_FAIL);
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
-        return "";
+        return BatteryError::ERR_CONNECTION_FAIL;
     }
 
-    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(data, String16, Str8ToStr16(sceneName), "");
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(data, String16, Str8ToStr16(sceneName), BatteryError::ERR_CONNECTION_FAIL);
 
     int ret = remote->SendRequest(
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::GET_BATTERY_CONFIG),
         data, reply, option);
     if (ret != ERR_OK) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
-        return "";
+        return BatteryError::ERR_CONNECTION_FAIL;
     }
 
-    std::u16string result;
-    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, String16, result, "");
-    return Str16ToStr8(result);
+    std::u16string tempResult;
+    int32_t error;
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int32, error, BatteryError::ERR_CONNECTION_FAIL);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, String16, tempResult, BatteryError::ERR_CONNECTION_FAIL);
+    result = Str16ToStr8(tempResult);
+    return static_cast<BatteryError>(error);
 }
 
-bool BatterySrvProxy::IsBatteryConfigSupported(const std::string& sceneName)
+BatteryError BatterySrvProxy::IsBatteryConfigSupported(const std::string& sceneName, bool& result)
 {
     sptr<IRemoteObject> remote = Remote();
-    RETURN_IF_WITH_RET(remote == nullptr, false);
+    RETURN_IF_WITH_RET(remote == nullptr, BatteryError::ERR_CONNECTION_FAIL);
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
 
     if (!data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor())) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "Write descriptor failed");
-        return false;
+        return BatteryError::ERR_CONNECTION_FAIL;
     }
 
-    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(data, String16, Str8ToStr16(sceneName), false);
+    RETURN_IF_WRITE_PARCEL_FAILED_WITH_RET(data, String16, Str8ToStr16(sceneName), BatteryError::ERR_CONNECTION_FAIL);
 
     int ret = remote->SendRequest(
         static_cast<int>(PowerMgr::BatterySrvInterfaceCode::SUPPORT_BATTERY_CONFIG),
         data, reply, option);
     if (ret != ERR_OK) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "%{public}s: SendRequest failed with ret=%{public}d", __func__, ret);
-        return false;
+        return BatteryError::ERR_CONNECTION_FAIL;
     }
 
-    bool result = false;
-    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Bool, result, false);
-    return result;
+    int32_t error;
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Int32, error, BatteryError::ERR_CONNECTION_FAIL);
+    RETURN_IF_READ_PARCEL_FAILED_WITH_RET(reply, Bool, result, BatteryError::ERR_CONNECTION_FAIL);
+    return static_cast<BatteryError>(error);
 }
 } // namespace PowerMgr
 } // namespace OHOS
