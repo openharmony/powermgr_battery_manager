@@ -733,13 +733,13 @@ HWTEST_F (BatteryClientTest, BatteryClient021, TestSize.Level1)
 
     string sceneName = "testScene";
     string value = "";
-    auto ret = BatterySrvClient.SetBatteryConfig(sceneName, value);
+    int ret = (int)BatterySrvClient.SetBatteryConfig(sceneName, value);
     EXPECT_NE(ret, 0);
 
     sceneName = "wireless";
-    value = BatterySrvClient.GetBatteryConfig(sceneName);
+    ret = (int)BatterySrvClient.GetBatteryConfig(sceneName, value);
     if (!value.empty()) {
-        ret = BatterySrvClient.SetBatteryConfig(sceneName, value);
+        ret = (int)BatterySrvClient.SetBatteryConfig(sceneName, value);
         EXPECT_EQ(ret, 0);
     }
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient021 end.");
@@ -756,8 +756,10 @@ HWTEST_F (BatteryClientTest, BatteryClient022, TestSize.Level1)
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
 
     string sceneName = "testScene";
-    string value = BatterySrvClient.GetBatteryConfig(sceneName);
-    EXPECT_EQ(value, "");
+    string result = "";
+    BatteryError ret = BatterySrvClient.GetBatteryConfig(sceneName, result);
+    EXPECT_NE(ret, BatteryError::ERR_OK);
+    EXPECT_EQ(result, "");
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient022 end.");
 }
 
@@ -772,8 +774,10 @@ HWTEST_F (BatteryClientTest, BatteryClient023, TestSize.Level1)
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
 
     string sceneName = "testScene1";
-    bool ret = BatterySrvClient.IsBatteryConfigSupported(sceneName);
-    EXPECT_FALSE(ret);
+    bool result = false;
+    BatteryError ret = BatterySrvClient.IsBatteryConfigSupported(sceneName, result);
+    EXPECT_NE(ret, BatteryError::ERR_OK);
+    EXPECT_FALSE(result);
     BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient023 end.");
 }
 

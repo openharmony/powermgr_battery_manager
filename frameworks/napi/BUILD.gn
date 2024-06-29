@@ -13,12 +13,20 @@
 
 import("../../batterymgr.gni")
 
+config("batterynapi_private_config") {
+  include_dirs = [ "include" ]
+}
+
 ohos_shared_library("batteryinfo") {
   sources = [
-    "battery_info.cpp",
-    "napi_utils.cpp",
+    "src/battery_info.cpp",
+    "src/napi_error.cpp",
+    "src/napi_utils.cpp",
   ]
-  configs = [ "${battery_utils}:utils_config" ]
+  configs = [
+    "${battery_utils}:utils_config",
+    ":batterynapi_private_config",
+  ]
   deps = [ "${battery_inner_api}:batterysrv_client" ]
   external_deps = [
     "c_utils:utils",
@@ -33,7 +41,7 @@ ohos_shared_library("batteryinfo") {
 }
 
 ohos_shared_library("charger") {
-  sources = [ "charger.cpp" ]
+  sources = [ "src/charger.cpp" ]
   configs = [
     "${battery_utils}:utils_config",
     "${battery_utils}:coverage_flags",
@@ -52,10 +60,11 @@ ohos_shared_library("charger") {
 }
 
 ohos_shared_library("battery") {
-  sources = [ "system_battery.cpp" ]
+  sources = [ "src/system_battery.cpp" ]
   configs = [
     "${battery_utils}:utils_config",
     "${battery_utils}:coverage_flags",
+    ":batterynapi_private_config",
   ]
   deps = [ "${battery_inner_api}:batterysrv_client" ]
   external_deps = [

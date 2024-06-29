@@ -88,15 +88,15 @@ public:
     /**
      * set charge config
      */
-    int32_t SetBatteryConfig(const std::string& sceneName, const std::string& value);
+    BatteryError SetBatteryConfig(const std::string& sceneName, const std::string& value);
     /**
      * get charge config
      */
-    std::string GetBatteryConfig(const std::string& sceneName);
+    BatteryError GetBatteryConfig(const std::string& sceneName, std::string& result);
     /**
      * is support charge config
      */
-    bool IsBatteryConfigSupported(const std::string& sceneName);
+    BatteryError IsBatteryConfigSupported(const std::string& sceneName, bool& result);
 
 #ifndef BATTERYMGR_DEATHRECIPIENT_UNITTEST
 private:

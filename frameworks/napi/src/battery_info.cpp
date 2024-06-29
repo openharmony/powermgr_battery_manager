@@ -24,6 +24,7 @@
 #include "battery_srv_client.h"
 #include "battery_log.h"
 #include "napi_utils.h"
+#include "napi_error.h"
 
 using namespace OHOS::PowerMgr;
 
@@ -186,22 +187,28 @@ static napi_value SetBatteryConfig(napi_env env, napi_callback_info info)
     size_t argc = INDEX_2;
     napi_value argv[argc];
     NapiUtils::GetCallbackInfo(env, info, argc, argv);
+    NapiError error;
 
     if (argc != INDEX_2 || !NapiUtils::CheckValueType(env, argv[INDEX_0], napi_string)
         || !NapiUtils::CheckValueType(env, argv[INDEX_1], napi_string)) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "set charge config failed, param is invalid");
+        error.ThrowError(env, BatteryError::ERR_PARAM_INVALID);
         return nullptr;
     }
 
     std::string sceneName = NapiUtils::GetStringFromNapi(env, argv[INDEX_0]);
     std::string value = NapiUtils::GetStringFromNapi(env, argv[INDEX_1]);
 
-    int32_t code = g_battClient.SetBatteryConfig(sceneName, value);
+    BatteryError code = g_battClient.SetBatteryConfig(sceneName, value);
     BATTERY_HILOGI(FEATURE_BATT_INFO, "set charge config, sceneName: %{public}s, value: %{public}s, ret: %{public}d",
-        sceneName.c_str(), value.c_str(), code);
+        sceneName.c_str(), value.c_str(), static_cast<int32_t>(code));
     
     napi_value napiValue;
-    NAPI_CALL(env, napi_create_uint32(env, code, &napiValue));
+    NAPI_CALL(env, napi_create_uint32(env, static_cast<int32_t>(code), &napiValue));
+    if (code != BatteryError::ERR_OK) {
+        error.ThrowError(env, code);
+        return napiValue;
+    }
     return napiValue;
 }
 
@@ -210,20 +217,27 @@ static napi_value GetBatteryConfig(napi_env env, napi_callback_info info)
     size_t argc = 1;
     napi_value argv[argc];
     NapiUtils::GetCallbackInfo(env, info, argc, argv);
+    NapiError error;
 
     if (argc != 1 || !NapiUtils::CheckValueType(env, argv[INDEX_0], napi_string)) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "get charge config failed, param is invalid");
+        error.ThrowError(env, BatteryError::ERR_PARAM_INVALID);
         return nullptr;
     }
 
     std::string sceneName = NapiUtils::GetStringFromNapi(env, argv[INDEX_0]);
     BATTERY_HILOGD(COMP_FWK, "get charge config, sceneName: %{public}s", sceneName.c_str());
 
-    std::string result = g_battClient.GetBatteryConfig(sceneName);
+    std::string result;
+    BatteryError code = g_battClient.GetBatteryConfig(sceneName, result);
     BATTERY_HILOGD(COMP_FWK, "get charge config, sceneValue: %{public}s", result.c_str());
     
     napi_value napiValue;
     NAPI_CALL(env, napi_create_string_utf8(env, result.c_str(), result.size(), &napiValue));
+    if (code != BatteryError::ERR_OK) {
+        error.ThrowError(env, code);
+        return napiValue;
+    }
     return napiValue;
 }
 
@@ -232,21 +246,28 @@ static napi_value IsBatteryConfigSupported(napi_env env, napi_callback_info info
     size_t argc = 1;
     napi_value argv[argc];
     NapiUtils::GetCallbackInfo(env, info, argc, argv);
+    NapiError error;
 
     if (argc != 1 || !NapiUtils::CheckValueType(env, argv[INDEX_0], napi_string)) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "support charge config failed, param is invalid");
+        error.ThrowError(env, BatteryError::ERR_PARAM_INVALID);
         return nullptr;
     }
 
     std::string sceneName = NapiUtils::GetStringFromNapi(env, argv[INDEX_0]);
     BATTERY_HILOGI(COMP_FWK, "get support charge config, featureName: %{public}s", sceneName.c_str());
 
-    bool result = g_battClient.IsBatteryConfigSupported(sceneName);
+    bool result = false;
+    BatteryError code = g_battClient.IsBatteryConfigSupported(sceneName, result);
     
     BATTERY_HILOGI(COMP_FWK, "get support charge config, sceneValue: %{public}d", static_cast<uint32_t>(result));
 
     napi_value napiValue;
     NAPI_CALL(env, napi_create_uint32(env, static_cast<uint32_t>(result), &napiValue));
+    if (code != BatteryError::ERR_OK) {
+        error.ThrowError(env, code);
+        return napiValue;
+    }
     return napiValue;
 }
 
