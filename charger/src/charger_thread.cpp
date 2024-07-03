@@ -453,7 +453,7 @@ void ChargerThread::Run(void* service)
 {
     BATTERY_HILOGI(FEATURE_CHARGING, "start run charger thread");
     Init();
-    std::make_unique<std::thread>(&ChargerThread::LoopingThreadEntry, this, service)->join();
+    std::make_unique<std::thread>([this, service] { this->LoopingThreadEntry(service); })->join();
 }
 } // namespace PowerMgr
 } // namespace OHOS
