@@ -49,7 +49,6 @@ ohos_shared_library("batteryservice") {
 
   external_deps = [ "power_manager:power_permission" ]
   external_deps += [
-    "ability_base:want",
     "ability_runtime:ability_manager",
     "bundle_framework:appexecfwk_base",
     "c_utils:utils",
@@ -73,6 +72,8 @@ ohos_shared_library("batteryservice") {
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
+
+  public_external_deps = [ "ability_base:want" ]
 
   if (battery_manager_feature_set_low_capacity_threshold) {
     defines = [ "BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD" ]
