@@ -146,7 +146,7 @@ bool BatteryService::RegisterBatteryHdiCallback()
     }
 
     BatteryCallback::BatteryEventCallback eventCb =
-        std::bind(&BatteryService::HandleBatteryCallbackEvent, this, std::placeholders::_1);
+        [this](const V2_0::BatteryInfo& event) -> int32_t { return this->HandleBatteryCallbackEvent(event); };
     BatteryCallback::RegisterBatteryEvent(eventCb);
     return true;
 }
