@@ -222,6 +222,8 @@ bool BatteryNotify::PublishChangedEventInner(const BatteryInfo& info) const
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
+    const std::vector<std::string> permissionVec { "ohos.permission.POWER_OPTIMIZATION" };
+    publishInfo.SetSubscriberPermissions(permissionVec);
 
     bool isSuccess = true;
     isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
