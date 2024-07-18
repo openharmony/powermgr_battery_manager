@@ -104,6 +104,7 @@ private:
     bool IsUnplugged(BatteryPluggedType pluggedType);
     void WakeupDevice(BatteryPluggedType pluggedType);
     bool IsCharging(BatteryChargeState chargeState);
+    bool IsInExtremePowerSaveMode();
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
     void SetLowCapacityThreshold();
 #endif
