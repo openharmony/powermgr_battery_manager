@@ -269,9 +269,7 @@ bool BatteryService::FillCommonEvent(std::string& ueventName, std::string& commo
         int32_t isEqual = iter.sceneConfigEqual;
         std::string configValue = iter.sceneConfigValue;
         ueventName += result;
-        if (isEqual && result == configValue) {
-            return true;
-        } else if (!isEqual && result != configValue) {
+        if ((isEqual && result == configValue) || (!isEqual && result != configValue)) {
             return true;
         }
     }
