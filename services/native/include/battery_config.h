@@ -34,21 +34,32 @@ public:
         int32_t endSoc;
         uint32_t rgb;
     };
+    struct CommonEventConf {
+        std::string eventName;
+        std::string uevent;
+        std::string sceneConfigName;
+        bool sceneConfigEqual;
+        std::string sceneConfigValue;
+    };
     static BatteryConfig& GetInstance();
     bool ParseConfig();
     bool IsExist(std::string key) const;
     int32_t GetInt(std::string key, int32_t defVal = 0) const;
     const std::vector<LightConf>& GetLightConf() const;
+    const std::vector<BatteryConfig::CommonEventConf>& GetCommonEventConf() const;
 
 private:
     bool OpenFile(std::ifstream& ifsConf, const std::string& configPath);
     void ParseConfInner();
     void ParseLightConf(std::string level);
+    void ParseBootActionsConf();
+    void ParseCommonEventConf(const Json::Value &bootActionsConfig);
     Json::Value FindConf(const std::string& key) const;
     bool SplitKey(const std::string& key, std::vector<std::string>& keys) const;
     Json::Value GetValue(std::string key) const;
     Json::Value config_;
     std::vector<BatteryConfig::LightConf> lightConf_;
+    std::vector<BatteryConfig::CommonEventConf> commonEventConf_;
     static std::mutex mutex_;
     static std::shared_ptr<BatteryConfig> instance_;
 };
