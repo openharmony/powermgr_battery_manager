@@ -90,6 +90,8 @@ public:
     void VibratorInit();
 private:
     bool Init();
+    void AddBootCommonEvents();
+    bool FillCommonEvent(std::string& ueventName, std::string& type);
     void WakeupDevice(BatteryChargeState chargeState);
     void RegisterBootCompletedCallback();
     int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V2_0::BatteryInfo& event);
