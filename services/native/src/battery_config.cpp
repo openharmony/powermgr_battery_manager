@@ -95,6 +95,11 @@ const std::vector<BatteryConfig::LightConf>& BatteryConfig::GetLightConf() const
     return lightConf_;
 }
 
+const std::vector<BatteryConfig::CommonEventConf>& BatteryConfig::GetCommonEventConf() const
+{
+    return commonEventConf_;
+}
+
 bool BatteryConfig::OpenFile(std::ifstream& ifsConf, const std::string& configPath)
 {
     bool isOpen = false;
@@ -124,6 +129,7 @@ void BatteryConfig::ParseConfInner()
     ParseLightConf("high");
     BATTERY_HILOGD(COMP_SVC, "The battery light configuration size %{public}d",
         static_cast<int32_t>(lightConf_.size()));
+    ParseBootActionsConf();
 }
 
 void BatteryConfig::ParseLightConf(std::string level)
@@ -152,6 +158,54 @@ void BatteryConfig::ParseLightConf(std::string level)
                rgb[BLUE_INDEX].asUInt()
     };
     lightConf_.push_back(lightConf);
+}
+
+void BatteryConfig::ParseBootActionsConf()
+{
+    Json::Value bootActionsConfig = GetValue("boot_actions");
+    if (bootActionsConfig.isNull() || !bootActionsConfig.isObject()) {
+        BATTERY_HILOGW(COMP_SVC, "boot_actions is invalid");
+        return;
+    }
+    ParseCommonEventConf(bootActionsConfig);
+}
+
+void BatteryConfig::ParseCommonEventConf(const Json::Value& bootActionsConfig)
+{
+    Json::Value commonEventConfs = bootActionsConfig["sendcommonevent"];
+    if (commonEventConfs.isNull() || !commonEventConfs.isArray()) {
+        BATTERY_HILOGW(COMP_SVC, "The common event config is invalid");
+        return;
+    }
+    commonEventConf_.clear();
+    for (const auto& commonEventConf : commonEventConfs) {
+        BatteryConfig::CommonEventConf tempCommonEventConf;
+        Json::Value eventName = commonEventConf["event_name"];
+        Json::Value sceneConfigName = commonEventConf["scene_config"]["name"];
+        Json::Value sceneConfigEqual = commonEventConf["scene_config"]["equal"];
+        Json::Value sceneConfigNotEqual = commonEventConf["scene_config"]["not_equal"];
+        Json::Value uevent = commonEventConf["uevent"];
+        if (!eventName.isString() || !sceneConfigName.isString() || !uevent.isString()) {
+            BATTERY_HILOGW(COMP_SVC, "parse common event config failed");
+            continue;
+        }
+        if (!sceneConfigEqual.isNull() && sceneConfigEqual.isString()) {
+            tempCommonEventConf.sceneConfigEqual = true;
+            tempCommonEventConf.sceneConfigValue = sceneConfigEqual.asString();
+        } else if (!sceneConfigNotEqual.isNull() && sceneConfigNotEqual.isString()) {
+            tempCommonEventConf.sceneConfigEqual = false;
+            tempCommonEventConf.sceneConfigValue = sceneConfigNotEqual.asString();
+        } else {
+            BATTERY_HILOGW(COMP_SVC, "parse expect value failed");
+            continue;
+        }
+        tempCommonEventConf.eventName = eventName.asString();
+        tempCommonEventConf.sceneConfigName = sceneConfigName.asString();
+        tempCommonEventConf.uevent = uevent.asString();
+        commonEventConf_.push_back(tempCommonEventConf);
+    }
+    BATTERY_HILOGI(COMP_SVC, "The battery commonevent configuration size %{public}d",
+        static_cast<int32_t>(commonEventConf_.size()));
 }
 
 Json::Value BatteryConfig::FindConf(const std::string& key) const
