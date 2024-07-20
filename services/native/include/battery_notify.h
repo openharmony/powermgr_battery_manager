@@ -33,7 +33,7 @@ public:
 
 private:
     void HandleUevent(BatteryInfo& info);
-    bool PublishChangedEvent(const BatteryInfo& info) const;
+    bool PublishChangedEvent(const BatteryInfo& info);
     bool PublishChangedEventInner(const BatteryInfo& info) const;
     bool PublishLowEvent(const BatteryInfo& info) const;
     bool PublishOkayEvent(const BatteryInfo& info) const;
@@ -47,6 +47,10 @@ private:
 
     int32_t lowCapacity_ = -1;
     ChargeType batteryInfoChargeType_ = ChargeType::NONE;
+    int32_t lastCapacity_ = -1;
+    int32_t lastPluggedType_ = -1;
+    int32_t lastTemperature_ = -1;
+    int32_t lastHealthState_ = -1;
 };
 } // namespace PowerMgr
 } // namespace OHOS

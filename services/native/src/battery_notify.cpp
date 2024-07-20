@@ -172,14 +172,18 @@ bool BatteryNotify::IsCommonEventServiceAbilityExist() const
     return true;
 }
 
-bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
+bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info)
 {
     Want want;
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CAPACITY, info.GetCapacity());
+    int32_t capacity = info.GetCapacity();
+    int32_t pluggedType = static_cast<int32_t>(info.GetPluggedType());
+    int32_t temperature = info.GetTemperature();
+    int32_t healthState = static_cast<int32_t>(info.GetHealthState());
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CAPACITY, capacity);
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_VOLTAGE, info.GetVoltage());
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_TEMPERATURE, info.GetTemperature());
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_HEALTH_STATE, static_cast<int32_t>(info.GetHealthState()));
-    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_TYPE, static_cast<int32_t>(info.GetPluggedType()));
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_TEMPERATURE, temperature);
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_HEALTH_STATE, healthState);
+    want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PLUGGED_TYPE, pluggedType);
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CHARGE_STATE, static_cast<int32_t>(info.GetChargeState()));
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_PRESENT, info.IsPresent());
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_TECHNOLOGY, info.GetTechnology());
@@ -196,13 +200,17 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info) const
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
-    bool isSuccess = true;
-
-    HiSysEventWrite(HiSysEvent::Domain::BATTERY, "CHANGED", HiSysEvent::EventType::STATISTIC,
-        "LEVEL", info.GetCapacity(), "CHARGER", static_cast<int32_t>(info.GetPluggedType()),
-        "VOLTAGE", info.GetVoltage(), "TEMPERATURE", info.GetTemperature(),
-        "HEALTH", static_cast<int32_t>(info.GetHealthState()), "CURRENT", info.GetNowCurrent());
-    isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
+    if (capacity != lastCapacity_ || pluggedType != lastPluggedType_ ||
+        temperature != lastTemperature_ || healthState != lastHealthState_) {
+        HiSysEventWrite(HiSysEvent::Domain::BATTERY, "CHANGED", HiSysEvent::EventType::STATISTIC,
+            "LEVEL", capacity, "CHARGER", pluggedType, "VOLTAGE", info.GetVoltage(),
+            "TEMPERATURE", temperature, "HEALTH", healthState, "CURRENT", info.GetNowCurrent());
+        lastCapacity_ = capacity;
+        lastPluggedType_ = pluggedType;
+        lastTemperature_ = temperature;
+        lastHealthState_ = healthState;
+    }
+    bool isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "failed to publish BATTERY_CHANGED event");
     }
