@@ -209,6 +209,7 @@ static HWTEST_F(BatteryServiceTest, BatteryService008, TestSize.Level1)
 static HWTEST_F(BatteryServiceTest, BatteryService009, TestSize.Level1)
 {
     BATTERY_HILOGD(LABEL_TEST, "BatteryService009 start.");
+    usleep(DELAY_TIME_US);
     g_service->MockUnplugged();
     EXPECT_EQ(g_service->IsMockUnplugged(), true);
     BATTERY_HILOGD(LABEL_TEST, "BatteryService009 end.");
