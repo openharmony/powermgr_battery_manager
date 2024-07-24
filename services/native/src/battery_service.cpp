@@ -453,11 +453,11 @@ int32_t BatteryService::GetCapacity()
         return batteryInfo_.GetCapacity();
     }
     std::shared_lock<std::shared_mutex> lock(mutex_);
+    int32_t capacity = BATTERY_FULL_CAPACITY;
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
-        return batteryInfo_.GetCapacity();
+        return capacity;
     }
-    int32_t capacity = BATTERY_FULL_CAPACITY;
     iBatteryInterface_->GetCapacity(capacity);
     return capacity;
 }
