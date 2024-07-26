@@ -60,7 +60,6 @@ sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance
 FFRTQueue g_queue("battery_service");
 FFRTHandle g_lowCapacityShutdownHandle = nullptr;
 BatteryPluggedType g_lastPluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
-static PowerMgrClient& g_powerMgrClient = PowerMgrClient::GetInstance();
 SysParam::BootCompletedCallback g_bootCompletedCallback;
 }
 std::atomic_bool BatteryService::isBootCompleted_ = false;
@@ -407,6 +406,12 @@ bool BatteryService::IsCharging(BatteryChargeState chargeState)
     return chargeState == BatteryChargeState::CHARGE_STATE_ENABLE;
 }
 
+bool BatteryService::IsInExtremePowerSaveMode()
+{
+    PowerMode mode = PowerMgrClient::GetInstance().GetDeviceMode();
+    return mode == PowerMode::EXTREME_POWER_SAVE_MODE;
+}
+
 void BatteryService::WakeupDevice(BatteryPluggedType pluggedType)
 {
     if (IsPlugged(pluggedType) || IsUnplugged(pluggedType)) {
@@ -417,24 +422,24 @@ void BatteryService::WakeupDevice(BatteryPluggedType pluggedType)
 
 void BatteryService::HandleTemperature(int32_t temperature)
 {
-    auto& powerMgrClient = PowerMgrClient::GetInstance();
     if (((temperature <= lowTemperature_) || (temperature >= highTemperature_)) &&
         (highTemperature_ != lowTemperature_)) {
-        powerMgrClient.ShutDownDevice("TemperatureOutOfRange");
+        PowerMgrClient::GetInstance().ShutDownDevice("TemperatureOutOfRange");
     }
 }
 
 void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeState)
 {
-    auto& powerMgrClient = PowerMgrClient::GetInstance();
     if ((capacity <= shutdownCapacityThreshold_) &&
         (g_lowCapacityShutdownHandle == nullptr) &&
         ((chargeState == BatteryChargeState::CHARGE_STATE_NONE) ||
          (chargeState == BatteryChargeState::CHARGE_STATE_BUTT))) {
         BATTERY_HILOGI(COMP_SVC, "HandleCapacity begin to submit task");
         FFRTTask task = [&] {
-            BATTERY_HILOGI(COMP_SVC, "HandleCapacity begin to shutdown");
-            powerMgrClient.ShutDownDevice("LowCapacity");
+            if (!IsInExtremePowerSaveMode()) {
+                BATTERY_HILOGI(COMP_SVC, "HandleCapacity begin to shutdown");
+                PowerMgrClient::GetInstance().ShutDownDevice("LowCapacity");
+            }
         };
         g_lowCapacityShutdownHandle = FFRTUtils::SubmitDelayTask(task, SHUTDOWN_DELAY_TIME_MS, g_queue);
     }
@@ -897,6 +902,5 @@ void BatteryService::VibratorInit()
     vibrator->LoadConfig(BATTERY_VIBRATOR_CONFIG_FILE,
         VENDOR_BATTERY_VIBRATOR_CONFIG_FILE, SYSTEM_BATTERY_VIBRATOR_CONFIG_FILE);
 }
-
 } // namespace PowerMgr
 } // namespace OHOS
