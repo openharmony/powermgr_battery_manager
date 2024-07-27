@@ -57,7 +57,7 @@ T String2Int(const std::string& str, int base = N_HEX)
 
 static OHOS::ColorType StrToColor(const std::string& hexColor)
 {
-    std::size_t startPos = 1ul;
+    std::size_t startPos = 1uL;
     auto getNextField = [&startPos, &hexColor]() {
         constexpr std::size_t width = 2ul;
         uint8_t ret = (startPos > hexColor.size()) ? 0 : String2Int<uint8_t>(hexColor.substr(startPos, width));
