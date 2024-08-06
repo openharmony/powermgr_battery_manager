@@ -27,7 +27,7 @@ constexpr uint32_t BACKLIGHT_ON = 128;
 BatteryBacklight::BatteryBacklight()
 {
     if (composer_ == nullptr) {
-        composer_.reset(IDisplayComposerInterface::Get());
+        composer_.reset(V1_2::IDisplayComposerInterface::Get());
         if (composer_ == nullptr) {
             return;
         }
