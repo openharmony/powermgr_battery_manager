@@ -20,6 +20,7 @@
 
 namespace OHOS {
 namespace PowerMgr {
+using namespace OHOS::HDI::Display::Composer;
 using namespace OHOS::HDI::Display::Composer::V1_2;
 class BatteryBacklight {
 public:
@@ -34,7 +35,7 @@ public:
     int32_t GetScreenState();
 
 private:
-    std::shared_ptr<IDisplayComposerInterface> composer_ = nullptr;
+    std::shared_ptr<V1_2::IDisplayComposerInterface> composer_ = nullptr;
     enum ScreenState screenState_ = SCREEN_OFF;
 };
 } // namespace PowerMgr
