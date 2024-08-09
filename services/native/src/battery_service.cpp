@@ -154,7 +154,9 @@ bool BatteryService::RegisterBatteryHdiCallback()
 void BatteryService::InitConfig()
 {
     auto& batteryConfig = BatteryConfig::GetInstance();
+#ifdef HAS_BATTERY_CONFIG_POLICY_PART
     batteryConfig.ParseConfig();
+#endif
 
     warnCapacity_ = batteryConfig.GetInt("soc.warning", warnCapacity_);
     highTemperature_ = batteryConfig.GetInt("temperature.high", highTemperature_);
