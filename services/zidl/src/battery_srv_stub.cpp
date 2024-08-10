@@ -41,7 +41,7 @@ int BatterySrvStub::OnRemoteRequest(uint32_t code, MessageParcel& data, MessageP
 
     const int DFX_DELAY_S = 10;
     int id = HiviewDFX::XCollie::GetInstance().SetTimer("BatteryManagerCallbackStub", DFX_DELAY_S, nullptr, nullptr,
-        HiviewDFX::XCOLLIE_FLAG_NOOP);
+        HiviewDFX::XCOLLIE_FLAG_LOG);
     int32_t ret = CheckRequestCode(code, data, reply, option);
     HiviewDFX::XCollie::GetInstance().CancelTimer(id);
     return ret;
