@@ -1,4 +1,4 @@
-#Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+#Copyright (c) 2021-2024 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -26,11 +26,15 @@ group("battery_fuzzertest") {
 group("battery_unittest") {
   testonly = true
   deps = [
-    "unittest:test_battery",
+    "unittest:battery_common_event_test",
     "unittest:test_battery_proxy_mock_iremoteobject",
     "unittest:test_battery_proxy_mock_messageparcel_write_error",
     "unittest:test_battery_proxy_mock_parcel_read_error",
     "unittest:test_battery_proxy_mock_sendrequest_error",
+    "unittest:test_battery_service_inner",
+    "unittest:test_battery_service_interface",
+    "unittest:test_battery_service_scenario",
+    "unittest:test_battery_stub",
     "unittest:test_batterywakeup",
     "unittest:test_mock_battery_config",
   ]
@@ -39,4 +43,12 @@ group("battery_unittest") {
 group("battery_benchmarktest") {
   testonly = true
   deps = [ "benchmarktest:BatteryBenchmarkTest" ]
+}
+
+group("battery_frameworks_unittest") {
+  testonly = true
+  deps = [
+    "unittest:test_batteryclient",
+    "unittest:test_batteryclient_death",
+  ]
 }
