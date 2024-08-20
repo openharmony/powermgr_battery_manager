@@ -16,11 +16,12 @@
 #ifndef BATTERY_BACKLIGHT_H
 #define BATTERY_BACKLIGHT_H
 
-#include "v1_0/include/idisplay_composer_interface.h"
+#include "v1_2/include/idisplay_composer_interface.h"
 
 namespace OHOS {
 namespace PowerMgr {
-using namespace OHOS::HDI::Display::Composer::V1_0;
+using namespace OHOS::HDI::Display::Composer;
+using namespace OHOS::HDI::Display::Composer::V1_2;
 class BatteryBacklight {
 public:
     enum ScreenState {
@@ -34,7 +35,7 @@ public:
     int32_t GetScreenState();
 
 private:
-    std::shared_ptr<IDisplayComposerInterface> composer_ = nullptr;
+    std::shared_ptr<V1_2::IDisplayComposerInterface> composer_ = nullptr;
     enum ScreenState screenState_ = SCREEN_OFF;
 };
 } // namespace PowerMgr
