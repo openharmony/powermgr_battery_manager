@@ -27,7 +27,7 @@ constexpr uint32_t BACKLIGHT_ON = 128;
 BatteryBacklight::BatteryBacklight()
 {
     if (composer_ == nullptr) {
-        composer_.reset(IDisplayComposerInterface::Get());
+        composer_.reset(V1_2::IDisplayComposerInterface::Get());
         if (composer_ == nullptr) {
             return;
         }
@@ -43,7 +43,7 @@ void BatteryBacklight::TurnOnScreen()
     if (screenState_ != SCREEN_ON) {
         BATTERY_HILOGD(FEATURE_CHARGING, "turn on screen");
         uint32_t devId = 0;
-        composer_->SetDisplayPowerStatus(devId, POWER_STATUS_ON);
+        composer_->SetDisplayPowerStatus(devId, V1_0::POWER_STATUS_ON);
         composer_->SetDisplayBacklight(devId, BACKLIGHT_ON);
         screenState_ = SCREEN_ON;
     }
@@ -54,7 +54,7 @@ void BatteryBacklight::TurnOffScreen()
     if (screenState_ != SCREEN_OFF) {
         BATTERY_HILOGD(FEATURE_CHARGING, "turn off screen");
         uint32_t devId = 0;
-        composer_->SetDisplayPowerStatus(devId, POWER_STATUS_OFF);
+        composer_->SetDisplayPowerStatus(devId, V1_0::POWER_STATUS_OFF);
         screenState_ = SCREEN_OFF;
     }
 }
