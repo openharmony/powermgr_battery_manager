@@ -259,5 +259,6 @@ ohos_unittest("test_mock_battery_config") {
   external_deps = [
     "config_policy:configpolicy_util",
     "hilog:libhilog",
+    "jsoncpp:jsoncpp",
   ]
 }
