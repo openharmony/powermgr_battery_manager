@@ -246,6 +246,5 @@ HWTEST_F(BatteryConfigTest, BatteryConfig013, TestSize.Level1)
     EXPECT_TRUE(!g_configTest.IsExist(key));
     BATTERY_HILOGD(LABEL_TEST, "BatteryConfig013 end");
 }
-
 } // namespace PowerMgr
 } // namespace OHOS
