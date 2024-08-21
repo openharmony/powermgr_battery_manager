@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,21 +13,23 @@
  * limitations under the License.
  */
 
-#ifndef BATTERY_CLIENT_TEST_H
-#define BATTERY_CLIENT_TEST_H
+#ifndef BATTERY_PLUGGED_WAKEUP_TEST_H
+#define BATTERY_PLUGGED_WAKEUP_TEST_H
 
 #include <gtest/gtest.h>
-#include <ipc_skeleton.h>
+
+#include "battery_info.h"
+#include "battery_log.h"
 
 namespace OHOS {
 namespace PowerMgr {
-class BatteryClientTest : public testing::Test {
+class BatteryPluggedWakeupTest : public testing::Test {
 public:
-    static void SetUpTestCase(void);
-    static void TearDownTestCase(void);
+    static void SetUpTestCase();
+    static void TearDownTestCase();
     void SetUp();
     void TearDown();
 };
 } // namespace PowerMgr
 } // namespace OHOS
-#endif // BATTERY_CLIENT_TEST_H
+#endif // BATTERY_PLUGGED_WAKEUP_TEST_H

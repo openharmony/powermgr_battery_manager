@@ -1,4 +1,4 @@
-# Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+# Copyright (c) 2021-2024 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,6 +18,8 @@ import("../../batterymgr.gni")
 config("module_private_config") {
   include_dirs = [
     "include",
+    "include/interface_test",
+    "include/scenario_test",
     "${battery_service_native}/include",
     "${battery_service_zidl}/include",
     "${battery_inner_api}/native/include",
@@ -32,19 +34,128 @@ config("module_mock_private_config") {
 }
 
 ##############################unittest##########################################
-ohos_unittest("test_battery") {
+ohos_unittest("test_battery_service_interface") {
   module_out_path = "${module_output_path}"
   defines = [ "GTEST" ]
 
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
-    "src/battery_callback_test.cpp",
-    "src/battery_config_test.cpp",
-    "src/battery_dump_test.cpp",
-    "src/battery_info_test.cpp",
-    "src/battery_light_test.cpp",
-    "src/battery_notify_test.cpp",
-    "src/battery_service_test.cpp",
+    "src/interface_test/battery_info_test.cpp",
+    "src/interface_test/battery_service_test.cpp",
+  ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  deps = [
+    "${battery_inner_api}:batterysrv_client",
+    "${battery_service_zidl}:batterysrv_stub",
+    "${battery_service}:batteryservice",
+    "//third_party/googletest:gtest_main",
+    "//third_party/jsoncpp:jsoncpp",
+  ]
+
+  external_deps = [
+    "ability_base:want",
+    "access_token:libaccesstoken_sdk",
+    "access_token:libnativetoken",
+    "access_token:libprivacy_sdk",
+    "access_token:libtoken_setproc",
+    "c_utils:utils",
+    "drivers_interface_battery:libbattery_proxy_2.0",
+    "drivers_interface_light:liblight_proxy_1.0",
+    "hdf_core:libhdi",
+    "hilog:libhilog",
+    "ipc:ipc_single",
+  ]
+}
+
+ohos_unittest("test_battery_service_scenario") {
+  module_out_path = "${module_output_path}"
+  defines = [ "GTEST" ]
+
+  sources = [
+    "${battery_manager_path}/test/utils/test_utils.cpp",
+    "src/scenario_test/battery_light_test.cpp",
+    "src/scenario_test/battery_notify_test.cpp",
+  ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  deps = [
+    "${battery_inner_api}:batterysrv_client",
+    "${battery_service_zidl}:batterysrv_stub",
+    "${battery_service}:batteryservice",
+    "//third_party/googletest:gtest_main",
+    "//third_party/jsoncpp:jsoncpp",
+  ]
+
+  external_deps = [
+    "ability_base:want",
+    "access_token:libaccesstoken_sdk",
+    "access_token:libnativetoken",
+    "access_token:libprivacy_sdk",
+    "access_token:libtoken_setproc",
+    "c_utils:utils",
+    "drivers_interface_battery:libbattery_proxy_2.0",
+    "drivers_interface_light:liblight_proxy_1.0",
+    "hdf_core:libhdi",
+    "hilog:libhilog",
+    "ipc:ipc_single",
+  ]
+}
+
+ohos_unittest("test_battery_service_inner") {
+  module_out_path = "${module_output_path}"
+  defines = [ "GTEST" ]
+
+  sources = [
+    "${battery_manager_path}/test/utils/test_utils.cpp",
+    "src/battert_service_inner_test.cpp",
+  ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  deps = [
+    "${battery_inner_api}:batterysrv_client",
+    "${battery_service_zidl}:batterysrv_stub",
+    "${battery_service}:batteryservice",
+    "//third_party/googletest:gtest_main",
+    "//third_party/jsoncpp:jsoncpp",
+  ]
+
+  external_deps = [
+    "ability_base:want",
+    "access_token:libaccesstoken_sdk",
+    "access_token:libnativetoken",
+    "access_token:libprivacy_sdk",
+    "access_token:libtoken_setproc",
+    "c_utils:utils",
+    "drivers_interface_battery:libbattery_proxy_2.0",
+    "drivers_interface_light:liblight_proxy_1.0",
+    "hdf_core:libhdi",
+    "hilog:libhilog",
+    "ipc:ipc_single",
+  ]
+}
+
+ohos_unittest("test_battery_stub") {
+  module_out_path = "${module_output_path}"
+  defines = [ "GTEST" ]
+
+  sources = [
+    "${battery_manager_path}/test/utils/test_utils.cpp",
     "src/battery_srv_stub_test.cpp",
   ]
 
@@ -211,7 +322,7 @@ ohos_unittest("test_batterywakeup") {
 
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
-    "src/battery_plugged_wakeup_test.cpp",
+    "src/scenario_test/battery_plugged_wakeup_test.cpp",
   ]
 
   configs = [
@@ -260,5 +371,94 @@ ohos_unittest("test_mock_battery_config") {
     "config_policy:configpolicy_util",
     "hilog:libhilog",
     "jsoncpp:jsoncpp",
+  ]
+}
+
+ohos_unittest("test_batteryclient") {
+  module_out_path = "${module_output_path}"
+  defines = [ "GTEST" ]
+
+  sources = [
+    "${battery_manager_path}/test/utils/test_utils.cpp",
+    "src/interface_test/battery_client_test.cpp",
+  ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  deps = [
+    "${battery_inner_api}:batterysrv_client",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "common_event_service:cesfwk_innerkits",
+    "hilog:libhilog",
+    "ipc:ipc_core",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
+  ]
+}
+
+ohos_unittest("test_batteryclient_death") {
+  module_out_path = "${module_output_path}"
+  defines = [ "BATTERYMGR_DEATHRECIPIENT_UNITTEST" ]
+
+  sources = [
+    "${battery_manager_path}/test/utils/test_utils.cpp",
+    "src/interface_test/battery_client_death_recipient_test.cpp",
+  ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  deps = [
+    "${battery_inner_api}:batterysrv_client",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "common_event_service:cesfwk_innerkits",
+    "hilog:libhilog",
+    "ipc:ipc_core",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
+  ]
+}
+
+ohos_unittest("battery_common_event_test") {
+  module_out_path = "${module_output_path}"
+  defines = [ "GTEST" ]
+
+  sources = [
+    "${battery_manager_path}/test/utils/test_utils.cpp",
+    "src/battery_event_test.cpp",
+  ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  deps = [
+    "${battery_inner_api}:batterysrv_client",
+    "${battery_manager_path}/services:batteryservice",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  external_deps = [
+    "ability_base:want",
+    "c_utils:utils",
+    "common_event_service:cesfwk_innerkits",
+    "hilog:libhilog",
   ]
 }
