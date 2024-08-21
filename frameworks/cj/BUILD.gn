@@ -1,0 +1,47 @@
+# Copyright (C) 2024 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("../../batterymgr.gni")
+
+config("batterynapi_private_config") {
+  include_dirs = [ "include" ]
+}
+
+ohos_shared_library("cj_battery_info_ffi") {
+  sanitize = {
+    integer_overflow = true
+    ubsan = true
+    boundary_sanitize = true
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+
+  sources = [ "src/battery_info_ffi.cpp" ]
+  configs = [
+    "${battery_utils}:utils_config",
+    ":batterynapi_private_config",
+  ]
+  deps = [ "${battery_inner_api}:batterysrv_client" ]
+  external_deps = [
+    "c_utils:utils",
+    "hilog:libhilog",
+    "napi:ace_napi",
+    "napi:cj_bind_ffi",
+    "napi:cj_bind_native",
+  ]
+
+  innerapi_tags = [ "platformsdk" ]
+  subsystem_name = "powermgr"
+  part_name = "battery_manager"
+}
