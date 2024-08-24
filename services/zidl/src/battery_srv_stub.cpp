@@ -39,7 +39,7 @@ int BatterySrvStub::OnRemoteRequest(uint32_t code, MessageParcel& data, MessageP
         return E_GET_POWER_SERVICE_FAILED;
     }
 
-    const int DFX_DELAY_S = 10;
+    const int DFX_DELAY_S = 60;
     int id = HiviewDFX::XCollie::GetInstance().SetTimer("BatteryManagerCallbackStub", DFX_DELAY_S, nullptr, nullptr,
         HiviewDFX::XCOLLIE_FLAG_LOG);
     int32_t ret = CheckRequestCode(code, data, reply, option);
