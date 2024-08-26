@@ -432,8 +432,7 @@ void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeS
 {
     if ((capacity <= shutdownCapacityThreshold_) &&
         (g_lowCapacityShutdownHandle == nullptr) &&
-        ((chargeState == BatteryChargeState::CHARGE_STATE_NONE) ||
-         (chargeState == BatteryChargeState::CHARGE_STATE_BUTT))) {
+        (!IsCharging(chargeState))) {
         BATTERY_HILOGI(COMP_SVC, "HandleCapacity begin to submit task");
         FFRTTask task = [&] {
             if (!IsInExtremePowerSaveMode()) {
