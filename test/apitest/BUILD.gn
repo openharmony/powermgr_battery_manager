@@ -11,31 +11,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//build/test.gni")
 import("../../batterymgr.gni")
 
-ohos_shared_library("ohbattery_info") {
-  include_dirs = [ "${battery_manager_path}/interfaces/kits/c" ]
-  sanitize = {
-    cfi = true
-    cfi_cross_dso = true
-    debug = false
-  }
-
-  sources = [
-    "./battery_info/ohbattery_info.cpp"
+group("apitest") {
+  deps = [
+    "capi:tests"
   ]
-
-  deps = [ "${battery_inner_api}:batterysrv_client" ]
-  
-  external_deps = [
-    "c_utils:utils",
-    "hilog:libhilog",
-    "ipc:ipc_core",
-    "samgr:samgr_proxy",
-  ]
-
-  relative_install_dir = "ndk"
-
-  subsystem_name = "powermgr"
-  part_name = "battery_manager"
 }
