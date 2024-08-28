@@ -18,6 +18,20 @@ declare_args() {
 }
 
 if (!defined(global_parts_info) ||
+    defined(global_parts_info.hiviewdfx_hisysevent)) {
+  has_hiviewdfx_hisysevent_part = true
+} else {
+  has_hiviewdfx_hisysevent_part = false
+}
+
+if (!defined(global_parts_info) ||
+    defined(global_parts_info.sensors_miscdevice)) {
+  has_sensors_miscdevice_part = true
+} else {
+  has_sensors_miscdevice_part = false
+}
+
+if (!defined(global_parts_info) ||
     defined(global_parts_info.hdf_drivers_interface_display)) {
   has_drivers_interface_display_part = true
 } else {
