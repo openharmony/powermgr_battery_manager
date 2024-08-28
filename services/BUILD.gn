@@ -72,7 +72,7 @@ ohos_shared_library("batteryservice") {
   ]
 
   public_external_deps = [ "ability_base:want" ]
-  
+
   defines = []
   if (battery_manager_feature_set_low_capacity_threshold) {
     defines += [ "BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD" ]
@@ -85,7 +85,7 @@ ohos_shared_library("batteryservice") {
 
   if (has_hiviewdfx_hisysevent_part) {
     defines += [ "HAS_HIVIEWDFX_HISYSEVENT_PART" ]
-    external_deps += [ "hisysevent:libhisysevent" ] 
+    external_deps += [ "hisysevent:libhisysevent" ]
   }
 
   subsystem_name = "powermgr"

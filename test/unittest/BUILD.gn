@@ -34,6 +34,7 @@ config("module_mock_private_config") {
 }
 
 defines = []
+
 ##############################unittest##########################################
 ohos_unittest("test_battery_service_interface") {
   module_out_path = "${module_output_path}"
@@ -221,7 +222,7 @@ ohos_unittest("test_battery_proxy_mock_iremoteobject") {
 
   if (has_hiviewdfx_hisysevent_part) {
     defines += [ "HAS_HIVIEWDFX_HISYSEVENT_PART" ]
-    external_deps += [ "hisysevent:libhisysevent" ] 
+    external_deps += [ "hisysevent:libhisysevent" ]
   }
 }
 
@@ -257,7 +258,7 @@ ohos_unittest("test_battery_proxy_mock_messageparcel_write_error") {
 
   if (has_hiviewdfx_hisysevent_part) {
     defines += [ "HAS_HIVIEWDFX_HISYSEVENT_PART" ]
-    external_deps += [ "hisysevent:libhisysevent" ] 
+    external_deps += [ "hisysevent:libhisysevent" ]
   }
 }
 
@@ -291,10 +292,10 @@ ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
-  
+
   if (has_hiviewdfx_hisysevent_part) {
     defines += [ "HAS_HIVIEWDFX_HISYSEVENT_PART" ]
-    external_deps += [ "hisysevent:libhisysevent" ] 
+    external_deps += [ "hisysevent:libhisysevent" ]
   }
 }
 
@@ -327,10 +328,10 @@ ohos_unittest("test_battery_proxy_mock_parcel_read_error") {
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
-  
+
   if (has_hiviewdfx_hisysevent_part) {
     defines += [ "HAS_HIVIEWDFX_HISYSEVENT_PART" ]
-    external_deps += [ "hisysevent:libhisysevent" ] 
+    external_deps += [ "hisysevent:libhisysevent" ]
   }
 }
 
