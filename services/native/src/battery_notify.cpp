@@ -21,7 +21,9 @@
 #include "common_event_publish_info.h"
 #include "common_event_support.h"
 #include "errors.h"
+#ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
 #include "hisysevent.h"
+#endif
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
 #include "string_ex.h"
@@ -35,7 +37,9 @@
 
 using namespace OHOS::AAFwk;
 using namespace OHOS::EventFwk;
+#ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
 using namespace OHOS::HiviewDFX;
+#endif
 
 namespace OHOS {
 namespace PowerMgr {
@@ -202,9 +206,11 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info)
     publishInfo.SetOrdered(false);
     if (capacity != lastCapacity_ || pluggedType != lastPluggedType_ ||
         temperature != lastTemperature_ || healthState != lastHealthState_) {
+        #ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
         HiSysEventWrite(HiSysEvent::Domain::BATTERY, "CHANGED", HiSysEvent::EventType::STATISTIC,
             "LEVEL", capacity, "CHARGER", pluggedType, "VOLTAGE", info.GetVoltage(),
             "TEMPERATURE", temperature, "HEALTH", healthState, "CURRENT", info.GetNowCurrent());
+        #endif
         lastCapacity_ = capacity;
         lastPluggedType_ = pluggedType;
         lastTemperature_ = temperature;

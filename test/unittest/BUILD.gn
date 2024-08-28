@@ -33,6 +33,7 @@ config("module_mock_private_config") {
   include_dirs = [ "mock/include" ]
 }
 
+defines = []
 ##############################unittest##########################################
 ohos_unittest("test_battery_service_interface") {
   module_out_path = "${module_output_path}"
@@ -213,11 +214,15 @@ ohos_unittest("test_battery_proxy_mock_iremoteobject") {
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "hilog:libhilog",
-    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
+
+  if (has_hiviewdfx_hisysevent_part) {
+    defines += [ "HAS_HIVIEWDFX_HISYSEVENT_PART" ]
+    external_deps += [ "hisysevent:libhisysevent" ] 
+  }
 }
 
 ### test exceptions when MessageParcel::WriteInterfaceToken() return false
@@ -245,11 +250,15 @@ ohos_unittest("test_battery_proxy_mock_messageparcel_write_error") {
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "hilog:libhilog",
-    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
+
+  if (has_hiviewdfx_hisysevent_part) {
+    defines += [ "HAS_HIVIEWDFX_HISYSEVENT_PART" ]
+    external_deps += [ "hisysevent:libhisysevent" ] 
+  }
 }
 
 ### test exceptions when SendRequest() return value not equal ERR_OK
@@ -278,11 +287,15 @@ ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "hilog:libhilog",
-    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
+  
+  if (has_hiviewdfx_hisysevent_part) {
+    defines += [ "HAS_HIVIEWDFX_HISYSEVENT_PART" ]
+    external_deps += [ "hisysevent:libhisysevent" ] 
+  }
 }
 
 ### test exceptions when read reply MessageParcel error
@@ -310,11 +323,15 @@ ohos_unittest("test_battery_proxy_mock_parcel_read_error") {
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "hilog:libhilog",
-    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
+  
+  if (has_hiviewdfx_hisysevent_part) {
+    defines += [ "HAS_HIVIEWDFX_HISYSEVENT_PART" ]
+    external_deps += [ "hisysevent:libhisysevent" ] 
+  }
 }
 
 ohos_unittest("test_batterywakeup") {
