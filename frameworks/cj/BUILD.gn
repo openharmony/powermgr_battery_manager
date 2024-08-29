@@ -36,6 +36,7 @@ ohos_shared_library("cj_battery_info_ffi") {
   external_deps = [
     "c_utils:utils",
     "hilog:libhilog",
+    "ipc:ipc_core",
     "napi:ace_napi",
     "napi:cj_bind_ffi",
     "napi:cj_bind_native",
