@@ -31,6 +31,7 @@ ohos_shared_library("batteryinfo") {
   external_deps = [
     "c_utils:utils",
     "hilog:libhilog",
+    "ipc:ipc_core",
     "napi:ace_napi",
   ]
 
@@ -70,6 +71,7 @@ ohos_shared_library("battery") {
   external_deps = [
     "c_utils:utils",
     "hilog:libhilog",
+    "ipc:ipc_core",
     "napi:ace_napi",
   ]
 

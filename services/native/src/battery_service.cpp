@@ -47,7 +47,6 @@ using namespace OHOS::AAFwk;
 namespace OHOS {
 namespace PowerMgr {
 namespace {
-constexpr const char* BATTERY_SERVICE_NAME = "BatteryService";
 constexpr const char* BATTERY_HDI_NAME = "battery_interface_service";
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
 constexpr uint32_t RETRY_TIME = 1000;
