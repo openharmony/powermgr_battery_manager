@@ -14,7 +14,7 @@
  */
 
 #include "ohbattery_info.h"
-
+#include "battery_log.h"
 #include "battery_srv_client.h"
 
 using namespace OHOS::PowerMgr;
@@ -22,7 +22,9 @@ using namespace OHOS::PowerMgr;
 int32_t OH_BatteryInfo_GetCapacity()
 {
     BatterySrvClient& batterySrvClient = BatterySrvClient::GetInstance();
-    return batterySrvClient.GetCapacity();
+    int32_t ret = batterySrvClient.GetCapacity();
+    BATTERY_HILOGI(LABEL_TEST, "OH_BatteryInfo_GetCapacity called, value = %{public}d", ret);
+    return ret;
 }
 
 BatteryInfo_BatteryPluggedType OH_BatteryInfo_GetPluggedType()
