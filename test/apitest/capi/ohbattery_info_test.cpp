@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include <gtest/test.h>
+#include <gtest/gtest.h>
 
 #include "battery_log.h"
 #include "battery_srv_client.h"
@@ -21,18 +21,18 @@
 
 namespace OHOS {
 namespace PowerMgr {
-
+using namespace testing::ext;
 class OhBatteryInfoTest : public testing::Test {
 public:
     void SetUp() override {};
     void TearDown() override {};
-    static void SetUpTestCase() override {};
-    static void TearDownTestCase() override {};
-}
+    static void SetUpTestCase() {};
+    static void TearDownTestCase() {};
+};
 
 HWTEST_F(OhBatteryInfoTest, OH_BatteryInfo_GetCapacity_001, TestSize.Level1)
 {
-    BATTERY_HILOGI("OH_BatteryInfo_GetCapacity_001 start");
+    BATTERY_HILOGI(LABEL_TEST, "OH_BatteryInfo_GetCapacity_001 start");
     BatterySrvClient& batterySrvClient = BatterySrvClient::GetInstance();
     int32_t resultFromClient = batterySrvClient.GetCapacity();
     int32_t resultFromCApi = OH_BatteryInfo_GetCapacity();
@@ -41,7 +41,7 @@ HWTEST_F(OhBatteryInfoTest, OH_BatteryInfo_GetCapacity_001, TestSize.Level1)
 
 HWTEST_F(OhBatteryInfoTest, OH_BatteryInfo_GetPluggedType_001, TestSize.Level1)
 {
-    BATTERY_HILOGI("OH_BatteryInfo_GetPluggedType_001 start");
+    BATTERY_HILOGI(LABEL_TEST, "OH_BatteryInfo_GetPluggedType_001 start");
     BatterySrvClient& batterySrvClient = BatterySrvClient::GetInstance();
     BatteryPluggedType resultFromClient = batterySrvClient.GetPluggedType();
     BatteryInfo_BatteryPluggedType resultFromCApi = OH_BatteryInfo_GetPluggedType();

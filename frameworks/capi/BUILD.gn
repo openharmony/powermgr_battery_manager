@@ -13,8 +13,12 @@
 
 import("../../batterymgr.gni")
 
-ohos_shared_library("ohbattery_info") {
+config("ohbattery_info_config") {
   include_dirs = [ "${battery_manager_path}/interfaces/kits/c" ]
+}
+
+ohos_shared_library("ohbattery_info") {
+  public_configs = [ ":ohbattery_info_config" ]
   sanitize = {
     cfi = true
     cfi_cross_dso = true

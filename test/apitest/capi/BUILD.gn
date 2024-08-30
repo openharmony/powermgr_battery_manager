@@ -12,9 +12,10 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("../../batterymgr.gni")
+import("../../../batterymgr.gni")
 
 group("tests") {
+  testonly = true
   deps = [ ":test_ohbattery_info" ]
 }
 
@@ -34,6 +35,7 @@ ohos_unittest("test_ohbattery_info") {
     "${battery_service_zidl}:batterysrv_stub",
     "${battery_service}:batteryservice",
     "${battery_manager_path}/frameworks/capi:ohbattery_info",
+    "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
   ]
 
@@ -43,4 +45,22 @@ ohos_unittest("test_ohbattery_info") {
     "ipc:ipc_core",
     "samgr:samgr_proxy",
   ]
+}
+
+ohos_executable("battery_ctest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+  configs = [
+    "${battery_utils}:utils_config",
+    "${battery_utils}:coverage_flags",
+  ]
+  sources = [ "test.c" ]
+  deps = [
+    "${battery_manager_path}/frameworks/capi:ohbattery_info",
+  ]
+  part_name = "battery_manager"
+  subsystem_name = "powermgr"
 }

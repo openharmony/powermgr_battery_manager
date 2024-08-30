@@ -1,0 +1,8 @@
+[
+    {   "first_introduced": "12",
+        "name":"OH_BatteryInfo_GetCapacity"
+    },
+    {   "first_introduced": "12",
+        "name":"OH_BatteryInfo_GetPluggedType"
+    }
+]
