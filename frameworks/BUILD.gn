@@ -22,7 +22,5 @@ group("battery_napi") {
 }
 
 group("battery_capi") {
-  deps = [
-    "capi:ohbattery_info"
-  ]
+  deps = [ "capi:ohbattery_info" ]
 }
