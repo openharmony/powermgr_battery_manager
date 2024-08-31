@@ -13,6 +13,28 @@
  * limitations under the License.
  */
 
+/**
+ * @addtogroup OH_BatteryInfo
+ * @{
+ *
+ * @brief Provides the definition of the C interface for the BatteryInfo module.
+ *
+ * @syscap SystemCapability.PowerManager.BatteryManager.Core
+ * @since 12
+ * @version 1.0
+ */
+/**
+ * @file ohbattery_info.h
+ *
+ * @brief Declares the APIs to discover and connect printers, print files from a printer,
+ *        query the list of the added printers and the printer information within it, and so on.
+ *
+ * @library libohbattery_info.so
+ * @kit BasicServicesKit
+ * @syscap SystemCapability.PowerManager.BatteryManager.Core
+ * @since 12
+ * @version 1.0
+ */
 #ifndef OHBATTERY_INFO_HEADER
 #define OHBATTERY_INFO_HEADER
 
@@ -25,6 +47,13 @@ extern "C" {
 static const char* COMMON_EVENT_KEY_CAPACITY = "soc";
 static const char* COMMON_EVENT_KEY_CHARGE_STATE = "chargeState";
 static const char* COMMON_EVENT_KEY_PLUGGED_TYPE = "pluggedType";
+
+/**
+ * @brief Defines plugged types.
+ *
+ * @since 12
+ * @version 1.0
+ */
 
 typedef enum {
     /**
@@ -53,14 +82,25 @@ typedef enum {
     PLUGGED_TYPE_BUTT
 } BatteryInfo_BatteryPluggedType;
 
-/** todo
- * Return the capacity of the battery, in percent.
+/**
+ * @brief This API returns the current battery capacity.
+ *
+ * @return Returns number betweem 0 and 100.
+ * @syscap ystemCapability.PowerManager.BatteryManager.Core
+ * @since 12
  */
 int32_t OH_BatteryInfo_GetCapacity();
 
-/** todo
- * Return the charger type plugged, such as PLUGGED_TYPE_NONE,
- * PLUGGED_TYPE_AC, PLUGGED_TYPE_USB,....
+/**
+ * @brief This API returns the current plugged type.
+ *
+ * @Return {@link BatteryInfo_BatteryPluggedType#PLUGGED_TYPE_NONE} if the power source is unplugged.
+ *         {@link PLUGGED_TYPE_AC} if the power source is an AC charger.
+ *         {@link PLUGGED_TYPE_USB} if the power source is an USB DC charger.
+ *         {@link PLUGGED_TYPE_WIRELESS} if the power source is wireless charger.
+ *         {@link PLUGGED_TYPE_BUTT} if the type is unknown.
+ * @syscap ystemCapability.PowerManager.BatteryManager.Core
+ * @since 12
  */
 BatteryInfo_BatteryPluggedType OH_BatteryInfo_GetPluggedType();
 
@@ -68,5 +108,4 @@ BatteryInfo_BatteryPluggedType OH_BatteryInfo_GetPluggedType();
 }
 /** @} */
 #endif /* __cplusplus */
-
-#endif
+#endif /* OHBATTERY_INFO_HEADER */
