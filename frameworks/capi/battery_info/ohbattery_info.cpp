@@ -32,7 +32,7 @@ BatteryInfo_BatteryPluggedType OH_BatteryInfo_GetPluggedType()
     BatterySrvClient& batterySrvClient = BatterySrvClient::GetInstance();
     uint32_t result = static_cast<uint32_t>(batterySrvClient.GetPluggedType());
     BatteryInfo_BatteryPluggedType ret = PLUGGED_TYPE_NONE;
-    switch(result) {
+    switch (result) {
         case static_cast<uint32_t>(PLUGGED_TYPE_AC):
             ret = PLUGGED_TYPE_AC;
             break;

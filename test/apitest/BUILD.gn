@@ -13,7 +13,5 @@
 
 group("apitest") {
   testonly = true
-  deps = [
-    "capi:tests"
-  ]
+  deps = [ "capi:tests" ]
 }

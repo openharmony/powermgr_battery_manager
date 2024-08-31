@@ -25,19 +25,17 @@ ohos_shared_library("ohbattery_info") {
     debug = false
   }
 
-  sources = [
-    "./battery_info/ohbattery_info.cpp"
-  ]
+  sources = [ "./battery_info/ohbattery_info.cpp" ]
 
   deps = [ "${battery_inner_api}:batterysrv_client" ]
-  
+
   external_deps = [
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
   ]
-
+  output_extension = "so"
   relative_install_dir = "ndk"
 
   subsystem_name = "powermgr"

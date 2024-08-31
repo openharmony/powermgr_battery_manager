@@ -69,4 +69,4 @@ BatteryInfo_BatteryPluggedType OH_BatteryInfo_GetPluggedType();
 /** @} */
 #endif /* __cplusplus */
 
-#endif /* BATTERY_INFO_NDK_TYPES_HEADER */
+#endif
