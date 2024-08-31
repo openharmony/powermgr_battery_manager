@@ -44,19 +44,3 @@ ohos_unittest("test_ohbattery_info") {
     "samgr:samgr_proxy",
   ]
 }
-
-ohos_executable("battery_ctest") {
-  sanitize = {
-    cfi = true
-    cfi_cross_dso = true
-    debug = false
-  }
-  configs = [
-    "${battery_utils}:utils_config",
-    "${battery_utils}:coverage_flags",
-  ]
-  sources = [ "test.c" ]
-  deps = [ "${battery_manager_path}/frameworks/capi:ohbattery_info" ]
-  part_name = "battery_manager"
-  subsystem_name = "powermgr"
-}
