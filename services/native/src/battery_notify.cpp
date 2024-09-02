@@ -206,11 +206,11 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info)
     publishInfo.SetOrdered(false);
     if (capacity != lastCapacity_ || pluggedType != lastPluggedType_ ||
         temperature != lastTemperature_ || healthState != lastHealthState_) {
-        #ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
+#ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
         HiSysEventWrite(HiSysEvent::Domain::BATTERY, "CHANGED", HiSysEvent::EventType::STATISTIC,
             "LEVEL", capacity, "CHARGER", pluggedType, "VOLTAGE", info.GetVoltage(),
             "TEMPERATURE", temperature, "HEALTH", healthState, "CURRENT", info.GetNowCurrent());
-        #endif
+#endif
         lastCapacity_ = capacity;
         lastPluggedType_ = pluggedType;
         lastTemperature_ = temperature;
