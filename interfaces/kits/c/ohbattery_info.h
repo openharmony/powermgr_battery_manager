@@ -26,8 +26,8 @@
 /**
  * @file ohbattery_info.h
  *
- * @brief Declares the APIs to discover and connect printers, print files from a printer,
- *        query the list of the added printers and the printer information within it, and so on.
+ * @brief Declares the APIs to get informations about the current battery capacity and the power source type,
+ *        defines strings that identify corresponding common events.
  *
  * @library libohbattery_info.so
  * @kit BasicServicesKit
@@ -44,8 +44,23 @@
 extern "C" {
 #endif /* __cplusplus */
 
+/**
+ * @brief A string that identifies the common event sent after battery capacity changes.
+ * @since 13
+ * @version 1.0
+ */
 static const char* COMMON_EVENT_KEY_CAPACITY = "soc";
+/**
+ * @brief A string that identifies the common event sent after charge state changes.
+ * @since 13
+ * @version 1.0
+ */
 static const char* COMMON_EVENT_KEY_CHARGE_STATE = "chargeState";
+/**
+ * @brief A string that identifies the common event sent after plugged type changes.
+ * @since 13
+ * @version 1.0
+ */
 static const char* COMMON_EVENT_KEY_PLUGGED_TYPE = "pluggedType";
 
 /**
@@ -54,7 +69,6 @@ static const char* COMMON_EVENT_KEY_PLUGGED_TYPE = "pluggedType";
  * @since 13
  * @version 1.0
  */
-
 typedef enum {
     /**
      * Power source is unplugged.
@@ -86,7 +100,7 @@ typedef enum {
  * @brief This API returns the current battery capacity.
  *
  * @return Returns number betweem 0 and 100.
- * @syscap ystemCapability.PowerManager.BatteryManager.Core
+ * @syscap SystemCapability.PowerManager.BatteryManager.Core
  * @since 13
  */
 int32_t OH_BatteryInfo_GetCapacity();
@@ -94,12 +108,12 @@ int32_t OH_BatteryInfo_GetCapacity();
 /**
  * @brief This API returns the current plugged type.
  *
- * @Return {@link BatteryInfo_BatteryPluggedType#PLUGGED_TYPE_NONE} if the power source is unplugged.
+ * @return {@link BatteryInfo_BatteryPluggedType#PLUGGED_TYPE_NONE} if the power source is unplugged.
  *         {@link PLUGGED_TYPE_AC} if the power source is an AC charger.
  *         {@link PLUGGED_TYPE_USB} if the power source is an USB DC charger.
  *         {@link PLUGGED_TYPE_WIRELESS} if the power source is wireless charger.
  *         {@link PLUGGED_TYPE_BUTT} if the type is unknown.
- * @syscap ystemCapability.PowerManager.BatteryManager.Core
+ * @syscap SystemCapability.PowerManager.BatteryManager.Core
  * @since 13
  */
 BatteryInfo_BatteryPluggedType OH_BatteryInfo_GetPluggedType();
