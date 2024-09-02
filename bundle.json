@@ -68,6 +68,7 @@
                 "base_group": [],
                 "fwk_group": [
                     "//base/powermgr/battery_manager/frameworks:battery_napi",
+                    "//base/powermgr/battery_manager/frameworks:battery_capi",
                     "//base/powermgr/battery_manager/interfaces/inner_api:batterysrv_client"
                 ],
                 "service_group": [
@@ -105,7 +106,8 @@
                 "//base/powermgr/battery_manager/test:battery_unittest",
                 "//base/powermgr/battery_manager/test:battery_systemtest",
                 "//base/powermgr/battery_manager/test:battery_fuzzertest",
-                "//base/powermgr/battery_manager/test:battery_benchmarktest"
+                "//base/powermgr/battery_manager/test:battery_benchmarktest",
+                "//base/powermgr/battery_manager/test:battery_apitest"
             ]
         }
     }
