@@ -40,6 +40,11 @@ group("battery_unittest") {
   ]
 }
 
+group("battery_apitest") {
+  testonly = true
+  deps = [ "apitest:apitest" ]
+}
+
 group("battery_benchmarktest") {
   testonly = true
   deps = [ "benchmarktest:BatteryBenchmarkTest" ]
