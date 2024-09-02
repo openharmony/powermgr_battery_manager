@@ -17,7 +17,6 @@
 
 #include  <cinttypes>
 
-#include "battery_log.h"
 #include "battery_srv_client.h"
 
 using namespace OHOS::PowerMgr;
@@ -26,7 +25,6 @@ int32_t OH_BatteryInfo_GetCapacity()
 {
     BatterySrvClient& batterySrvClient = BatterySrvClient::GetInstance();
     int32_t ret = batterySrvClient.GetCapacity();
-    BATTERY_HILOGD(LABEL_TEST, "OH_BatteryInfo_GetCapacity called, value = %{public}d", ret);
     return ret;
 }
 
@@ -52,6 +50,5 @@ BatteryInfo_BatteryPluggedType OH_BatteryInfo_GetPluggedType()
             ret = PLUGGED_TYPE_BUTT;
             break;
     }
-    BATTERY_HILOGD(LABEL_TEST, "OH_BatteryInfo_GetPluggedType called, result = %{public}" PRIu32, result);
     return ret;
 }
