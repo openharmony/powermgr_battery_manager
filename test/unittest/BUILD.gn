@@ -32,6 +32,7 @@ config("module_private_config") {
 config("module_mock_private_config") {
   include_dirs = [ "mock/include" ]
 }
+
 ##############################unittest##########################################
 ohos_unittest("test_battery_service_interface") {
   module_out_path = "${module_output_path}"
