@@ -14,6 +14,9 @@
  */
 
 #include "ohbattery_info.h"
+
+#include  <cinttypes>
+
 #include "battery_log.h"
 #include "battery_srv_client.h"
 
@@ -23,7 +26,7 @@ int32_t OH_BatteryInfo_GetCapacity()
 {
     BatterySrvClient& batterySrvClient = BatterySrvClient::GetInstance();
     int32_t ret = batterySrvClient.GetCapacity();
-    BATTERY_HILOGI(LABEL_TEST, "OH_BatteryInfo_GetCapacity called, value = %{public}d", ret);
+    BATTERY_HILOGD(LABEL_TEST, "OH_BatteryInfo_GetCapacity called, value = %{public}d", ret);
     return ret;
 }
 
@@ -42,11 +45,13 @@ BatteryInfo_BatteryPluggedType OH_BatteryInfo_GetPluggedType()
         case static_cast<uint32_t>(PLUGGED_TYPE_WIRELESS):
             ret = PLUGGED_TYPE_WIRELESS;
             break;
-        case static_cast<uint32_t>(PLUGGED_TYPE_BUTT):
-            ret = PLUGGED_TYPE_BUTT;
+        case static_cast<uint32_t>(PLUGGED_TYPE_NONE):
+            ret = PLUGGED_TYPE_NONE;
             break;
         default:
+            ret = PLUGGED_TYPE_BUTT;
             break;
     }
+    BATTERY_HILOGD(LABEL_TEST, "OH_BatteryInfo_GetPluggedType called, result = %{public}" PRIu32, result);
     return ret;
 }

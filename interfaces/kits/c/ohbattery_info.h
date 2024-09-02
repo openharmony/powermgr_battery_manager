@@ -20,7 +20,7 @@
  * @brief Provides the definition of the C interface for the BatteryInfo module.
  *
  * @syscap SystemCapability.PowerManager.BatteryManager.Core
- * @since 12
+ * @since 13
  * @version 1.0
  */
 /**
@@ -32,7 +32,7 @@
  * @library libohbattery_info.so
  * @kit BasicServicesKit
  * @syscap SystemCapability.PowerManager.BatteryManager.Core
- * @since 12
+ * @since 13
  * @version 1.0
  */
 #ifndef OHBATTERY_INFO_HEADER
@@ -51,7 +51,7 @@ static const char* COMMON_EVENT_KEY_PLUGGED_TYPE = "pluggedType";
 /**
  * @brief Defines plugged types.
  *
- * @since 12
+ * @since 13
  * @version 1.0
  */
 
@@ -87,7 +87,7 @@ typedef enum {
  *
  * @return Returns number betweem 0 and 100.
  * @syscap ystemCapability.PowerManager.BatteryManager.Core
- * @since 12
+ * @since 13
  */
 int32_t OH_BatteryInfo_GetCapacity();
 
@@ -100,12 +100,11 @@ int32_t OH_BatteryInfo_GetCapacity();
  *         {@link PLUGGED_TYPE_WIRELESS} if the power source is wireless charger.
  *         {@link PLUGGED_TYPE_BUTT} if the type is unknown.
  * @syscap ystemCapability.PowerManager.BatteryManager.Core
- * @since 12
+ * @since 13
  */
 BatteryInfo_BatteryPluggedType OH_BatteryInfo_GetPluggedType();
-
 #ifdef __cplusplus
 }
-/** @} */
 #endif /* __cplusplus */
 #endif /* OHBATTERY_INFO_HEADER */
+/** @} */
