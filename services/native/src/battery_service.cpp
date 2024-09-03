@@ -55,7 +55,6 @@ constexpr uint32_t SHUTDOWN_DELAY_TIME_MS = 60000;
 const std::string BATTERY_VIBRATOR_CONFIG_FILE = "etc/battery/battery_vibrator.json";
 const std::string VENDOR_BATTERY_VIBRATOR_CONFIG_FILE = "/vendor/etc/battery/battery_vibrator.json";
 const std::string SYSTEM_BATTERY_VIBRATOR_CONFIG_FILE = "/system/etc/battery/battery_vibrator.json";
-const std::string COMMON_EVENT_BATTERY_CHANGED = "usual.event.BATTERY_CHANGED";
 sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 FFRTQueue g_queue("battery_service");
 FFRTHandle g_lowCapacityShutdownHandle = nullptr;
@@ -229,51 +228,7 @@ void BatteryService::InitBatteryInfo()
     batteryInfo_.SetTechnology(GetTechnology());
     batteryInfo_.SetNowCurrent(GetNowCurrent());
     batteryInfo_.SetChargeType(GetChargeType());
-    AddBootCommonEvents();
     HandleBatteryInfo();
-}
-
-void BatteryService::AddBootCommonEvents()
-{
-    std::string ueventName;
-    std::string commonEventName = COMMON_EVENT_BATTERY_CHANGED;
-    if (FillCommonEvent(ueventName, commonEventName)) {
-        BATTERY_HILOGI(COMP_SVC, "need boot broadcast %{public}s", commonEventName.c_str());
-        // Splicing strings for parsing uevent
-        batteryInfo_.SetUevent(ueventName + "$sendcommonevent");
-    }
-
-    if (commonEventName != COMMON_EVENT_BATTERY_CHANGED) {
-        batteryInfo_.SetUevent(ueventName);
-        batteryNotify_->PublishCustomEvent(batteryInfo_, commonEventName);
-        batteryInfo_.SetUevent("");
-    }
-}
-
-bool BatteryService::FillCommonEvent(std::string& ueventName, std::string& commonEventName)
-{
-    const auto& commonEventConf = BatteryConfig::GetInstance().GetCommonEventConf();
-    if (commonEventConf.empty()) {
-        BATTERY_HILOGI(COMP_SVC, "don't need send common event, config is empty!");
-        return false;
-    }
-    for (const auto& iter : commonEventConf) {
-        commonEventName = iter.eventName;
-        ueventName = iter.uevent;
-        std::string result;
-        BatteryError error = GetBatteryConfig(iter.sceneConfigName, result);
-        if (error != BatteryError::ERR_OK) {
-            continue;
-        }
-        bool isEqual = iter.sceneConfigEqual;
-        std::string configValue = iter.sceneConfigValue;
-        ueventName += result;
-        if ((isEqual && result == configValue) || (!isEqual && result != configValue)) {
-            return true;
-        }
-    }
-    BATTERY_HILOGI(COMP_SVC, "don't need send common event");
-    return false;
 }
 
 void BatteryService::HandleBatteryInfo()
@@ -801,7 +756,6 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
     if (!Permission::IsSystem()) {
         return ERR_PERMISSION_DENIED;
     }
-
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     if ((args.empty()) || (args[0].compare(u"-h") == 0)) {
         batteryDump.DumpBatteryHelp(fd);
