@@ -116,7 +116,7 @@ void BatteryNotify::HandleUevent(BatteryInfo& info)
             PublishChangedEvent(info);
         } else if (ueventAct == SEND_CUSTOMEVENT) {
             info.SetUevent(ueventName);
-            PublishCustomEvent(info, BATTERY_CUSTOM_EVENT);
+            PublishCustomEvent(info);
         } else {
             BATTERY_HILOGE(COMP_SVC, "undefine uevent act %{public}s", ueventAct.c_str());
         }
@@ -434,11 +434,11 @@ bool BatteryNotify::PublishDischargingEvent(const BatteryInfo& info) const
     return isSuccess;
 }
 
-bool BatteryNotify::PublishCustomEvent(const BatteryInfo& info, const std::string& commonEventName) const
+bool BatteryNotify::PublishCustomEvent(const BatteryInfo& info) const
 {
     Want want;
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_UEVENT, info.GetUevent());
-    want.SetAction(commonEventName);
+    want.SetAction(BATTERY_CUSTOM_EVENT);
     CommonEventData data;
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
