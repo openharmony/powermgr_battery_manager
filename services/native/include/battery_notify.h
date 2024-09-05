@@ -29,7 +29,6 @@ public:
     BatteryNotify();
     ~BatteryNotify() = default;
     int32_t PublishEvents(BatteryInfo& info);
-    bool PublishCustomEvent(const BatteryInfo& info, const std::string& commonEventName) const;
 
 private:
     void HandleUevent(BatteryInfo& info);
@@ -44,6 +43,7 @@ private:
     bool PublishDischargingEvent(const BatteryInfo& info) const;
     bool PublishChargeTypeChangedEvent(const BatteryInfo& info);
     bool IsCommonEventServiceAbilityExist() const;
+    bool PublishCustomEvent(const BatteryInfo& info) const;
 
     int32_t lowCapacity_ = -1;
     ChargeType batteryInfoChargeType_ = ChargeType::NONE;
