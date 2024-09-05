@@ -21,6 +21,8 @@ config("batterysrv_public_config") {
 }
 
 ohos_shared_library("batterysrv_client") {
+  branch_protector_ret = "pac_ret"
+
   sources = [
     "${battery_frameworks}/native/src/battery_srv_client.cpp",
     "${battery_service_zidl}/src/battery_srv_proxy.cpp",
