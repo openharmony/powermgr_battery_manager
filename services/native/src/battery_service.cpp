@@ -295,7 +295,7 @@ void BatteryService::HandleBatteryInfo()
 
     batteryNotify_->PublishEvents(batteryInfo_);
     HandleTemperature(batteryInfo_.GetTemperature());
-    HandleCapacity(batteryInfo_.GetCapacity(), batteryInfo_.GetChargeState());
+    HandleCapacity(batteryInfo_.GetCapacity(), batteryInfo_.GetChargeState(), batteryInfo_.IsPresent());
     lastBatteryInfo_ = batteryInfo_;
 }
 
@@ -427,12 +427,17 @@ void BatteryService::HandleTemperature(int32_t temperature)
     }
 }
 
-void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeState)
+void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent)
 {
     if ((capacity <= shutdownCapacityThreshold_) &&
         (g_lowCapacityShutdownHandle == nullptr) &&
+#ifndef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+        isBatteryPresent &&
+#endif
         (!IsCharging(chargeState))) {
-        BATTERY_HILOGI(COMP_SVC, "HandleCapacity begin to submit task");
+        BATTERY_HILOGI(COMP_SVC, "HandleCapacity begin to submit task, "
+            "capacity=%{public}d, chargeState=%{public}u, isBatteryPresent=%{public}d",
+            capacity, static_cast<uint32_t>(chargeState), isBatteryPresent);
         FFRTTask task = [&] {
             if (!IsInExtremePowerSaveMode()) {
                 BATTERY_HILOGI(COMP_SVC, "HandleCapacity begin to shutdown");
@@ -442,8 +447,10 @@ void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeS
         g_lowCapacityShutdownHandle = FFRTUtils::SubmitDelayTask(task, SHUTDOWN_DELAY_TIME_MS, g_queue);
     }
 
-    if (IsCharging(chargeState) && g_lowCapacityShutdownHandle != nullptr) {
-        BATTERY_HILOGI(COMP_SVC, "HandleCapacity cancel shutdown task");
+    if (g_lowCapacityShutdownHandle != nullptr && IsCharging(chargeState)) {
+        BATTERY_HILOGI(COMP_SVC, "HandleCapacity cancel shutdown task, "
+            "capacity=%{public}d, chargeState=%{public}u, isBatteryPresent=%{public}d",
+            capacity, static_cast<uint32_t>(chargeState), isBatteryPresent);
         FFRTUtils::CancelTask(g_lowCapacityShutdownHandle, g_queue);
         g_lowCapacityShutdownHandle = nullptr;
     }
