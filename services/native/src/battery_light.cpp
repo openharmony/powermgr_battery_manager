@@ -29,10 +29,12 @@ using namespace std;
 
 namespace OHOS {
 namespace PowerMgr {
+#ifdef HAS_SENSORS_MISCDEVICE_PART
 namespace {
 constexpr uint32_t MOVE_RIGHT_16 = 16;
 constexpr uint32_t MOVE_RIGHT_8 = 8;
 }
+#endif
 void BatteryLight::InitLight()
 {
 #ifdef HAS_SENSORS_MISCDEVICE_PART

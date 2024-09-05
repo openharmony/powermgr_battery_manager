@@ -34,7 +34,9 @@ public:
 
 private:
     bool available_ {false};
+#ifdef HAS_SENSORS_MISCDEVICE_PART
     int32_t lightId_ {-1};
+#endif
     uint32_t lightColor_ {0};
 };
 } // namespace PowerMgr
