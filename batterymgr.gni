@@ -45,6 +45,13 @@ if (!defined(global_parts_info) || defined(global_parts_info.arkui_ui_lite)) {
   has_ui_lite_part = false
 }
 
+if (!defined(global_parts_info) ||
+    defined(global_parts_info.customization_config_policy)) {
+  has_battery_config_policy_part = true
+} else {
+  has_battery_config_policy_part = false
+}
+
 ability_runtime_path = "//foundation/ability/ability_runtime"
 ability_runtime_napi_path = "${ability_runtime_path}/frameworks/js/napi"
 ability_runtime_inner_api_path = "${ability_runtime_path}/interfaces/inner_api"
