@@ -54,7 +54,6 @@ ohos_shared_library("batteryservice") {
     "c_utils:utils",
     "common_event_service:cesfwk_core",
     "common_event_service:cesfwk_innerkits",
-    "config_policy:configpolicy_util",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "ffrt:libffrt",
     "hdf_core:libhdi",
@@ -83,6 +82,11 @@ ohos_shared_library("batteryservice") {
 
   if (has_hiviewdfx_hisysevent_part) {
     external_deps += [ "hisysevent:libhisysevent" ]
+  }
+
+  if (has_battery_config_policy_part) {
+    defines += [ "HAS_BATTERY_CONFIG_POLICY_PART" ]
+    external_deps += [ "config_policy:configpolicy_util" ]
   }
 
   subsystem_name = "powermgr"

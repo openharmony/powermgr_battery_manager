@@ -50,7 +50,6 @@ ohos_executable("charger") {
   external_deps = [
     "cJSON:cjson",
     "c_utils:utils",
-    "config_policy:configpolicy_util",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "drivers_interface_input:libinput_proxy_1.0",
     "init:libbegetutil",
@@ -60,8 +59,14 @@ ohos_executable("charger") {
     "libpng:libpng",
   ]
 
+  if (has_battery_config_policy_part) {
+    defines += [ "HAS_BATTERY_CONFIG_POLICY_PART" ]
+    external_deps += [ "config_policy:configpolicy_util" ]
+  }
+
   if (has_drivers_interface_display_part && has_drivers_interface_light_part &&
-      has_graphic_surface_part && has_ui_lite_part) {
+      has_graphic_surface_part && has_ui_lite_part &&
+      battery_manager_feature_enable_charger) {
     defines += [ "ENABLE_CHARGER" ]
     external_deps += [
       "drivers_interface_display:libdisplay_composer_hdi_impl_1.2",
@@ -77,6 +82,7 @@ ohos_executable("charger") {
   }
 
   part_name = "battery_manager"
+  subsystem_name = "powermgr"
 }
 
 group("charger_group") {
