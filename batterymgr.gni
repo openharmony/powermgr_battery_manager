@@ -15,6 +15,7 @@ import("//build/ohos.gni")
 
 declare_args() {
   battery_manager_feature_set_low_capacity_threshold = false
+  battery_manager_feature_enable_charger = false
 }
 
 defines = []
@@ -59,6 +60,13 @@ if (!defined(global_parts_info) || defined(global_parts_info.arkui_ui_lite)) {
   has_ui_lite_part = true
 } else {
   has_ui_lite_part = false
+}
+
+if (!defined(global_parts_info) ||
+    defined(global_parts_info.customization_config_policy)) {
+  has_battery_config_policy_part = true
+} else {
+  has_battery_config_policy_part = false
 }
 
 ability_runtime_path = "//foundation/ability/ability_runtime"

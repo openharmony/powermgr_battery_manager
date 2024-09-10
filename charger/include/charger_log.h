@@ -40,25 +40,25 @@ inline std::string ReplaceHolders(const char* fmt)
     return "[%s:%d] %s# " + str + "\n";
 }
 
-#define BATTERY_HILOGE(label, fmt, ...)                                                                             \
-    do {                                                                                                            \
-        InitLogPrint(INIT_LOG_PATH CHARGER_LOG_FILE, INIT_ERROR, label, (ReplaceHolders(fmt).c_str()), (FILE_NAME), \
-            (__LINE__), (__FUNCTION__), ##__VA_ARGS__);                                                             \
+#define BATTERY_HILOGE(label, fmt, ...)                                                                            \
+    do {                                                                                                           \
+        InitLogPrint(INIT_LOG_PATH CHARGER_LOG_FILE, INIT_ERROR, label, (ReplaceHolders(fmt).c_str()),             \
+            (STARTUP_FILE_NAME), (__LINE__), (__FUNCTION__), ##__VA_ARGS__);                                       \
     } while (0)
 #define BATTERY_HILOGW(label, fmt, ...)                                                                            \
     do {                                                                                                           \
-        InitLogPrint(INIT_LOG_PATH CHARGER_LOG_FILE, INIT_WARN, label, (ReplaceHolders(fmt).c_str()), (FILE_NAME), \
-            (__LINE__), (__FUNCTION__), ##__VA_ARGS__);                                                            \
+        InitLogPrint(INIT_LOG_PATH CHARGER_LOG_FILE, INIT_WARN, label, (ReplaceHolders(fmt).c_str()),              \
+            (STARTUP_FILE_NAME), (__LINE__), (__FUNCTION__), ##__VA_ARGS__);                                       \
     } while (0)
 #define BATTERY_HILOGI(label, fmt, ...)                                                                            \
     do {                                                                                                           \
-        InitLogPrint(INIT_LOG_PATH CHARGER_LOG_FILE, INIT_INFO, label, (ReplaceHolders(fmt).c_str()), (FILE_NAME), \
-            (__LINE__), (__FUNCTION__), ##__VA_ARGS__);                                                            \
+        InitLogPrint(INIT_LOG_PATH CHARGER_LOG_FILE, INIT_INFO, label, (ReplaceHolders(fmt).c_str()),              \
+            (STARTUP_FILE_NAME), (__LINE__), (__FUNCTION__), ##__VA_ARGS__);                                       \
     } while (0)
-#define BATTERY_HILOGD(label, fmt, ...)                                                                             \
-    do {                                                                                                            \
-        InitLogPrint(INIT_LOG_PATH CHARGER_LOG_FILE, INIT_DEBUG, label, (ReplaceHolders(fmt).c_str()), (FILE_NAME), \
-            (__LINE__), (__FUNCTION__), ##__VA_ARGS__);                                                             \
+#define BATTERY_HILOGD(label, fmt, ...)                                                                            \
+    do {                                                                                                           \
+        InitLogPrint(INIT_LOG_PATH CHARGER_LOG_FILE, INIT_DEBUG, label, (ReplaceHolders(fmt).c_str()),             \
+            (STARTUP_FILE_NAME), (__LINE__), (__FUNCTION__), ##__VA_ARGS__);                                       \
     } while (0)
 
 #endif // BATTERY_LOG_H

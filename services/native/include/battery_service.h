@@ -24,7 +24,6 @@
 #include <string>
 #include <vector>
 
-#include "event_runner.h"
 #include "hdi_service_status_listener.h"
 #include "iservmgr_hdi.h"
 #include "iservstat_listener_hdi.h"
