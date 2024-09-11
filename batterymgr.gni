@@ -18,6 +18,23 @@ declare_args() {
   battery_manager_feature_enable_charger = false
 }
 
+defines = []
+if (!defined(global_parts_info) ||
+    defined(global_parts_info.hiviewdfx_hisysevent)) {
+  has_hiviewdfx_hisysevent_part = true
+  defines += [ "HAS_HIVIEWDFX_HISYSEVENT_PART" ]
+} else {
+  has_hiviewdfx_hisysevent_part = false
+}
+
+if (!defined(global_parts_info) ||
+    defined(global_parts_info.sensors_miscdevice)) {
+  has_sensors_miscdevice_part = true
+  defines += [ "HAS_SENSORS_MISCDEVICE_PART" ]
+} else {
+  has_sensors_miscdevice_part = false
+}
+
 if (!defined(global_parts_info) ||
     defined(global_parts_info.hdf_drivers_interface_display)) {
   has_drivers_interface_display_part = true
