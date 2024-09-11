@@ -20,7 +20,7 @@ config("batteryd_private_config") {
 
 ohos_executable("charger") {
   install_enable = true
-  defines = [
+  defines += [
     "ENABLE_INIT_LOG",
     "DIFF_PATCH_SDK",
   ]

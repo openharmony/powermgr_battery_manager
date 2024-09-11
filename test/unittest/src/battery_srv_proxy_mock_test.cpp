@@ -17,10 +17,13 @@
 #include "battery_srv_proxy.h"
 #include "ipc_object_stub.h"
 #include "mock_remote_object.h"
+#ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
 #include <hisysevent.h>
-
+#endif
 using namespace testing::ext;
+#ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
 using namespace OHOS::HiviewDFX;
+#endif
 using namespace OHOS::PowerMgr;
 using namespace OHOS;
 using namespace std;
