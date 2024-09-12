@@ -487,9 +487,9 @@ void BatteryService::SetLowCapacityThreshold()
             BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
     }
-    BATTERY_HILOGI(FEATURE_BATT_INFO, "set low capacity thres: shutdownCapacityThreshold_ = %{public}d",
-        shutdownCapacityThreshold_);
-    iBatteryInterface_->SetBatteryConfig(thers, std::to_string(shutdownCapacityThreshold_));
+    BATTERY_HILOGI(FEATURE_BATT_INFO, "set low capacity thres: criticalCapacityThreshold_ = %{public}d",
+        criticalCapacityThreshold_);
+    iBatteryInterface_->SetBatteryConfig(thers, std::to_string(criticalCapacityThreshold_));
 }
 #endif
 
