@@ -18,11 +18,14 @@
 #include "charger_log.h"
 #include "charger_animation.h"
 #include "init_reboot.h"
-#include "v1_0/iinput_interfaces.h"
+#include <cstdint>
+#include <input_manager.h>
 #include <cinttypes>
 #include <linux/netlink.h>
 #include <parameters.h>
 #include <securec.h>
+
+using namespace OHOS::MMI;
 
 namespace OHOS {
 namespace PowerMgr {
@@ -34,15 +37,15 @@ constexpr int32_t BACKLIGHT_OFF_TIME_MS = 10000;
 constexpr int32_t VIBRATE_TIME_MS = 75;
 const std::string REBOOT_CMD = "";
 const std::string SHUTDOWN_CMD = "shutdown";
-constexpr uint32_t INDEV_TYPE_UNKNOWN = 39;
+constexpr int32_t KEYCODE_POWER_VAL = 18;
+constexpr int32_t KEY_ACTION_DOWN_VAL = 1;
+constexpr int32_t KEY_ACTION_UP_VAL = 0;
 } // namespace
 
 std::unique_ptr<ChargerAnimation> ChargerThread::animation_ = nullptr;
 bool ChargerThread::isChargeStateChanged_ = false;
 bool ChargerThread::isConfigParse_ = false;
 int32_t ChargerThread::lackPowerCapacity_ = -1;
-sptr<HDI::Input::V1_0::IInputCallback> g_callback {nullptr};
-sptr<HDI::Input::V1_0::IInputInterfaces> ChargerThread::inputInterface = nullptr;
 
 struct KeyState {
     bool isUp;
@@ -58,31 +61,7 @@ static int64_t GetCurrentTime()
     return tm.tv_sec * SEC_TO_MSEC + (tm.tv_nsec / NSEC_TO_MSEC);
 }
 
-int32_t ChargerThread::HdfInputEventCallback::EventPkgCallback(
-    const std::vector<HDI::Input::V1_0::EventPackage>& pkgs, uint32_t devIndex)
-{
-    (void)devIndex;
-    if (pkgs.empty()) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "pkgs is empty");
-        return HDF_FAILURE;
-    }
-    for (uint32_t i = 0; i < pkgs.size(); i++) {
-        struct input_event ev = {
-            .type = static_cast<__u16>(pkgs[i].type),
-            .code = static_cast<__u16>(pkgs[i].code),
-            .value = pkgs[i].value,
-        };
-        HandleInputEvent(&ev);
-    }
-    return HDF_SUCCESS;
-}
-
-int32_t ChargerThread::HdfInputEventCallback::HotPlugCallback(const HotPlugEvent &event)
-{
-    return HDF_SUCCESS;
-}
-
-void ChargerThread::HdfInputEventCallback::SetKeyState(int32_t code, int32_t value, int64_t now)
+void ChargerThreadInputMonitor::SetKeyState(int32_t code, int32_t value, int64_t now) const
 {
     bool isDown = !!value;
 
@@ -102,22 +81,6 @@ void ChargerThread::HdfInputEventCallback::SetKeyState(int32_t code, int32_t val
 
     g_keys[code].isDown = isDown;
     g_keys[code].isUp = true;
-}
-
-void ChargerThread::HdfInputEventCallback::HandleInputEvent(const struct input_event* iev)
-{
-    input_event ev {};
-    ev.type = iev->type;
-    ev.code = iev->code;
-    ev.value = iev->value;
-    BATTERY_HILOGD(FEATURE_CHARGING, "ev.type=%{public}u, ev.code=%{public}u, ev.value=%{public}d",
-        ev.type, ev.code, ev.value);
-
-    if (ev.type != EV_KEY) {
-        BATTERY_HILOGW(FEATURE_CHARGING, "Wrong type");
-        return;
-    }
-    SetKeyState(ev.code, ev.value, GetCurrentTime());
 }
 
 void ChargerThread::HandleStates()
@@ -336,44 +299,39 @@ void ChargerThread::HandlePowerKey(int32_t keycode, int64_t now)
     }
 }
 
-void ChargerThread::InitInput()
+void ChargerThreadInputMonitor::OnInputEvent(std::shared_ptr<OHOS::MMI::PointerEvent> pointerEvent) const {};
+void ChargerThreadInputMonitor::OnInputEvent(std::shared_ptr<OHOS::MMI::AxisEvent> axisEvent) const {};
+
+void ChargerThreadInputMonitor::OnInputEvent(std::shared_ptr<OHOS::MMI::KeyEvent> keyEvent) const
 {
-    inputInterface = nullptr;
-    inputInterface = HDI::Input::V1_0::IInputInterfaces::Get(true);
-    if (inputInterface == nullptr) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "inputInterface is null");
-        return;
+    if (keyEvent->GetKeyCode() == OHOS::MMI::KeyEvent::KEYCODE_POWER) {
+        if (keyEvent->GetKeyAction() == MMI::KeyEvent::KEY_ACTION_DOWN) {
+            BATTERY_HILOGW(FEATURE_CHARGING, "PowerKey Action Down");
+            SetKeyState(KEYCODE_POWER_VAL, KEY_ACTION_DOWN_VAL, GetCurrentTime());
+        } else if (keyEvent->GetKeyAction() == MMI::KeyEvent::KEY_ACTION_UP) {
+            BATTERY_HILOGW(FEATURE_CHARGING, "PowerKey Action Up");
+            SetKeyState(KEYCODE_POWER_VAL, KEY_ACTION_UP_VAL, GetCurrentTime());
+        }
     }
+}
 
-    const uint32_t POWERKEY_INPUT_DEVICE = 2;
-    int32_t ret = inputInterface->OpenInputDevice(POWERKEY_INPUT_DEVICE);
-    if (ret != HDF_SUCCESS) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "open device failed, index=%{public}u, ret=%{public}d",
-            POWERKEY_INPUT_DEVICE, ret);
-        return;
+void ChargerThread::InputMonitorInit()
+{
+    BATTERY_HILOGI(FEATURE_CHARGING, "Charger input monitor init");
+    std::shared_ptr<ChargerThreadInputMonitor> inputMonitor = std::make_shared<ChargerThreadInputMonitor>();
+    if (inputMonitorId_ < 0) {
+        inputMonitorId_ =
+            InputManager::GetInstance()->AddMonitor(std::static_pointer_cast<IInputEventConsumer>(inputMonitor));
     }
+}
 
-    uint32_t devType = INDEV_TYPE_UNKNOWN;
-    ret = inputInterface->GetDeviceType(POWERKEY_INPUT_DEVICE, devType);
-    if (ret != HDF_SUCCESS) {
-        BATTERY_HILOGE(
-            FEATURE_CHARGING, "get device type failed, index=%{public}u, ret=%{public}d", POWERKEY_INPUT_DEVICE, ret);
-        return;
-    }
-
-    /* first param is powerkey input device, refer to device node '/dev/hdf_input_event2', so pass 2 */
-    if (g_callback == nullptr) {
-        g_callback = new (std::nothrow) HdfInputEventCallback();
-    }
-    if (g_callback == nullptr) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "The callback_ is nullptr");
-        return;
-    }
-    ret = inputInterface->RegisterReportCallback(POWERKEY_INPUT_DEVICE, g_callback);
-    if (ret != HDF_SUCCESS) {
-        BATTERY_HILOGE(FEATURE_CHARGING, "register callback failed, index=%{public}u, ret=%{public}d",
-            POWERKEY_INPUT_DEVICE, ret);
-        return;
+void ChargerThread::InputMonitorCancel()
+{
+    BATTERY_HILOGI(FEATURE_CHARGING, "Charger input monitor cancel");
+    InputManager *inputManager = InputManager::GetInstance();
+    if (inputMonitorId_ >= 0) {
+        inputManager->RemoveMonitor(inputMonitorId_);
+        inputMonitorId_ = -1;
     }
 }
 
@@ -448,7 +406,7 @@ void ChargerThread::Init()
     InitBacklight();
     InitLed();
     InitAnimation();
-    InitInput();
+    InputMonitorInit();
 }
 
 void ChargerThread::Run(void* service)
