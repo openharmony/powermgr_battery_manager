@@ -61,7 +61,8 @@
                 "power_manager",
                 "safwk",
                 "samgr",
-                "ui_lite"
+                "ui_lite",
+                "input"
             ]
         },
         "build": {

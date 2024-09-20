@@ -53,6 +53,7 @@ ohos_executable("charger") {
     "drivers_interface_battery:libbattery_proxy_2.0",
     "drivers_interface_input:libinput_proxy_1.0",
     "init:libbegetutil",
+    "input:libmmi-client",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
     "jsoncpp:jsoncpp",
