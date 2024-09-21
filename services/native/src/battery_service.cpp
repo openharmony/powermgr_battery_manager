@@ -450,7 +450,7 @@ void BatteryService::SetLowCapacityThreshold()
 
 BatteryError BatteryService::SetBatteryConfig(const std::string& sceneName, const std::string& value)
 {
-    if (!Permission::IsSystem()) {
+    if (!Permission::IsSystem() || !Permission::IsNativePermissionGranted("ohos.permission.POWER_OPTIMIZATION")) {
         BATTERY_HILOGI(FEATURE_BATT_INFO, "SetBatteryConfig failed, System permission intercept");
         return BatteryError::ERR_SYSTEM_API_DENIED;
     }
