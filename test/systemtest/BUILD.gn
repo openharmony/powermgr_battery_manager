@@ -126,6 +126,10 @@ ohos_systemtest("test_battery_event_systemtest") {
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
+
+  if (build_variant == "user") {
+    defines += [ "BATTERY_USER_VERSION" ]
+  }
 }
 
 group("systemtest") {
