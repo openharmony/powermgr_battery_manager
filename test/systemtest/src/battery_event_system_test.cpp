@@ -439,6 +439,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest001, TestSize.Level0)
  * @tc.name: BatteryEventSystemTest
  * @tc.desc: Verify the receive the common event
  */
+#ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest002, TestSize.Level0)
 {
     shared_ptr<CommonEventBatteryChangedTest> subscriber = CommonEventBatteryChangedTest::RegisterEvent();
@@ -451,6 +452,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest002, TestSize.Level0)
     EXPECT_EQ(CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED, g_action);
     CommonEventManager::UnSubscribeCommonEvent(subscriber);
 }
+#endif
 
 /*
  * @tc.number: BatteryEventSystemTest003
@@ -458,6 +460,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest002, TestSize.Level0)
  * @tc.desc: Verify the receive the common event
  * @tc.require: issueI6KRS8
  */
+#ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest003, TestSize.Level0)
 {
     shared_ptr<CommonEventBatteryChargingTest> subscriber = CommonEventBatteryChargingTest::RegisterEvent();
@@ -470,6 +473,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest003, TestSize.Level0)
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
 }
+#endif
 
 /*
  * @tc.number: BatteryEventSystemTest004
@@ -477,6 +481,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest003, TestSize.Level0)
  * @tc.desc: Verify the receive the common event
  * @tc.require: issueI6KRS8
  */
+#ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest004, TestSize.Level0)
 {
     shared_ptr<CommonEventBatteryDischargingTest> subscriber = CommonEventBatteryDischargingTest::RegisterEvent();
@@ -489,6 +494,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest004, TestSize.Level0)
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
 }
+#endif
 
 /*
  * @tc.number: BatteryEventSystemTest005
@@ -496,6 +502,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest004, TestSize.Level0)
  * @tc.desc: Verify the receive the common event
  * @tc.require: issueI6KRS8
  */
+#ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest005, TestSize.Level0)
 {
     shared_ptr<CommonEventBatteryOkayTest> subscriber = CommonEventBatteryOkayTest::RegisterEvent();
@@ -508,6 +515,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest005, TestSize.Level0)
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
 }
+#endif
 
 /*
  * @tc.number: BatteryEventSystemTest006
@@ -515,6 +523,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest005, TestSize.Level0)
  * @tc.desc: Verify the receive the common event
  * @tc.require: issueI6KRS8
  */
+#ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest006, TestSize.Level0)
 {
     shared_ptr<CommonEventBatteryDisconnectTest> subscriber = CommonEventBatteryDisconnectTest::RegisterEvent();
@@ -527,6 +536,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest006, TestSize.Level0)
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
 }
+#endif
 
 /*
  * @tc.number: BatteryEventSystemTest007
@@ -534,6 +544,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest006, TestSize.Level0)
  * @tc.desc: Verify the receive the common event
  * @tc.require: issueI6KRS8
  */
+#ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest007, TestSize.Level0)
 {
     shared_ptr<CommonEventBatteryConnectTest> subscriber = CommonEventBatteryConnectTest::RegisterEvent();
@@ -546,6 +557,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest007, TestSize.Level0)
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
 }
+#endif
 
 /*
  * @tc.number: BatteryEventSystemTest008
@@ -553,6 +565,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest007, TestSize.Level0)
  * @tc.desc: Verify the receive the common event
  * @tc.require: issueI6KRS8
  */
+#ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
 {
     shared_ptr<CommonEventChargeTypeChangedTest> subscriber = CommonEventChargeTypeChangedTest::RegisterEvent();
@@ -565,6 +578,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
 }
+#endif
 
 /*
  * @tc.number: BatteryEventSystemTest009
@@ -572,6 +586,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
  * @tc.desc: Test capacity and unplugged dump, verify the receive the common event
  * @tc.require: issueI6Z8RB
  */
+#ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
 {
     shared_ptr<CommonEventDumpCapacityTest> subscriber = CommonEventDumpCapacityTest::RegisterEvent();
@@ -623,4 +638,5 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
 }
+#endif
 } // namespace
