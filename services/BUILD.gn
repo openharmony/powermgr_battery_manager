@@ -57,6 +57,7 @@ ohos_shared_library("batteryservice") {
     "common_event_service:cesfwk_innerkits",
     "config_policy:configpolicy_util",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "eventhandler:libeventhandler",
     "ffrt:libffrt",
     "hdf_core:libhdi",
     "hdf_core:libpub_utils",
@@ -76,6 +77,10 @@ ohos_shared_library("batteryservice") {
 
   if (battery_manager_feature_set_low_capacity_threshold) {
     defines = [ "BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD" ]
+  }
+
+  if (build_variant == "user") {
+    defines += [ "BATTERY_USER_VERSION" ]
   }
 
   subsystem_name = "powermgr"

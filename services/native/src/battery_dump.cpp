@@ -36,10 +36,12 @@ void BatteryDump::DumpBatteryHelp(int32_t fd)
     dprintf(fd, "Usage:\n");
     dprintf(fd, "      -h: dump help\n");
     dprintf(fd, "      -i: dump battery info\n");
+#ifndef BATTERY_USER_VERSION
     dprintf(fd, "      -u: unplug battery charging state\n");
     dprintf(fd, "      -r: reset battery state\n");
     dprintf(fd, "      --capacity <capacity>: set battery capacity, the capacity range [0, 100]\n");
     dprintf(fd, "      --uevent <uevent>: set battery uevent\n");
+#endif
 }
 
 void BatteryDump::DumpCurrentTime(int32_t fd)
@@ -103,8 +105,12 @@ bool BatteryDump::MockUnplugged(int32_t fd, sptr<BatteryService>& service, const
         BATTERY_HILOGW(FEATURE_CHARGING, "args cannot be empty or invalid");
         return false;
     }
+#ifndef BATTERY_USER_VERSION
     service->MockUnplugged();
     dprintf(fd, "unplugged battery charging state \n");
+#else
+    dprintf(fd, "[Failed] User version is not support \n");
+#endif
     return true;
 }
 
@@ -114,8 +120,12 @@ bool BatteryDump::Reset(int32_t fd, sptr<BatteryService>& service, const std::ve
         BATTERY_HILOGW(FEATURE_CHARGING, "args cannot be empty or invalid");
         return false;
     }
+#ifndef BATTERY_USER_VERSION
     service->Reset();
     dprintf(fd, "reset battery state \n");
+#else
+    dprintf(fd, "[Failed] User version is not support \n");
+#endif
     return true;
 }
 
@@ -125,6 +135,7 @@ bool BatteryDump::MockCapacity(int32_t fd, sptr<BatteryService> &service, const 
         BATTERY_HILOGW(FEATURE_BATT_INFO, "args cannot be empty or invalid");
         return false;
     }
+#ifndef BATTERY_USER_VERSION
     int32_t capacity = 0;
     std::string capacityStr = Str16ToStr8(args[1]);
     if (!StrToInt(capacityStr, capacity)) {
@@ -137,6 +148,9 @@ bool BatteryDump::MockCapacity(int32_t fd, sptr<BatteryService> &service, const 
     }
     service->MockCapacity(capacity);
     dprintf(fd, "battery capacity %d \n", capacity);
+#else
+    dprintf(fd, "[Failed] User version is not support \n");
+#endif
     return true;
 }
 
@@ -146,9 +160,13 @@ bool BatteryDump::MockUevent(int32_t fd, sptr<BatteryService> &service, const st
         BATTERY_HILOGW(FEATURE_BATT_INFO, "args cannot be empty or invalid");
         return false;
     }
+#ifndef BATTERY_USER_VERSION
     std::string uevent = Str16ToStr8(args[1]);
     service->MockUevent(uevent);
     dprintf(fd, "battery uevent %s \n", uevent.c_str());
+#else
+    dprintf(fd, "[Failed] User version is not support \n");
+#endif
     return true;
 }
 }  // namespace PowerMgr
