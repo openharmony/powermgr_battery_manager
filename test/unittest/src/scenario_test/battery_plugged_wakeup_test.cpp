@@ -61,7 +61,7 @@ namespace {
  */
 HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest001, TestSize.Level0)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest001 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest001 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
         g_service->Reset();
@@ -75,7 +75,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest001, TestSize.Level0)
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_TRUE(isScreenOnNow);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest001 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest001 end.");
 }
 
 /**
@@ -85,7 +85,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest001, TestSize.Level0)
  */
 HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest002, TestSize.Level0)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest002 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest002 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB");
@@ -99,7 +99,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest002, TestSize.Level0)
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_TRUE(isScreenOnNow);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest002 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest002 end.");
 }
 
 /**
@@ -109,7 +109,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest002, TestSize.Level0)
  */
 HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest003, TestSize.Level0)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest003 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest003 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
         g_service->Reset();
@@ -123,7 +123,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest003, TestSize.Level0)
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_TRUE(isScreenOnNow);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest003 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest003 end.");
 }
 
 /**
@@ -133,7 +133,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest003, TestSize.Level0)
  */
 HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest004, TestSize.Level0)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest004 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest004 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "Wireless");
@@ -147,7 +147,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest004, TestSize.Level0)
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_TRUE(isScreenOnNow);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest004 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest004 end.");
 }
 
 /**
@@ -157,7 +157,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest004, TestSize.Level0)
  */
 HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest005, TestSize.Level0)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest005 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest005 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
         g_service->Reset();
@@ -171,7 +171,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest005, TestSize.Level0)
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_TRUE(isScreenOnNow);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest005 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest005 end.");
 }
 
 /**
@@ -181,7 +181,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest005, TestSize.Level0)
  */
 HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest006, TestSize.Level0)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest006 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest006 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "Mains");
@@ -195,7 +195,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest006, TestSize.Level0)
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_TRUE(isScreenOnNow);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest006 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest006 end.");
 }
 
 /**
@@ -205,7 +205,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest006, TestSize.Level0)
  */
 HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest007, TestSize.Level0)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest007 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest007 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
         g_service->Reset();
@@ -219,7 +219,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest007, TestSize.Level0)
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest007 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest007 end.");
 }
 
 /**
@@ -229,7 +229,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest007, TestSize.Level0)
  */
 HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest008, TestSize.Level0)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest008 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest008 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "1");
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "Unknown");
@@ -243,7 +243,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest008, TestSize.Level0)
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest008 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest008 end.");
 }
 
 /**
@@ -253,7 +253,7 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest008, TestSize.Level0)
  */
 HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest009, TestSize.Level0)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest009 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest009 start.");
     if (g_isMock) {
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/online", "0");
         g_service->Reset();
@@ -266,6 +266,6 @@ HWTEST_F(BatteryPluggedWakeupTest, BatteryPluggedWakeupTest009, TestSize.Level0)
         isScreenOnNow = powerMgrClient.IsScreenOn();
         EXPECT_FALSE(isScreenOnNow);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryPluggedWakeupTest009 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryPluggedWakeupTest009 end.");
 }
 }
