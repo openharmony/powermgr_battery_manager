@@ -93,7 +93,7 @@ namespace {
  */
 HWTEST_F (BatteryClientTest, BatteryClient001, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient001 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient001 start.");
 
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
@@ -111,7 +111,7 @@ HWTEST_F (BatteryClientTest, BatteryClient001, TestSize.Level1)
         ASSERT_TRUE(capacity <= 100 && capacity >= 0);
     }
 
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient001 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient001 end.");
 }
 
 /**
@@ -122,6 +122,7 @@ HWTEST_F (BatteryClientTest, BatteryClient001, TestSize.Level1)
 
 HWTEST_F (BatteryClientTest, BatteryClient002, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient002 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempChargeState = BatterySrvClient.GetChargingStatus();
@@ -146,7 +147,7 @@ HWTEST_F (BatteryClientTest, BatteryClient002, TestSize.Level1)
         ASSERT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
             chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient002 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient002 end.");
 }
 
 /**
@@ -156,7 +157,7 @@ HWTEST_F (BatteryClientTest, BatteryClient002, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient003, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient003 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient003 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempHealthState = BatterySrvClient.GetHealthStatus();
@@ -180,7 +181,7 @@ HWTEST_F (BatteryClientTest, BatteryClient003, TestSize.Level1)
             << static_cast<int32_t>(healthState);
         ASSERT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient003 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient003 end.");
 }
 
 /**
@@ -190,7 +191,7 @@ HWTEST_F (BatteryClientTest, BatteryClient003, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient004, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient004 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient004 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempPresent = BatterySrvClient.GetPresent();
@@ -207,7 +208,7 @@ HWTEST_F (BatteryClientTest, BatteryClient004, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient004 executing, present=" << present;
         ASSERT_TRUE(present);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient004 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient004 end.");
 }
 
 /**
@@ -217,7 +218,7 @@ HWTEST_F (BatteryClientTest, BatteryClient004, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient005, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient005 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient005 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempVoltage = BatterySrvClient.GetVoltage();
@@ -234,7 +235,7 @@ HWTEST_F (BatteryClientTest, BatteryClient005, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient005 executing, voltage=" << voltage;
         ASSERT_TRUE(voltage >= 0);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient005 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient005 end.");
 }
 
 /**
@@ -244,7 +245,7 @@ HWTEST_F (BatteryClientTest, BatteryClient005, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient006, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient006 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient006 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempTempPresent = BatterySrvClient.GetBatteryTemperature();
@@ -261,7 +262,7 @@ HWTEST_F (BatteryClientTest, BatteryClient006, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient006 executing, temperature=" << temperature;
         ASSERT_TRUE(temperature >= 0 && temperature <= 600);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient006 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient006 end.");
 }
 
 /**
@@ -271,7 +272,7 @@ HWTEST_F (BatteryClientTest, BatteryClient006, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient007, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient007 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient007 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         std::string tempTechnology = BatterySrvClient.GetTechnology();
@@ -288,7 +289,7 @@ HWTEST_F (BatteryClientTest, BatteryClient007, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient007 executing, technology=" << technology;
         ASSERT_TRUE(technology == "Li-poly");
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient007 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient007 end.");
 }
 
 /**
@@ -298,7 +299,7 @@ HWTEST_F (BatteryClientTest, BatteryClient007, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient008, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient008 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient008 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         TestUtils::ResetOnline();
@@ -320,7 +321,7 @@ HWTEST_F (BatteryClientTest, BatteryClient008, TestSize.Level1)
             << static_cast<int32_t>(pluggedType);
         ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient008 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient008 end.");
 }
 
 /**
@@ -330,7 +331,7 @@ HWTEST_F (BatteryClientTest, BatteryClient008, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient009, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient009 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient009 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempCurrnow = BatterySrvClient.GetNowCurrent();
@@ -347,7 +348,7 @@ HWTEST_F (BatteryClientTest, BatteryClient009, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient009 executing, currnow=" << currnow;
         ASSERT_TRUE(currnow >= -20000 && currnow <= 20000);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient009 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient009 end.");
 }
 
 /**
@@ -357,7 +358,7 @@ HWTEST_F (BatteryClientTest, BatteryClient009, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient010, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient010 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient010 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempChargenow = BatterySrvClient.GetRemainEnergy();
@@ -374,7 +375,7 @@ HWTEST_F (BatteryClientTest, BatteryClient010, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient010 executing, chargenow=" << chargenow;
         ASSERT_TRUE(chargenow >= 0);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient010 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient010 end.");
 }
 
 /**
@@ -384,7 +385,7 @@ HWTEST_F (BatteryClientTest, BatteryClient010, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient011, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient011 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient011 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempTotalenergy = BatterySrvClient.GetTotalEnergy();
@@ -401,7 +402,7 @@ HWTEST_F (BatteryClientTest, BatteryClient011, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient011 executing, totalenergy=" << totalenergy;
         ASSERT_TRUE(totalenergy >= 0);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient011 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient011 end.");
 }
 
 /**
@@ -411,7 +412,7 @@ HWTEST_F (BatteryClientTest, BatteryClient011, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient012, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient012 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient012 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempCapacity = BatterySrvClient.GetCapacity();
@@ -435,7 +436,7 @@ HWTEST_F (BatteryClientTest, BatteryClient012, TestSize.Level1)
             ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_CRITICAL);
         }
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient012 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient012 end.");
 }
 
 /**
@@ -445,7 +446,7 @@ HWTEST_F (BatteryClientTest, BatteryClient012, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient013, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient013 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient013 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempCapacity = BatterySrvClient.GetCapacity();
@@ -469,7 +470,7 @@ HWTEST_F (BatteryClientTest, BatteryClient013, TestSize.Level1)
             ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_LOW);
         }
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient013 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient013 end.");
 }
 
 /**
@@ -479,7 +480,7 @@ HWTEST_F (BatteryClientTest, BatteryClient013, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient014, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient014 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient014 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempCapacity = BatterySrvClient.GetCapacity();
@@ -503,7 +504,7 @@ HWTEST_F (BatteryClientTest, BatteryClient014, TestSize.Level1)
             ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_NORMAL);
         }
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient014 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient014 end.");
 }
 
 /**
@@ -513,7 +514,7 @@ HWTEST_F (BatteryClientTest, BatteryClient014, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient015, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient015 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient015 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempCapacity = BatterySrvClient.GetCapacity();
@@ -537,7 +538,7 @@ HWTEST_F (BatteryClientTest, BatteryClient015, TestSize.Level1)
             ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_HIGH);
         }
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient015 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient015 end.");
 }
 
 /**
@@ -547,7 +548,7 @@ HWTEST_F (BatteryClientTest, BatteryClient015, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient016, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient016 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient016 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto tempCapacity = BatterySrvClient.GetCapacity();
@@ -571,7 +572,7 @@ HWTEST_F (BatteryClientTest, BatteryClient016, TestSize.Level1)
             ASSERT_TRUE(batterylevel == OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_FULL);
         }
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient016 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient016 end.");
 }
 
 
@@ -582,7 +583,7 @@ HWTEST_F (BatteryClientTest, BatteryClient016, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient017, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient017 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient017 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         auto remainingChargeTime = BatterySrvClient.GetRemainingChargeTime();
@@ -593,7 +594,7 @@ HWTEST_F (BatteryClientTest, BatteryClient017, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient017 executing, remainingChargeTime=" << remainingChargeTime;
         ASSERT_TRUE(remainingChargeTime >= 0);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient017 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient017 end.");
 }
 
 /**
@@ -603,7 +604,7 @@ HWTEST_F (BatteryClientTest, BatteryClient017, TestSize.Level1)
  */
 HWTEST_F(BatteryClientTest, BatteryClient018, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient018 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient018 start.");
     {
         BatteryInfo info1;
         info1.SetCapacity(100);
@@ -643,7 +644,7 @@ HWTEST_F(BatteryClientTest, BatteryClient018, TestSize.Level1)
         ASSERT_FALSE(info1 == info2);
         ASSERT_TRUE(info1 != info2);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient018 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient018 end.");
 }
 
 /**
@@ -653,7 +654,7 @@ HWTEST_F(BatteryClientTest, BatteryClient018, TestSize.Level1)
  */
 HWTEST_F(BatteryClientTest, BatteryClient019, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient019 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient019 start.");
     BatteryInfo info1 = g_info;
     info1.SetPresent(false);
     BatteryInfo info2 = g_info;
@@ -689,7 +690,7 @@ HWTEST_F(BatteryClientTest, BatteryClient019, TestSize.Level1)
     info2.SetPluggedMaxCurrent(10);
     info1.SetPluggedMaxCurrent(20);
     ASSERT_FALSE(info1 == info2);
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient019 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient019 end.");
 }
 
 /**
@@ -699,26 +700,26 @@ HWTEST_F(BatteryClientTest, BatteryClient019, TestSize.Level1)
  */
 HWTEST_F(BatteryClientTest, BatteryClient020, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient020 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient020 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     BatterySrvClient.proxy_ = nullptr;
     BatterySrvClient.ResetProxy(nullptr);
 
     sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (sysMgr == nullptr) {
-        BATTERY_HILOGD(LABEL_TEST, "Failed to get Registry");
+        BATTERY_HILOGI(LABEL_TEST, "Failed to get Registry");
         return;
     }
     wptr<IRemoteObject> remoteObj = sysMgr->CheckSystemAbility(POWER_MANAGER_SERVICE_ID);
     if (remoteObj == nullptr) {
-        BATTERY_HILOGD(LABEL_TEST, "GetSystemAbility failed");
+        BATTERY_HILOGI(LABEL_TEST, "GetSystemAbility failed");
         return;
     }
     EXPECT_NE(BatterySrvClient.Connect(), nullptr);
     BatterySrvClient.ResetProxy(remoteObj);
     EXPECT_NE(BatterySrvClient.proxy_, nullptr);
 
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient020 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient020 end.");
 }
 
 /**
@@ -728,7 +729,7 @@ HWTEST_F(BatteryClientTest, BatteryClient020, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient021, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient021 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient021 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
 
     string sceneName = "testScene";
@@ -742,7 +743,7 @@ HWTEST_F (BatteryClientTest, BatteryClient021, TestSize.Level1)
         ret = (int)BatterySrvClient.SetBatteryConfig(sceneName, value);
         EXPECT_EQ(ret, 0);
     }
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient021 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient021 end.");
 }
 
 /**
@@ -752,7 +753,7 @@ HWTEST_F (BatteryClientTest, BatteryClient021, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient022, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient022 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient022 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
 
     string sceneName = "testScene";
@@ -760,7 +761,7 @@ HWTEST_F (BatteryClientTest, BatteryClient022, TestSize.Level1)
     BatteryError ret = BatterySrvClient.GetBatteryConfig(sceneName, result);
     EXPECT_NE(ret, BatteryError::ERR_OK);
     EXPECT_EQ(result, "");
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient022 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient022 end.");
 }
 
 /**
@@ -770,7 +771,7 @@ HWTEST_F (BatteryClientTest, BatteryClient022, TestSize.Level1)
  */
 HWTEST_F (BatteryClientTest, BatteryClient023, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient023 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient023 start.");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
 
     string sceneName = "testScene1";
@@ -778,7 +779,7 @@ HWTEST_F (BatteryClientTest, BatteryClient023, TestSize.Level1)
     BatteryError ret = BatterySrvClient.IsBatteryConfigSupported(sceneName, result);
     EXPECT_NE(ret, BatteryError::ERR_OK);
     EXPECT_FALSE(result);
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClient::BatteryClient023 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient023 end.");
 }
 
 } // namespace

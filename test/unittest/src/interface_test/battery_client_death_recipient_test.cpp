@@ -41,7 +41,7 @@ namespace {
  */
 HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient001, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClientDeathRecipient001 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientDeathRecipient001 start.");
     auto& batterySrvClient = BatterySrvClient::GetInstance();
     EXPECT_NE(batterySrvClient.Connect(), nullptr);
 
@@ -51,7 +51,7 @@ HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient001, TestSi
     EXPECT_NE(deathRecipient, nullptr);
     deathRecipient->OnRemoteDied(remoteObj);
     EXPECT_NE(batterySrvClient.proxy_, nullptr);
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClientDeathRecipient001 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientDeathRecipient001 end.");
 }
 
 /**
@@ -61,18 +61,18 @@ HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient001, TestSi
  */
 HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient002, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClientDeathRecipient002 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientDeathRecipient002 start.");
     auto& batterySrvClient = BatterySrvClient::GetInstance();
     EXPECT_NE(batterySrvClient.Connect(), nullptr);
 
     sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (sysMgr == nullptr) {
-        BATTERY_HILOGD(LABEL_TEST, "Failed to get Registry");
+        BATTERY_HILOGI(LABEL_TEST, "Failed to get Registry");
         return;
     }
     wptr<IRemoteObject> remoteObj = sysMgr->CheckSystemAbility(POWER_MANAGER_BATT_SERVICE_ID);
     if (remoteObj == nullptr) {
-        BATTERY_HILOGD(LABEL_TEST, "GetSystemAbility failed");
+        BATTERY_HILOGI(LABEL_TEST, "GetSystemAbility failed");
         return;
     }
 
@@ -85,6 +85,6 @@ HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient002, TestSi
     }
 
     ASSERT_EQ(batterySrvClient.proxy_, nullptr);
-    BATTERY_HILOGD(LABEL_TEST, "BatteryClientDeathRecipient002 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientDeathRecipient002 end.");
 }
 } // namespace
