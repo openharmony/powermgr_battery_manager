@@ -37,7 +37,6 @@ constexpr int32_t BACKLIGHT_OFF_TIME_MS = 10000;
 constexpr int32_t VIBRATE_TIME_MS = 75;
 const std::string REBOOT_CMD = "";
 const std::string SHUTDOWN_CMD = "shutdown";
-constexpr int32_t KEYCODE_POWER_VAL = 18;
 constexpr int32_t KEY_ACTION_DOWN_VAL = 1;
 constexpr int32_t KEY_ACTION_UP_VAL = 0;
 } // namespace
@@ -306,11 +305,11 @@ void ChargerThreadInputMonitor::OnInputEvent(std::shared_ptr<OHOS::MMI::KeyEvent
 {
     if (keyEvent->GetKeyCode() == OHOS::MMI::KeyEvent::KEYCODE_POWER) {
         if (keyEvent->GetKeyAction() == MMI::KeyEvent::KEY_ACTION_DOWN) {
-            BATTERY_HILOGW(FEATURE_CHARGING, "PowerKey Action Down");
-            SetKeyState(KEYCODE_POWER_VAL, KEY_ACTION_DOWN_VAL, GetCurrentTime());
+            BATTERY_HILOGI(FEATURE_CHARGING, "PowerKey Action Down");
+            SetKeyState(KEY_POWER, KEY_ACTION_DOWN_VAL, GetCurrentTime());
         } else if (keyEvent->GetKeyAction() == MMI::KeyEvent::KEY_ACTION_UP) {
-            BATTERY_HILOGW(FEATURE_CHARGING, "PowerKey Action Up");
-            SetKeyState(KEYCODE_POWER_VAL, KEY_ACTION_UP_VAL, GetCurrentTime());
+            BATTERY_HILOGI(FEATURE_CHARGING, "PowerKey Action Up");
+            SetKeyState(KEY_POWER, KEY_ACTION_UP_VAL, GetCurrentTime());
         }
     }
 }
