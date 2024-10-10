@@ -17,6 +17,7 @@
 #include "battery_srv_proxy.h"
 #include "ipc_object_stub.h"
 #include "mock_remote_object.h"
+#include "battery_log.h"
 #ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
 #include <hisysevent.h>
 #endif
@@ -62,8 +63,10 @@ namespace {
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_001, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_001 start.");
     int32_t capacity = g_proxy->GetCapacity();
     EXPECT_TRUE(capacity == INVALID_BATT_INT_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_001 end.");
 }
 
 /**
@@ -74,9 +77,11 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_001, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_002, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_002 start.");
     BatteryChargeState chargeState = g_proxy->GetChargingStatus();
     EXPECT_TRUE(chargeState >= BatteryChargeState::CHARGE_STATE_NONE &&
         chargeState <= BatteryChargeState::CHARGE_STATE_BUTT); // the enum value range of BatteryChargeState
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_002 end.");
 }
 
 /**
@@ -87,9 +92,11 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_002, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_003, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_003 start.");
     BatteryHealthState healthState = g_proxy->GetHealthStatus();
     EXPECT_TRUE(healthState >= BatteryHealthState::HEALTH_STATE_UNKNOWN &&
         healthState <= BatteryHealthState::HEALTH_STATE_BUTT); // the enum value range of BatteryHealthState
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_003 end.");
 }
 
 /**
@@ -100,9 +107,11 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_003, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_004, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_004 start.");
     BatteryPluggedType pluggedType = g_proxy->GetPluggedType();
     EXPECT_TRUE(pluggedType >= BatteryPluggedType::PLUGGED_TYPE_NONE &&
         pluggedType <= BatteryPluggedType::PLUGGED_TYPE_BUTT); // the enum value range of BatteryPluggedType
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_004 end.");
 }
 
 /**
@@ -113,8 +122,10 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_004, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_005, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_005 start.");
     bool isPresent = g_proxy->GetPresent();
     EXPECT_TRUE(isPresent == INVALID_BATT_BOOL_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_005 end.");
 }
 
 /**
@@ -125,8 +136,10 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_005, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_006, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_006 start.");
     std::string technology = g_proxy->GetTechnology();
     EXPECT_TRUE(technology == INVALID_STRING_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_006 end.");
 }
 
 /**
@@ -137,8 +150,10 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_006, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_007, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_007 start.");
     int32_t totalEnergy = g_proxy->GetTotalEnergy();
     EXPECT_TRUE(totalEnergy == INVALID_BATT_INT_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_007 end.");
 }
 
 /**
@@ -149,8 +164,10 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_007, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_008, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_008 start.");
     int32_t currentAverage = g_proxy->GetCurrentAverage();
     EXPECT_TRUE(currentAverage == INVALID_BATT_INT_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_008 end.");
 }
 
 /**
@@ -161,8 +178,10 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_008, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_009, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_009 start.");
     int32_t nowCurrent = g_proxy->GetNowCurrent();
     EXPECT_TRUE(nowCurrent == INVALID_BATT_INT_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_009 end.");
 }
 
 /**
@@ -173,8 +192,10 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_009, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_010, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_010 start.");
     int32_t remainEnergy = g_proxy->GetRemainEnergy();
     EXPECT_TRUE(remainEnergy == INVALID_BATT_INT_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_010 end.");
 }
 
 /**
@@ -185,8 +206,10 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_010, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_011, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_011 start.");
     int32_t temperature = g_proxy->GetBatteryTemperature();
     EXPECT_TRUE(temperature == INVALID_BATT_TEMP_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_011 end.");
 }
 
 /**
@@ -197,9 +220,11 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_011, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_012, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_012 start.");
     BatteryCapacityLevel batteryLevel = g_proxy->GetCapacityLevel();
     EXPECT_TRUE(batteryLevel >= BatteryCapacityLevel::LEVEL_NONE &&
         batteryLevel <= BatteryCapacityLevel::LEVEL_RESERVED); // the enum value range of BatteryCapacityLevel
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_012 end.");
 }
 
 /**
@@ -210,8 +235,10 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_012, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_013, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_013 start.");
     int64_t remainChargeTime = g_proxy->GetRemainingChargeTime();
     EXPECT_TRUE(remainChargeTime == INVALID_REMAINING_CHARGE_TIME_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_013 end.");
 }
 
 /**
@@ -222,7 +249,9 @@ HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_013, TestSize.Level0)
  */
 HWTEST_F(BatteryProxyMockTest, BatteryProxyMockTest_014, TestSize.Level0)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_014 start.");
     int32_t voltage = g_proxy->GetVoltage();
     EXPECT_TRUE(voltage == INVALID_BATT_INT_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryProxyMockTest_014 end.");
 }
 } // namespace
