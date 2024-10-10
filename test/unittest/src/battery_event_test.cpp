@@ -60,11 +60,11 @@ void BatteryEventTest::TearDownTestCase()
  */
 HWTEST_F(BatteryEventTest, BatteryEventTest001, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryEventTest001 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest001 start.");
     BatteryInfo info;
     bool ret = g_batteryNotify->PublishLowEvent(info);
     EXPECT_TRUE(ret);
-    BATTERY_HILOGD(LABEL_TEST, "BatteryEventTest001 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest001 end.");
 }
 
 /**
@@ -74,9 +74,9 @@ HWTEST_F(BatteryEventTest, BatteryEventTest001, TestSize.Level1)
  */
 HWTEST_F(BatteryEventTest, BatteryEventTest002, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryEventTest002 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest002 start.");
     BatteryInfo info;
     bool ret = g_batteryNotify->PublishCustomEvent(info, "test.battery.custom.event");
     EXPECT_TRUE(ret);
-    BATTERY_HILOGD(LABEL_TEST, "BatteryEventTest002 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest002 end.");
 }

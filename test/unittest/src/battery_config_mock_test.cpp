@@ -35,16 +35,16 @@ BatteryConfig& g_configTest = BatteryConfig::GetInstance();;
 } // namespace
 
 /**
- * @tc.name: BatteryConfig001
+ * @tc.name: BatteryConfigMock001
  * @tc.desc: Test ParseConfig
  * @tc.type: FUNC
  */
-HWTEST_F(BatteryConfigMockTest, BatteryConfig001, TestSize.Level1)
+HWTEST_F(BatteryConfigMockTest, BatteryConfigMock001, TestSize.Level1)
 {
-    BATTERY_HILOGD(LABEL_TEST, "BatteryConfig001 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfigMock001 begin");
     bool ret = g_configTest.ParseConfig();
     EXPECT_TRUE(ret);
-    BATTERY_HILOGD(LABEL_TEST, "BatteryConfig001 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfigMock001 end");
 }
 } // namespace PowerMgr
 } // namespace OHOS

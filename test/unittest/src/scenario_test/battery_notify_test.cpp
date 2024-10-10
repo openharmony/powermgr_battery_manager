@@ -81,8 +81,10 @@ void BatteryNotifyTest::TearDown()
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify001, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify001 begin");
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify001 end");
 }
 
 /**
@@ -93,10 +95,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify001, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify002, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify002 begin");
     const BatteryHealthState healthState = BatteryHealthState::HEALTH_STATE_GOOD;
     g_batteryInfo->SetHealthState(healthState);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify002 end");
 }
 
 /**
@@ -107,10 +111,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify002, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify003, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify003 begin");
     const BatteryHealthState healthState = BatteryHealthState::HEALTH_STATE_OVERHEAT;
     g_batteryInfo->SetHealthState(healthState);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify003 end");
 }
 
 /**
@@ -121,10 +127,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify003, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify004, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify004 begin");
     const BatteryHealthState healthState = BatteryHealthState::HEALTH_STATE_OVERVOLTAGE;
     g_batteryInfo->SetHealthState(healthState);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify004 end");
 }
 
 /**
@@ -135,10 +143,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify004, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify005, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify005 begin");
     const BatteryHealthState healthState = BatteryHealthState::HEALTH_STATE_COLD;
     g_batteryInfo->SetHealthState(healthState);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify005 end");
 }
 
 /**
@@ -149,10 +159,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify005, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify006, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify006 begin");
     const BatteryHealthState healthState = BatteryHealthState::HEALTH_STATE_DEAD;
     g_batteryInfo->SetHealthState(healthState);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify006 end");
 }
 
 /**
@@ -163,10 +175,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify006, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify007, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify007 begin");
     const BatteryHealthState healthState = BatteryHealthState::HEALTH_STATE_BUTT;
     g_batteryInfo->SetHealthState(healthState);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify007 end");
 }
 
 /**
@@ -177,10 +191,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify007, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify008, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify008 begin");
     const BatteryPluggedType pluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
     g_batteryInfo->SetPluggedType(pluggedType);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify008 end");
 }
 
 /**
@@ -191,10 +207,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify008, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify009, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify009 begin");
     const BatteryPluggedType pluggedType = BatteryPluggedType::PLUGGED_TYPE_AC;
     g_batteryInfo->SetPluggedType(pluggedType);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify009 end");
 }
 
 /**
@@ -205,10 +223,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify009, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify010, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify010 begin");
     const BatteryPluggedType pluggedType = BatteryPluggedType::PLUGGED_TYPE_USB;
     g_batteryInfo->SetPluggedType(pluggedType);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify010 end");
 }
 
 /**
@@ -219,10 +239,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify010, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify011, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify011 begin");
     const BatteryPluggedType pluggedType = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
     g_batteryInfo->SetPluggedType(pluggedType);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify011 end");
 }
 
 /**
@@ -233,10 +255,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify011, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify012, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify012 begin");
     const BatteryPluggedType pluggedType = BatteryPluggedType::PLUGGED_TYPE_BUTT;
     g_batteryInfo->SetPluggedType(pluggedType);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify012 end");
 }
 
 /**
@@ -247,10 +271,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify012, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify013, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify013 begin");
     const BatteryChargeState chargeState = BatteryChargeState::CHARGE_STATE_ENABLE;
     g_batteryInfo->SetChargeState(chargeState);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify013 end");
 }
 
 /**
@@ -261,10 +287,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify013, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify014, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify014 begin");
     const BatteryChargeState chargeState = BatteryChargeState::CHARGE_STATE_DISABLE;
     g_batteryInfo->SetChargeState(chargeState);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify014 end");
 }
 
 /**
@@ -275,10 +303,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify014, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify015, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify015 begin");
     const BatteryChargeState chargeState = BatteryChargeState::CHARGE_STATE_FULL;
     g_batteryInfo->SetChargeState(chargeState);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify015 end");
 }
 
 /**
@@ -289,10 +319,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify015, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify016, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify016 begin");
     const BatteryChargeState chargeState = BatteryChargeState::CHARGE_STATE_BUTT;
     g_batteryInfo->SetChargeState(chargeState);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify016 end");
 }
 
 /**
@@ -303,10 +335,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify016, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify017, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify017 begin");
     const int32_t capacity = -100;
     g_batteryInfo->SetCapacity(capacity);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify017 end");
 }
 
 /**
@@ -317,11 +351,13 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify017, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify018, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify018 begin");
     for (int i = 0; i < 2; i++) {
         const BatteryChargeState chargeState = BatteryChargeState::CHARGE_STATE_ENABLE;
         g_batteryInfo->SetChargeState(chargeState);
         auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
         EXPECT_EQ(ret, ERR_OK);
+        BATTERY_HILOGI(LABEL_TEST, "BatteryNotify018 end");
     }
 }
 
@@ -333,12 +369,14 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify018, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify019, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify019 begin");
     const int32_t capacity = -100;
     g_batteryInfo->SetCapacity(capacity);
     for (int i = 0; i < 2; i++) {
         auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
         EXPECT_EQ(ret, ERR_OK);
     }
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify019 end");
 }
 
 /**
@@ -348,10 +386,12 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify019, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify020, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify020 begin");
     const ChargeType chargeType = ChargeType::WIRED_NORMAL;
     g_batteryInfo->SetChargeType(chargeType);
     auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify020 end");
 }
 
 /**
@@ -361,6 +401,7 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify020, TestSize.Level1)
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify021, TestSize.Level1)
 {
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify021 begin");
     const string uevent1 = "TEST_BATTERY_UNDER_VOLTAGE=3";
     g_batteryInfo->SetUevent(uevent1);
     EXPECT_EQ(g_batteryInfo->GetUevent(), uevent1);
@@ -374,6 +415,7 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify021, TestSize.Level1)
     g_batteryInfo->SetUevent(uevent3);
     ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify021 end");
 }
 } // namespace PowerMgr
 } // namespace OHOS
