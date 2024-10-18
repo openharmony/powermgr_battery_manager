@@ -20,6 +20,7 @@
             "SystemCapability.PowerManager.BatteryManager.Extension"
         ],
         "features": [
+            "battery_manager_feature_enable_charger",
             "battery_manager_feature_set_low_capacity_threshold"
         ],
         "adapted_system_type": [
