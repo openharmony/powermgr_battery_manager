@@ -297,7 +297,11 @@ void BatteryService::HandleBatteryInfo()
 
     batteryNotify_->PublishEvents(batteryInfo_);
     HandleTemperature(batteryInfo_.GetTemperature());
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+    HandleCapacityExt(batteryInfo_.GetCapacity(), batteryInfo_.GetChargeState());
+#else
     HandleCapacity(batteryInfo_.GetCapacity(), batteryInfo_.GetChargeState(), batteryInfo_.IsPresent());
+#endif
     lastBatteryInfo_ = batteryInfo_;
 }
 
@@ -431,12 +435,8 @@ void BatteryService::HandleTemperature(int32_t temperature)
 
 void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent)
 {
-    if ((capacity <= shutdownCapacityThreshold_) &&
-        (g_lowCapacityShutdownHandle == nullptr) &&
-#ifndef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
-        isBatteryPresent &&
-#endif
-        (!IsCharging(chargeState))) {
+    if ((capacity <= shutdownCapacityThreshold_) && (g_lowCapacityShutdownHandle == nullptr)
+        && isBatteryPresent && (!IsCharging(chargeState))) {
         BATTERY_HILOGI(COMP_SVC, "HandleCapacity begin to submit task, "
             "capacity=%{public}d, chargeState=%{public}u, isBatteryPresent=%{public}d",
             capacity, static_cast<uint32_t>(chargeState), isBatteryPresent);
@@ -453,6 +453,31 @@ void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeS
         BATTERY_HILOGI(COMP_SVC, "HandleCapacity cancel shutdown task, "
             "capacity=%{public}d, chargeState=%{public}u, isBatteryPresent=%{public}d",
             capacity, static_cast<uint32_t>(chargeState), isBatteryPresent);
+        FFRTUtils::CancelTask(g_lowCapacityShutdownHandle, g_queue);
+        g_lowCapacityShutdownHandle = nullptr;
+    }
+}
+
+void BatteryService::HandleCapacityExt(int32_t capacity, BatteryChargeState chargeState)
+{
+    if ((capacity <= shutdownCapacityThreshold_) && (g_lowCapacityShutdownHandle == nullptr)
+        && (capacity < lastBatteryInfo_.GetCapacity())) {
+        BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt begin to submit task, "
+            "capacity=%{public}d, chargeState=%{public}u", capacity, static_cast<uint32_t>(chargeState));
+        FFRTTask task = [&] {
+            if (!IsInExtremePowerSaveMode()) {
+                BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt begin to shutdown");
+                PowerMgrClient::GetInstance().ShutDownDevice("LowCapacity");
+            }
+        };
+        g_lowCapacityShutdownHandle = FFRTUtils::SubmitDelayTask(task, SHUTDOWN_DELAY_TIME_MS, g_queue);
+    }
+
+    if (g_lowCapacityShutdownHandle != nullptr && IsCharging(chargeState)
+        && capacity > lastBatteryInfo_.GetCapacity()) {
+        BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt cancel shutdown task, "
+            "capacity=%{public}d, chargeState=%{public}u, lastcapacity=%{public}d",
+            capacity, static_cast<uint32_t>(chargeState), lastBatteryInfo_.GetCapacity());
         FFRTUtils::CancelTask(g_lowCapacityShutdownHandle, g_queue);
         g_lowCapacityShutdownHandle = nullptr;
     }
