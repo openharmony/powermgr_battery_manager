@@ -24,6 +24,7 @@
 #include <linux/netlink.h>
 #include <parameters.h>
 #include <securec.h>
+#include <dlfcn.h>
 
 using namespace OHOS::MMI;
 
@@ -52,6 +53,29 @@ struct KeyState {
     int64_t timestamp;
 };
 struct KeyState g_keys[KEY_MAX + 1] = {};
+
+static const char* POWER_CHARGE_EXTENSION_PATH = "libpower_charge_ext.z.so";
+static const char* CLEAR_POWER_OFF_CHARGE_FLAG_FUNC = "ClearPowerOffChargeFlag";
+typedef void(*Func)();
+
+static void ClearPowerOffChargeFlag()
+{
+    BATTERY_HILOGI(FEATURE_CHARGING, "enter ClearPowerOffChargeFlag");
+    void *handler = dlopen(POWER_CHARGE_EXTENSION_PATH, RTLD_LAZY | RTLD_NODELETE);
+    if (handler == nullptr) {
+        BATTERY_HILOGE(FEATURE_CHARGING, "Dlopen failed, reason : %{public}s", dlerror());
+        return;
+    }
+
+    Func clearPowerOffChargeFlag = (Func)dlsym(handler, CLEAR_POWER_OFF_CHARGE_FLAG_FUNC);
+    if (clearPowerOffChargeFlag == nullptr) {
+        BATTERY_HILOGE(FEATURE_CHARGING, "find function failed, reason : %{public}s", dlerror());
+        dlclose(handler);
+        return;
+    }
+    clearPowerOffChargeFlag();
+    dlclose(handler);
+}
 
 static int64_t GetCurrentTime()
 {
@@ -272,6 +296,7 @@ void ChargerThread::HandlePowerKey(int32_t keycode, int64_t now)
                 BATTERY_HILOGW(FEATURE_CHARGING, "reboot machine");
                 backlight_->TurnOffScreen();
                 vibrate_->HandleVibration(VIBRATE_TIME_MS);
+                ClearPowerOffChargeFlag();
                 DoReboot(REBOOT_CMD.c_str());
             } else if (backlight_->GetScreenState() == BatteryBacklight::SCREEN_OFF) {
                 SetKeyWait(g_keys[keycode], REBOOT_TIME);
