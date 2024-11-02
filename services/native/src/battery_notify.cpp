@@ -209,7 +209,8 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info)
 #ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
         HiSysEventWrite(HiSysEvent::Domain::BATTERY, "CHANGED", HiSysEvent::EventType::STATISTIC,
             "LEVEL", capacity, "CHARGER", pluggedType, "VOLTAGE", info.GetVoltage(),
-            "TEMPERATURE", temperature, "HEALTH", healthState, "CURRENT", info.GetNowCurrent());
+            "TEMPERATURE", temperature, "HEALTH", healthState, "CURRENT", info.GetNowCurrent(),
+            "CHARGE_MODE", static_cast<int32_t>(info.GetChargeType()));
 #endif
         lastCapacity_ = capacity;
         lastPluggedType_ = pluggedType;
