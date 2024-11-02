@@ -99,6 +99,7 @@ private:
     void HandleBatteryInfo();
     void CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState);
     void HandleCapacity(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
+    void HandleCapacityExt(int32_t capacity, BatteryChargeState chargeState);
     bool IsLastPlugged();
     bool IsNowPlugged(BatteryPluggedType pluggedType);
     bool IsPlugged(BatteryPluggedType pluggedType);
