@@ -14,12 +14,16 @@
  */
 
 #include "battery_notify.h"
+#include <mutex>
 #include <regex>
 
+#include "audio_haptic_sound.h"
+#include "../../foundation/multimedia/player_framework/interfaces/inner_api/native/media_errors.h"
 #include "common_event_data.h"
 #include "common_event_manager.h"
 #include "common_event_publish_info.h"
 #include "common_event_support.h"
+#include "config_policy_utils.h"
 #include "errors.h"
 #ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
 #include "hisysevent.h"
@@ -43,6 +47,7 @@ using namespace OHOS::HiviewDFX;
 
 namespace OHOS {
 namespace PowerMgr {
+std::mutex chargerSoundMutex_;
 bool g_batteryLowOnce = false;
 bool g_batteryOkOnce = false;
 bool g_batteryConnectOnce = false;
@@ -57,6 +62,9 @@ const std::string REBOOT = "reboot";
 const std::string SEND_COMMONEVENT = "sendcommonevent";
 const std::string SEND_CUSTOMEVENT = "sendcustomevent";
 const std::string BATTERY_CUSTOM_EVENT_PREFIX = "usual.event.";
+const std::string CHARGER_SOUND_FALLBACK_PATH = "/sys_prod/variant/region_comm/china/resource/media/audio/ui/"
+                                                "PowerConnected.ogg";
+const char* CHARGER_SOUND_RELATIVE_PATH = "resource/media/audio/ui/PowerConnected.ogg";
 sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 
 BatteryNotify::BatteryNotify()
@@ -64,6 +72,42 @@ BatteryNotify::BatteryNotify()
     const int32_t DEFAULT_LOW_CAPACITY = 20;
     lowCapacity_ = BatteryConfig::GetInstance().GetInt("soc.low", DEFAULT_LOW_CAPACITY);
     BATTERY_HILOGI(COMP_SVC, "Low broadcast power=%{public}d", lowCapacity_);
+}
+
+bool BatteryNotify::InitChargerSound()
+{
+    BATTERY_HILOGI(COMP_SVC, "initiating charger sound");
+    std::string soundPath = GetPath(CHARGER_SOUND_RELATIVE_PATH);
+    if (soundPath.empty()) {
+        BATTERY_HILOGE(COMP_SVC, "get sound path failed, using fallback path");
+        soundPath = CHARGER_SOUND_FALLBACK_PATH;
+    }
+    std::lock_guard lock(chargerSoundMutex_);
+    chargerSound_ = Media::AudioHapticSound::CreateAudioHapticSound(
+        Media::AUDIO_LATENCY_MODE_NORMAL, soundPath, false, AudioStandard::STREAM_USAGE_SYSTEM);
+    if (!chargerSound_) {
+        BATTERY_HILOGE(COMP_SVC, "CreateAudioHapticSound failed");
+        return false;
+    }
+    int32_t errcode = chargerSound_->PrepareSound();
+    if (errcode != ERR_OK) {
+        std::string errString = Media::MSErrorToString(static_cast<Media::MediaServiceErrCode>(errcode));
+        BATTERY_HILOGE(COMP_SVC, "prepare error: %{public}s", errString.c_str());
+        return false;
+    }
+    BATTERY_HILOGI(COMP_SVC, "initiating charger sound completed");
+    return true;
+}
+
+std::string BatteryNotify::GetPath(const char* uri)
+{
+    std::string ret {};
+    char buf[MAX_PATH_LEN];
+    char* path = GetOneCfgFile(uri, buf, MAX_PATH_LEN);
+    if (path) {
+        ret = path;
+    }
+    return ret;
 }
 
 int32_t BatteryNotify::PublishEvents(BatteryInfo& info)
@@ -306,6 +350,34 @@ bool BatteryNotify::PublishOkayEvent(const BatteryInfo& info) const
     return isSuccess;
 }
 
+void BatteryNotify::StartChargerSound() const
+{
+    std::lock_guard lock(chargerSoundMutex_);
+    if (!chargerSound_) {
+        BATTERY_HILOGE(COMP_SVC, "chargerSound_ is nullptr");
+        return;
+    }
+    int32_t errcode = chargerSound_->StartSound();
+    if (errcode != ERR_OK) {
+        std::string errString = Media::MSErrorToString(static_cast<Media::MediaServiceErrCode>(errcode));
+        BATTERY_HILOGE(COMP_SVC, "StartSound error: %{public}s", errString.c_str());
+    }
+}
+
+void BatteryNotify::StopChargerSound() const
+{
+    std::lock_guard lock(chargerSoundMutex_);
+    if (!chargerSound_) {
+        BATTERY_HILOGE(COMP_SVC, "chargerSound_ is nullptr");
+        return;
+    }
+    int32_t errcode = chargerSound_->StopSound();
+    if (errcode != ERR_OK) {
+        std::string errString = Media::MSErrorToString(static_cast<Media::MediaServiceErrCode>(errcode));
+        BATTERY_HILOGE(COMP_SVC, "StopSound error: %{public}s", errString.c_str());
+    }
+}
+
 bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
 {
     bool isSuccess = true;
@@ -320,6 +392,7 @@ bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
         return isSuccess;
     }
     StartVibrator();
+    StartChargerSound();
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_CONNECTED);
     CommonEventData data;
@@ -359,6 +432,7 @@ bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 
+    StopChargerSound();
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_DISCONNECTED);
     CommonEventData data;

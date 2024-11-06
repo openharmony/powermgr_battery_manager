@@ -99,6 +99,7 @@ void BatteryService::OnStart()
         return;
     }
     AddSystemAbilityListener(MISCDEVICE_SERVICE_ABILITY_ID);
+    AddSystemAbilityListener(PLAYER_DISTRIBUTED_SERVICE_ID);
     ready_ = true;
 }
 
@@ -126,6 +127,9 @@ void BatteryService::OnAddSystemAbility(int32_t systemAbilityId, const std::stri
     BATTERY_HILOGI(COMP_SVC, "systemAbilityId=%{public}d, deviceId=%{private}s", systemAbilityId, deviceId.c_str());
     if (systemAbilityId == MISCDEVICE_SERVICE_ABILITY_ID) {
         batteryLight_.InitLight();
+    }
+    if (systemAbilityId == PLAYER_DISTRIBUTED_SERVICE_ID) {
+        batteryNotify_->InitChargerSound();
     }
 }
 

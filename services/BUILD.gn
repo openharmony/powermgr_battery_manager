@@ -50,8 +50,10 @@ ohos_shared_library("batteryservice") {
   external_deps = [ "power_manager:power_permission" ]
   external_deps += [
     "ability_runtime:ability_manager",
+    "audio_framework:audio_client",
     "bundle_framework:appexecfwk_base",
     "c_utils:utils",
+    "config_policy:configpolicy_util",
     "common_event_service:cesfwk_core",
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_2.0",
@@ -63,6 +65,8 @@ ohos_shared_library("batteryservice") {
     "hilog:libhilog",
     "ipc:ipc_core",
     "jsoncpp:jsoncpp",
+    "player_framework:audio_haptic",
+    "player_framework:media_client",
     "power_manager:power_ffrt",
     "power_manager:power_sysparam",
     "power_manager:power_vibrator",
