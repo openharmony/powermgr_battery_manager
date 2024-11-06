@@ -23,6 +23,10 @@
 #include "battery_info.h"
 
 namespace OHOS {
+namespace Media {
+class AudioHapticSound;
+} // namespace Media
+
 namespace PowerMgr {
 class BatteryNotify {
 public:
@@ -30,6 +34,7 @@ public:
     ~BatteryNotify() = default;
     int32_t PublishEvents(BatteryInfo& info);
     bool PublishCustomEvent(const BatteryInfo& info, const std::string& commonEventName) const;
+    bool InitChargerSound();
 
 private:
     void HandleUevent(BatteryInfo& info);
@@ -44,6 +49,9 @@ private:
     bool PublishDischargingEvent(const BatteryInfo& info) const;
     bool PublishChargeTypeChangedEvent(const BatteryInfo& info);
     bool IsCommonEventServiceAbilityExist() const;
+    void StartChargerSound() const;
+    void StopChargerSound() const;
+    std::string GetPath(const char* uri);
 
     int32_t lowCapacity_ = -1;
     ChargeType batteryInfoChargeType_ = ChargeType::NONE;
@@ -51,6 +59,7 @@ private:
     int32_t lastPluggedType_ = -1;
     int32_t lastTemperature_ = -1;
     int32_t lastHealthState_ = -1;
+    std::shared_ptr<Media::AudioHapticSound> chargerSound_ {};
 };
 } // namespace PowerMgr
 } // namespace OHOS
