@@ -46,5 +46,6 @@
         "type": {
             "path": "/data/service/el0/battery/charger_type"
         }
-    }
+    },
+    "wirelesscharger": 0
 }

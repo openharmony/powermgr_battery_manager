@@ -44,6 +44,10 @@ private:
     bool PublishDischargingEvent(const BatteryInfo& info) const;
     bool PublishChargeTypeChangedEvent(const BatteryInfo& info);
     bool IsCommonEventServiceAbilityExist() const;
+    void WirelessPluggedConnected(const BatteryInfo& info) const;
+    void WirelessPluggedDisconnected(const BatteryInfo& info) const;
+    void RotationMotionSubscriber() const;
+    void RotationMotionUnsubscriber() const;
 
     int32_t lowCapacity_ = -1;
     ChargeType batteryInfoChargeType_ = ChargeType::NONE;
@@ -51,6 +55,7 @@ private:
     int32_t lastPluggedType_ = -1;
     int32_t lastTemperature_ = -1;
     int32_t lastHealthState_ = -1;
+    BatteryPluggedType lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_BUTT;
 };
 } // namespace PowerMgr
 } // namespace OHOS
