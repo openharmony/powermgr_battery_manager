@@ -18,7 +18,6 @@
 #include <regex>
 
 #include "audio_haptic_sound.h"
-#include "../../foundation/multimedia/player_framework/interfaces/inner_api/native/media_errors.h"
 #include "common_event_data.h"
 #include "common_event_manager.h"
 #include "common_event_publish_info.h"
@@ -62,8 +61,7 @@ const std::string REBOOT = "reboot";
 const std::string SEND_COMMONEVENT = "sendcommonevent";
 const std::string SEND_CUSTOMEVENT = "sendcustomevent";
 const std::string BATTERY_CUSTOM_EVENT_PREFIX = "usual.event.";
-const std::string CHARGER_SOUND_FALLBACK_PATH = "/sys_prod/variant/region_comm/china/resource/media/audio/ui/"
-                                                "PowerConnected.ogg";
+const std::string CHARGER_SOUND_DEFAULT_PATH = "/vendor/etc/battery/PowerConnected.ogg";
 const char* CHARGER_SOUND_RELATIVE_PATH = "resource/media/audio/ui/PowerConnected.ogg";
 sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 
@@ -80,7 +78,7 @@ bool BatteryNotify::InitChargerSound()
     std::string soundPath = GetPath(CHARGER_SOUND_RELATIVE_PATH);
     if (soundPath.empty()) {
         BATTERY_HILOGE(COMP_SVC, "get sound path failed, using fallback path");
-        soundPath = CHARGER_SOUND_FALLBACK_PATH;
+        soundPath = CHARGER_SOUND_DEFAULT_PATH;
     }
     std::lock_guard lock(chargerSoundMutex_);
     chargerSound_ = Media::AudioHapticSound::CreateAudioHapticSound(
@@ -91,8 +89,7 @@ bool BatteryNotify::InitChargerSound()
     }
     int32_t errcode = chargerSound_->PrepareSound();
     if (errcode != ERR_OK) {
-        std::string errString = Media::MSErrorToString(static_cast<Media::MediaServiceErrCode>(errcode));
-        BATTERY_HILOGE(COMP_SVC, "prepare error: %{public}s", errString.c_str());
+        BATTERY_HILOGE(COMP_SVC, "prepare error, code: %{public}d", errcode);
         return false;
     }
     BATTERY_HILOGI(COMP_SVC, "initiating charger sound completed");
@@ -102,7 +99,7 @@ bool BatteryNotify::InitChargerSound()
 std::string BatteryNotify::GetPath(const char* uri)
 {
     std::string ret {};
-    char buf[MAX_PATH_LEN];
+    char buf[MAX_PATH_LEN] = {0};
     char* path = GetOneCfgFile(uri, buf, MAX_PATH_LEN);
     if (path) {
         ret = path;
@@ -359,8 +356,7 @@ void BatteryNotify::StartChargerSound() const
     }
     int32_t errcode = chargerSound_->StartSound();
     if (errcode != ERR_OK) {
-        std::string errString = Media::MSErrorToString(static_cast<Media::MediaServiceErrCode>(errcode));
-        BATTERY_HILOGE(COMP_SVC, "StartSound error: %{public}s", errString.c_str());
+        BATTERY_HILOGE(COMP_SVC, "start sound error, code: %{public}d", errcode);
     }
 }
 
@@ -373,8 +369,7 @@ void BatteryNotify::StopChargerSound() const
     }
     int32_t errcode = chargerSound_->StopSound();
     if (errcode != ERR_OK) {
-        std::string errString = Media::MSErrorToString(static_cast<Media::MediaServiceErrCode>(errcode));
-        BATTERY_HILOGE(COMP_SVC, "StopSound error: %{public}s", errString.c_str());
+        BATTERY_HILOGE(COMP_SVC, "stop sound error, code: %{public}d", errcode);
     }
 }
 
