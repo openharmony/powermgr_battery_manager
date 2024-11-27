@@ -21,6 +21,9 @@
 #include <new>
 
 #include "ability_manager_client.h"
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
+#include "charging_sound.h"
+#endif
 #include "errors.h"
 #include "hdf_device_class.h"
 #include "hdf_service_status.h"
@@ -99,7 +102,11 @@ void BatteryService::OnStart()
         return;
     }
     AddSystemAbilityListener(MISCDEVICE_SERVICE_ABILITY_ID);
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
+    // need this service to prepare( i.e PrepareSound() ) an player
+    // which is a prerequisite for playing sound
     AddSystemAbilityListener(PLAYER_DISTRIBUTED_SERVICE_ID);
+#endif
     ready_ = true;
 }
 
@@ -128,9 +135,11 @@ void BatteryService::OnAddSystemAbility(int32_t systemAbilityId, const std::stri
     if (systemAbilityId == MISCDEVICE_SERVICE_ABILITY_ID) {
         batteryLight_.InitLight();
     }
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
     if (systemAbilityId == PLAYER_DISTRIBUTED_SERVICE_ID) {
-        batteryNotify_->InitChargerSound();
+        ChargingSound::GetInstance().Prepare();
     }
+#endif
 }
 
 bool BatteryService::RegisterBatteryHdiCallback()

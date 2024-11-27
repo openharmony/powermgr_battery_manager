@@ -21,6 +21,7 @@
         ],
         "features": [
             "battery_manager_feature_enable_charger",
+            "battery_manager_feature_enable_charging_sound",
             "battery_manager_feature_set_low_capacity_threshold"
         ],
         "adapted_system_type": [
