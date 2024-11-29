@@ -53,6 +53,7 @@ const std::string REBOOT = "reboot";
 const std::string SEND_COMMONEVENT = "sendcommonevent";
 const std::string SEND_CUSTOMEVENT = "sendcustomevent";
 const std::string BATTERY_CUSTOM_EVENT = "usual.event.battery.custom";
+const std::string BATTERY_CUSTOM_EVENT_PREFIX = "usual.event.battery";
 sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 
 BatteryNotify::BatteryNotify()
@@ -116,7 +117,10 @@ void BatteryNotify::HandleUevent(BatteryInfo& info)
             PublishChangedEvent(info);
         } else if (ueventAct == SEND_CUSTOMEVENT) {
             info.SetUevent(ueventName);
-            PublishCustomEvent(info);
+            PublishCustomEvent(info, BATTERY_CUSTOM_EVENT);
+        } else if (ueventAct.compare(0, BATTERY_CUSTOM_EVENT_PREFIX.size(), BATTERY_CUSTOM_EVENT_PREFIX) == 0) {
+            info.SetUevent(ueventName);
+            PublishCustomEvent(info, ueventAct);
         } else {
             BATTERY_HILOGE(COMP_SVC, "undefine uevent act %{public}s", ueventAct.c_str());
         }
@@ -434,15 +438,17 @@ bool BatteryNotify::PublishDischargingEvent(const BatteryInfo& info) const
     return isSuccess;
 }
 
-bool BatteryNotify::PublishCustomEvent(const BatteryInfo& info) const
+bool BatteryNotify::PublishCustomEvent(const BatteryInfo& info, const std::string& commonEventName) const
 {
     Want want;
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_UEVENT, info.GetUevent());
-    want.SetAction(BATTERY_CUSTOM_EVENT);
+    want.SetAction(commonEventName);
     CommonEventData data;
     data.SetWant(want);
     CommonEventPublishInfo publishInfo;
     publishInfo.SetOrdered(false);
+    const std::vector<std::string> permissionVec { "ohos.permission.POWER_OPTIMIZATION" };
+    publishInfo.SetSubscriberPermissions(permissionVec);
 
     bool isSuccess = CommonEventManager::PublishCommonEvent(data, publishInfo);
     if (!isSuccess) {
