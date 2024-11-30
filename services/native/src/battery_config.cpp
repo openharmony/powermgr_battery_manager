@@ -102,6 +102,11 @@ const std::vector<BatteryConfig::LightConf>& BatteryConfig::GetLightConf() const
     return lightConf_;
 }
 
+bool BatteryConfig::GetWirelessChargerConf() const
+{
+    return wirelessChargerEnable_;
+}
+
 const std::vector<BatteryConfig::CommonEventConf>& BatteryConfig::GetCommonEventConf() const
 {
     return commonEventConf_;
@@ -136,6 +141,7 @@ void BatteryConfig::ParseConfInner()
     ParseLightConf("high");
     BATTERY_HILOGD(COMP_SVC, "The battery light configuration size %{public}d",
         static_cast<int32_t>(lightConf_.size()));
+    ParseWirelessChargerConf();
     ParseBootActionsConf();
 }
 
@@ -166,6 +172,17 @@ void BatteryConfig::ParseLightConf(std::string level)
     };
     lightConf_.push_back(lightConf);
 }
+
+void BatteryConfig::ParseWirelessChargerConf()
+{
+    Json::Value wirelessCharger = GetValue("wirelesscharger");
+    if (wirelessCharger.isNull() || !wirelessCharger.isInt()) {
+        BATTERY_HILOGW(COMP_SVC, "wirelesscharger is invalid");
+        return;
+    }
+    wirelessChargerEnable_ = static_cast<bool>(wirelessCharger.asInt());
+}
+
 
 void BatteryConfig::ParseBootActionsConf()
 {
