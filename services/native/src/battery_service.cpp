@@ -51,6 +51,7 @@ constexpr const char* BATTERY_HDI_NAME = "battery_interface_service";
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
 constexpr uint32_t RETRY_TIME = 1000;
 constexpr uint32_t SHUTDOWN_DELAY_TIME_MS = 60000;
+constexpr uint32_t SHUTDOWN_GUARD_TIMEOUT_MS = SHUTDOWN_DELAY_TIME_MS + 30000;
 const std::string BATTERY_VIBRATOR_CONFIG_FILE = "etc/battery/battery_vibrator.json";
 const std::string VENDOR_BATTERY_VIBRATOR_CONFIG_FILE = "/vendor/etc/battery/battery_vibrator.json";
 const std::string SYSTEM_BATTERY_VIBRATOR_CONFIG_FILE = "/system/etc/battery/battery_vibrator.json";
@@ -60,6 +61,7 @@ FFRTQueue g_queue("battery_service");
 FFRTHandle g_lowCapacityShutdownHandle = nullptr;
 BatteryPluggedType g_lastPluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
 SysParam::BootCompletedCallback g_bootCompletedCallback;
+std::shared_ptr<RunningLock> g_shutdownGuard = nullptr;
 }
 std::atomic_bool BatteryService::isBootCompleted_ = false;
 
@@ -464,11 +466,14 @@ void BatteryService::HandleCapacityExt(int32_t capacity, BatteryChargeState char
         && (capacity < lastBatteryInfo_.GetCapacity())) {
         BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt begin to submit task, "
             "capacity=%{public}d, chargeState=%{public}u", capacity, static_cast<uint32_t>(chargeState));
+        CreateShutdownGuard();
+        LockShutdownGuard();
         FFRTTask task = [&] {
             if (!IsInExtremePowerSaveMode()) {
                 BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt begin to shutdown");
                 PowerMgrClient::GetInstance().ShutDownDevice("LowCapacity");
             }
+            UnlockShutdownGuard();
         };
         g_lowCapacityShutdownHandle = FFRTUtils::SubmitDelayTask(task, SHUTDOWN_DELAY_TIME_MS, g_queue);
     }
@@ -478,9 +483,41 @@ void BatteryService::HandleCapacityExt(int32_t capacity, BatteryChargeState char
         BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt cancel shutdown task, "
             "capacity=%{public}d, chargeState=%{public}u, lastcapacity=%{public}d",
             capacity, static_cast<uint32_t>(chargeState), lastBatteryInfo_.GetCapacity());
+        UnlockShutdownGuard();
         FFRTUtils::CancelTask(g_lowCapacityShutdownHandle, g_queue);
         g_lowCapacityShutdownHandle = nullptr;
     }
+}
+
+void BatteryService::CreateShutdownGuard()
+{
+    std::unique_lock lock(shutdownGuardMutex_);
+    if (g_shutdownGuard == nullptr) {
+        BATTERY_HILOGI(COMP_SVC, "g_shutdownGuard is nullptr, create runninglock");
+        // to avoid the shutdown ffrt task breaked by S3/ULSR
+        g_shutdownGuard = PowerMgrClient::GetInstance().CreateRunningLock(
+            "ShutDownGuard", RunningLockType::RUNNINGLOCK_BACKGROUND_TASK);
+    }
+}
+
+void BatteryService::LockShutdownGuard()
+{
+    std::unique_lock lock(shutdownGuardMutex_);
+    if (g_shutdownGuard == nullptr) {
+        BATTERY_HILOGI(COMP_SVC, "g_shutdownGuard is nullptr, skip lock");
+        return;
+    }
+    g_shutdownGuard->Lock(SHUTDOWN_GUARD_TIMEOUT_MS);
+}
+
+void BatteryService::UnlockShutdownGuard()
+{
+    std::unique_lock lock(shutdownGuardMutex_);
+    if (g_shutdownGuard == nullptr) {
+        BATTERY_HILOGI(COMP_SVC, "g_shutdownGuard is nullptr, skip unlock");
+        return;
+    }
+    g_shutdownGuard->UnLock();
 }
 
 int32_t BatteryService::GetCapacity()
