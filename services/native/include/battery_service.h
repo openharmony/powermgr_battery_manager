@@ -107,6 +107,9 @@ private:
     void WakeupDevice(BatteryPluggedType pluggedType);
     bool IsCharging(BatteryChargeState chargeState);
     bool IsInExtremePowerSaveMode();
+    void CreateShutdownGuard();
+    void LockShutdownGuard();
+    void UnlockShutdownGuard();
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
     void SetLowCapacityThreshold();
 #endif
@@ -140,6 +143,7 @@ private:
     int64_t remainTime_ { 0 };
     BatteryInfo batteryInfo_;
     BatteryInfo lastBatteryInfo_;
+    std::mutex shutdownGuardMutex_;
 };
 } // namespace PowerMgr
 } // namespace OHOS
