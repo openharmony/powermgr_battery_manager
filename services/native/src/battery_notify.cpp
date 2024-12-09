@@ -38,6 +38,10 @@
 #include "power_vibrator.h"
 #include "power_mgr_client.h"
 #include <dlfcn.h>
+#ifdef BATTERY_SUPPORT_NOTIFICATION
+#include "notification_locale.h"
+#include "notification_manager.h"
+#endif
 
 using namespace OHOS::AAFwk;
 using namespace OHOS::EventFwk;
@@ -60,6 +64,7 @@ const std::string SHUTDOWN = "shutdown";
 const std::string REBOOT = "reboot";
 const std::string SEND_COMMONEVENT = "sendcommonevent";
 const std::string SEND_CUSTOMEVENT = "sendcustomevent";
+const std::string SEND_POPUP = "sendpopup";
 const std::string BATTERY_CUSTOM_EVENT_PREFIX = "usual.event.";
 sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 
@@ -68,6 +73,9 @@ BatteryNotify::BatteryNotify()
     const int32_t DEFAULT_LOW_CAPACITY = 20;
     lowCapacity_ = BatteryConfig::GetInstance().GetInt("soc.low", DEFAULT_LOW_CAPACITY);
     BATTERY_HILOGI(COMP_SVC, "Low broadcast power=%{public}d", lowCapacity_);
+#ifdef BATTERY_SUPPORT_NOTIFICATION
+    NotificationLocale::GetInstance().ParseLocaleCfg();
+#endif
 }
 
 int32_t BatteryNotify::PublishEvents(BatteryInfo& info)
@@ -125,6 +133,10 @@ void BatteryNotify::HandleUevent(BatteryInfo& info)
         } else if (ueventAct.compare(0, BATTERY_CUSTOM_EVENT_PREFIX.size(), BATTERY_CUSTOM_EVENT_PREFIX) == 0) {
             info.SetUevent(ueventName);
             PublishCustomEvent(info, ueventAct);
+        } else if (ueventAct == SEND_POPUP) {
+            info.SetUevent(ueventName);
+            PublishChangedEvent(info);
+            HandleNotification(ueventName);
         } else {
             BATTERY_HILOGE(COMP_SVC, "undefine uevent act %{public}s", ueventAct.c_str());
         }
@@ -546,5 +558,25 @@ bool BatteryNotify::PublishCustomEvent(const BatteryInfo& info, const std::strin
     }
     return isSuccess;
 }
+
+bool BatteryNotify::HandleNotification(const std::string& ueventName) const
+{
+#ifdef BATTERY_SUPPORT_NOTIFICATION
+    NotificationLocale::GetInstance().UpdateStringMap();
+    std::unordered_map<std::string, std::vector<BatteryConfig::PopupConf>> popupCfg =
+        BatteryConfig::GetInstance().GetPopupConf();
+    auto iter = popupCfg.find(ueventName);
+    if (iter == popupCfg.end()) {
+        BATTERY_HILOGW(COMP_SVC, "HandleNotification not found conf: %{public}s", ueventName.c_str());
+        return false;
+    }
+    for (auto& item : iter->second) {
+        NotificationManager::GetInstance().HandleNotification(item.name, item.action);
+        BATTERY_HILOGI(COMP_SVC, "popupName=%{public}s, popupAction=%{public}d", item.name.c_str(), item.action);
+    }
+#endif
+    return true;
+}
+
 } // namespace PowerMgr
 } // namespace OHOS

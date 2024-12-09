@@ -1,0 +1,77 @@
+# Copyright (c) 2024 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+
+import("../../../batterymgr.gni")
+
+## Install locale_path.json to /system/etc/battery/resources/locale_path.json
+ohos_prebuilt_etc("battery_locale_path") {
+  source = "locale_path.json"
+  relative_install_dir = "battery/resources"
+  part_name = "${batterymgr_native_part_name}"
+  subsystem_name = "powermgr"
+}
+
+## Install base/element/string.json to /system/etc/battery/resources/base/element/string.json
+ohos_prebuilt_etc("battery_notification_base") {
+  source = "base/element/string.json"
+  relative_install_dir = "battery/resources/base/element"
+  part_name = "${batterymgr_native_part_name}"
+  subsystem_name = "powermgr"
+}
+
+## Install zh_CN/element/string.json to /system/etc/battery/resources/zh_CN/element/string.json
+ohos_prebuilt_etc("battery_notification_zh_CN") {
+  source = "zh_CN/element/string.json"
+  relative_install_dir = "battery/resources/zh_CN/element"
+  part_name = "${batterymgr_native_part_name}"
+  subsystem_name = "powermgr"
+}
+
+## Install bo_CN/element/string.json to /system/etc/battery/resources/bo_CN/element/string.json
+ohos_prebuilt_etc("battery_notification_bo_CN") {
+  source = "bo_CN/element/string.json"
+  relative_install_dir = "battery/resources/bo_CN/element"
+  part_name = "${batterymgr_native_part_name}"
+  subsystem_name = "powermgr"
+}
+
+## Install ug/element/string.json to /system/etc/battery/resources/ug/element/string.json
+ohos_prebuilt_etc("battery_notification_ug") {
+  source = "ug/element/string.json"
+  relative_install_dir = "battery/resources/ug/element"
+  part_name = "${batterymgr_native_part_name}"
+  subsystem_name = "powermgr"
+}
+
+## Install zh_HK/element/string.json to /system/etc/battery/resources/zh_HK/element/string.json
+ohos_prebuilt_etc("battery_notification_zh_HK") {
+  source = "zh_HK/element/string.json"
+  relative_install_dir = "battery/resources/zh_HK/element"
+  part_name = "${batterymgr_native_part_name}"
+  subsystem_name = "powermgr"
+}
+
+## Install zh_TW/element/string.json to /system/etc/battery/resources/zh_TW/element/string.json
+ohos_prebuilt_etc("battery_notification_zh_TW") {
+  source = "zh_TW/element/string.json"
+  relative_install_dir = "battery/resources/zh_TW/element"
+  part_name = "${batterymgr_native_part_name}"
+  subsystem_name = "powermgr"
+}
+
+## Install zz_ZX/element/string.json to /system/etc/battery/resources/zz_ZX/element/string.json
+ohos_prebuilt_etc("battery_notification_zz_ZX") {
+  source = "zz_ZX/element/string.json"
+  relative_install_dir = "battery/resources/zz_ZX/element"
+  part_name = "${batterymgr_native_part_name}"
+  subsystem_name = "powermgr"
+}
