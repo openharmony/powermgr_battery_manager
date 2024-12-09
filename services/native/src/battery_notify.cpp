@@ -16,6 +16,9 @@
 #include "battery_notify.h"
 #include <regex>
 
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
+#include "charging_sound.h"
+#endif
 #include "common_event_data.h"
 #include "common_event_manager.h"
 #include "common_event_publish_info.h"
@@ -322,6 +325,9 @@ bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
         return isSuccess;
     }
     StartVibrator();
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
+    ChargingSound::GetInstance().Start();
+#endif
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_CONNECTED);
     CommonEventData data;
@@ -373,7 +379,9 @@ bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const
     if (g_batteryDisconnectOnce) {
         return isSuccess;
     }
-
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
+    ChargingSound::GetInstance().Stop();
+#endif
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_DISCONNECTED);
     CommonEventData data;

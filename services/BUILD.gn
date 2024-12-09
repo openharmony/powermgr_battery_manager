@@ -73,6 +73,16 @@ ohos_shared_library("batteryservice") {
 
   public_external_deps = [ "ability_base:want" ]
 
+  if (battery_manager_feature_enable_charging_sound) {
+    defines += [ "BATTERY_MANAGER_ENABLE_CHARGING_SOUND" ]
+    sources += [ "native/src/charging_sound.cpp" ]
+    external_deps += [
+      "audio_framework:audio_client",
+      "config_policy:configpolicy_util",
+      "player_framework:audio_haptic",
+    ]
+  }
+
   if (battery_manager_feature_set_low_capacity_threshold) {
     defines += [ "BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD" ]
   }
