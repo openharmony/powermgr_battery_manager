@@ -80,3 +80,42 @@ HWTEST_F(BatteryEventTest, BatteryEventTest002, TestSize.Level1)
     EXPECT_TRUE(ret);
     BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest002 end.");
 }
+
+/**
+ * @tc.name: BatteryEventTest003
+ * @tc.desc: test HandleNotification function
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryEventTest, BatteryEventTest003, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest003 start.");
+    std::string popupName = "popup_test003";
+    bool ret = g_batteryNotify->HandleNotification(popupName);
+    BATTERY_HILOGI(LABEL_TEST, "HandleNotification ret[%d]", static_cast<int32_t>(ret));
+#ifndef BATTERY_SUPPORT_NOTIFICATION
+    EXPECT_TRUE(ret);
+#endif
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest003 end.");
+}
+
+/**
+ * @tc.name: BatteryEventTest004
+ * @tc.desc: test HandleNotification function
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryEventTest, BatteryEventTest004, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest004 start.");
+    BatteryInfo info;
+    std::string ueventName = "notification_test004";
+    info.SetUevent(ueventName);
+    bool ret =  g_batteryNotify->PublishChangedEvent(info);
+    EXPECT_TRUE(ret);
+    std::string popupName = "popup_test004";
+    ret = g_batteryNotify->HandleNotification(popupName);
+    BATTERY_HILOGI(LABEL_TEST, "HandleNotification ret[%d]", static_cast<int32_t>(ret));
+#ifndef BATTERY_SUPPORT_NOTIFICATION
+    EXPECT_TRUE(ret);
+#endif
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest004 end.");
+}
