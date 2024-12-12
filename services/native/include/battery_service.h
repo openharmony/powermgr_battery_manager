@@ -56,6 +56,11 @@ public:
         return ready_;
     }
 
+    bool IsBootCompleted() const
+    {
+        return isBootCompleted_.load();
+    }
+
     int32_t Dump(int fd, const std::vector<std::u16string> &args) override;
     int32_t GetCapacity() override;
     BatteryChargeState GetChargingStatus() override;

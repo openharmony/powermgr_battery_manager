@@ -326,7 +326,9 @@ bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
     }
     StartVibrator();
 #ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
-    ChargingSound::GetInstance().Start();
+    if (g_service && g_service->IsBootCompleted()) {
+        ChargingSound::GetInstance().Start();
+    }
 #endif
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_CONNECTED);
@@ -380,7 +382,9 @@ bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 #ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
-    ChargingSound::GetInstance().Stop();
+    if (g_service && g_service->IsBootCompleted()) {
+        ChargingSound::GetInstance().Stop();
+    }
 #endif
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_DISCONNECTED);
