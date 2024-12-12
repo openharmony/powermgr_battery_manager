@@ -24,6 +24,34 @@ namespace PowerMgr {
 const std::string CHARGER_SOUND_DEFAULT_PATH = "/vendor/etc/battery/PowerConnected.ogg";
 const char* CHARGER_SOUND_RELATIVE_PATH = "resource/media/audio/ui/PowerConnected.ogg";
 
+class ChargingSoundCallBack : public Media::AudioHapticSoundCallBack {
+public:
+    explicit ChargingSoundCallBack(std::shared_ptr<Media::AudioHapticSound> sound) : sound_(sound) {}
+    virtual ~ChargingSoundCallBack() = default;
+    void OnEndOfStream() override
+    {
+        if (sound_) {
+            sound_->ReleaseSound();
+        }
+    }
+    void OnError(int32_t /* errorCode */) override
+    {
+        if (sound_) {
+            sound_->ReleaseSound();
+        }
+    }
+    void OnFirstFrameWriting(uint64_t /* latency */) override {}
+    void OnInterruptr(const AudioStandard::InterruptEvent& /* interruptEvent */) override
+    {
+        if (sound_) {
+            sound_->ReleaseSound();
+        }
+    }
+
+private:
+    std::shared_ptr<Media::AudioHapticSound> sound_;
+};
+
 ChargingSound& ChargingSound::GetInstance()
 {
     static ChargingSound instance;
@@ -50,6 +78,8 @@ ChargingSound::ChargingSound()
     }
     sound_ = Media::AudioHapticSound::CreateAudioHapticSound(
         Media::AUDIO_LATENCY_MODE_NORMAL, uri_, false, AudioStandard::STREAM_USAGE_SYSTEM);
+    callback_ = std::make_shared<ChargingSoundCallBack>(sound_);
+    sound_->SetAudioHapticSoundCallback(callback_);
 }
 
 void ChargingSound::Prepare() const
@@ -64,19 +94,16 @@ void ChargingSound::Prepare() const
     }
 }
 
-void ChargingSound::Start(bool retry) const
+void ChargingSound::Start() const
 {
     if (!sound_) {
-        BATTERY_HILOGE(COMP_SVC, "sound_ not created, retry=%{public}d", retry);
+        BATTERY_HILOGE(COMP_SVC, "sound_ not created");
         return;
     }
+    Prepare();
     int32_t errcode = sound_->StartSound();
     if (errcode != ERR_OK) {
-        BATTERY_HILOGE(COMP_SVC, "start sound error, code: %{public}d, retry=%{pub;ic}d", errcode, retry);
-        if (retry) {
-            Prepare();
-            Start(false);
-        }
+        BATTERY_HILOGE(COMP_SVC, "start sound error, code: %{public}d", errcode);
     }
 }
 
@@ -85,7 +112,7 @@ void ChargingSound::Stop() const
     if (!sound_) {
         return;
     }
-    (void)sound_->StopSound();
+    (void)sound_->ReleaseSound();
 }
 } // namespace PowerMgr
 } // namespace OHOS
