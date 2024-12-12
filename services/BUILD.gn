@@ -16,6 +16,7 @@ import("../batterymgr.gni")
 config("batterysrv_public_config") {
   include_dirs = [
     "native/include",
+    "native/notification",
     "${battery_service_zidl}/include",
     "${battery_inner_api}/native/include",
   ]
@@ -87,6 +88,24 @@ ohos_shared_library("batteryservice") {
     defines += [ "BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD" ]
   }
 
+  if (battery_manager_feature_supprt_notification) {
+    sources += [
+      "native/notification/button_event.cpp",
+      "native/notification/notification_center.cpp",
+      "native/notification/notification_decorator.cpp",
+      "native/notification/notification_locale.cpp",
+      "native/notification/notification_manager.cpp",
+    ]
+
+    external_deps += [
+      "distributed_notification_service:ans_innerkits",
+      "i18n:intl_util",
+      "image_framework:image_native",
+    ]
+
+    defines += [ "BATTERY_SUPPORT_NOTIFICATION" ]
+  }
+
   if (has_sensors_miscdevice_part) {
     external_deps += [ "miscdevice:light_interface_native" ]
   }
@@ -114,4 +133,17 @@ group("service") {
     "native/profile:battery_config",
     "native/profile:battery_vibrator_config",
   ]
+
+  if (battery_manager_feature_supprt_notification) {
+    deps += [
+      "native/resources:battery_locale_path",
+      "native/resources:battery_notification_base",
+      "native/resources:battery_notification_bo_CN",
+      "native/resources:battery_notification_ug",
+      "native/resources:battery_notification_zh_CN",
+      "native/resources:battery_notification_zh_HK",
+      "native/resources:battery_notification_zh_TW",
+      "native/resources:battery_notification_zz_ZX",
+    ]
+  }
 }

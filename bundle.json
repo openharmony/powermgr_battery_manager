@@ -22,7 +22,8 @@
         "features": [
             "battery_manager_feature_enable_charger",
             "battery_manager_feature_enable_charging_sound",
-            "battery_manager_feature_set_low_capacity_threshold"
+            "battery_manager_feature_set_low_capacity_threshold",
+            "battery_manager_feature_supprt_notification"
         ],
         "adapted_system_type": [
             "standard"
@@ -66,7 +67,10 @@
                 "safwk",
                 "samgr",
                 "ui_lite",
-                "input"
+                "input",
+                "distributed_notification_service",
+                "i18n",
+                "image_framework"
             ]
         },
         "build": {
