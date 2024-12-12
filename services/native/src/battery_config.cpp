@@ -43,6 +43,9 @@ constexpr int32_t MAX_DEPTH = 5;
 constexpr int32_t MIN_DEPTH = 1;
 constexpr uint32_t MOVE_LEFT_16 = 16;
 constexpr uint32_t MOVE_LEFT_8 = 8;
+constexpr int32_t FIRST_BUTTON_INDEX = 0;
+constexpr int32_t SECOND_BUTTON_INDEX = 1;
+constexpr int32_t MAX_BUTTON_RANGE = 2;
 }
 namespace OHOS {
 namespace PowerMgr {
@@ -143,6 +146,8 @@ void BatteryConfig::ParseConfInner()
         static_cast<int32_t>(lightConf_.size()));
     ParseWirelessChargerConf();
     ParseBootActionsConf();
+    ParsePopupConf();
+    ParseNotificationConf();
 }
 
 void BatteryConfig::ParseLightConf(std::string level)
@@ -230,6 +235,100 @@ void BatteryConfig::ParseCommonEventConf(const Json::Value& bootActionsConfig)
     }
     BATTERY_HILOGI(COMP_SVC, "The battery commonevent configuration size %{public}d",
         static_cast<int32_t>(commonEventConf_.size()));
+}
+
+const std::unordered_map<std::string, std::vector<BatteryConfig::PopupConf>>& BatteryConfig::GetPopupConf() const
+{
+    BATTERY_HILOGI(COMP_SVC, "GetPopupConf");
+    return popupConfig_;
+}
+
+void BatteryConfig::ParsePopupConf()
+{
+    Json::Value popupConfig = GetValue("popup");
+    if (popupConfig.isNull() || !popupConfig.isObject()) {
+        BATTERY_HILOGW(COMP_SVC, "popupConfig invalid");
+        return;
+    }
+    popupConfig_.clear();
+    Json::Value::Members members = popupConfig.getMemberNames();
+    for (auto iter = members.begin(); iter != members.end(); iter++) {
+        std::string uevent = *iter;
+        Json::Value valueObj = popupConfig[uevent];
+        if (valueObj.isNull() || !valueObj.isArray()) {
+            BATTERY_HILOGW(COMP_SVC, "ueventConf invalid, key=%{public}s", uevent.c_str());
+            continue;
+        }
+        std::vector<BatteryConfig::PopupConf> popupConfVec;
+        for (const auto& popupObj : valueObj) {
+            Json::Value popupName = popupObj["name"];
+            Json::Value popupAction = popupObj["action"];
+            if (!popupName.isString() || !popupAction.isUInt()) {
+                BATTERY_HILOGW(COMP_SVC, "popupObj invalid, key=%{public}s", uevent.c_str());
+                continue;
+            }
+            BatteryConfig::PopupConf popupCfg = {
+                .name = popupName.asString(),
+                .action = popupAction.asUInt()
+            };
+            BATTERY_HILOGI(COMP_SVC, "add popupConf %{public}s, %{public}d", popupCfg.name.c_str(), popupCfg.action);
+            popupConfVec.emplace_back(popupCfg);
+        }
+        BATTERY_HILOGI(COMP_SVC, "popupConfVec size: %{public}d", static_cast<int32_t>(popupConfVec.size()));
+        popupConfig_.emplace(uevent, popupConfVec);
+    }
+    BATTERY_HILOGI(COMP_SVC, "popupConfVec size: %{public}d", static_cast<int32_t>(popupConfig_.size()));
+}
+
+const std::unordered_map<std::string, BatteryConfig::NotificationConf>& BatteryConfig::GetNotificationConf() const
+{
+    return notificationConfMap_;
+}
+
+void BatteryConfig::ParseNotificationConf()
+{
+    Json::Value nConf = GetValue("notification");
+    if (nConf.isNull() || !nConf.isArray()) {
+        BATTERY_HILOGW(COMP_SVC, "nConf is invalid");
+        return;
+    }
+    for (const auto& conf : nConf) {
+        Json::Value nameObj = conf["name"];
+        Json::Value iconObj = conf["icon"];
+        Json::Value titleObj = conf["title"];
+        Json::Value textObj = conf["text"];
+        Json::Value buttonObj = conf["button"];
+        if (!nameObj.isString() || !iconObj.isString() || !titleObj.isString()
+            || !textObj.isString() || !buttonObj.isArray()) {
+            BATTERY_HILOGW(COMP_SVC, "stringConf Parse failed");
+            continue;
+        }
+        if (buttonObj.size() != MAX_BUTTON_RANGE || !buttonObj[FIRST_BUTTON_INDEX].isObject() ||
+            !buttonObj[SECOND_BUTTON_INDEX].isObject()) {
+            BATTERY_HILOGW(COMP_SVC, "buttonConf is invalid");
+            continue;
+        }
+        Json::Value firstButtonNameObj = buttonObj[FIRST_BUTTON_INDEX]["name"];
+        Json::Value firstButtonActionObj = buttonObj[FIRST_BUTTON_INDEX]["action"];
+        Json::Value secondButtonNameObj = buttonObj[SECOND_BUTTON_INDEX]["name"];
+        Json::Value secondButtonActionObj = buttonObj[SECOND_BUTTON_INDEX]["action"];
+        if (!firstButtonNameObj.isString() || !firstButtonActionObj.isString()
+            || !secondButtonNameObj.isString() || !secondButtonActionObj.isString()) {
+            BATTERY_HILOGW(COMP_SVC, "buttonConf Parse failed");
+            return;
+        }
+        std::string name = nameObj.asString();
+        BatteryConfig::NotificationConf notificationConf = {
+            .name = name,
+            .icon = iconObj.asString(),
+            .title = titleObj.asString(),
+            .firstButton = std::make_pair(firstButtonNameObj.asString(), firstButtonActionObj.asString()),
+            .secondButton = std::make_pair(secondButtonNameObj.asString(), secondButtonActionObj.asString())
+        };
+        BATTERY_HILOGI(COMP_SVC, "notificationConf name: %{public}s", name.c_str());
+        notificationConfMap_.emplace(name, notificationConf);
+    }
+    BATTERY_HILOGI(COMP_SVC, "notificationConf size: %{public}d", static_cast<int32_t>(notificationConfMap_.size()));
 }
 
 Json::Value BatteryConfig::FindConf(const std::string& key) const

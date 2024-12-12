@@ -21,6 +21,7 @@
 #include <mutex>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 #include <json/json.h>
 #include "nocopyable.h"
@@ -41,6 +42,24 @@ public:
         bool sceneConfigEqual;
         std::string sceneConfigValue;
     };
+    struct PopupConf {
+        std::string name;
+        int32_t action;
+    };
+    struct NotificationConf {
+        std::string name;
+        std::string icon;
+        std::string title;
+        std::string text;
+        std::pair<std::string, std::string> firstButton;
+        std::pair<std::string, std::string> secondButton;
+        const std::string GetInfo() const
+        {
+            return "name: " + name + ", icon: " + icon + ", title: " + title + ", text: " + text +
+                ", firstButton: " + firstButton.first + ", " + firstButton.second +
+                ", secondButton: " + secondButton.first + ", " + secondButton.second;
+        }
+    };
     static BatteryConfig& GetInstance();
     bool ParseConfig();
     bool IsExist(std::string key) const;
@@ -48,6 +67,8 @@ public:
     const std::vector<LightConf>& GetLightConf() const;
     bool GetWirelessChargerConf() const;
     const std::vector<BatteryConfig::CommonEventConf>& GetCommonEventConf() const;
+    const std::unordered_map<std::string, std::vector<BatteryConfig::PopupConf>>& GetPopupConf() const;
+    const std::unordered_map<std::string, BatteryConfig::NotificationConf>& GetNotificationConf() const;
 
 private:
     bool OpenFile(std::ifstream& ifsConf, const std::string& configPath);
@@ -55,6 +76,8 @@ private:
     void ParseLightConf(std::string level);
     void ParseWirelessChargerConf();
     void ParseBootActionsConf();
+    void ParsePopupConf();
+    void ParseNotificationConf();
     void ParseCommonEventConf(const Json::Value &bootActionsConfig);
     Json::Value FindConf(const std::string& key) const;
     bool SplitKey(const std::string& key, std::vector<std::string>& keys) const;
@@ -63,6 +86,8 @@ private:
     std::vector<BatteryConfig::LightConf> lightConf_;
     std::vector<BatteryConfig::CommonEventConf> commonEventConf_;
     bool wirelessChargerEnable_ { false };
+    std::unordered_map<std::string, std::vector<BatteryConfig::PopupConf>> popupConfig_;
+    std::unordered_map<std::string, BatteryConfig::NotificationConf> notificationConfMap_;
     static std::mutex mutex_;
     static std::shared_ptr<BatteryConfig> instance_;
 };

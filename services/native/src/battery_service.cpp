@@ -582,7 +582,8 @@ BatteryError BatteryService::SetBatteryConfig(const std::string& sceneName, cons
         return BatteryError::ERR_SYSTEM_API_DENIED;
     }
 
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter SetBatteryConfig");
+    BATTERY_HILOGI(FEATURE_BATT_INFO, "Enter SetBatteryConfig sceneName:%{public}s value:%{public}s",
+        sceneName.c_str(), value.c_str());
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");

@@ -30,6 +30,7 @@ public:
     ~BatteryNotify() = default;
     int32_t PublishEvents(BatteryInfo& info);
     bool PublishCustomEvent(const BatteryInfo& info, const std::string& commonEventName) const;
+    bool HandleNotification(const std::string& ueventName) const;
 
 private:
     void HandleUevent(BatteryInfo& info);

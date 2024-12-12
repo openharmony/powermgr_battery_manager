@@ -1,0 +1,32 @@
+{
+    "String":[
+        {
+            "name":"zh-Hans-CN",
+            "value":"zh_CN"
+        },
+        {
+            "name":"en-Latn-US",
+            "value": "base"
+        },
+        {
+            "name":"zh-Hant-HK",
+            "value":"zh_HK"
+        },
+        {
+            "name":"zh-Hant-TW",
+            "value":"zh_TW"
+        },
+        {
+            "name":"ug-CN",
+            "value":"ug"
+        },
+        {
+            "name":"bo-CN",
+            "value":"bo_CN"
+        },
+        {
+            "name":"zz-ZX",
+            "value":"zz_ZX"
+        }
+    ]
+}
