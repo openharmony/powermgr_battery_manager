@@ -22,10 +22,11 @@ class AudioHapticSound;
 } // namespace Media
 
 namespace PowerMgr {
+class ChargingSoundCallBack;
 class ChargingSound {
 public:
     static ChargingSound& GetInstance();
-    void Start(bool retry = true) const;
+    void Start() const;
     void Stop() const;
     void Prepare() const;
 
@@ -34,7 +35,8 @@ private:
     DISALLOW_COPY_AND_MOVE(ChargingSound);
     std::string GetPath(const char* uri) const;
     std::string uri_;
-    std::atomic_shared_ptr<Media::AudioHapticSound> sound_ {}; // empty initialization for incomplete type
+    std::shared_ptr<Media::AudioHapticSound> sound_ {};
+    std::shared_ptr<ChargingSoundCallBack> callback_ {};
 };
 } // namespace PowerMgr
 } // namespace OHOS
