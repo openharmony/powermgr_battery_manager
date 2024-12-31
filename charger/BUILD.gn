@@ -87,11 +87,15 @@ ohos_executable("charger") {
 }
 
 group("charger_group") {
-  deps = [ ":charger" ]
+  if (battery_manager_feature_enable_charger) {
+    deps = [ ":charger" ]
+  }
 }
 
 group("charger_animation") {
-  deps = [ "sa_profile:animation_config" ]
+  if (battery_manager_feature_enable_charger) {
+    deps = [ "sa_profile:animation_config" ]
+  }
 }
 
 group("resources_service") {
