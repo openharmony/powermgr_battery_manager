@@ -113,6 +113,10 @@ ohos_unittest("test_battery_service_scenario") {
     "ipc:ipc_single",
   ]
 
+  if (battery_manager_feature_enable_wireless_charge) {
+    defines += [ "BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE" ]
+  }
+
   if (battery_manager_feature_supprt_notification) {
     sources += [ "src/scenario_test/battery_notification_test.cpp" ]
 

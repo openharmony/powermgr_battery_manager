@@ -109,7 +109,9 @@ int32_t BatteryNotify::PublishEvents(BatteryInfo& info)
     isAllSuccess &= ret;
     ret = PublishChargeTypeChangedEvent(info);
     isAllSuccess &= ret;
+#ifdef BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE
     lastPowerPluggedType_ = info.GetPluggedType();
+#endif
     return isAllSuccess ? ERR_OK : ERR_NO_INIT;
 }
 
@@ -360,18 +362,6 @@ bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
     return isSuccess;
 }
 
-void BatteryNotify::WirelessPluggedConnected(const BatteryInfo& info) const
-{
-    bool wirelessChargerEnable = BatteryConfig::GetInstance().GetWirelessChargerConf();
-    if (wirelessChargerEnable) {
-        if ((lastPowerPluggedType_ != BatteryPluggedType::PLUGGED_TYPE_WIRELESS) &&
-            (info.GetPluggedType() == BatteryPluggedType::PLUGGED_TYPE_WIRELESS)) {
-            RotationMotionSubscriber();
-        }
-    }
-    return;
-}
-
 void BatteryNotify::StartVibrator() const
 {
     std::shared_ptr<PowerVibrator> vibrator = PowerVibrator::GetInstance();
@@ -416,8 +406,23 @@ bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const
     return isSuccess;
 }
 
+void BatteryNotify::WirelessPluggedConnected(const BatteryInfo& info) const
+{
+#ifdef BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE
+    bool wirelessChargerEnable = BatteryConfig::GetInstance().GetWirelessChargerConf();
+    if (wirelessChargerEnable) {
+        if ((lastPowerPluggedType_ != BatteryPluggedType::PLUGGED_TYPE_WIRELESS) &&
+            (info.GetPluggedType() == BatteryPluggedType::PLUGGED_TYPE_WIRELESS)) {
+            RotationMotionSubscriber();
+        }
+    }
+    return;
+#endif
+}
+
 void BatteryNotify::WirelessPluggedDisconnected(const BatteryInfo& info) const
 {
+#ifdef BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE
     bool wirelessChargerEnable = BatteryConfig::GetInstance().GetWirelessChargerConf();
     if (wirelessChargerEnable) {
         if ((lastPowerPluggedType_ == BatteryPluggedType::PLUGGED_TYPE_WIRELESS) &&
@@ -426,16 +431,20 @@ void BatteryNotify::WirelessPluggedDisconnected(const BatteryInfo& info) const
         }
     }
     return;
+#endif
 }
 
+#ifdef BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE
 static const char* ROTATION_SUBSCRIBER_CONFIG = "RotationMotionSubscriber";
 static const char* ROTATION_UNSUBSCRIBER_CONFIG = "RotationMotionUnsubscriber";
 static const char* POWER_CHARGE_EXTENSION_PATH = "libpower_charge_ext.z.so";
 typedef void(*FuncRotationSubscriber)();
 typedef void(*FuncRotationUnsubscriber)();
+#endif
 
 void BatteryNotify::RotationMotionSubscriber() const
 {
+#ifdef BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE
     BATTERY_HILOGI(FEATURE_BATT_INFO, "Start to RotationMotionSubscriber");
     void *subscriberHandler = dlopen(POWER_CHARGE_EXTENSION_PATH, RTLD_LAZY | RTLD_NODELETE);
     if (subscriberHandler == nullptr) {
@@ -455,10 +464,12 @@ void BatteryNotify::RotationMotionSubscriber() const
     dlclose(subscriberHandler);
     subscriberHandler = nullptr;
     return;
+#endif
 }
 
 void BatteryNotify::RotationMotionUnsubscriber() const
 {
+#ifdef BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE
     BATTERY_HILOGI(FEATURE_BATT_INFO, "Start to RotationMotionUnsubscriber");
     void *unsubscriberHandler = dlopen(POWER_CHARGE_EXTENSION_PATH, RTLD_LAZY | RTLD_NODELETE);
     if (unsubscriberHandler == nullptr) {
@@ -478,6 +489,7 @@ void BatteryNotify::RotationMotionUnsubscriber() const
     dlclose(unsubscriberHandler);
     unsubscriberHandler = nullptr;
     return;
+#endif
 }
 
 bool BatteryNotify::PublishChargingEvent(const BatteryInfo& info) const
