@@ -24,7 +24,7 @@ namespace PowerMgr {
 const std::string CHARGER_SOUND_DEFAULT_PATH = "/vendor/etc/battery/PowerConnected.ogg";
 const char* CHARGER_SOUND_RELATIVE_PATH = "resource/media/audio/ui/PowerConnected.ogg";
 
-class ChargingSoundCallBack : public Media::AudioHapticSoundCallBack {
+class ChargingSoundCallBack : public Media::AudioHapticSoundCallback {
 public:
     explicit ChargingSoundCallBack(std::shared_ptr<Media::AudioHapticSound> sound) : sound_(sound) {}
     virtual ~ChargingSoundCallBack() = default;
@@ -41,7 +41,7 @@ public:
         }
     }
     void OnFirstFrameWriting(uint64_t /* latency */) override {}
-    void OnInterruptr(const AudioStandard::InterruptEvent& /* interruptEvent */) override
+    void OnInterrupt(const AudioStandard::InterruptEvent& /* interruptEvent */) override
     {
         if (sound_) {
             sound_->ReleaseSound();
