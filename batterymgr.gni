@@ -18,6 +18,7 @@ declare_args() {
   battery_manager_feature_enable_charger = false
   battery_manager_feature_enable_charging_sound = false
   battery_manager_feature_supprt_notification = false
+  battery_manager_feature_enable_wireless_charge = false
 }
 
 defines = []
