@@ -188,7 +188,6 @@ void BatteryConfig::ParseWirelessChargerConf()
     wirelessChargerEnable_ = static_cast<bool>(wirelessCharger.asInt());
 }
 
-
 void BatteryConfig::ParseBootActionsConf()
 {
     Json::Value bootActionsConfig = GetValue("boot_actions");
