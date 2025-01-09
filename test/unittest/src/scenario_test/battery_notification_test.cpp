@@ -34,8 +34,7 @@ std::shared_ptr<OHOS::PowerMgr::BatteryNotify> g_batteryServiceNotify = nullptr;
 namespace OHOS {
 namespace PowerMgr {
 
-BatteryInfo* g_batteryInfo;
-std::shared_ptr<BatteryNotify> g_batteryServiceNotify;
+BatteryInfo* g_batteryServiceInfo;
 
 void BatteryNotificationTest::SetUpTestCase()
 {
@@ -44,14 +43,14 @@ void BatteryNotificationTest::SetUpTestCase()
 
 void BatteryNotificationTest::SetUp()
 {
-    g_batteryInfo = new BatteryInfo();
+    g_batteryServiceInfo = new BatteryInfo();
 }
 
 void BatteryNotificationTest::TearDown()
 {
-    if (g_batteryInfo != nullptr) {
-        delete g_batteryInfo;
-        g_batteryInfo = nullptr;
+    if (g_batteryServiceInfo != nullptr) {
+        delete g_batteryServiceInfo;
+        g_batteryServiceInfo = nullptr;
     }
 }
 
