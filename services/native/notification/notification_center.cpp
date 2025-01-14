@@ -43,7 +43,7 @@ void NotificationCenter::CreateBaseStyle(const BatteryConfig::NotificationConf& 
 
 void NotificationCenter::SetNotificationId(const std::string& popupName)
 {
-    int32_t notificationId = std::hash<std::string>()(popupName);
+    int32_t notificationId = static_cast<int32_t>(std::hash<std::string>()(popupName));
     BATTERY_HILOGI(COMP_SVC, "SetNotificationId notifationId[%{public}d]", notificationId);
     request_.SetNotificationId(notificationId);
 }
