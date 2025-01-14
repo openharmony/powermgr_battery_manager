@@ -86,6 +86,10 @@ ohos_shared_library("batteryservice") {
     ]
   }
 
+  if (battery_manager_feature_enable_wireless_charge) {
+    defines += [ "BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE" ]
+  }
+
   if (battery_manager_feature_set_low_capacity_threshold) {
     defines += [ "BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD" ]
   }
