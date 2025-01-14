@@ -16,6 +16,7 @@ import("//build/ohos.gni")
 declare_args() {
   battery_manager_feature_set_low_capacity_threshold = false
   battery_manager_feature_enable_charger = false
+  battery_manager_feature_enable_charging_sound = false
 }
 
 if (!defined(global_parts_info) ||
