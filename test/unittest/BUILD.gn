@@ -75,6 +75,10 @@ ohos_unittest("test_battery") {
     "hilog:libhilog",
     "ipc:ipc_single",
   ]
+
+  if (battery_manager_feature_enable_wireless_charge) {
+    defines += [ "BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE" ]
+  }
 }
 
 ### test exceptions when Remote() return nullptr
