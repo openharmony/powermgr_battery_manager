@@ -375,5 +375,32 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify021, TestSize.Level1)
     ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
 }
+
+#ifdef BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE
+/**
+ * @tc.name: BatteryNotify022
+ * @tc.desc: Test Wireless Charge
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify022, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify022 begin");
+    BatteryPluggedType pluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
+    g_batteryInfo->SetPluggedType(pluggedType);
+    auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
+    EXPECT_EQ(ret, ERR_OK);
+
+    pluggedType = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
+    g_batteryInfo->SetPluggedType(pluggedType);
+    ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
+    EXPECT_EQ(ret, ERR_OK);
+
+    pluggedType = BatteryPluggedType::PLUGGED_TYPE_USB;
+    g_batteryInfo->SetPluggedType(pluggedType);
+    ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
+    EXPECT_EQ(ret, ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify022 end");
+}
+#endif
 } // namespace PowerMgr
 } // namespace OHOS
