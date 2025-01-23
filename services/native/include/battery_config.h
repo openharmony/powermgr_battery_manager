@@ -39,16 +39,19 @@ public:
     bool IsExist(std::string key) const;
     int32_t GetInt(std::string key, int32_t defVal = 0) const;
     const std::vector<LightConf>& GetLightConf() const;
+    bool GetWirelessChargerConf() const;
 
 private:
     bool OpenFile(std::ifstream& ifsConf, const std::string& configPath);
     void ParseConfInner();
     void ParseLightConf(std::string level);
+    void ParseWirelessChargerConf();
     Json::Value FindConf(const std::string& key) const;
     bool SplitKey(const std::string& key, std::vector<std::string>& keys) const;
     Json::Value GetValue(std::string key) const;
     Json::Value config_;
     std::vector<BatteryConfig::LightConf> lightConf_;
+    bool wirelessChargerEnable_ { false };
     static std::mutex mutex_;
     static std::shared_ptr<BatteryConfig> instance_;
 };
