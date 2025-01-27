@@ -216,6 +216,23 @@ uint32_t SystemBattery::BatteryInfo::IsCharging() const
         chargingState_ == BatteryChargeState::CHARGE_STATE_FULL);
 }
 
+static void SendEvent(napi_env env, SystemBattery *asyncContext, napi_event_priority prio)
+{
+    auto task = [env, asyncContext]() mutable {
+        BATTERY_HILOGD(FEATURE_BATT_INFO, "CompleteCallback In");
+        if (asyncContext == nullptr) {
+            BATTERY_HILOGD(FEATURE_BATT_INFO, "asyncContext is nullptr");
+            return;
+        }
+        asyncContext->GetBatteryStats(env);
+        delete asyncContext;
+    };
+    if (napi_send_event(env, task, prio) != napi_status::napi_ok) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "failed to SendEvent!");
+        delete asyncContext;
+    }
+}
+
 static napi_value GetStatus(napi_env env, napi_callback_info info)
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Call the GetBatteryStats method");
@@ -232,27 +249,7 @@ static napi_value GetStatus(napi_env env, napi_callback_info info)
 
     std::unique_ptr<SystemBattery> asyncInfo = std::make_unique<SystemBattery>();
     RETURN_IF_WITH_RET(!asyncInfo->CreateCallbackRef(env, argv[ARGC_ONE]), nullptr);
-
-    napi_value resource = nullptr;
-    NAPI_CALL(env, napi_create_string_utf8(env, "GetStatus", NAPI_AUTO_LENGTH, &resource));
-    napi_create_async_work(
-        env,
-        nullptr,
-        resource,
-        [](napi_env env, void *data) {
-	    BATTERY_HILOGD(FEATURE_BATT_INFO, "async_work callback function is called");
-	},
-        [](napi_env env, napi_status status, void *data) {
-            SystemBattery *asyncInfo = reinterpret_cast<SystemBattery*>(data);
-            if (asyncInfo != nullptr) {
-                asyncInfo->GetBatteryStats(env);
-                napi_delete_async_work(env, asyncInfo->asyncWork);
-                delete asyncInfo;
-            }
-        },
-        reinterpret_cast<void*>(asyncInfo.get()),
-        &asyncInfo->asyncWork);
-    NAPI_CALL(env, napi_queue_async_work_with_qos(env, asyncInfo->asyncWork, napi_qos_utility));
+    SendEvent(env, asyncInfo.get(), napi_eprio_low);
     asyncInfo.release();
     return nullptr;
 }
