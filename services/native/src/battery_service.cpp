@@ -373,7 +373,7 @@ bool BatteryService::IsInExtremePowerSaveMode()
 void BatteryService::WakeupDevice(BatteryPluggedType pluggedType)
 {
     if (IsPlugged(pluggedType) || IsUnplugged(pluggedType)) {
-        PowerMgrClient::GetInstance().WakeupDevice();
+        PowerMgrClient::GetInstance().WakeupDevice(WakeupDeviceType::WAKEUP_DEVICE_PLUG_CHANGE);
     }
     g_lastPluggedType = pluggedType;
 }
