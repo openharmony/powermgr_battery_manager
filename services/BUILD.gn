@@ -92,21 +92,7 @@ ohos_shared_library("batteryservice") {
     defines += [ "BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD" ]
   }
 
-  if (battery_manager_feature_supprt_notification) {
-    sources += [
-      "native/notification/button_event.cpp",
-      "native/notification/notification_center.cpp",
-      "native/notification/notification_decorator.cpp",
-      "native/notification/notification_locale.cpp",
-      "native/notification/notification_manager.cpp",
-    ]
-
-    external_deps += [
-      "distributed_notification_service:ans_innerkits",
-      "i18n:intl_util",
-      "image_framework:image_native",
-    ]
-
+  if (battery_manager_feature_support_notification) {
     defines += [ "BATTERY_SUPPORT_NOTIFICATION" ]
   }
 
@@ -131,14 +117,59 @@ ohos_shared_library("batteryservice") {
   part_name = "battery_manager"
 }
 
+ohos_shared_library("battery_notification") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+  branch_protector_ret = "pac_ret"
+
+  include_dirs = [ "native/notification" ]
+
+  sources = [
+    "native/notification/button_event.cpp",
+    "native/notification/notification_center.cpp",
+    "native/notification/notification_decorator.cpp",
+    "native/notification/notification_locale.cpp",
+    "native/notification/notification_manager.cpp",
+  ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  public_configs = [ ":batterysrv_public_config" ]
+
+  public_external_deps = [ "ability_base:want" ]
+
+  deps = [ "${battery_inner_api}:batterysrv_client" ]
+
+  external_deps = [
+    "ability_base:zuri",
+    "c_utils:utils",
+    "config_policy:configpolicy_util",
+    "distributed_notification_service:ans_innerkits",
+    "hilog:libhilog",
+    "i18n:intl_util",
+    "image_framework:image_native",
+    "jsoncpp:jsoncpp",
+  ]
+
+  subsystem_name = "powermgr"
+  part_name = "battery_manager"
+}
+
 group("service") {
   deps = [
+    ":battery_notification",
     ":batteryservice",
     "native/profile:battery_config",
     "native/profile:battery_vibrator_config",
   ]
 
-  if (battery_manager_feature_supprt_notification) {
+  if (battery_manager_feature_support_notification) {
     deps += [
       "native/resources:battery_locale_path",
       "native/resources:battery_notification_base",

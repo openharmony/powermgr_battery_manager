@@ -79,8 +79,13 @@ bool NotificationLocale::ParseJsonfile(const std::string& targetPath,
 
 void NotificationLocale::ParseLocaleCfg()
 {
+    if (islanguageMapInit_) {
+        return;
+    }
     languageMap_.clear();
-    ParseJsonfile(LOCALE_CONFIG_PATH, languageMap_);
+    if (ParseJsonfile(LOCALE_CONFIG_PATH, languageMap_)) {
+        islanguageMapInit_ = true;
+    }
 }
 
 void NotificationLocale::UpdateStringMap()

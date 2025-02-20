@@ -93,6 +93,7 @@ ohos_unittest("test_battery_service_scenario") {
   deps = [
     "${battery_inner_api}:batterysrv_client",
     "${battery_service_zidl}:batterysrv_stub",
+    "${battery_service}:battery_notification",
     "${battery_service}:batteryservice",
     "//third_party/googletest:gtest_main",
     "//third_party/jsoncpp:jsoncpp",
@@ -117,7 +118,7 @@ ohos_unittest("test_battery_service_scenario") {
     defines += [ "BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE" ]
   }
 
-  if (battery_manager_feature_supprt_notification) {
+  if (battery_manager_feature_support_notification) {
     sources += [ "src/scenario_test/battery_notification_test.cpp" ]
 
     external_deps += [
@@ -492,7 +493,7 @@ ohos_unittest("battery_common_event_test") {
     "hilog:libhilog",
   ]
 
-  if (battery_manager_feature_supprt_notification) {
+  if (battery_manager_feature_support_notification) {
     defines += [ "BATTERY_SUPPORT_NOTIFICATION" ]
   }
 }

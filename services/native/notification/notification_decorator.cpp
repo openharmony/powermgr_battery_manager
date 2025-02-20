@@ -15,8 +15,7 @@
 
 #include "notification_decorator.h"
 #include "battery_log.h"
-#include "battery_service.h"
-
+#include "battery_srv_client.h"
 
 namespace {
 static const std::string REVERSE_SUPER_CHARGE_OPEN = "notification.battery.reverse_super_charge_open";
@@ -24,7 +23,6 @@ static const std::string REVERSE_SUPER_CHARGE_CLOSE = "notification.battery.reve
 }
 namespace OHOS {
 namespace PowerMgr {
-auto g_batteryService = DelayedSpSingleton<BatteryService>::GetInstance();
 bool NotificationDecorator::PublishNotification()
 {
     if (batteryNotification_ == nullptr) {
@@ -76,11 +74,7 @@ void ReverseSuperChargeOpenButton::RegisterButtonEvent(const std::string& button
 
 void ReverseSuperChargeOpenButton::OpenMode()
 {
-    if (g_batteryService == nullptr) {
-        BATTERY_HILOGW(COMP_SVC, "batteryService is nullptr");
-        return;
-    }
-    g_batteryService->SetBatteryConfig("reverse_super_charge", "2");
+    BatterySrvClient::GetInstance().SetBatteryConfig("reverse_super_charge", "2");
     BATTERY_HILOGI(COMP_SVC, "onReceiveOpenModeEvent end");
 }
 
@@ -95,11 +89,7 @@ void ReverseSuperChargeCloseButton::RegisterButtonEvent(const std::string& butto
 
 void ReverseSuperChargeCloseButton::CloseMode()
 {
-    if (g_batteryService == nullptr) {
-        BATTERY_HILOGW(COMP_SVC, "batteryService is nullptr");
-        return;
-    }
-    g_batteryService->SetBatteryConfig("reverse_super_charge", "1");
+    BatterySrvClient::GetInstance().SetBatteryConfig("reverse_super_charge", "1");
     BATTERY_HILOGI(COMP_SVC, "onReceiveCloseModeEvent end");
 }
 }
