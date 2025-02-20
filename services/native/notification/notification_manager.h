@@ -16,6 +16,8 @@
 #ifndef BATTERY_NOTIFICATION_MANAGER_H
 #define BATTERY_NOTIFICATION_MANAGER_H
 
+#define API __attribute__((visibility("default")))
+
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -26,14 +28,15 @@
 
 namespace OHOS {
 namespace PowerMgr {
-class NotificationManager {
+class API NotificationManager {
 public:
     static NotificationManager& GetInstance()
     {
         static NotificationManager notificationMgr;
         return notificationMgr;
     }
-    void HandleNotification(const std::string& popupName, uint32_t popupAction);
+    void HandleNotification(const std::string& popupName, uint32_t popupAction,
+        const std::unordered_map<std::string, BatteryConfig::NotificationConf>& nConfMap);
     void CancleNotification(const std::string& popupName);
 private:
     NotificationManager() = default;
@@ -46,6 +49,10 @@ private:
     std::mutex mapMutex_;
     std::unordered_map<std::string, std::shared_ptr<IBatteryNotification>> notificationMap_;
 };
+
+extern "C" API void HandleNotification(const std::string& name, int32_t action,
+    const std::unordered_map<std::string, BatteryConfig::NotificationConf>& nConfMap);
+
 }   // namespace PowerMgr
 }   // namespace OHOS
 

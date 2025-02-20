@@ -39,6 +39,7 @@ private:
     std::unordered_map<std::string, std::string> languageMap_;
     std::unordered_map<std::string, std::string> stringMap_;
     std::string localeBaseName_;
+    bool islanguageMapInit_ { false };
     static std::mutex mutex_;
     static std::shared_ptr<NotificationLocale> instance_;
 };
