@@ -22,10 +22,12 @@ namespace PowerMgr {
 static const uint32_t PUBLISH_POPUP_ACTION = 0;
 static const uint32_t CANCLE_POPUP_ACTION = 1;
 
-void NotificationManager::HandleNotification(const std::string& popupName, uint32_t popupAction)
+void NotificationManager::HandleNotification(const std::string& popupName, uint32_t popupAction,
+    const std::unordered_map<std::string, BatteryConfig::NotificationConf>& nConfMap)
 {
+    NotificationLocale::GetInstance().ParseLocaleCfg();
+    NotificationLocale::GetInstance().UpdateStringMap();
     if (popupAction == PUBLISH_POPUP_ACTION) {
-        auto nConfMap = BatteryConfig::GetInstance().GetNotificationConf();
         auto iter = nConfMap.find(popupName);
         if (iter != nConfMap.end()) {
             BatteryConfig::NotificationConf nCfg = FillNotificationCfg(iter->second);
@@ -103,6 +105,12 @@ BatteryConfig::NotificationConf NotificationManager::FillNotificationCfg(const B
     temp.firstButton.first = localeConfig.GetStringByKey(cfg.firstButton.first);
     temp.secondButton.first = localeConfig.GetStringByKey(cfg.secondButton.first);
     return temp;
+}
+
+extern "C" API void HandleNotification(const std::string& name, int32_t action,
+    const std::unordered_map<std::string, BatteryConfig::NotificationConf>& nConfMap)
+{
+    NotificationManager::GetInstance().HandleNotification(name, action, nConfMap);
 }
 
 }

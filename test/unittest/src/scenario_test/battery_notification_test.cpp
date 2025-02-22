@@ -89,8 +89,8 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification002, TestSize.Level1)
 #endif
     std::shared_ptr<NotificationManager> notificationMgr = std::make_shared<NotificationManager>();
     EXPECT_TRUE(notificationMgr != nullptr);
-    notificationMgr->HandleNotification(popupName, 0);
-    notificationMgr->HandleNotification(popupName, 1);
+    notificationMgr->HandleNotification(popupName, 0, {});
+    notificationMgr->HandleNotification(popupName, 1, {});
     EXPECT_TRUE(notificationMgr->notificationMap_.size() == 0);
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotification002 end");
 }
