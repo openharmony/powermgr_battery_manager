@@ -38,10 +38,6 @@
 #include "power_vibrator.h"
 #include "power_mgr_client.h"
 #include <dlfcn.h>
-#ifdef BATTERY_SUPPORT_NOTIFICATION
-#include "notification_locale.h"
-#include "notification_manager.h"
-#endif
 
 using namespace OHOS::AAFwk;
 using namespace OHOS::EventFwk;
@@ -73,9 +69,6 @@ BatteryNotify::BatteryNotify()
     const int32_t DEFAULT_LOW_CAPACITY = 20;
     lowCapacity_ = BatteryConfig::GetInstance().GetInt("soc.low", DEFAULT_LOW_CAPACITY);
     BATTERY_HILOGI(COMP_SVC, "Low broadcast power=%{public}d", lowCapacity_);
-#ifdef BATTERY_SUPPORT_NOTIFICATION
-    NotificationLocale::GetInstance().ParseLocaleCfg();
-#endif
 }
 
 int32_t BatteryNotify::PublishEvents(BatteryInfo& info)
@@ -578,7 +571,6 @@ bool BatteryNotify::PublishCustomEvent(const BatteryInfo& info, const std::strin
 bool BatteryNotify::HandleNotification(const std::string& ueventName) const
 {
 #ifdef BATTERY_SUPPORT_NOTIFICATION
-    NotificationLocale::GetInstance().UpdateStringMap();
     std::unordered_map<std::string, std::vector<BatteryConfig::PopupConf>> popupCfg =
         BatteryConfig::GetInstance().GetPopupConf();
     auto iter = popupCfg.find(ueventName);
@@ -586,10 +578,28 @@ bool BatteryNotify::HandleNotification(const std::string& ueventName) const
         BATTERY_HILOGW(COMP_SVC, "HandleNotification not found conf: %{public}s", ueventName.c_str());
         return false;
     }
+    typedef void(*HandleNotificationFunc)(const std::string&, int32_t,
+        const std::unordered_map<std::string, BatteryConfig::NotificationConf>&);
+    void* handler = dlopen("libbattery_notification.z.so", RTLD_LAZY | RTLD_NODELETE);
+    if (handler == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "dlopen HandleNotificationFunc failed, reason : %{public}s", dlerror());
+        return false;
+    }
+    HandleNotificationFunc HandleNotification =
+        reinterpret_cast<HandleNotificationFunc>(dlsym(handler, "HandleNotification"));
+    if (HandleNotification == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "HandleNotificationFunc is null, reason : %{public}s", dlerror());
+        dlclose(handler);
+        handler = nullptr;
+        return false;
+    }
+    auto nConfMap = BatteryConfig::GetInstance().GetNotificationConf();
     for (auto& item : iter->second) {
-        NotificationManager::GetInstance().HandleNotification(item.name, item.action);
+        HandleNotification(item.name, item.action, nConfMap);
         BATTERY_HILOGI(COMP_SVC, "popupName=%{public}s, popupAction=%{public}d", item.name.c_str(), item.action);
     }
+    dlclose(handler);
+    handler = nullptr;
 #endif
     return true;
 }
