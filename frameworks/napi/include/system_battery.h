@@ -57,7 +57,7 @@ private:
     public:
         bool GetBatteryInfo();
         double GetLevel() const;
-        uint32_t IsCharging() const;
+        bool IsCharging() const;
 
     private:
         int32_t capacity_ { INVALID_BATT_INT_VALUE };
