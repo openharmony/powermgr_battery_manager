@@ -263,7 +263,7 @@ static napi_value IsBatteryConfigSupported(napi_env env, napi_callback_info info
     BATTERY_HILOGI(COMP_FWK, "get support charge config, sceneValue: %{public}d", static_cast<uint32_t>(result));
 
     napi_value napiValue;
-    NAPI_CALL(env, napi_get_boolean(env, result, &napiValue));
+    NAPI_CALL(env, napi_create_uint32(env, static_cast<uint32_t>(result), &napiValue));
     if (code != BatteryError::ERR_OK) {
         error.ThrowError(env, code);
         return napiValue;
