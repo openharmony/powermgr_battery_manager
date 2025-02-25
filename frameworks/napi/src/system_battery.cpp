@@ -63,7 +63,7 @@ napi_value SystemBattery::CreateResponse(napi_env env)
     napi_value level = nullptr;
     napi_value charging = nullptr;
     NAPI_CALL(env, napi_create_double(env, batteryInfo_.GetLevel(), &level));
-    NAPI_CALL(env, napi_get_boolean(env, batteryInfo_.IsCharging(), &charging));
+    NAPI_CALL(env, napi_create_uint32(env, batteryInfo_.IsCharging(), &charging));
 
     napi_value response = nullptr;
     NAPI_CALL(env, napi_create_object(env, &response));
@@ -210,10 +210,10 @@ double SystemBattery::BatteryInfo::GetLevel() const
     return (capacity_ * LEVEL_RANGES);
 }
 
-bool SystemBattery::BatteryInfo::IsCharging() const
+uint32_t SystemBattery::BatteryInfo::IsCharging() const
 {
-    return chargingState_ == BatteryChargeState::CHARGE_STATE_ENABLE ||
-        chargingState_ == BatteryChargeState::CHARGE_STATE_FULL;
+    return static_cast<uint32_t>(chargingState_ == BatteryChargeState::CHARGE_STATE_ENABLE ||
+        chargingState_ == BatteryChargeState::CHARGE_STATE_FULL);
 }
 
 static void SendEvent(napi_env env, SystemBattery *asyncContext, napi_event_priority prio)
