@@ -60,6 +60,7 @@
                 "miscdevice",
                 "napi",
                 "power_manager",
+                "runtime_core",
                 "safwk",
                 "samgr",
                 "ui_lite",
@@ -72,6 +73,7 @@
                 "fwk_group": [
                     "//base/powermgr/battery_manager/frameworks:battery_napi",
                     "//base/powermgr/battery_manager/frameworks:battery_capi",
+                    "//base/powermgr/battery_manager/frameworks/ani:battery_ani_packages",
                     "//base/powermgr/battery_manager/interfaces/inner_api:batterysrv_client"
                 ],
                 "service_group": [
