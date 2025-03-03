@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "std": [
+          "../../../../../arkcompiler/runtime_core/static_core/plugins/ets/stdlib/std"
+        ],
+        "escompat": [
+          "../../../../../arkcompiler/runtime_core/static_core/plugins/ets/stdlib/escompat"
+        ],
+        "@ohos.batteryInfo": [
+          "./ets/@ohos.batteryInfo.ets"
+        ]
+      },
+      "outDir": "../cache",
+      "package": ""
+    },
+    "include": [
+      "./ets/*.ets"
+    ]
+}
