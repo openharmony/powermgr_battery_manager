@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+#include <unistd.h>
 #include "notification_locale.h"
 #include "config_policy_utils.h"
 #include "locale_config.h"
