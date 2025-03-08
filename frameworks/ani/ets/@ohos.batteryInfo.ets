@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
- loadLibrary("battery_ani.z")
- class batteryInfo {
+class batteryInfo {
+    static { loadLibrary("battery_ani.z") }
     readonly batterySOC: int;
     static get batterySOC(): int {
         return batteryInfo.getBatterySOC();
     }
     static native getBatterySOC(): int;
- }
- export default batteryInfo;
+}
+export default batteryInfo;
