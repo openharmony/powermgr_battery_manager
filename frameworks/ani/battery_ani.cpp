@@ -38,7 +38,7 @@ ANI_EXPORT ani_status ANI_Constructor(ani_vm *vm, uint32_t *result)
         return ANI_ERROR;
     }
 
-    static const char *className = "LbatteryInfo/batteryInfo;";
+    static const char *className = "L@ohos/batteryInfo/batteryInfo;";
     ani_class cls;
     if (ANI_OK != env->FindClass(className, &cls)) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "Not found %{public}s", className);
