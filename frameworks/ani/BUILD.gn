@@ -47,9 +47,8 @@ generate_static_abc("battery_info_abc") {
   arktsconfig = "${battery_frameworks}/ani/arktsconfig.json"
   dst_file = "$target_out_dir/batteryInfo.abc"
   out_puts = [ "$target_out_dir/batteryInfo.abc" ]
-
-  #is_boot_abc = "True"
-  #device_dst_file = "system/framework/batteryInfo.abc"
+  is_boot_abc = "True"
+  device_dst_file = "/system/framework/batteryInfo.abc"
 }
 
 ohos_prebuilt_etc("battery_info_abc_etc") {
