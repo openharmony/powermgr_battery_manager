@@ -10,51 +10,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-import("//build/config/components/ets_frontend/ets2abc_config.gni")
-import("../../batterymgr.gni")
+import("//build/ohos.gni")
 
 group("battery_ani_packages") {
   deps = [
-    ":battery_ani",
-    ":battery_info_abc_etc",
+    "./battery_info:battery_ani",
+    "./battery_info:battery_info_abc_etc",
   ]
-}
-
-ohos_shared_library("battery_ani") {
-  branch_protector_ret = "pac_ret"
-  sanitize = {
-    cfi = true
-    cfi_cross_dso = true
-    debug = false
-  }
-
-  public_configs = []
-  sources = [ "battery_ani.cpp" ]
-  deps = [ "${battery_inner_api}:batterysrv_client" ]
-  external_deps = [
-    "c_utils:utils",
-    "hilog:libhilog",
-    "ipc:ipc_core",
-    "runtime_core:ani",
-  ]
-
-  subsystem_name = "powermgr"
-  part_name = "battery_manager"
-}
-
-generate_static_abc("battery_info_abc") {
-  arktsconfig = "${battery_frameworks}/ani/arktsconfig.json"
-  dst_file = "$target_out_dir/batteryInfo.abc"
-  out_puts = [ "$target_out_dir/batteryInfo.abc" ]
-  is_boot_abc = "True"
-  device_dst_file = "/system/framework/batteryInfo.abc"
-}
-
-ohos_prebuilt_etc("battery_info_abc_etc") {
-  source = "$target_out_dir/batteryInfo.abc"
-  module_install_dir = "framework"
-  subsystem_name = "powermgr"
-  part_name = "battery_manager"
-  deps = [ ":battery_info_abc" ]
 }
