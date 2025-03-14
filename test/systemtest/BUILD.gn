@@ -29,7 +29,7 @@ config("module_private_config") {
 
 ##############################systemtest##########################################
 ohos_systemtest("test_systemtest") {
-  module_out_path = "${module_output_path}"
+  module_out_path = "battery_manager/battery_manager"
 
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
@@ -67,7 +67,7 @@ ohos_systemtest("test_systemtest") {
 
 ##############################systemtest##########################################
 ohos_systemtest("test_charger_offline_shutdown") {
-  module_out_path = "${module_output_path}"
+  module_out_path = "battery_manager/battery_manager"
 
   sources = [ "src/charger_offline_shutdown_test.cpp" ]
 
