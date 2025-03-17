@@ -41,7 +41,7 @@ namespace {
  */
 HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient001, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryClientDeathRecipient001 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientDeathRecipient001 function start!");
     auto& batterySrvClient = BatterySrvClient::GetInstance();
     EXPECT_NE(batterySrvClient.Connect(), nullptr);
 
@@ -51,7 +51,7 @@ HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient001, TestSi
     EXPECT_NE(deathRecipient, nullptr);
     deathRecipient->OnRemoteDied(remoteObj);
     EXPECT_NE(batterySrvClient.proxy_, nullptr);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryClientDeathRecipient001 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientDeathRecipient001 function end!");
 }
 
 /**
@@ -61,7 +61,7 @@ HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient001, TestSi
  */
 HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient002, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryClientDeathRecipient002 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientDeathRecipient002 function start!");
     auto& batterySrvClient = BatterySrvClient::GetInstance();
     EXPECT_NE(batterySrvClient.Connect(), nullptr);
 
@@ -85,6 +85,6 @@ HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient002, TestSi
     }
 
     ASSERT_EQ(batterySrvClient.proxy_, nullptr);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryClientDeathRecipient002 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClientDeathRecipient002 function end!");
 }
 } // namespace
