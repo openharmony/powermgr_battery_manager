@@ -61,7 +61,7 @@ void BatteryNotificationTest::TearDown()
  */
 HWTEST_F(BatteryNotificationTest, BatteryNotification001, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification001 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification001 function start!");
     g_batteryInfo->SetUevent("battery_notification_test001");
     EXPECT_EQ(g_batteryInfo->GetUevent(), "battery_notification_test001");
     std::string popupName = "BatteryNotification001_popup";
@@ -70,7 +70,7 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification001, TestSize.Level1)
 #ifndef BATTERY_SUPPORT_NOTIFICATION
     EXPECT_TRUE(ret);
 #endif
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification001 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification001 function end!");
 }
 
 /**
@@ -80,7 +80,7 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification001, TestSize.Level1)
  */
 HWTEST_F(BatteryNotificationTest, BatteryNotification002, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification002 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification002 function start!");
     std::string popupName = "BatteryNotification002_popup";
     bool ret = g_batteryServiceNotify->HandleNotification(popupName);
     BATTERY_HILOGI(LABEL_TEST, "HandleNotification ret[%d]", static_cast<int32_t>(ret));
@@ -92,7 +92,7 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification002, TestSize.Level1)
     notificationMgr->HandleNotification(popupName, 0, {});
     notificationMgr->HandleNotification(popupName, 1, {});
     EXPECT_TRUE(notificationMgr->notificationMap_.size() == 0);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification002 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification002 function end!");
 }
 
 /**
@@ -102,7 +102,7 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification002, TestSize.Level1)
  */
 HWTEST_F(BatteryNotificationTest, BatteryNotification003, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification003 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification003 function start!");
     std::string popupName = "battery_notification_test003";
     bool ret = g_batteryServiceNotify->HandleNotification(popupName);
     BATTERY_HILOGI(LABEL_TEST, "HandleNotification ret[%d]", static_cast<int32_t>(ret));
@@ -117,7 +117,7 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification003, TestSize.Level1)
     EXPECT_TRUE(notificationMgr->notificationMap_.size() == 1);
     notificationMgr->CancleNotification("BatteryNotification003_popup");
     EXPECT_TRUE(notificationMgr->notificationMap_.size() == 0);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification003 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification003 function end!");
 }
 
 /**
@@ -127,7 +127,7 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification003, TestSize.Level1)
  */
 HWTEST_F(BatteryNotificationTest, BatteryNotification004, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification004 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification004 function start!");
     std::string popupName = "battery_notification_test004";
     bool ret = g_batteryServiceNotify->HandleNotification(popupName);
     BATTERY_HILOGI(LABEL_TEST, "HandleNotification ret[%d]", static_cast<int32_t>(ret));
@@ -148,7 +148,7 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification004, TestSize.Level1)
     EXPECT_TRUE(notificationMgr->notificationMap_.size() == 1);
     notificationMgr->CancleNotification("BatteryNotification004_popup");
     EXPECT_TRUE(notificationMgr->notificationMap_.size() == 0);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification004 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification004 function end!");
 }
 
 /**
@@ -158,7 +158,7 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification004, TestSize.Level1)
  */
 HWTEST_F(BatteryNotificationTest, BatteryNotification005, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification005 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification005 function start!");
     std::string popupName = "battery_notification_test005";
     bool ret = g_batteryServiceNotify->HandleNotification(popupName);
     BATTERY_HILOGI(LABEL_TEST, "HandleNotification ret[%d]", static_cast<int32_t>(ret));
@@ -179,7 +179,7 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification005, TestSize.Level1)
     EXPECT_TRUE(notificationMgr->notificationMap_.size() == 1);
     notificationMgr->CancleNotification("BatteryNotification005_popup");
     EXPECT_TRUE(notificationMgr->notificationMap_.size() == 0);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification005 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification005 function end!");
 }
 
 /**
@@ -189,7 +189,7 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification005, TestSize.Level1)
  */
 HWTEST_F(BatteryNotificationTest, BatteryNotification006, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification006 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification006 function start!");
     std::string popupName = "battery_notification_test006";
     bool ret = g_batteryServiceNotify->HandleNotification(popupName);
     BATTERY_HILOGI(LABEL_TEST, "HandleNotification ret[%d]", static_cast<int32_t>(ret));
@@ -210,7 +210,7 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification006, TestSize.Level1)
     EXPECT_TRUE(notificationMgr->notificationMap_.size() == 1);
     notificationMgr->CancleNotification("BatteryNotification006_popup");
     EXPECT_TRUE(notificationMgr->notificationMap_.size() == 0);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification006 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification006 function end!");
 }
 }
 }

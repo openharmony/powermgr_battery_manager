@@ -41,10 +41,10 @@ BatteryConfig& g_configTest = BatteryConfig::GetInstance();;
  */
 HWTEST_F(BatteryConfigMockTest, BatteryConfigMock001, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfigMock001 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfigMock001 function start!");
     bool ret = g_configTest.ParseConfig();
     EXPECT_TRUE(ret);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfigMock001 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfigMock001 function end!");
 }
 } // namespace PowerMgr
 } // namespace OHOS

@@ -63,7 +63,7 @@ namespace {
  */
 HWTEST_F (BatterySttest, BatteryST001, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST001 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST001 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST001 g_isMock 1.");
@@ -82,7 +82,7 @@ HWTEST_F (BatterySttest, BatteryST001, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryST001 executing, capacity=" << capacity;
         EXPECT_TRUE(capacity <= 100 && capacity >= 0);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST001 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST001 function end!");
 }
 
 /**
@@ -93,7 +93,7 @@ HWTEST_F (BatterySttest, BatteryST001, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST002, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST002 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST002 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST002 g_isMock 1.");
@@ -118,7 +118,7 @@ HWTEST_F (BatterySttest, BatteryST002, TestSize.Level1)
         EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
             chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST002 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST002 function end!");
 }
 
 /**
@@ -129,7 +129,7 @@ HWTEST_F (BatterySttest, BatteryST002, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST003, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST003 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST003 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST003 g_isMock 1.");
@@ -153,7 +153,7 @@ HWTEST_F (BatterySttest, BatteryST003, TestSize.Level1)
         EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
             chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST003 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST003 function end!");
 }
 
 /**
@@ -164,7 +164,7 @@ HWTEST_F (BatterySttest, BatteryST003, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST004, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "enter. BatteryST004 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST004 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST004 g_isMock 1.");
@@ -188,7 +188,7 @@ HWTEST_F (BatterySttest, BatteryST004, TestSize.Level1)
         EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
             chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST004 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST004 function end!");
 }
 
 /**
@@ -199,7 +199,7 @@ HWTEST_F (BatterySttest, BatteryST004, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST005, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST005 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST005 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST005 g_isMock 1.");
@@ -223,7 +223,7 @@ HWTEST_F (BatterySttest, BatteryST005, TestSize.Level1)
         EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
             chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST005 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST005 function end!");
 }
 
 /**
@@ -234,7 +234,7 @@ HWTEST_F (BatterySttest, BatteryST005, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST006, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST006 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST006 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST006 g_isMock 1.");
@@ -258,7 +258,7 @@ HWTEST_F (BatterySttest, BatteryST006, TestSize.Level1)
         EXPECT_TRUE(chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE ||
             chargeState == OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST006 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST006 function end!");
 }
 
 /**
@@ -269,7 +269,7 @@ HWTEST_F (BatterySttest, BatteryST006, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST007, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST007 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST007 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST007 g_isMock 1.");
@@ -292,7 +292,7 @@ HWTEST_F (BatterySttest, BatteryST007, TestSize.Level1)
             << static_cast<int32_t>(healthState);
         EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST007 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST007 function end!");
 }
 
 /**
@@ -303,7 +303,7 @@ HWTEST_F (BatterySttest, BatteryST007, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST008, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST008 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST008 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST008 g_isMock 1.");
@@ -326,7 +326,7 @@ HWTEST_F (BatterySttest, BatteryST008, TestSize.Level1)
             << static_cast<int32_t>(healthState);
         EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST008 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST008 function end!");
 }
 
 /**
@@ -337,7 +337,7 @@ HWTEST_F (BatterySttest, BatteryST008, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST009, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST009 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST009 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST009 g_isMock 1.");
@@ -360,7 +360,7 @@ HWTEST_F (BatterySttest, BatteryST009, TestSize.Level1)
             << static_cast<int32_t>(healthState);
         EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST009 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST009 function end!");
 }
 
 /**
@@ -371,7 +371,7 @@ HWTEST_F (BatterySttest, BatteryST009, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST010, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST010 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST010 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST010 g_isMock 1.");
@@ -394,7 +394,7 @@ HWTEST_F (BatterySttest, BatteryST010, TestSize.Level1)
             << static_cast<int32_t>(healthState);
         EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST010 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST010 function end!");
 }
 
 /**
@@ -405,7 +405,7 @@ HWTEST_F (BatterySttest, BatteryST010, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST011, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST011 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST011 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST011 g_isMock 1.");
@@ -428,7 +428,7 @@ HWTEST_F (BatterySttest, BatteryST011, TestSize.Level1)
             << static_cast<int32_t>(healthState);
         EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST011 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST011 function end!");
 }
 
 /**
@@ -439,7 +439,7 @@ HWTEST_F (BatterySttest, BatteryST011, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST012, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST012 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST012 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST012 g_isMock 1.");
@@ -462,7 +462,7 @@ HWTEST_F (BatterySttest, BatteryST012, TestSize.Level1)
             << static_cast<int32_t>(healthState);
         EXPECT_TRUE(healthState == OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST012 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST012 function end!");
 }
 
 /**
@@ -473,7 +473,7 @@ HWTEST_F (BatterySttest, BatteryST012, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST013, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST013 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST013 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST012 g_isMock 1.");
@@ -492,7 +492,7 @@ HWTEST_F (BatterySttest, BatteryST013, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryST013 executing, present=" << present;
         EXPECT_TRUE(present);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST013 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST013 function end!");
 }
 
 /**
@@ -503,7 +503,7 @@ HWTEST_F (BatterySttest, BatteryST013, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST014, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST014 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST014 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST014 g_isMock 1.");
@@ -522,7 +522,7 @@ HWTEST_F (BatterySttest, BatteryST014, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryST014 executing, present=" << present;
         EXPECT_TRUE(present);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST014 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST014 function end!");
 }
 
 /**
@@ -533,7 +533,7 @@ HWTEST_F (BatterySttest, BatteryST014, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST015, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST015 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST015 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST015 g_isMock 1.");
@@ -552,7 +552,7 @@ HWTEST_F (BatterySttest, BatteryST015, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryST015 executing, voltage=" << voltage;
         EXPECT_TRUE(voltage >= 0);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST015 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST015 function end!");
 }
 
 /**
@@ -563,7 +563,7 @@ HWTEST_F (BatterySttest, BatteryST015, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST016, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST016 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST016 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST016 g_isMock 1.");
@@ -582,7 +582,7 @@ HWTEST_F (BatterySttest, BatteryST016, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryST016 executing, temperature=" << temperature;
         EXPECT_TRUE(temperature >= 0 && temperature <= 600);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST016 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST016 function end!");
 }
 
 /**
@@ -593,7 +593,7 @@ HWTEST_F (BatterySttest, BatteryST016, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST017 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST017 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST017 g_isMock 1.");
@@ -612,7 +612,7 @@ HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
         GTEST_LOG_(INFO) << "BatteryST017 executing, technology=" << technology;
         EXPECT_TRUE(technology == "Li-poly");
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST058 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST017 function end!");
 }
 
 /**
@@ -623,7 +623,7 @@ HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST018 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST018 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST018 g_isMock 1.");
@@ -643,7 +643,7 @@ HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
             << static_cast<int32_t>(pluggedType);
         EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST018 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST018 function end!");
 }
 
 /**
@@ -654,7 +654,7 @@ HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST019 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST019 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST019 g_isMock 1.");
@@ -674,7 +674,7 @@ HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
             << static_cast<int32_t>(pluggedType);
         EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST019 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST019 function end!");
 }
 
 /**
@@ -685,7 +685,7 @@ HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST020 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST020 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST020 g_isMock 1.");
@@ -705,7 +705,7 @@ HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
             << static_cast<int32_t>(pluggedType);
         EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST020 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST020 function end!");
 }
 
 /**
@@ -717,7 +717,7 @@ HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
  */
 HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST021 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST021 function start!");
     auto& BatterySrvClient = BatterySrvClient::GetInstance();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryST021 g_isMock 1.");
@@ -737,6 +737,6 @@ HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
             << static_cast<int32_t>(pluggedType);
         EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryST021 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryST021 function end!");
 }
 }

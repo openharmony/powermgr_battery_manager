@@ -70,7 +70,7 @@ void BatteryDumpTest::SetUpTestCase()
  */
 HWTEST_F(BatteryCallbackTest, BatteryCallback001, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryCallback001 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryCallback001 function start!");
     sptr<HDI::Battery::V2_0::IBatteryInterface> iBatteryInterface;
     iBatteryInterface = HDI::Battery::V2_0::IBatteryInterface::Get();
     sptr<HDI::Battery::V2_0::IBatteryCallback> callback = new BatteryCallback();
@@ -81,7 +81,7 @@ HWTEST_F(BatteryCallbackTest, BatteryCallback001, TestSize.Level1)
     HDI::Battery::V2_0::BatteryInfo event;
     iBatteryInterface->GetBatteryInfo(event);
     EXPECT_NE(callback->Update(event), HDF_FAILURE);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryCallback001 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryCallback001 function end!");
 }
 
 /**
@@ -91,13 +91,13 @@ HWTEST_F(BatteryCallbackTest, BatteryCallback001, TestSize.Level1)
  */
 HWTEST_F(BatteryCallbackTest, BatteryCallback002, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryCallback002 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryCallback002 function start!");
     BatteryCallback::BatteryEventCallback eventCb = nullptr;
     EXPECT_EQ(BatteryCallback::RegisterBatteryEvent(eventCb), HDF_SUCCESS);
     HDI::Battery::V2_0::BatteryInfo event;
     sptr<HDI::Battery::V2_0::IBatteryCallback> callback = new BatteryCallback();
     EXPECT_EQ(callback->Update(event), HDF_FAILURE);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryCallback002 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryCallback002 function end!");
 }
 
 /**
@@ -107,9 +107,9 @@ HWTEST_F(BatteryCallbackTest, BatteryCallback002, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig001, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig001 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig001 function start!");
     EXPECT_TRUE(g_configTest.ParseConfig());
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig001 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig001 function end!");
 }
 
 /**
@@ -119,7 +119,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig001, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig002, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig002 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig002 function start!");
     const std::vector<BatteryConfig::LightConf> lightConf = g_configTest.GetLightConf();
     EXPECT_TRUE(lightConf.size());
 
@@ -133,7 +133,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig002, TestSize.Level1)
         // The value ranges from 0 to maxRgb
         EXPECT_TRUE(lightConf[i].rgb >= 0 && lightConf[i].rgb <= maxRgb);
     }
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig002 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig002 function end!");
 }
 
 /**
@@ -143,7 +143,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig002, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig003, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig003 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig003 function start!");
     std::string key = "soc.warning";
     if (!g_configTest.IsExist(key)) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryConfig003 %{public}s does not exist", key.c_str());
@@ -154,7 +154,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig003, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig003 warnCapacity=%{public}d", warnCapacity);
     // The value ranges from 0 to 100
     EXPECT_TRUE(warnCapacity >= 0 && warnCapacity <= 100);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig003 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig003 function end!");
 }
 
 /**
@@ -164,7 +164,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig003, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig004, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig004 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig004 function start!");
     std::string key = "temperature.high";
     if (!g_configTest.IsExist(key)) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryConfig004 %{public}s does not exist", key.c_str());
@@ -176,7 +176,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig004, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig004 highTemperature=%{public}d", highTemperature);
     // The value ranges from -900 to 900
     EXPECT_TRUE(highTemperature > minTemp && highTemperature < maxTemp);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig004 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig004 function end!");
 }
 
 /**
@@ -186,7 +186,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig004, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig005, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig005 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig005 function start!");
     std::string key = "temperature.low";
     if (!g_configTest.IsExist(key)) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryConfig005 %{public}s does not exist", key.c_str());
@@ -198,7 +198,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig005, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig005 lowTemperature=%{public}d", lowTemperature);
     // The value ranges from -900 to 900
     EXPECT_TRUE(lowTemperature < maxTemp && lowTemperature > minTemp);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig005 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig005 function end!");
 }
 
 /**
@@ -208,7 +208,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig005, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig006, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig006 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig006 function start!");
     std::string key = "soc.shutdown";
     if (!g_configTest.IsExist(key)) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryConfig006 %{public}s does not exist", key.c_str());
@@ -219,7 +219,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig006, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig006 shtdwonCapacity=%{public}d", shtdwonCapacity);
     // The value ranges from 0 to 100
     EXPECT_TRUE(shtdwonCapacity >= 0 && shtdwonCapacity <= 100);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig006 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig006 function end!");
 }
 
 /**
@@ -229,7 +229,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig006, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig007, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig007 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig007 function start!");
     std::string key = "soc.low";
     if (!g_configTest.IsExist(key)) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryConfig007 %{public}s does not exist", key.c_str());
@@ -240,7 +240,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig007, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig007 low_battery_event=%{public}d", low_battery_event);
     // The value ranges from 0 to 100
     EXPECT_TRUE(low_battery_event >= 0 && low_battery_event <= 100);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig007 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig007 function end!");
 }
 
 /**
@@ -250,10 +250,10 @@ HWTEST_F(BatteryConfigTest, BatteryConfig007, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig008, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig008 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig008 function start!");
     int32_t defValue = 100;
     EXPECT_EQ(defValue, g_configTest.GetInt("XXXXXXXXX", defValue));
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig008 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig008 function end!");
 }
 
 /**
@@ -263,10 +263,10 @@ HWTEST_F(BatteryConfigTest, BatteryConfig008, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig009, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig009 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig009 function start!");
     int32_t defValue = 200;
     EXPECT_EQ(defValue, g_configTest.GetInt("X.X.X.X.X.X", defValue));
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig009 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig009 function end!");
 }
 
 /**
@@ -276,10 +276,10 @@ HWTEST_F(BatteryConfigTest, BatteryConfig009, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig010, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig010 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig010 function start!");
     int32_t defValue = 300;
     EXPECT_EQ(defValue, g_configTest.GetInt("", defValue));
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig010 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig010 function end!");
 }
 
 /**
@@ -290,9 +290,9 @@ HWTEST_F(BatteryConfigTest, BatteryConfig010, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig011, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0011 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0011 function start!");
     EXPECT_TRUE(g_configTest.ParseConfig());
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0011 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0011 function end!");
 }
 
 /**
@@ -303,7 +303,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig011, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig012, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0012 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0012 function start!");
     std::string key = "light.high.soc";
     if (!g_configTest.IsExist(key)) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryConfig012 %{public}s does not exist", key.c_str());
@@ -314,7 +314,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig012, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig012 highSoc=%{public}d", highSoc);
     // The value ranges from 0 to 100
     EXPECT_TRUE(highSoc >= 0 && highSoc <= 100);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0012 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0012 function end!");
 }
 
 /**
@@ -325,10 +325,10 @@ HWTEST_F(BatteryConfigTest, BatteryConfig012, TestSize.Level1)
  */
 HWTEST_F(BatteryConfigTest, BatteryConfig013, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig013 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig013 function start!");
     std::string key = "invalid.key";
     EXPECT_TRUE(!g_configTest.IsExist(key));
-    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig013 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig013 function end!");
 }
 
 /**
@@ -339,13 +339,13 @@ HWTEST_F(BatteryConfigTest, BatteryConfig013, TestSize.Level1)
  */
 HWTEST_F(BatteryDumpTest, BatteryDump001, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump001 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump001 function start!");
     int32_t fd = 1;
     std::vector<std::u16string> args;
     std::u16string arg = u"-i";
     args.push_back(arg);
     EXPECT_EQ(g_service->Dump(fd, args), ERR_OK);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump001 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump001 function end!");
 }
 
 /**
@@ -356,13 +356,13 @@ HWTEST_F(BatteryDumpTest, BatteryDump001, TestSize.Level1)
  */
 HWTEST_F(BatteryDumpTest, BatteryDump002, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump002 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump002 function start!");
     int32_t fd = 1;
     std::vector<std::u16string> args;
     std::u16string arg = u"-u";
     args.push_back(arg);
     EXPECT_EQ(g_service->Dump(fd, args), ERR_OK);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump002 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump002 function end!");
 }
 
 /**
@@ -373,13 +373,13 @@ HWTEST_F(BatteryDumpTest, BatteryDump002, TestSize.Level1)
  */
 HWTEST_F(BatteryDumpTest, BatteryDump003, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump003 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump003 function start!");
     int32_t fd = 1;
     std::vector<std::u16string> args;
     std::u16string arg = u"-r";
     args.push_back(arg);
     EXPECT_EQ(g_service->Dump(fd, args), ERR_OK);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump003 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump003 function end!");
 }
 
 /*
@@ -390,13 +390,13 @@ HWTEST_F(BatteryDumpTest, BatteryDump003, TestSize.Level1)
  */
 static HWTEST_F(BatteryDumpTest, BatteryDump004, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump004 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump004 function start!");
     int32_t fd = 1;
     std::vector<std::u16string> args;
     std::u16string arg = u"-l";
     args.push_back(arg);
     EXPECT_EQ(g_service->Dump(fd, args), ERR_NO_INIT);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump004 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump004 function end!");
 }
 
 /**
@@ -407,13 +407,13 @@ static HWTEST_F(BatteryDumpTest, BatteryDump004, TestSize.Level1)
  */
 static HWTEST_F(BatteryDumpTest, BatteryDump005, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump005 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump005 function start!");
     int32_t fd = 1;
     std::vector<std::u16string> args;
     std::u16string arg = u"-ls";
     args.push_back(arg);
     EXPECT_EQ(g_service->Dump(fd, args), ERR_NO_INIT);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump005 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump005 function end!");
 }
 
 /**
@@ -424,11 +424,11 @@ static HWTEST_F(BatteryDumpTest, BatteryDump005, TestSize.Level1)
  */
 static HWTEST_F(BatteryDumpTest, BatteryDump006, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump006 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump006 function start!");
     int32_t fd = 1;
     std::vector<std::u16string> args;
     EXPECT_EQ(g_service->Dump(fd, args), ERR_OK);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump006 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump006 function end!");
 }
 
 /**
@@ -439,12 +439,12 @@ static HWTEST_F(BatteryDumpTest, BatteryDump006, TestSize.Level1)
  */
 HWTEST_F(BatteryDumpTest, BatteryDump007, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump007 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump007 function start!");
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     int32_t fd = 1;
     std::vector<std::u16string> args;
     EXPECT_FALSE(batteryDump.GetBatteryInfo(fd, g_service, args));
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump007 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump007 function end!");
 }
 
 /**
@@ -455,12 +455,12 @@ HWTEST_F(BatteryDumpTest, BatteryDump007, TestSize.Level1)
  */
 HWTEST_F(BatteryDumpTest, BatteryDump008, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump008 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump008 function start!");
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     int32_t fd = 1;
     std::vector<std::u16string> args;
     EXPECT_FALSE(batteryDump.MockUnplugged(fd, g_service, args));
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump008 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump008 function end!");
 }
 
 /**
@@ -471,12 +471,12 @@ HWTEST_F(BatteryDumpTest, BatteryDump008, TestSize.Level1)
  */
 HWTEST_F(BatteryDumpTest, BatteryDump009, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump009 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump009 function start!");
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     int32_t fd = 1;
     std::vector<std::u16string> args;
     EXPECT_FALSE(batteryDump.Reset(fd, g_service, args));
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump009 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump009 function end!");
 }
 
 /**
@@ -487,7 +487,7 @@ HWTEST_F(BatteryDumpTest, BatteryDump009, TestSize.Level1)
  */
 static HWTEST_F(BatteryDumpTest, BatteryDump010, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump010 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump010 function start!");
     int32_t fd = 1;
     std::vector<std::u16string> args;
     std::u16string argParam = u"--capacity";
@@ -495,7 +495,7 @@ static HWTEST_F(BatteryDumpTest, BatteryDump010, TestSize.Level1)
     args.push_back(argParam);
     args.push_back(argCapacity);
     EXPECT_EQ(g_service->Dump(fd, args), ERR_OK);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump010 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump010 function end!");
 }
 
 /**
@@ -506,13 +506,13 @@ static HWTEST_F(BatteryDumpTest, BatteryDump010, TestSize.Level1)
  */
 static HWTEST_F(BatteryDumpTest, BatteryDump011, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump011 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump011 function start!");
     int32_t fd = 1;
     std::vector<std::u16string> args;
     std::u16string arg = u"--capacity";
     args.push_back(arg);
     EXPECT_EQ(g_service->Dump(fd, args), ERR_NO_INIT);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump011 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump011 function end!");
 }
 
 /**
@@ -523,13 +523,13 @@ static HWTEST_F(BatteryDumpTest, BatteryDump011, TestSize.Level1)
  */
 static HWTEST_F(BatteryDumpTest, BatteryDump012, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump012 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump012 function start!");
     int32_t fd = 1;
     std::vector<std::u16string> args;
     std::u16string arg = u"--capacity 200";
     args.push_back(arg);
     EXPECT_EQ(g_service->Dump(fd, args), ERR_NO_INIT);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump012 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump012 function end!");
 }
 
 /**
@@ -540,12 +540,12 @@ static HWTEST_F(BatteryDumpTest, BatteryDump012, TestSize.Level1)
  */
 HWTEST_F(BatteryDumpTest, BatteryDump013, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump013 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump013 function start!");
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     int32_t fd = 1;
     std::vector<std::u16string> args;
     EXPECT_FALSE(batteryDump.MockCapacity(fd, g_service, args));
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump013 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump013 function end!");
 }
 
 /**
@@ -555,12 +555,12 @@ HWTEST_F(BatteryDumpTest, BatteryDump013, TestSize.Level1)
  */
 HWTEST_F(BatteryDumpTest, BatteryDump014, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump014 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump014 function start!");
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     int32_t fd = 1;
     std::vector<std::u16string> args;
     EXPECT_FALSE(batteryDump.MockUevent(fd, g_service, args));
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump014 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump014 function end!");
 }
 
 /**
@@ -570,7 +570,7 @@ HWTEST_F(BatteryDumpTest, BatteryDump014, TestSize.Level1)
  */
 static HWTEST_F(BatteryDumpTest, BatteryDump015, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump015 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump015 function start!");
     int32_t fd = 1;
     std::vector<std::u16string> args;
     std::u16string argParam = u"--uevent";
@@ -578,7 +578,7 @@ static HWTEST_F(BatteryDumpTest, BatteryDump015, TestSize.Level1)
     args.push_back(argParam);
     args.push_back(argCapacity);
     EXPECT_EQ(g_service->Dump(fd, args), ERR_OK);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump015 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump015 function end!");
 }
 
 /**
@@ -588,13 +588,13 @@ static HWTEST_F(BatteryDumpTest, BatteryDump015, TestSize.Level1)
  */
 static HWTEST_F(BatteryDumpTest, BatteryDump016, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump016 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump016 function start!");
     int32_t fd = 1;
     std::vector<std::u16string> args;
     std::u16string arg = u"--uevent";
     args.push_back(arg);
     EXPECT_EQ(g_service->Dump(fd, args), ERR_NO_INIT);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump016 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump016 function end!");
 }
 } // namespace PowerMgr
 } // namespace OHOS
