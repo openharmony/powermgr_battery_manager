@@ -422,7 +422,7 @@ namespace {
  */
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest001, TestSize.Level0)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest001 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest001 function start!");
     shared_ptr<CommonEventBatteryLowTest> subscriber = CommonEventBatteryLowTest::RegisterEvent();
     if (g_isMock) {
         BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest001 g_isMock 1.");
@@ -435,7 +435,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest001, TestSize.Level0)
         EXPECT_EQ(CommonEventSupport::COMMON_EVENT_BATTERY_LOW, g_action);
     }
     CommonEventManager::UnSubscribeCommonEvent(subscriber);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest001 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest001 function end!");
 }
 
 /*
@@ -446,7 +446,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest001, TestSize.Level0)
 #ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest002, TestSize.Level0)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest002 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest002 function start!");
     shared_ptr<CommonEventBatteryChangedTest> subscriber = CommonEventBatteryChangedTest::RegisterEvent();
     TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "40");
     system("hidumper -s 3302 -a -r");
@@ -456,7 +456,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest002, TestSize.Level0)
     }
     EXPECT_EQ(CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED, g_action);
     CommonEventManager::UnSubscribeCommonEvent(subscriber);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest002 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest002 function end!");
 }
 #endif
 
@@ -469,7 +469,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest002, TestSize.Level0)
 #ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest003, TestSize.Level0)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest003 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest003 function start!");
     shared_ptr<CommonEventBatteryChargingTest> subscriber = CommonEventBatteryChargingTest::RegisterEvent();
     TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/type", "Charging");
     system("hidumper -s 3302 -a -r");
@@ -479,7 +479,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest003, TestSize.Level0)
     }
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest003 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest003 function end!");
 }
 #endif
 
@@ -492,7 +492,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest003, TestSize.Level0)
 #ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest004, TestSize.Level0)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest004 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest004 function start!");
     shared_ptr<CommonEventBatteryDischargingTest> subscriber = CommonEventBatteryDischargingTest::RegisterEvent();
     TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/type", "DisCharging");
     system("hidumper -s 3302 -a -r");
@@ -502,7 +502,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest004, TestSize.Level0)
     }
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest004 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest004 function end!");
 }
 #endif
 
@@ -515,7 +515,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest004, TestSize.Level0)
 #ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest005, TestSize.Level0)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest005 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest005 function start!");
     shared_ptr<CommonEventBatteryOkayTest> subscriber = CommonEventBatteryOkayTest::RegisterEvent();
     TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "90");
     system("hidumper -s 3302 -a -r");
@@ -525,7 +525,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest005, TestSize.Level0)
     }
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest005 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest005 function end!");
 }
 #endif
 
@@ -538,7 +538,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest005, TestSize.Level0)
 #ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest006, TestSize.Level0)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest006 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest006 function start!");
     shared_ptr<CommonEventBatteryDisconnectTest> subscriber = CommonEventBatteryDisconnectTest::RegisterEvent();
     TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "Disconnect");
     system("hidumper -s 3302 -a -r");
@@ -548,7 +548,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest006, TestSize.Level0)
     }
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest006 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest006 function end!");
 }
 #endif
 
@@ -561,7 +561,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest006, TestSize.Level0)
 #ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest007, TestSize.Level0)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest007 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest007 function start!");
     shared_ptr<CommonEventBatteryConnectTest> subscriber = CommonEventBatteryConnectTest::RegisterEvent();
     TestUtils::WriteMock(MOCK_BATTERY_PATH + "/ohos_charger/type", "USB");
     system("hidumper -s 3302 -a -r");
@@ -571,7 +571,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest007, TestSize.Level0)
     }
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest007 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest007 function end!");
 }
 #endif
 
@@ -584,7 +584,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest007, TestSize.Level0)
 #ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest008 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest008 function start!");
     shared_ptr<CommonEventChargeTypeChangedTest> subscriber = CommonEventChargeTypeChangedTest::RegisterEvent();
     TestUtils::WriteMock(MOCK_BATTERY_PATH + "/charge_type", "1");
     system("hidumper -s 3302 -a -r");
@@ -594,7 +594,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
     }
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest008 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest008 function end!");
 }
 #endif
 
@@ -607,7 +607,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
 #ifndef BATTERY_USER_VERSION
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest009 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest009 function start!");
     shared_ptr<CommonEventDumpCapacityTest> subscriber = CommonEventDumpCapacityTest::RegisterEvent();
     int32_t capacity = 2;
     std::string baseCmdStr = "hidumper -s 3302 -a";
@@ -656,7 +656,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
     EXPECT_EQ(g_chargeState, static_cast<int32_t>(BatterySrvClient::GetInstance().GetChargingStatus()));
     auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
     EXPECT_TRUE(ret);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest009 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest009 function end!");
 }
 #endif
 } // namespace

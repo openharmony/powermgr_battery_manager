@@ -99,11 +99,11 @@ void BatteryLightTest::TearDown()
  */
 HWTEST_F(BatteryLightTest, BatteryLight001, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight001 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight001 function start!");
     RETURN_IF(!g_light.isAvailable());
     g_light.TurnOff();
     EXPECT_TRUE(g_light.GetLightColor() == 0U);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight001 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight001 function end!");
 }
 
 /**
@@ -114,12 +114,12 @@ HWTEST_F(BatteryLightTest, BatteryLight001, TestSize.Level1)
  */
 HWTEST_F(BatteryLightTest, BatteryLight002, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight002 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight002 function start!");
     RETURN_IF(!g_light.isAvailable());
     uint32_t color = 0U;
     g_light.TurnOn(color);
     EXPECT_TRUE(g_light.GetLightColor() == color);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight002 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight002 function end!");
 }
 
 /**
@@ -130,13 +130,13 @@ HWTEST_F(BatteryLightTest, BatteryLight002, TestSize.Level1)
  */
 HWTEST_F(BatteryLightTest, BatteryLight003, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight003 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight003 function start!");
     RETURN_IF(!g_light.isAvailable());
     int32_t capacity = 1;
     g_light.UpdateColor(BatteryChargeState::CHARGE_STATE_ENABLE, capacity);
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::RED_LIGHT);
     EXPECT_TRUE(g_light.UpdateColor(BatteryChargeState::CHARGE_STATE_ENABLE, capacity));
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight003 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight003 function end!");
 }
 
 /**
@@ -147,12 +147,12 @@ HWTEST_F(BatteryLightTest, BatteryLight003, TestSize.Level1)
  */
 HWTEST_F(BatteryLightTest, BatteryLight004, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight004 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight004 function start!");
     RETURN_IF(!g_light.isAvailable());
     uint32_t color = 0x7fffffff;
     g_light.TurnOn(color);
     EXPECT_TRUE(g_light.GetLightColor() == color);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight004 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight004 function end!");
 }
 
 /**
@@ -162,7 +162,7 @@ HWTEST_F(BatteryLightTest, BatteryLight004, TestSize.Level1)
  */
 HWTEST_F(BatteryLightTest, BatteryLight005, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight005 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight005 function start!");
     RETURN_IF(!g_light.isAvailable());
     GTEST_LOG_(INFO) << "initial:" << g_light.GetLightColor();
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::LIGHT_OFF);
@@ -174,7 +174,7 @@ HWTEST_F(BatteryLightTest, BatteryLight005, TestSize.Level1)
     EXPECT_FALSE(g_light.UpdateColor(BatteryChargeState::CHARGE_STATE_NONE, 0));
     GTEST_LOG_(INFO) << "actual:" << g_light.GetLightColor() << "=expect:" << BatteryConfigTest::LIGHT_OFF;
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::LIGHT_OFF);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight005 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight005 function end!");
 }
 
 /**
@@ -184,14 +184,14 @@ HWTEST_F(BatteryLightTest, BatteryLight005, TestSize.Level1)
  */
 HWTEST_F(BatteryLightTest, BatteryLight006, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight006 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight006 function start!");
     RETURN_IF(!g_light.isAvailable());
     GTEST_LOG_(INFO) << "initial:" << g_light.GetLightColor();
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::LIGHT_OFF);
     EXPECT_TRUE(g_light.UpdateColor(BatteryChargeState::CHARGE_STATE_ENABLE, 9));
     GTEST_LOG_(INFO) << "actual:" << g_light.GetLightColor() << "=expect:" << BatteryConfigTest::RED_LIGHT;
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::RED_LIGHT);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight006 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight006 function end!");
 }
 
 /**
@@ -201,14 +201,14 @@ HWTEST_F(BatteryLightTest, BatteryLight006, TestSize.Level1)
  */
 HWTEST_F(BatteryLightTest, BatteryLight007, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight007 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight007 function start!");
     RETURN_IF(!g_light.isAvailable());
     GTEST_LOG_(INFO) << "initial:" << g_light.GetLightColor();
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::LIGHT_OFF);
     EXPECT_TRUE(g_light.UpdateColor(BatteryChargeState::CHARGE_STATE_ENABLE, 89));
     GTEST_LOG_(INFO) << "actual:" << g_light.GetLightColor() << "=expect:" << BatteryConfigTest::YELLOW_LIGHT;
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::YELLOW_LIGHT);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight007 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight007 function end!");
 }
 
 /**
@@ -218,14 +218,14 @@ HWTEST_F(BatteryLightTest, BatteryLight007, TestSize.Level1)
  */
 HWTEST_F(BatteryLightTest, BatteryLight008, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight008 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight008 function start!");
     RETURN_IF(!g_light.isAvailable());
     GTEST_LOG_(INFO) << "initial:" << g_light.GetLightColor();
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::LIGHT_OFF);
     EXPECT_TRUE(g_light.UpdateColor(BatteryChargeState::CHARGE_STATE_ENABLE, 100));
     GTEST_LOG_(INFO) << "actual:" << g_light.GetLightColor() << "=expect:" << BatteryConfigTest::GREEN_LIGHT;
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::GREEN_LIGHT);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight008 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight008 function end!");
 }
 
 /**
@@ -235,7 +235,7 @@ HWTEST_F(BatteryLightTest, BatteryLight008, TestSize.Level1)
  */
 HWTEST_F(BatteryLightTest, BatteryLight009, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight009 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight009 function start!");
     RETURN_IF(!g_light.isAvailable());
     GTEST_LOG_(INFO) << "initial:" << g_light.GetLightColor();
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::LIGHT_OFF);
@@ -248,7 +248,7 @@ HWTEST_F(BatteryLightTest, BatteryLight009, TestSize.Level1)
     EXPECT_FALSE(g_light.UpdateColor(BatteryChargeState::CHARGE_STATE_ENABLE, -1));
     GTEST_LOG_(INFO) << "actual:" << g_light.GetLightColor() << "=expect:" << BatteryConfigTest::GREEN_LIGHT;
     EXPECT_EQ(g_light.GetLightColor(), BatteryConfigTest::GREEN_LIGHT);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight009 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight009 function end!");
 }
 
 /**
@@ -258,14 +258,14 @@ HWTEST_F(BatteryLightTest, BatteryLight009, TestSize.Level1)
  */
 HWTEST_F(BatteryLightTest, BatteryLight010, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight010 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight010 function start!");
     BatteryLight light;
     GTEST_LOG_(INFO) << "initial:" << light.GetLightColor();
     light.TurnOn(123);
     EXPECT_EQ(light.GetLightColor(), BatteryConfigTest::LIGHT_OFF);
     light.TurnOff();
     EXPECT_EQ(light.GetLightColor(), BatteryConfigTest::LIGHT_OFF);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryLight010 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryLight010 function end!");
 }
 } // namespace PowerMgr
 } // namespace OHOS
