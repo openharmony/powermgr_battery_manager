@@ -60,11 +60,11 @@ void BatteryEventTest::TearDownTestCase()
  */
 HWTEST_F(BatteryEventTest, BatteryEventTest001, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest001 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest001 function start!");
     BatteryInfo info;
     bool ret = g_batteryNotify->PublishLowEvent(info);
     EXPECT_TRUE(ret);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest001 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest001 function end!");
 }
 
 /**
@@ -74,11 +74,11 @@ HWTEST_F(BatteryEventTest, BatteryEventTest001, TestSize.Level1)
  */
 HWTEST_F(BatteryEventTest, BatteryEventTest002, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest002 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest002 function start!");
     BatteryInfo info;
     bool ret = g_batteryNotify->PublishCustomEvent(info, "test.battery.custom.event");
     EXPECT_TRUE(ret);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest002 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest002 function end!");
 }
 
 /**
@@ -88,14 +88,14 @@ HWTEST_F(BatteryEventTest, BatteryEventTest002, TestSize.Level1)
  */
 HWTEST_F(BatteryEventTest, BatteryEventTest003, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest003 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest003 function start!");
     std::string popupName = "popup_test003";
     bool ret = g_batteryNotify->HandleNotification(popupName);
     BATTERY_HILOGI(LABEL_TEST, "HandleNotification ret[%d]", static_cast<int32_t>(ret));
 #ifndef BATTERY_SUPPORT_NOTIFICATION
     EXPECT_TRUE(ret);
 #endif
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest003 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest003 function end!");
 }
 
 /**
@@ -105,7 +105,7 @@ HWTEST_F(BatteryEventTest, BatteryEventTest003, TestSize.Level1)
  */
 HWTEST_F(BatteryEventTest, BatteryEventTest004, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest004 start.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest004 function start!");
     BatteryInfo info;
     std::string ueventName = "notification_test004";
     info.SetUevent(ueventName);
@@ -117,5 +117,5 @@ HWTEST_F(BatteryEventTest, BatteryEventTest004, TestSize.Level1)
 #ifndef BATTERY_SUPPORT_NOTIFICATION
     EXPECT_TRUE(ret);
 #endif
-    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest004 end.");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTest004 function end!");
 }

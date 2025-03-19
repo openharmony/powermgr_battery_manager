@@ -45,11 +45,11 @@ void BatteryInfoTest::TearDownTestCase()
  */
 HWTEST_F(BatteryInfoTest, BatteryInfo001, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryInfo001 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryInfo001 function start!");
     const int32_t remainEnergy = 100;
     g_infoTest->SetRemainEnergy(remainEnergy);
     EXPECT_EQ(g_infoTest->GetRemainEnergy(), remainEnergy);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryInfo001 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryInfo001 function end!");
 }
 
 /**
@@ -59,11 +59,11 @@ HWTEST_F(BatteryInfoTest, BatteryInfo001, TestSize.Level1)
  */
 HWTEST_F(BatteryInfoTest, BatteryInfo002, TestSize.Level1)
 {
-    BATTERY_HILOGI(LABEL_TEST, "BatteryInfo002 begin");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryInfo002 function start!");
     const ChargeType none = ChargeType::WIRED_NORMAL;
     g_infoTest->SetChargeType(none);
     EXPECT_EQ(g_infoTest->GetChargeType(), none);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryInfo002 end");
+    BATTERY_HILOGI(LABEL_TEST, "BatteryInfo002 function end!");
 }
 } // namespace PowerMgr
 } // namespace OHOS
