@@ -96,7 +96,8 @@ void BatteryLight::TurnOn(uint32_t color)
 bool BatteryLight::UpdateColor(BatteryChargeState chargeState, int32_t capacity)
 {
     if ((chargeState == BatteryChargeState::CHARGE_STATE_NONE) ||
-        (chargeState == BatteryChargeState::CHARGE_STATE_BUTT)) {
+        (chargeState == BatteryChargeState::CHARGE_STATE_BUTT) ||
+        (chargeState == BatteryChargeState::CHARGE_STATE_DISABLE)) {
         BATTERY_HILOGD(FEATURE_BATT_LIGHT, "not in charging state, turn off battery light");
 #ifdef HAS_SENSORS_MISCDEVICE_PART
         TurnOff();
