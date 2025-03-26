@@ -26,6 +26,7 @@ group("battery_fuzzertest") {
 group("battery_unittest") {
   testonly = true
   deps = [
+    "unittest:battery_common_event_part2_test",
     "unittest:battery_common_event_test",
     "unittest:test_battery_proxy_mock_iremoteobject",
     "unittest:test_battery_proxy_mock_messageparcel_write_error",

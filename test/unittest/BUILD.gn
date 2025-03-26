@@ -30,6 +30,19 @@ config("module_private_config") {
   ]
 }
 
+config("module_private_config_without_json") {
+  include_dirs = [
+    "include",
+    "include/interface_test",
+    "include/scenario_test",
+    "${battery_service_native}/include",
+    "${battery_service_native}/notification/include",
+    "${battery_service_zidl}/include",
+    "${battery_inner_api}/native/include",
+    "${battery_manager_path}/test/utils",
+  ]
+}
+
 config("module_mock_private_config") {
   include_dirs = [ "mock/include" ]
 }
@@ -495,6 +508,45 @@ ohos_unittest("battery_common_event_test") {
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "hilog:libhilog",
+  ]
+
+  if (battery_manager_feature_support_notification) {
+    defines += [ "BATTERY_SUPPORT_NOTIFICATION" ]
+  }
+}
+
+ohos_unittest("battery_common_event_part2_test") {
+  module_out_path = "${module_output_path}"
+  defines += [ "GTEST" ]
+
+  sources = [
+    "${battery_manager_path}/test/utils/test_utils.cpp",
+    "mock/source/mock_common_event_manager.cpp",
+    "mock/source/mock_remote_object.cpp",
+    "mock/source/mock_sa_manager.cpp",
+    "src/battery_event_test_part2.cpp",
+  ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config_without_json",
+    ":module_mock_private_config",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  deps = [
+    "${battery_inner_api}:batterysrv_client",
+    "${battery_manager_path}/services:batteryservice",
+  ]
+
+  external_deps = [
+    "ability_base:want",
+    "c_utils:utils",
+    "common_event_service:cesfwk_innerkits",
+    "googletest:gmock_main",
+    "googletest:gtest_main",
+    "hilog:libhilog",
+    "ipc:ipc_core",
   ]
 
   if (battery_manager_feature_support_notification) {
