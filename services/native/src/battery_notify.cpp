@@ -17,7 +17,10 @@
 #include <regex>
 
 #ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
-#include "charging_sound.h"
+#include "ffrt_utils.h"
+#ifdef CONFIG_USE_JEMALLOC_DFX_INTF
+#include "memory_guard.h"
+#endif
 #endif
 #include "common_event_data.h"
 #include "common_event_manager.h"
@@ -44,7 +47,6 @@ using namespace OHOS::EventFwk;
 #ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
 using namespace OHOS::HiviewDFX;
 #endif
-
 namespace OHOS {
 namespace PowerMgr {
 bool g_batteryLowOnce = false;
@@ -319,6 +321,83 @@ bool BatteryNotify::PublishOkayEvent(const BatteryInfo& info) const
     return isSuccess;
 }
 
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
+namespace {
+std::atomic<bool> g_stopping = false;
+std::atomic<bool> g_released = true;
+constexpr int MAX_PLAY_TIME_MS = 2000;
+constexpr int TICK_INTERVAL_MS = 100;
+constexpr int US_PER_MS = 1000;
+
+// be careful: most of the shared libraries in ohos do not support dynamic (un-)loading.
+// for now, if the current process does not hav certain libs as dependency (thus they won't be unloaded),
+// re-dlopen after dlclosing libmedia_client.z.so causes crashes (use of released symbols somehow).
+// known libraries that should not be unloaded:  configpolicy_util, image_framework.
+void AntiMemLeak()
+{
+    // this indirectly opened library causes mem leak, do not reopen it.
+    // check global variables in third_party/libphonenumber/cpp/src/phonenumbers/ohos/update_metadata.cc
+    // if there are any further libraries causing mem-leaks or crashes, add them here.
+    void* tmpHandle = dlopen("libphonenumber_standard.z.so", RTLD_LAZY | RTLD_NODELETE);
+    if (!tmpHandle) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "dlopen libphonenumber_standard.z.so failed");
+    } else {
+        dlclose(tmpHandle);
+    }
+}
+
+void StartChargingSoundFunc()
+{
+#ifdef CONFIG_USE_JEMALLOC_DFX_INTF
+    OHOS::PowerMgr::MemoryGuard guard;
+#endif
+    if (!g_service || !g_service->IsBootCompleted()) {
+        return;
+    }
+    bool expected = true;
+    bool ret = g_released.compare_exchange_strong(expected, false);
+    if (!ret) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "charging sound not released");
+        return;
+    }
+    AntiMemLeak();
+    void* handle = dlopen("libcharging_sound.z.so", RTLD_LAZY);
+    if (!handle) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "dlopen libcharging_sound failed: ret=%{public}s", dlerror());
+        g_released.store(true);
+        return;
+    }
+    auto ChargingSoundStart = reinterpret_cast<bool(*)(void)>(dlsym(handle, "ChargingSoundStart"));
+    auto IsPlaying = reinterpret_cast<bool (*)(void)>(dlsym(handle, "IsPlaying"));
+    if (!IsPlaying || !ChargingSoundStart) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "dlsym failed");
+        dlclose(handle);
+        g_released.store(true);
+        return;
+    }
+    g_stopping.store(false);
+    ffrt::submit([ChargingSoundStart, IsPlaying, handle]() {
+#ifdef CONFIG_USE_JEMALLOC_DFX_INTF
+        OHOS::PowerMgr::MemoryGuard guard;
+#endif
+        ChargingSoundStart();
+        for (int timePassed = 0; timePassed < MAX_PLAY_TIME_MS; timePassed += TICK_INTERVAL_MS) {
+            if (g_stopping.load()) {
+                break;
+            }
+            if (!IsPlaying()) {
+                break;
+            }
+            usleep(TICK_INTERVAL_MS * US_PER_MS);
+        }
+        dlclose(handle);
+        g_released.store(true);
+    });
+}
+
+}
+#endif
+
 bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
 {
     bool isSuccess = true;
@@ -335,9 +414,7 @@ bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
     }
     StartVibrator();
 #ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
-    if (g_service && g_service->IsBootCompleted()) {
-        ChargingSound::GetInstance().Start();
-    }
+    StartChargingSoundFunc();
 #endif
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_CONNECTED);
@@ -379,9 +456,7 @@ bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 #ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
-    if (g_service && g_service->IsBootCompleted()) {
-        ChargingSound::GetInstance().Stop();
-    }
+    g_stopping.store(true);
 #endif
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_DISCONNECTED);
