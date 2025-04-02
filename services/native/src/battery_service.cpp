@@ -20,10 +20,6 @@
 #include <functional>
 #include <new>
 
-#include "ability_manager_client.h"
-#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
-#include "charging_sound.h"
-#endif
 #include "errors.h"
 #include "hdf_device_class.h"
 #include "hdf_service_status.h"
