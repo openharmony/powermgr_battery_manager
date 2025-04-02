@@ -36,6 +36,7 @@ const std::string MOCK_POWER_SUPPLY_BASE_PATH = "/data/service/el0/battery";
 const std::string POWER_SUPPLY_BATTERY = "Battery";
 const std::string INVALID_STRING_VALUE = "invalid";
 const std::string BATTERY_NODE_PATH = "battery";
+constexpr unsigned int DOMAIN_FEATURE_CHARGING = 0xD002925;
 } // namespace
 
 BatterydInfo g_batteryInfo;
@@ -119,11 +120,12 @@ int32_t PowerSupplyProvider::ReadSysfsFile(const char* path, char* buf, size_t s
         BATTERY_HILOGE(FEATURE_CHARGING, "failed to open path");
         return HDF_ERR_IO;
     }
+    fdsan_exchange_owner_tag(fd, 0, DOMAIN_FEATURE_CHARGING);
 
     size_t readSize = read(fd, buf, size - 1);
     buf[readSize] = '\0';
     Trim(buf);
-    close(fd);
+    fdsan_close_with_tag(fd, DOMAIN_FEATURE_CHARGING);
 
     return HDF_SUCCESS;
 }

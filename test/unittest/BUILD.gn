@@ -27,6 +27,8 @@ config("module_private_config") {
     "${battery_manager_path}/test/utils",
     "//third_party/json/single_include",
     "//third_party/jsoncpp/include",
+    "${battery_manager_path}/charger/include",
+    "${battery_manager_path}/charger/include/dev",
   ]
 }
 
@@ -150,6 +152,10 @@ ohos_unittest("test_battery_service_inner") {
   defines += [ "GTEST" ]
 
   sources = [
+    "${battery_manager_path}/charger/src/dev/drm_driver.cpp",
+    "${battery_manager_path}/charger/src/dev/fbdev_driver.cpp",
+    "${battery_manager_path}/charger/src/dev/graphic_dev.cpp",
+    "${battery_manager_path}/charger/src/power_supply_provider.cpp",
     "${battery_manager_path}/test/utils/test_utils.cpp",
     "src/battert_service_inner_test.cpp",
   ]
@@ -179,9 +185,17 @@ ohos_unittest("test_battery_service_inner") {
     "drivers_interface_light:liblight_proxy_1.0",
     "hdf_core:libhdi",
     "hilog:libhilog",
+    "init:libbegetutil",
     "ipc:ipc_single",
     "safwk:system_ability_fwk",
   ]
+
+  if (has_drivers_interface_display_part && has_drivers_interface_light_part &&
+      has_graphic_surface_part && has_ui_lite_part &&
+      battery_manager_feature_enable_charger) {
+    defines += [ "ENABLE_CHARGER" ]
+    external_deps += [ "libdrm:libdrm" ]
+  }
 }
 
 ohos_unittest("test_battery_stub") {
