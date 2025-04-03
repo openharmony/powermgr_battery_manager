@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,16 +22,26 @@
 #include "config_policy_utils.h"
 
 using namespace testing::ext;
+namespace {
+bool g_returnBool = false;
+char* g_returnCharPtr = nullptr;
+}
 
 char* GetOneCfgFile(const char *pathSuffix, char *buf, unsigned int bufLength)
 {
-    return nullptr;
+    return g_returnCharPtr;
+}
+
+bool Json::parseFromStream(
+    Json::CharReader::Factory const& fact, Json::IStream& sin, Json::Value* root, Json::String* errs)
+{
+    return g_returnBool;
 }
 
 namespace OHOS {
 namespace PowerMgr {
 namespace {
-BatteryConfig& g_configTest = BatteryConfig::GetInstance();;
+BatteryConfig& g_configTest = BatteryConfig::GetInstance();
 } // namespace
 
 /**
@@ -43,6 +53,11 @@ HWTEST_F(BatteryConfigMockTest, BatteryConfigMock001, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfigMock001 function start!");
     bool ret = g_configTest.ParseConfig();
+    EXPECT_TRUE(ret);
+    static char nullChar = '\0';
+    g_returnCharPtr = &nullChar;
+    g_returnBool = true;
+    ret = g_configTest.ParseConfig();
     EXPECT_TRUE(ret);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfigMock001 function end!");
 }
