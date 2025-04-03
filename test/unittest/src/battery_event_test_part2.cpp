@@ -98,8 +98,17 @@ HWTEST_F(BatteryEventTestPart2, BatteryEventTestPart2001, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2001 start.");
     BatteryInfo info;
-    MockBatteryCommonEventManager::SetBoolReturnValue(true);
+    info.SetCapacity(50);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
     bool ret = g_batteryNotify->PublishLowEvent(info);
+    EXPECT_TRUE(ret);
+    info.SetCapacity(8);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    ret = g_batteryNotify->PublishLowEvent(info);
+    EXPECT_FALSE(ret);
+    info.SetCapacity(7);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    ret = g_batteryNotify->PublishLowEvent(info);
     EXPECT_TRUE(ret);
     BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2001 end.");
 }
@@ -238,4 +247,155 @@ HWTEST_F(BatteryEventTestPart2, BatteryEventTestPart2005, TestSize.Level1)
     EXPECT_TRUE(result);
     testing::Mock::AllowLeak(&mockClient);
     BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2005 end.");
+}
+
+/**
+ * @tc.name: BatteryEventTestPart2006
+ * @tc.desc: test PublishChangedEvent function
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryEventTestPart2, BatteryEventTestPart2006, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2006 start.");
+    BatteryInfo info;
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    bool ret = g_batteryNotify->PublishChangedEvent(info);
+    EXPECT_FALSE(ret);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2006 end.");
+}
+
+/**
+ * @tc.name: BatteryEventTestPart2007
+ * @tc.desc: test PublishChangedEventInner function
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryEventTestPart2, BatteryEventTestPart2007, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2007 start.");
+    BatteryInfo info;
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    bool ret = g_batteryNotify->PublishChangedEventInner(info);
+    EXPECT_FALSE(ret);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2007 end.");
+}
+
+/**
+ * @tc.name: BatteryEventTestPart2008
+ * @tc.desc: test PublishOkayEvent function
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryEventTestPart2, BatteryEventTestPart2008, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2008 start.");
+    BatteryInfo info;
+    info.SetCapacity(7);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    bool ret = g_batteryNotify->PublishOkayEvent(info);
+    EXPECT_TRUE(ret);
+    info.SetCapacity(50);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    ret = g_batteryNotify->PublishOkayEvent(info);
+    EXPECT_FALSE(ret);
+    info.SetCapacity(51);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    ret = g_batteryNotify->PublishOkayEvent(info);
+    EXPECT_TRUE(ret);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2008 end.");
+}
+
+/**
+ * @tc.name: BatteryEventTestPart2009
+ * @tc.desc: test PublishChargingEvent function
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryEventTestPart2, BatteryEventTestPart2009, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2009 start.");
+    BatteryInfo info;
+    info.SetChargeState(BatteryChargeState::CHARGE_STATE_NONE);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    bool ret = g_batteryNotify->PublishChargingEvent(info);
+    EXPECT_TRUE(ret);
+    info.SetChargeState(BatteryChargeState::CHARGE_STATE_ENABLE);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    ret = g_batteryNotify->PublishChargingEvent(info);
+    EXPECT_FALSE(ret);
+    info.SetChargeState(BatteryChargeState::CHARGE_STATE_FULL);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    ret = g_batteryNotify->PublishChargingEvent(info);
+    EXPECT_TRUE(ret);
+    info.SetChargeState(BatteryChargeState::CHARGE_STATE_NONE);
+    MockBatteryCommonEventManager::SetBoolReturnValue(true);
+    ret = g_batteryNotify->PublishChargingEvent(info);
+    EXPECT_TRUE(ret);
+    info.SetChargeState(BatteryChargeState::CHARGE_STATE_ENABLE);
+    MockBatteryCommonEventManager::SetBoolReturnValue(true);
+    ret = g_batteryNotify->PublishChargingEvent(info);
+    EXPECT_TRUE(ret);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2009 end.");
+}
+
+/**
+ * @tc.name: BatteryEventTestPart2010
+ * @tc.desc: test PublishDischargingEvent function
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryEventTestPart2, BatteryEventTestPart2010, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2010 start.");
+    BatteryInfo info;
+    info.SetChargeState(BatteryChargeState::CHARGE_STATE_ENABLE);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    bool ret = g_batteryNotify->PublishDischargingEvent(info);
+    EXPECT_TRUE(ret);
+    info.SetChargeState(BatteryChargeState::CHARGE_STATE_NONE);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    ret = g_batteryNotify->PublishDischargingEvent(info);
+    EXPECT_FALSE(ret);
+    info.SetChargeState(BatteryChargeState::CHARGE_STATE_DISABLE);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    ret = g_batteryNotify->PublishDischargingEvent(info);
+    EXPECT_TRUE(ret);
+    info.SetChargeState(BatteryChargeState::CHARGE_STATE_FULL);
+    MockBatteryCommonEventManager::SetBoolReturnValue(true);
+    ret = g_batteryNotify->PublishDischargingEvent(info);
+    EXPECT_TRUE(ret);
+    info.SetChargeState(BatteryChargeState::CHARGE_STATE_NONE);
+    MockBatteryCommonEventManager::SetBoolReturnValue(true);
+    ret = g_batteryNotify->PublishDischargingEvent(info);
+    EXPECT_TRUE(ret);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2010 end.");
+}
+
+/**
+ * @tc.name: BatteryEventTestPart2011
+ * @tc.desc: test PublishCustomEvent function
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryEventTestPart2, BatteryEventTestPart2011, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2011 start.");
+    BatteryInfo info;
+    info.SetChargeState(BatteryChargeState::CHARGE_STATE_ENABLE);
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    bool ret = g_batteryNotify->PublishCustomEvent(info, "usual.event.BatteryEventTestPart2011");
+    EXPECT_FALSE(ret);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2011 end.");
+}
+
+/**
+ * @tc.name: BatteryEventTestPart2012
+ * @tc.desc: test PublishChargeTypeChangedEvent function
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryEventTestPart2, BatteryEventTestPart2012, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2012 start.");
+    BatteryInfo info;
+    info.SetChargeType(ChargeType::WIRED_NORMAL);
+    g_batteryNotify->batteryInfoChargeType_ = ChargeType::NONE;
+    MockBatteryCommonEventManager::SetBoolReturnValue(false);
+    bool ret = g_batteryNotify->PublishChargeTypeChangedEvent(info);
+    EXPECT_FALSE(ret);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryEventTestPart2012 end.");
 }
