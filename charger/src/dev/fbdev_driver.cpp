@@ -28,6 +28,10 @@
 
 namespace OHOS {
 namespace PowerMgr {
+namespace {
+constexpr unsigned int DOMAIN_FEATURE_CHARGING = 0xD002925;
+}
+
 FbdevDriver::~FbdevDriver()
 {
     ReleaseFb(&buff_);
@@ -44,19 +48,20 @@ bool FbdevDriver::Init()
         BATTERY_HILOGE(FEATURE_CHARGING, "cannot open fb0");
         return false;
     }
+    fdsan_exchange_owner_tag(fd, 0, DOMAIN_FEATURE_CHARGING);
 
     (void)FbPowerContrl(fd, false);
     (void)FbPowerContrl(fd, true);
 
     if (ioctl(fd, FBIOGET_FSCREENINFO, &finfo_) < 0) {
         BATTERY_HILOGE(FEATURE_CHARGING, "failed to get fb0 info");
-        close(fd);
+        fdsan_close_with_tag(fd, DOMAIN_FEATURE_CHARGING);
         return false;
     }
 
     if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo_) < 0) {
         BATTERY_HILOGE(FEATURE_CHARGING, "failed to get fb0 info");
-        close(fd);
+        fdsan_close_with_tag(fd, DOMAIN_FEATURE_CHARGING);
         return false;
     }
 
@@ -66,7 +71,7 @@ bool FbdevDriver::Init()
     buff_.vaddr = mmap(nullptr, finfo_.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (buff_.vaddr == MAP_FAILED) {
         BATTERY_HILOGE(FEATURE_CHARGING, "failed to mmap framebuffer");
-        close(fd);
+        fdsan_close_with_tag(fd, DOMAIN_FEATURE_CHARGING);
         return false;
     }
     (void)memset_s(buff_.vaddr, finfo_.smem_len, 0, finfo_.smem_len);
@@ -125,7 +130,7 @@ void FbdevDriver::ReleaseFb(const struct FbBufferObject* fbo)
         return;
     }
     munmap(fbo->vaddr, fbo->size);
-    close(fd_);
+    fdsan_close_with_tag(fd_, DOMAIN_FEATURE_CHARGING);
     fd_ = -1;
 }
 

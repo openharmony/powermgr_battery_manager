@@ -21,6 +21,10 @@
 
 namespace OHOS {
 namespace PowerMgr {
+namespace {
+constexpr unsigned int DOMAIN_FEATURE_CHARGING = 0xD002925;
+}
+
 void DrmDriver::Flip(const uint8_t* buf)
 {
     if (buff_.vaddr != MAP_FAILED) {
@@ -227,12 +231,13 @@ drmModeRes* DrmDriver::GetOneResources(const int devIndex, int& fd) const
         BATTERY_HILOGE(FEATURE_CHARGING, "open failed %{public}s", devName.c_str());
         return nullptr;
     }
+    fdsan_exchange_owner_tag(tmpFd, 0, DOMAIN_FEATURE_CHARGING);
     // 2: check drm capacity
     uint64_t cap = 0;
     int ret = drmGetCap(tmpFd, DRM_CAP_DUMB_BUFFER, &cap);
     if (ret != 0 || cap == 0) {
         BATTERY_HILOGE(FEATURE_CHARGING, "drmGetCap failed");
-        close(tmpFd);
+        fdsan_close_with_tag(tmpFd, DOMAIN_FEATURE_CHARGING);
         return nullptr;
     }
 
@@ -240,7 +245,7 @@ drmModeRes* DrmDriver::GetOneResources(const int devIndex, int& fd) const
     drmModeRes* res = drmModeGetResources(tmpFd);
     if (res == nullptr) {
         BATTERY_HILOGE(FEATURE_CHARGING, "drmModeGetResources failed");
-        close(tmpFd);
+        fdsan_close_with_tag(tmpFd, DOMAIN_FEATURE_CHARGING);
         return nullptr;
     }
 
@@ -255,7 +260,7 @@ drmModeRes* DrmDriver::GetOneResources(const int devIndex, int& fd) const
             return res;
         }
     }
-    close(tmpFd);
+    fdsan_close_with_tag(tmpFd, DOMAIN_FEATURE_CHARGING);
     drmModeFreeResources(res);
     return nullptr;
 }
@@ -335,7 +340,7 @@ void DrmDriver::ModesetDestroyFb(struct BufferObject* bo)
         drmModeFreeResources(res_);
     }
     if (fd_ > 0) {
-        close(fd_);
+        fdsan_close_with_tag(fd_, DOMAIN_FEATURE_CHARGING);
         fd_ = -1;
     }
 }
