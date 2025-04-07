@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,15 +16,22 @@
 #include "battery_notify_test.h"
 
 #include <string>
+#ifdef GTEST
+#define private   public
+#define protected public
+#endif
 
 #include "battery_log.h"
 #include "battery_notify.h"
+#include "battery_service.h"
+#include "battery_config.h"
 using namespace testing::ext;
 
 namespace OHOS {
 namespace PowerMgr {
 BatteryInfo* g_batteryInfo;
 std::shared_ptr<BatteryNotify> g_batteryNotify;
+sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 
 void BatteryNotifyTest::SetUpTestCase()
 {
@@ -63,6 +70,8 @@ void BatteryNotifyTest::SetUp()
     g_batteryInfo->SetTechnology(tec);
     const int32_t nowCur = 10;
     g_batteryInfo->SetNowCurrent(nowCur);
+    const string uevent = "BatteryNotifyTest";
+    g_batteryInfo->SetUevent(uevent);
 }
 
 void BatteryNotifyTest::TearDown()
@@ -441,8 +450,85 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify022, TestSize.Level1)
     g_batteryInfo->SetPluggedType(pluggedType);
     ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
     EXPECT_EQ(ret, ERR_OK);
+
+    // WirelessPluggedConnected
+    BatteryConfig::GetInstance().wirelessChargerEnable_ = true;
+    g_batteryNotify->lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
+    g_batteryNotify->WirelessPluggedConnected(*g_batteryInfo);
+
+    g_batteryNotify->lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_NONE;
+    pluggedType = BatteryPluggedType::PLUGGED_TYPE_USB;
+    g_batteryInfo->SetPluggedType(pluggedType);
+    g_batteryNotify->WirelessPluggedConnected(*g_batteryInfo);
+
+    g_batteryNotify->lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_NONE;
+    pluggedType = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
+    g_batteryInfo->SetPluggedType(pluggedType);
+    g_batteryNotify->WirelessPluggedConnected(*g_batteryInfo);
+
+    // WirelessPluggedDisconnected
+    BatteryConfig::GetInstance().wirelessChargerEnable_ = true;
+    g_batteryNotify->lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_NONE;
+    g_batteryNotify->WirelessPluggedDisconnected(*g_batteryInfo);
+
+    g_batteryNotify->lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
+    pluggedType = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
+    g_batteryInfo->SetPluggedType(pluggedType);
+    g_batteryNotify->WirelessPluggedDisconnected(*g_batteryInfo);
+
+    g_batteryNotify->lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
+    pluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
+    g_batteryInfo->SetPluggedType(pluggedType);
+    g_batteryNotify->WirelessPluggedDisconnected(*g_batteryInfo);
+    BatteryConfig::GetInstance().wirelessChargerEnable_ = false;
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify022 function end!");
 }
 #endif
+
+/**
+ * @tc.name: BatteryNotify023
+ * @tc.desc: Test PublishChangedEvent--BatteryInfo::COMMON_EVENT_KEY_CAPACITY_LEVEL
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify023, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify023 function start!");
+    g_service->isMockCapacity_ = true;
+    g_service->batteryInfo_.SetCapacity(100);
+    g_service->InitConfig();
+    bool ret = g_batteryNotify->PublishChangedEvent(*g_batteryInfo);
+    EXPECT_TRUE(ret);
+    g_service->batteryInfo_.SetCapacity(50);
+    ret = g_batteryNotify->PublishChangedEvent(*g_batteryInfo);
+    EXPECT_TRUE(ret);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify023 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify024
+ * @tc.desc: Test HandleNotification
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify024, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify024 function start!");
+    Json::CharReaderBuilder builder;
+    std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
+    Json::Value root;
+    std::string errors;
+    std::string jsonStr = R"({"popup": {"XXX": [{"name": 123}]}})";
+    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
+    EXPECT_TRUE(parseResult);
+    auto& batteryConfig = BatteryConfig::GetInstance();
+    batteryConfig.config_ = root;
+    batteryConfig.ParsePopupConf();
+    EXPECT_TRUE(batteryConfig.popupConfig_.size() == 1);
+    bool ret = g_batteryNotify->HandleNotification("XXX");
+    BATTERY_HILOGI(LABEL_TEST, "HandleNotification ret[%d]", static_cast<int32_t>(ret));
+#ifndef BATTERY_SUPPORT_NOTIFICATION
+    EXPECT_TRUE(ret);
+#endif
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify024 function end!");
+}
 } // namespace PowerMgr
 } // namespace OHOS
