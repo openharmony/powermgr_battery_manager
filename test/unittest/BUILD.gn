@@ -1,4 +1,4 @@
-# Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+# Copyright (c) 2021-2025 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -82,12 +82,15 @@ ohos_unittest("test_battery_service_interface") {
     "access_token:libtoken_setproc",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
-    "drivers_interface_light:liblight_proxy_1.0",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
     "safwk:system_ability_fwk",
   ]
+
+  if (has_drivers_interface_light_part) {
+    external_deps += [ "drivers_interface_light:liblight_proxy_1.0" ]
+  }
 }
 
 ohos_unittest("test_battery_service_scenario") {
@@ -124,11 +127,14 @@ ohos_unittest("test_battery_service_scenario") {
     "access_token:libtoken_setproc",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
-    "drivers_interface_light:liblight_proxy_1.0",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
   ]
+
+  if (has_drivers_interface_light_part) {
+    external_deps += [ "drivers_interface_light:liblight_proxy_1.0" ]
+  }
 
   if (battery_manager_feature_enable_wireless_charge) {
     defines += [ "BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE" ]
@@ -182,7 +188,6 @@ ohos_unittest("test_battery_service_inner") {
     "access_token:libtoken_setproc",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
-    "drivers_interface_light:liblight_proxy_1.0",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "init:libbegetutil",
@@ -190,12 +195,90 @@ ohos_unittest("test_battery_service_inner") {
     "safwk:system_ability_fwk",
   ]
 
+  if (has_drivers_interface_light_part) {
+    external_deps += [ "drivers_interface_light:liblight_proxy_1.0" ]
+  }
+
   if (has_drivers_interface_display_part && has_drivers_interface_light_part &&
       has_graphic_surface_part && has_ui_lite_part &&
       battery_manager_feature_enable_charger) {
     defines += [ "ENABLE_CHARGER" ]
     external_deps += [ "libdrm:libdrm" ]
   }
+}
+
+ohos_unittest("test_battery_callback") {
+  module_out_path = "${module_output_path}"
+  defines += [ "GTEST" ]
+
+  sources = [ "src/scenario_test/battery_callback_test.cpp" ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config_without_json",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  deps = [
+    "${battery_service_zidl}:batterysrv_stub",
+    "${battery_service}:batteryservice",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "drivers_interface_battery:libbattery_proxy_2.0",
+    "googletest:gtest_main",
+    "hdf_core:libhdi",
+    "hilog:libhilog",
+    "ipc:ipc_single",
+    "safwk:system_ability_fwk",
+  ]
+}
+
+ohos_unittest("test_battery_config") {
+  module_out_path = "${module_output_path}"
+  defines += [ "GTEST" ]
+
+  sources = [ "src/scenario_test/battery_config_test.cpp" ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config_without_json",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  deps = [ "${battery_service}:batteryservice" ]
+
+  external_deps = [
+    "c_utils:utils",
+    "googletest:gtest_main",
+    "hilog:libhilog",
+    "jsoncpp:jsoncpp",
+  ]
+}
+
+ohos_unittest("test_battery_dump") {
+  module_out_path = "${module_output_path}"
+  defines += [ "GTEST" ]
+
+  sources = [ "src/scenario_test/battery_dump_test.cpp" ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config_without_json",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  deps = [ "${battery_service}:batteryservice" ]
+
+  external_deps = [
+    "c_utils:utils",
+    "drivers_interface_battery:libbattery_proxy_2.0",
+    "googletest:gtest_main",
+    "hdf_core:libhdi",
+    "hilog:libhilog",
+    "jsoncpp:jsoncpp",
+  ]
 }
 
 ohos_unittest("test_battery_stub") {
@@ -229,12 +312,15 @@ ohos_unittest("test_battery_stub") {
     "access_token:libtoken_setproc",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
-    "drivers_interface_light:liblight_proxy_1.0",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
     "safwk:system_ability_fwk",
   ]
+
+  if (has_drivers_interface_light_part) {
+    external_deps += [ "drivers_interface_light:liblight_proxy_1.0" ]
+  }
 }
 
 ### test exceptions when Remote() return nullptr
@@ -400,13 +486,16 @@ ohos_unittest("test_batterywakeup") {
   external_deps = [
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
-    "drivers_interface_light:liblight_proxy_1.0",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_core",
     "power_manager:powermgr_client",
     "safwk:system_ability_fwk",
   ]
+
+  if (has_drivers_interface_light_part) {
+    external_deps += [ "drivers_interface_light:liblight_proxy_1.0" ]
+  }
 }
 
 ohos_unittest("test_mock_battery_config") {
