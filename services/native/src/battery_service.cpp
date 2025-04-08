@@ -102,6 +102,7 @@ void BatteryService::OnStart()
         return;
     }
     AddSystemAbilityListener(MISCDEVICE_SERVICE_ABILITY_ID);
+    AddSystemAbilityListener(COMMON_EVENT_SERVICE_ID);
     ready_ = true;
 }
 
@@ -129,6 +130,29 @@ void BatteryService::OnAddSystemAbility(int32_t systemAbilityId, const std::stri
     BATTERY_HILOGI(COMP_SVC, "systemAbilityId=%{public}d, deviceId=%{private}s", systemAbilityId, deviceId.c_str());
     if (systemAbilityId == MISCDEVICE_SERVICE_ABILITY_ID) {
         batteryLight_.InitLight();
+    }
+
+    if (systemAbilityId == COMMON_EVENT_SERVICE_ID && !isCommonEventReady_.load()) {
+        if (!isBatteryHdiReady_.load()) {
+            BATTERY_HILOGE(COMP_SVC, "battery hdi interface is not ready, return");
+            return;
+        }
+        OHOS::PowerMgr::BatteryInfo info = batteryInfo_;
+        info.SetUevent("");
+        BATTERY_HILOGI(FEATURE_BATT_INFO, "cesready!capacity=%{public}d, voltage=%{public}d, "
+            "temperature=%{public}d, healthState=%{public}d, pluggedType=%{public}d, "
+            "pluggedMaxCurrent=%{public}d, pluggedMaxVoltage=%{public}d, "
+            "chargeState=%{public}d, chargeCounter=%{public}d, present=%{public}d, "
+            "technology=%{public}s, currNow=%{public}d, totalEnergy=%{public}d, curAverage=%{public}d, "
+            "remainEnergy=%{public}d, chargeType=%{public}d, event=%{public}s", info.GetCapacity(),
+            info.GetVoltage(), info.GetTemperature(), info.GetHealthState(),
+            info.GetPluggedType(), info.GetPluggedMaxCurrent(), info.GetPluggedMaxVoltage(),
+            info.GetChargeState(), info.GetChargeCounter(), info.IsPresent(),
+            info.GetTechnology().c_str(), info.GetNowCurrent(), info.GetTotalEnergy(),
+            info.GetCurAverage(), info.GetRemainEnergy(), info.GetChargeType(),
+            info.GetUevent().c_str());
+        batteryNotify_->PublishEvents(info);
+        isCommonEventReady_.store(true, std::memory_order_relaxed);
     }
 }
 
@@ -282,6 +306,7 @@ bool BatteryService::RegisterHdiStatusListener()
                     SetLowCapacityThreshold();
 #endif
                     InitBatteryInfo();
+                    isBatteryHdiReady_.store(true, std::memory_order_relaxed);
                     return;
                 };
                 FFRTUtils::SubmitTask(task);

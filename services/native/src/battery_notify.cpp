@@ -74,7 +74,8 @@ int32_t BatteryNotify::PublishEvents(BatteryInfo& info)
             return ERR_NO_INIT;
         }
     }
-    if (info.GetUevent() != POWER_SUPPLY && info.GetUevent() != "") {
+    if (info.GetUevent() != POWER_SUPPLY && info.GetUevent() != "" &&
+        info.GetUevent() != INVALID_STRING_VALUE) {
         HandleUevent(info);
         return ERR_OK;
     }
@@ -84,6 +85,7 @@ int32_t BatteryNotify::PublishEvents(BatteryInfo& info)
     isAllSuccess &= ret;
     ret = PublishChangedEventInner(info);
     isAllSuccess &= ret;
+    std::lock_guard<std::mutex> lock(mutex_);
     ret = PublishLowEvent(info);
     isAllSuccess &= ret;
     ret = PublishOkayEvent(info);

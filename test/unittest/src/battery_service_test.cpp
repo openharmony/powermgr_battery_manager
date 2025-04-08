@@ -44,7 +44,7 @@ namespace {
 sptr<BatteryService> g_service;
 bool g_isMock = TestUtils::IsMock();
 const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";
-constexpr int DELAY_TIME_US = 2000;
+constexpr int DELAY_TIME_US = 200000;
 }
 
 void BatteryServiceTest::TearDownTestCase(void)
