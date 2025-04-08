@@ -63,6 +63,10 @@ ohos_systemtest("test_systemtest") {
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
+
+  if (battery_manager_feature_set_low_capacity_threshold) {
+    defines += [ "PC_TEST" ]
+  }
 }
 
 ##############################systemtest##########################################
@@ -132,6 +136,10 @@ ohos_systemtest("test_battery_event_systemtest") {
 
   if (build_variant == "user") {
     defines += [ "BATTERY_USER_VERSION" ]
+  }
+
+  if (battery_manager_feature_set_low_capacity_threshold) {
+    defines += [ "PC_TEST" ]
   }
 }
 
