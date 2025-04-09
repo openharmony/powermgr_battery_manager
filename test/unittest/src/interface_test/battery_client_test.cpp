@@ -287,7 +287,11 @@ HWTEST_F (BatteryClientTest, BatteryClient007, TestSize.Level1)
         auto technology = BatterySrvClient.GetTechnology();
         BATTERY_HILOGI(LABEL_TEST, "BatteryClientTest::technology=%{public}s", technology.c_str());
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient007 executing, technology=" << technology;
+#ifdef PC_TEST
+        ASSERT_TRUE(technology == "Li-ion");
+#else
         ASSERT_TRUE(technology == "Li-poly");
+#endif
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient007 function end!");
 }
@@ -319,7 +323,11 @@ HWTEST_F (BatteryClientTest, BatteryClient008, TestSize.Level1)
             static_cast<int32_t>(pluggedType));
         GTEST_LOG_(INFO) << "BatteryClient::BatteryClient008 executing, pluggedType="
             << static_cast<int32_t>(pluggedType);
+#ifdef PC_TEST
+        ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
+#else
         ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+#endif
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient008 function end!");
 }
