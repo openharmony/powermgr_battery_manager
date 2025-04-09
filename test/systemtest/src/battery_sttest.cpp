@@ -610,7 +610,11 @@ HWTEST_F (BatterySttest, BatteryST017, TestSize.Level1)
         auto technology = BatterySrvClient.GetTechnology();
         BATTERY_HILOGI(LABEL_TEST, "BatteryST017::technology=%{public}s", technology.c_str());
         GTEST_LOG_(INFO) << "BatteryST017 executing, technology=" << technology;
+#ifdef PC_TEST
+        EXPECT_TRUE(technology == "Li-ion");
+#else
         EXPECT_TRUE(technology == "Li-poly");
+#endif
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryST017 function end!");
 }
@@ -641,7 +645,11 @@ HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
             static_cast<int32_t>(pluggedType));
         GTEST_LOG_(INFO) << "BatteryST018 executing, pluggedType="
             << static_cast<int32_t>(pluggedType);
+#ifdef PC_TEST
+        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
+#else
         EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+#endif
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryST018 function end!");
 }
@@ -672,7 +680,11 @@ HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
             static_cast<int32_t>(pluggedType));
         GTEST_LOG_(INFO) << "BatteryST019 executing, pluggedType="
             << static_cast<int32_t>(pluggedType);
+#ifdef PC_TEST
+        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
+#else
         EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+#endif
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryST019 function end!");
 }
@@ -703,7 +715,11 @@ HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
             static_cast<int32_t>(pluggedType));
         GTEST_LOG_(INFO) << "BatteryST020 executing, pluggedType="
             << static_cast<int32_t>(pluggedType);
+#ifdef PC_TEST
+        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
+#else
         EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+#endif
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryST020 function end!");
 }
@@ -735,7 +751,11 @@ HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
             static_cast<int32_t>(pluggedType));
         GTEST_LOG_(INFO) << "BatteryST021 executing, pluggedType="
             << static_cast<int32_t>(pluggedType);
+#ifdef PC_TEST
+        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
+#else
         EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+#endif
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryST021 function end!");
 }

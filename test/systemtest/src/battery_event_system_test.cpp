@@ -623,8 +623,10 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
     }
     EXPECT_EQ(g_capacity, capacity);
     EXPECT_EQ(capacity, BatterySrvClient::GetInstance().GetCapacity());
+#ifndef PC_TEST
     EXPECT_EQ(g_capacityLevel, static_cast<int32_t>(BatteryCapacityLevel::LEVEL_CRITICAL));
     EXPECT_TRUE(BatteryCapacityLevel::LEVEL_CRITICAL == BatterySrvClient::GetInstance().GetCapacityLevel());
+#endif
 
     system("hidumper -s 3302 -a -u");
     if (g_cv.wait_for(lck, std::chrono::seconds(TIME_OUT)) == std::cv_status::timeout) {
@@ -657,8 +659,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
     }
     EXPECT_EQ(g_capacity, BatterySrvClient::GetInstance().GetCapacity());
     EXPECT_EQ(g_chargeState, static_cast<int32_t>(BatterySrvClient::GetInstance().GetChargingStatus()));
-    auto ret = CommonEventManager::UnSubscribeCommonEvent(subscriber);
-    EXPECT_TRUE(ret);
+    EXPECT_TRUE(CommonEventManager::UnSubscribeCommonEvent(subscriber));
     BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest009 function end!");
 }
 #endif
