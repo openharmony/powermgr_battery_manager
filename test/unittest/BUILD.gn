@@ -158,10 +158,6 @@ ohos_unittest("test_battery_service_inner") {
   defines += [ "GTEST" ]
 
   sources = [
-    "${battery_manager_path}/charger/src/dev/drm_driver.cpp",
-    "${battery_manager_path}/charger/src/dev/fbdev_driver.cpp",
-    "${battery_manager_path}/charger/src/dev/graphic_dev.cpp",
-    "${battery_manager_path}/charger/src/power_supply_provider.cpp",
     "${battery_manager_path}/test/utils/test_utils.cpp",
     "src/battert_service_inner_test.cpp",
   ]
@@ -204,6 +200,12 @@ ohos_unittest("test_battery_service_inner") {
       battery_manager_feature_enable_charger) {
     defines += [ "ENABLE_CHARGER" ]
     external_deps += [ "libdrm:libdrm" ]
+    sources += [
+      "${battery_manager_path}/charger/src/dev/drm_driver.cpp",
+      "${battery_manager_path}/charger/src/dev/fbdev_driver.cpp",
+      "${battery_manager_path}/charger/src/dev/graphic_dev.cpp",
+      "${battery_manager_path}/charger/src/power_supply_provider.cpp",
+    ]
   }
 }
 
