@@ -499,7 +499,7 @@ void BatteryService::HandleCapacityExt(int32_t capacity, BatteryChargeState char
         FFRTTask task = [&] {
             if (!IsInExtremePowerSaveMode()) {
                 BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt begin to hibernate");
-                PowerMgrClient::GetInstance().Hibernate(false,"LowCapacity");
+                PowerMgrClient::GetInstance().Hibernate(false, "LowCapacity");
             }
             UnlockShutdownGuard();
         };
