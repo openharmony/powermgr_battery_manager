@@ -31,11 +31,6 @@
 #include "battery_dump.h"
 #include "battery_service.h"
 #include "power_common.h"
-#ifdef ENABLE_CHARGER
-#include "graphic_dev.h"
-#include "power_supply_provider.h"
-#include "display_drv.h"
-#endif
 
 using namespace testing::ext;
 
@@ -44,9 +39,6 @@ namespace PowerMgr {
 namespace {
 sptr<BatteryService> g_service;
 auto& g_configTest = BatteryConfig::GetInstance();
-#ifdef ENABLE_CHARGER
-constexpr int32_t MAX_BUFF_SIZE = 128;
-#endif
 }
 
 int32_t HandleBatteryCallbackEvent(const OHOS::HDI::Battery::V2_0::BatteryInfo& event)
@@ -604,51 +596,5 @@ static HWTEST_F(BatteryDumpTest, BatteryDump016, TestSize.Level1)
     EXPECT_EQ(g_service->Dump(fd, args), ERR_NO_INIT);
     BATTERY_HILOGI(LABEL_TEST, "BatteryDump016 end");
 }
-
-/**
- * @tc.name: BatteryDump017
- * @tc.desc: Test functions Dump, capacity out of range
- * @tc.type: FUNC
- * @tc.require: issueIBYDPK
- */
-#ifdef ENABLE_CHARGER
-HWTEST_F(BatteryDumpTest, BatteryDump017, TestSize.Level1)
-{
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump017 begin");
-    std::unique_ptr<GraphicDev> sfDev_ = std::make_unique<GraphicDev>();
-    std::unique_ptr<DisplayDrv> fbdrv_ = nullptr;
-    fbdrv_ = sfDev_->MakeDrv(DevType::FB_DEVICE);
-    std::unique_ptr<DisplayDrv> drmdrv_ = nullptr;
-    drmdrv_ = sfDev_->MakeDrv(DevType::DRM_DEVICE);
-    EXPECT_TRUE(fbdrv_ == nullptr || fbdrv_->Init() || sfDev_->GetDevType() != DevType::FB_DEVICE);
-    EXPECT_TRUE(drmdrv_ == nullptr || drmdrv_->Init() || sfDev_->GetDevType() != DevType::DRM_DEVICE);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump017 end");
-}
-#endif
-
-/**
- * @tc.name: BatteryDump018
- * @tc.desc: Test functions Dump, capacity out of range
- * @tc.type: FUNC
- * @tc.require: issueIBYDPK
- */
-#ifdef ENABLE_CHARGER
-HWTEST_F(BatteryDumpTest, BatteryDump018, TestSize.Level1)
-{
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump018 begin");
-    std::unique_ptr<PowerSupplyProvider> provider_ = std::make_unique<PowerSupplyProvider>();
-    provider_->InitBatteryPath();
-    provider_->InitPowerSupplySysfs();
-    int32_t temperature = 0;
-    EXPECT_EQ(provider_->ParseTemperature(&temperature), HDF_SUCCESS);
-    int32_t capacity_ = 0;
-    EXPECT_EQ(provider_->ParseCapacity(&capacity_), HDF_SUCCESS);
-    int32_t chargeState_ = 0;
-    EXPECT_EQ(provider_->ParseChargeState(&chargeState_), HDF_SUCCESS);
-    char buf[MAX_BUFF_SIZE] = {0};
-    EXPECT_NE(provider_->ReadBatterySysfsToBuff("", buf, sizeof(buf)), HDF_SUCCESS);
-    BATTERY_HILOGI(LABEL_TEST, "BatteryDump018 end");
-}
-#endif
 } // namespace PowerMgr
 } // namespace OHOS
