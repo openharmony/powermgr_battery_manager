@@ -27,8 +27,6 @@ config("module_private_config") {
     "${battery_manager_path}/test/utils",
     "//third_party/json/single_include",
     "//third_party/jsoncpp/include",
-    "${battery_manager_path}/charger/include",
-    "${battery_manager_path}/charger/include/dev",
   ]
 }
 
@@ -42,6 +40,8 @@ config("module_private_config_without_json") {
     "${battery_service_zidl}/include",
     "${battery_inner_api}/native/include",
     "${battery_manager_path}/test/utils",
+    "${battery_manager_path}/charger/include",
+    "${battery_manager_path}/charger/include/dev",
   ]
 }
 
@@ -186,7 +186,6 @@ ohos_unittest("test_battery_service_inner") {
     "drivers_interface_battery:libbattery_proxy_2.0",
     "hdf_core:libhdi",
     "hilog:libhilog",
-    "init:libbegetutil",
     "ipc:ipc_single",
     "safwk:system_ability_fwk",
   ]
@@ -194,6 +193,27 @@ ohos_unittest("test_battery_service_inner") {
   if (has_drivers_interface_light_part) {
     external_deps += [ "drivers_interface_light:liblight_proxy_1.0" ]
   }
+}
+
+ohos_unittest("test_battery_charger") {
+  module_out_path = "${module_output_path}"
+  defines += [ "GTEST" ]
+
+  sources = [ "src/battery_charger_test.cpp" ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config_without_json",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "drivers_interface_battery:libbattery_proxy_2.0",
+    "googletest:gtest_main",
+    "hilog:libhilog",
+    "init:libbegetutil",
+  ]
 
   if (has_drivers_interface_display_part && has_drivers_interface_light_part &&
       has_graphic_surface_part && has_ui_lite_part &&
