@@ -498,8 +498,8 @@ void BatteryService::HandleCapacityExt(int32_t capacity, BatteryChargeState char
         LockShutdownGuard();
         FFRTTask task = [&] {
             if (!IsInExtremePowerSaveMode()) {
-                BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt begin to shutdown");
-                PowerMgrClient::GetInstance().ShutDownDevice("LowCapacity");
+                BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt begin to hibernate");
+                PowerMgrClient::GetInstance().Hibernate(false, "LowCapacity");
             }
             UnlockShutdownGuard();
         };
@@ -508,7 +508,7 @@ void BatteryService::HandleCapacityExt(int32_t capacity, BatteryChargeState char
 
     if (g_lowCapacityShutdownHandle != nullptr && IsCharging(chargeState)
         && capacity > lastBatteryInfo_.GetCapacity()) {
-        BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt cancel shutdown task, "
+        BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt cancel hibernate task, "
             "capacity=%{public}d, chargeState=%{public}u, lastcapacity=%{public}d",
             capacity, static_cast<uint32_t>(chargeState), lastBatteryInfo_.GetCapacity());
         UnlockShutdownGuard();
@@ -584,9 +584,9 @@ void BatteryService::SetLowCapacityThreshold()
             BATTERY_HILOGE(FEATURE_BATT_INFO, "iBatteryInterface_ is nullptr");
         return;
     }
-    BATTERY_HILOGI(FEATURE_BATT_INFO, "set low capacity thres: criticalCapacityThreshold_ = %{public}d",
-        criticalCapacityThreshold_);
-    iBatteryInterface_->SetBatteryConfig(thers, std::to_string(criticalCapacityThreshold_));
+    BATTERY_HILOGI(FEATURE_BATT_INFO, "set low capacity thres: shutdownCapacityThreshold_ = %{public}d",
+        shutdownCapacityThreshold_);
+    iBatteryInterface_->SetBatteryConfig(thers, std::to_string(shutdownCapacityThreshold_));
 }
 #endif
 
