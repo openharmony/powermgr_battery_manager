@@ -247,6 +247,7 @@ ohos_unittest("test_battery_callback") {
   ]
 
   external_deps = [
+    "ability_base:want",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "googletest:gtest_main",
@@ -294,6 +295,7 @@ ohos_unittest("test_battery_dump") {
   deps = [ "${battery_service}:batteryservice" ]
 
   external_deps = [
+    "ability_base:want",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "googletest:gtest_main",
@@ -506,6 +508,7 @@ ohos_unittest("test_batterywakeup") {
   ]
 
   external_deps = [
+    "ability_base:want",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "hdf_core:libhdi",
