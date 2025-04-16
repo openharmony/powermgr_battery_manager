@@ -50,6 +50,7 @@ ohos_shared_library("batteryservice") {
 
   external_deps = [ "power_manager:power_permission" ]
   external_deps += [
+    "ability_base:want",
     "ability_runtime:ability_manager",
     "bundle_framework:appexecfwk_base",
     "c_utils:utils",
@@ -71,8 +72,6 @@ ohos_shared_library("batteryservice") {
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
-
-  public_external_deps = [ "ability_base:want" ]
 
   if (battery_manager_feature_enable_charging_sound) {
     defines += [ "BATTERY_MANAGER_ENABLE_CHARGING_SOUND" ]
@@ -142,11 +141,10 @@ ohos_shared_library("battery_notification") {
 
   public_configs = [ ":batterysrv_public_config" ]
 
-  public_external_deps = [ "ability_base:want" ]
-
   deps = [ "${battery_inner_api}:batterysrv_client" ]
 
   external_deps = [
+    "ability_base:want",
     "ability_base:zuri",
     "c_utils:utils",
     "config_policy:configpolicy_util",

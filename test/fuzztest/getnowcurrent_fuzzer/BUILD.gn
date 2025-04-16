@@ -47,6 +47,7 @@ ohos_fuzztest("GetNowCurrentFuzzTest") {
   ]
 
   external_deps = [
+    "ability_base:want",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "hdf_core:libhdi",
