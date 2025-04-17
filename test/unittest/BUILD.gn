@@ -130,6 +130,7 @@ ohos_unittest("test_battery_service_scenario") {
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
+    "safwk:system_ability_fwk",
   ]
 
   if (has_drivers_interface_light_part) {
@@ -302,6 +303,7 @@ ohos_unittest("test_battery_dump") {
     "hdf_core:libhdi",
     "hilog:libhilog",
     "jsoncpp:jsoncpp",
+    "safwk:system_ability_fwk",
   ]
 }
 
