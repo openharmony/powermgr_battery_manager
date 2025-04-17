@@ -20,6 +20,7 @@
 #include <unordered_map>
 #include <mutex>
 #include <string>
+#include <unistd.h>
 #include <json/json.h>
 #include "nocopyable.h"
 
