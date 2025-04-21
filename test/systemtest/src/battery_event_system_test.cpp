@@ -446,7 +446,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest001, TestSize.Level0)
  * @tc.name: BatteryEventSystemTest
  * @tc.desc: Verify the receive the common event
  */
-#ifndef BATTERY_USER_VERSION
+#ifdef ENABLE_TEST
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest002, TestSize.Level0)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest002 function start!");
@@ -607,7 +607,7 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest008, TestSize.Level0)
  * @tc.desc: Test capacity and unplugged dump, verify the receive the common event
  * @tc.require: issueI6Z8RB
  */
-#ifndef BATTERY_USER_VERSION
+#ifdef ENABLE_TEST
 HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest009, TestSize.Level0)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryEventSystemTest009 function start!");

@@ -138,6 +138,10 @@ ohos_systemtest("test_battery_event_systemtest") {
     defines += [ "BATTERY_USER_VERSION" ]
   }
 
+  if (battery_manager_feature_enable_charger) {
+    defines += [ "ENABLE_TEST" ]
+  }
+
   if (battery_manager_feature_set_low_capacity_threshold) {
     defines += [ "PC_TEST" ]
   }
