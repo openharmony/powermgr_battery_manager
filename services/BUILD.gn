@@ -168,15 +168,17 @@ group("service") {
   ]
 
   if (battery_manager_feature_support_notification) {
-    deps += [
-      "native/resources:battery_locale_path",
-      "native/resources:battery_notification_base",
-      "native/resources:battery_notification_bo_CN",
-      "native/resources:battery_notification_ug",
-      "native/resources:battery_notification_zh_CN",
-      "native/resources:battery_notification_zh_HK",
-      "native/resources:battery_notification_zh_TW",
-      "native/resources:battery_notification_zz_ZX",
-    ]
+    deps += [ "native/resources:battery_locale_path" ]
+    if (battery_manager_feature_support_notification_string) {
+      deps += [
+        "native/resources:battery_notification_base",
+        "native/resources:battery_notification_bo_CN",
+        "native/resources:battery_notification_ug",
+        "native/resources:battery_notification_zh_CN",
+        "native/resources:battery_notification_zh_HK",
+        "native/resources:battery_notification_zh_TW",
+        "native/resources:battery_notification_zz_ZX",
+      ]
+    }
   }
 }
