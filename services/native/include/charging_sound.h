@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2024-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,30 +14,43 @@
  */
 #ifndef POWERMGR_BATTERY_MANAGER_CHARGING_SOUND_H
 #define POWERMGR_BATTERY_MANAGER_CHARGING_SOUND_H
+#include <atomic>
+#include <memory>
 #include <string>
 #include "nocopyable.h"
 namespace OHOS {
 namespace Media {
-class AudioHapticSound;
+class Player;
 } // namespace Media
 
 namespace PowerMgr {
-class ChargingSoundCallBack;
 class ChargingSound {
 public:
-    static ChargingSound& GetInstance();
-    void Start() const;
-    void Stop() const;
-    void Prepare() const;
+    ChargingSound();
+    ~ChargingSound();
+    bool Play();
+    void Release();
+    void Stop();
+    bool IsPlaying();
+    // single instance for now
+    static bool IsPlayingGlobal();
+    static bool PlayGlobal();
+    static void ReleaseGlobal();
 
 private:
-    ChargingSound();
     DISALLOW_COPY_AND_MOVE(ChargingSound);
     std::string GetPath(const char* uri) const;
     std::string uri_;
-    std::shared_ptr<Media::AudioHapticSound> sound_ {};
-    std::shared_ptr<ChargingSoundCallBack> callback_ {};
+    std::shared_ptr<Media::Player> player_ {};
+    std::atomic<bool> isPlaying_ {false};
+    static std::shared_ptr<ChargingSound> instance_;
 };
+
+// export apis
+extern "C" {
+    __attribute__ ((visibility ("default"))) bool ChargingSoundStart(void);
+    __attribute__ ((visibility ("default"))) bool IsPlaying(void);
+}
 } // namespace PowerMgr
 } // namespace OHOS
 #endif
