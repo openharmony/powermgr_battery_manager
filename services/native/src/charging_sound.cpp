@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2024-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,49 +14,83 @@
  */
 #include "charging_sound.h"
 
+#include <dlfcn.h>
+#include <mutex>
+#include <securec.h>
+#include "audio_stream_info.h"
 #include "battery_log.h"
-#include "audio_haptic_sound.h"
 #include "config_policy_utils.h"
 #include "errors.h"
+#include "player.h"
 
 namespace OHOS {
 namespace PowerMgr {
-const std::string CHARGER_SOUND_DEFAULT_PATH = "/vendor/etc/battery/PowerConnected.ogg";
-const char* CHARGER_SOUND_RELATIVE_PATH = "resource/media/audio/ui/PowerConnected.ogg";
+// static non-local initializations
+constexpr const char* CHARGER_SOUND_DEFAULT_PATH = "/vendor/etc/battery/PowerConnected.ogg";
+constexpr const char* CHARGER_SOUND_RELATIVE_PATH = "resource/media/audio/ui/PowerConnected.ogg";
+std::mutex g_playerPtrMutex;
 
-class ChargingSoundCallBack : public Media::AudioHapticSoundCallback {
+// this static object is used as constructor/destructor, for now only one single instance is allowed.
+std::shared_ptr<ChargingSound> ChargingSound::instance_ = std::make_shared<ChargingSound>();
+
+namespace {
+void ICUCleanUp()
+{
+    void* icuHandle = dlopen("libhmicuuc.z.so", RTLD_LAZY);
+    if (!icuHandle) {
+        BATTERY_HILOGE(COMP_SVC, "%{public}s: open so failed", __func__);
+        return;
+    }
+    auto getIcuVersion = reinterpret_cast<const char* (*)(void)>(dlsym(icuHandle, "GetIcuVersion"));
+    if (!getIcuVersion) {
+        BATTERY_HILOGE(COMP_SVC, "find GetIcuVersion symbol failed");
+        dlclose(icuHandle);
+        return;
+    }
+    const char* version = getIcuVersion();
+    constexpr int maxLength = 100;
+    constexpr const char* icuCleanFuncName = "u_cleanup";
+    auto buffer = std::make_unique<char[]>(maxLength);
+    int ret = sprintf_s(buffer.get(), maxLength, "%s_%s", icuCleanFuncName, version);
+    if (ret < 0) {
+        BATTERY_HILOGE(COMP_SVC, "string operation failed");
+        dlclose(icuHandle);
+        return;
+    }
+    auto CleanUp = reinterpret_cast<void (*)(void)>(dlsym(icuHandle, buffer.get()));
+    if (!CleanUp) {
+        BATTERY_HILOGE(COMP_SVC, "find u_cleanup symbol failed");
+        dlclose(icuHandle);
+    }
+    CleanUp();
+    dlclose(icuHandle);
+}
+} // namespace
+
+class SoundCallback : public Media::PlayerCallback {
 public:
-    explicit ChargingSoundCallBack(std::shared_ptr<Media::AudioHapticSound> sound) : sound_(sound) {}
-    virtual ~ChargingSoundCallBack() = default;
-    void OnEndOfStream() override
+    explicit SoundCallback(const std::shared_ptr<ChargingSound>& strongSound) : weakSound_(strongSound) {}
+    virtual ~SoundCallback() = default;
+    void OnInfo(Media::PlayerOnInfoType type, int32_t /* extra */, const Media::Format& /* infoBody */) override
     {
-        if (sound_) {
-            sound_->ReleaseSound();
+        if (type == Media::INFO_TYPE_EOS) {
+            auto sound = weakSound_.lock();
+            if (sound) {
+                sound->Stop();
+            }
         }
     }
-    void OnError(int32_t /* errorCode */) override
+    void OnError(int32_t /* errorCode */, const std::string& /*errorMsg */) override
     {
-        if (sound_) {
-            sound_->ReleaseSound();
-        }
-    }
-    void OnFirstFrameWriting(uint64_t /* latency */) override {}
-    void OnInterrupt(const AudioStandard::InterruptEvent& /* interruptEvent */) override
-    {
-        if (sound_) {
-            sound_->ReleaseSound();
+        auto sound = weakSound_.lock();
+        if (sound) {
+            sound->Stop();
         }
     }
 
 private:
-    std::shared_ptr<Media::AudioHapticSound> sound_;
+    std::weak_ptr<ChargingSound> weakSound_ {};
 };
-
-ChargingSound& ChargingSound::GetInstance()
-{
-    static ChargingSound instance;
-    return instance;
-}
 
 std::string ChargingSound::GetPath(const char* uri) const
 {
@@ -74,45 +108,125 @@ ChargingSound::ChargingSound()
     uri_ = GetPath(CHARGER_SOUND_RELATIVE_PATH);
     if (uri_.empty()) {
         BATTERY_HILOGE(COMP_SVC, "get sound path failed, using fallback path");
-        uri_ = CHARGER_SOUND_DEFAULT_PATH;
+        uri_ = std::string{CHARGER_SOUND_DEFAULT_PATH};
     }
-    sound_ = Media::AudioHapticSound::CreateAudioHapticSound(
-        Media::AUDIO_LATENCY_MODE_NORMAL, uri_, false, AudioStandard::STREAM_USAGE_SYSTEM);
-    callback_ = std::make_shared<ChargingSoundCallBack>(sound_);
-    sound_->SetAudioHapticSoundCallback(callback_);
+    BATTERY_HILOGI(COMP_SVC, "ChargingSound instance created");
 }
 
-void ChargingSound::Prepare() const
+ChargingSound::~ChargingSound()
 {
-    if (!sound_) {
-        BATTERY_HILOGE(COMP_SVC, "sound_ not created");
-        return;
+    Release();
+    std::shared_ptr<Media::Player> tmp = std::atomic_load_explicit(&player_, std::memory_order_acquire);
+    if (tmp) {
+        tmp->ReleaseClientListener();
     }
-    int32_t errcode = sound_->PrepareSound();
-    if (errcode != ERR_OK) {
-        BATTERY_HILOGE(COMP_SVC, "prepare error, code: %{public}d", errcode);
-    }
+    ICUCleanUp();
+    BATTERY_HILOGI(COMP_SVC, "ChargingSound instance destroyed");
 }
 
-void ChargingSound::Start() const
+void ChargingSound::Stop()
 {
-    if (!sound_) {
-        BATTERY_HILOGE(COMP_SVC, "sound_ not created");
-        return;
+    std::shared_ptr<Media::Player> tmp = std::atomic_load_explicit(&player_, std::memory_order_acquire);
+    if (tmp) {
+        tmp->Stop();
     }
-    Prepare();
-    int32_t errcode = sound_->StartSound();
-    if (errcode != ERR_OK) {
-        BATTERY_HILOGE(COMP_SVC, "start sound error, code: %{public}d", errcode);
-    }
+    isPlaying_.store(false);
 }
 
-void ChargingSound::Stop() const
+void ChargingSound::Release()
 {
-    if (!sound_) {
-        return;
+    std::shared_ptr<Media::Player> tmp = std::atomic_load_explicit(&player_, std::memory_order_acquire);
+    if (tmp) {
+        tmp->ReleaseSync();
     }
-    (void)sound_->ReleaseSound();
+    isPlaying_.store(false);
 }
+
+bool ChargingSound::Play()
+{
+    std::shared_ptr<Media::Player> tmp = std::atomic_load_explicit(&player_, std::memory_order_acquire);
+    if (!tmp) {
+        std::lock_guard<std::mutex> lock(g_playerPtrMutex);
+        tmp = std::atomic_load_explicit(&player_, std::memory_order_relaxed);
+        if (!tmp) {
+            tmp = Media::PlayerFactory::CreatePlayer();
+        }
+        std::atomic_store_explicit(&player_, tmp, std::memory_order_release);
+    }
+    if (!tmp) {
+        BATTERY_HILOGE(COMP_SVC, "create player failed");
+        return false;
+    }
+    tmp->Reset(); // reset avplayer
+    int32_t ret = Media::MSERR_OK;
+    std::shared_ptr<SoundCallback> callback = std::make_shared<SoundCallback>(instance_);
+    ret = tmp->SetPlayerCallback(callback);
+    if (ret != Media::MSERR_OK) {
+        BATTERY_HILOGE(COMP_SVC, "set player callback failed, ret=%{public}d", ret);
+        return false;
+    }
+    ret = tmp->SetSource(uri_);
+    if (ret != Media::MSERR_OK) {
+        BATTERY_HILOGE(COMP_SVC, "set stream source failed, ret=%{public}d", ret);
+        return false;
+    }
+    Media::Format format;
+    format.PutIntValue(Media::PlayerKeys::CONTENT_TYPE, AudioStandard::CONTENT_TYPE_UNKNOWN);
+    format.PutIntValue(Media::PlayerKeys::STREAM_USAGE, AudioStandard::STREAM_USAGE_SYSTEM);
+    ret = tmp->SetParameter(format);
+    if (ret != Media::MSERR_OK) {
+        BATTERY_HILOGE(COMP_SVC, "Set stream usage to Player failed, ret=%{public}d", ret);
+        return false;
+    }
+    ret = tmp->Prepare();
+    if (ret != Media::MSERR_OK) {
+        BATTERY_HILOGE(COMP_SVC, "prepare failed, ret=%{public}d", ret);
+        return false;
+    }
+    isPlaying_.store(true);
+    ret = tmp->Play();
+    if (ret != Media::MSERR_OK) {
+        BATTERY_HILOGE(COMP_SVC, "play failed, ret=%{public}d", ret);
+        isPlaying_.store(false);
+        return false;
+    }
+    return true;
+}
+
+bool ChargingSound::IsPlaying()
+{
+    return isPlaying_.load();
+}
+
+bool ChargingSound::IsPlayingGlobal()
+{
+    return instance_->IsPlaying();
+}
+
+bool ChargingSound::PlayGlobal()
+{
+    bool ret = instance_->Play();
+    if (!ret) {
+        instance_->Release();
+    }
+    return ret;
+}
+
+void ChargingSound::ReleaseGlobal()
+{
+    instance_->Release();
+}
+
+//APIs
+bool ChargingSoundStart()
+{
+    return ChargingSound::PlayGlobal();
+}
+
+bool IsPlaying()
+{
+    return ChargingSound::IsPlayingGlobal();
+}
+
 } // namespace PowerMgr
 } // namespace OHOS
