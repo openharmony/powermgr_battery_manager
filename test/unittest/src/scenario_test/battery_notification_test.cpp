@@ -62,8 +62,8 @@ void BatteryNotificationTest::TearDown()
 HWTEST_F(BatteryNotificationTest, BatteryNotification001, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotification001 begin");
-    g_batteryInfo->SetUevent("battery_notification_test001");
-    EXPECT_EQ(g_batteryInfo->GetUevent(), "battery_notification_test001");
+    g_batteryServiceInfo->SetUevent("battery_notification_test001");
+    EXPECT_EQ(g_batteryServiceInfo->GetUevent(), "battery_notification_test001");
     std::string popupName = "BatteryNotification001_popup";
     bool ret = g_batteryServiceNotify->HandleNotification(popupName);
     BATTERY_HILOGI(LABEL_TEST, "HandleNotification ret[%d]", static_cast<int32_t>(ret));
