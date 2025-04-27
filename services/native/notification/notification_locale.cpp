@@ -62,9 +62,10 @@ bool NotificationLocale::ParseJsonfile(const std::string& targetPath,
         BATTERY_HILOGE(COMP_SVC, "%{public}s json root error", targetPath.c_str());
         return false;
     }
-    Json::Value stringConf = root["String"];
+    Json::Value stringConf = root["string"];
     if (stringConf.isNull() || !stringConf.isArray()) {
         BATTERY_HILOGE(COMP_SVC, "%{public}s stringConf invalid", targetPath.c_str());
+        return false;
     }
     for (const auto& conf : stringConf) {
         Json::Value nameObj = conf["name"];
@@ -74,7 +75,7 @@ bool NotificationLocale::ParseJsonfile(const std::string& targetPath,
             container.insert(std::make_pair(nameObj.asString(), valueObj.asString()));
         }
     }
-    BATTERY_HILOGE(COMP_SVC, "%{public}s stringConf end", targetPath.c_str());
+    BATTERY_HILOGI(COMP_SVC, "%{public}s stringConf end", targetPath.c_str());
     return true;
 }
 

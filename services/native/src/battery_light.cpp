@@ -21,23 +21,19 @@
 #include "battery_light.h"
 #include "battery_log.h"
 #include "power_common.h"
-#ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
 #include "light_agent.h"
 #include "light_agent_type.h"
-#endif
+
 using namespace std;
 
 namespace OHOS {
 namespace PowerMgr {
-#ifdef HAS_SENSORS_MISCDEVICE_PART
 namespace {
 constexpr uint32_t MOVE_RIGHT_16 = 16;
 constexpr uint32_t MOVE_RIGHT_8 = 8;
 }
-#endif
 void BatteryLight::InitLight()
 {
-#ifdef HAS_SENSORS_MISCDEVICE_PART
     LightInfo* lightInfo = nullptr;
     int32_t count = 0;
     int32_t ret = OHOS::Sensors::GetLightList(&lightInfo, count);
@@ -58,24 +54,20 @@ void BatteryLight::InitLight()
             break;
         }
     }
-#endif
 }
 
 void BatteryLight::TurnOff()
 {
-#ifdef HAS_SENSORS_MISCDEVICE_PART
     RETURN_IF(!available_);
     int32_t ret = OHOS::Sensors::TurnOff(lightId_);
     if (ret < ERR_OK) {
         BATTERY_HILOGW(FEATURE_BATT_LIGHT, "Failed to turn off the battery light");
     }
     lightColor_ = (ret < ERR_OK) ? lightColor_ : 0;
-#endif
 }
 
 void BatteryLight::TurnOn(uint32_t color)
 {
-#ifdef HAS_SENSORS_MISCDEVICE_PART
     RETURN_IF(!available_);
     union LightColor lightColor;
     lightColor.rgbColor.r = (color >> MOVE_RIGHT_16) & 0xFF;
@@ -90,7 +82,6 @@ void BatteryLight::TurnOn(uint32_t color)
         BATTERY_HILOGW(FEATURE_BATT_LIGHT, "Failed to turn on the battery light");
     }
     lightColor_ = (ret < ERR_OK) ? lightColor_ : color;
-#endif
 }
 
 bool BatteryLight::UpdateColor(BatteryChargeState chargeState, int32_t capacity)
@@ -98,9 +89,7 @@ bool BatteryLight::UpdateColor(BatteryChargeState chargeState, int32_t capacity)
     if ((chargeState == BatteryChargeState::CHARGE_STATE_NONE) ||
         (chargeState == BatteryChargeState::CHARGE_STATE_BUTT)) {
         BATTERY_HILOGD(FEATURE_BATT_LIGHT, "not in charging state, turn off battery light");
-#ifdef HAS_SENSORS_MISCDEVICE_PART
         TurnOff();
-#endif
         return false;
     }
 
@@ -109,10 +98,8 @@ bool BatteryLight::UpdateColor(BatteryChargeState chargeState, int32_t capacity)
     for (const auto& it : lightConf) {
         if ((capacity >= it.beginSoc) && (capacity <= it.endSoc)) {
             RETURN_IF_WITH_RET(lightColor_ == it.rgb, true);
-#ifdef HAS_SENSORS_MISCDEVICE_PART
             TurnOff();
             TurnOn(it.rgb);
-#endif
             return true;
         }
     }
