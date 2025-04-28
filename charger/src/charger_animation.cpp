@@ -20,6 +20,7 @@
 
 #include "common/graphic_startup.h"
 #include "common/screen.h"
+#include "config_policy_utils.h"
 
 namespace OHOS {
 namespace PowerMgr {

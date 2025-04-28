@@ -23,12 +23,27 @@
 #include "battery_thread.h"
 #include "battery_vibrate.h"
 #include "charger_animation.h"
+#include "v1_0/iinput_interfaces.h"
 #include <linux/input.h>
-#include <input_manager.h>
 
 namespace OHOS {
 namespace PowerMgr {
+using namespace OHOS::HDI::Input::V1_0;
 class ChargerThread : public BatteryThread {
+public:
+    class HdfInputEventCallback : public IInputCallback {
+    public:
+        HdfInputEventCallback() = default;
+        ~HdfInputEventCallback() override = default;
+
+        int32_t EventPkgCallback(const std::vector<HDI::Input::V1_0::EventPackage> &pkgs, uint32_t devIndex) override;
+        int32_t HotPlugCallback(const HotPlugEvent &event) override;
+
+    private:
+        void SetKeyState(int32_t code, int32_t value, int64_t now);
+        void HandleInputEvent(const struct input_event* iev);
+    };
+
 private:
     void Init();
     static void UpdateAnimation(const int32_t& chargeState, const int32_t& capacity);
@@ -43,8 +58,7 @@ private:
     void CycleMatters() override;
     static void InitAnimation();
     void SetKeyWait(struct KeyState& key, int64_t timeout);
-    void InputMonitorInit();
-    void InputMonitorCancel();
+    static void InitInput();
     void HandlePowerKeyState();
     void HandlePowerKey(int32_t keycode, int64_t now);
     void InitLackPowerCapacity();
@@ -56,6 +70,7 @@ private:
     std::unique_ptr<BatteryVibrate> vibrate_ = nullptr;
     std::unique_ptr<BatteryBacklight> backlight_ = nullptr;
     std::unique_ptr<BatteryLed> led_ = nullptr;
+    static sptr<HDI::Input::V1_0::IInputInterfaces> inputInterface;
 
     static const int32_t INVALID = -1;
     int64_t keyWait_ = INVALID;
@@ -68,17 +83,6 @@ private:
     static bool isChargeStateChanged_;
     static bool isConfigParse_;
     static int32_t lackPowerCapacity_;
-    int32_t inputMonitorId_ {-1};
-};
-
-class ChargerThreadInputMonitor : public MMI::IInputEventConsumer {
-public:
-    virtual void OnInputEvent(std::shared_ptr<OHOS::MMI::KeyEvent> keyEvent) const;
-    virtual void OnInputEvent(std::shared_ptr<OHOS::MMI::PointerEvent> pointerEvent) const;
-    virtual void OnInputEvent(std::shared_ptr<OHOS::MMI::AxisEvent> axisEvent) const;
-
-private:
-    void SetKeyState(int32_t code, int32_t value, int64_t now) const;
 };
 } // namespace PowerMgr
 } // namespace OHOS
