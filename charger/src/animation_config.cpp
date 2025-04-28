@@ -15,6 +15,7 @@
 
 #include "animation_config.h"
 #include "charger_log.h"
+#include "config_policy_utils.h"
 #include "string_ex.h"
 
 #include <fstream>

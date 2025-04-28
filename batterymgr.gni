@@ -21,23 +21,6 @@ declare_args() {
   battery_manager_feature_enable_wireless_charge = false
 }
 
-defines = []
-if (!defined(global_parts_info) ||
-    defined(global_parts_info.hiviewdfx_hisysevent)) {
-  has_hiviewdfx_hisysevent_part = true
-  defines += [ "HAS_HIVIEWDFX_HISYSEVENT_PART" ]
-} else {
-  has_hiviewdfx_hisysevent_part = false
-}
-
-if (!defined(global_parts_info) ||
-    defined(global_parts_info.sensors_miscdevice)) {
-  has_sensors_miscdevice_part = true
-  defines += [ "HAS_SENSORS_MISCDEVICE_PART" ]
-} else {
-  has_sensors_miscdevice_part = false
-}
-
 if (!defined(global_parts_info) ||
     defined(global_parts_info.hdf_drivers_interface_display)) {
   has_drivers_interface_display_part = true
@@ -63,13 +46,6 @@ if (!defined(global_parts_info) || defined(global_parts_info.arkui_ui_lite)) {
   has_ui_lite_part = true
 } else {
   has_ui_lite_part = false
-}
-
-if (!defined(global_parts_info) ||
-    defined(global_parts_info.customization_config_policy)) {
-  has_battery_config_policy_part = true
-} else {
-  has_battery_config_policy_part = false
 }
 
 ability_runtime_path = "//foundation/ability/ability_runtime"

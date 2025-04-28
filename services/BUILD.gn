@@ -55,15 +55,17 @@ ohos_shared_library("batteryservice") {
     "c_utils:utils",
     "common_event_service:cesfwk_core",
     "common_event_service:cesfwk_innerkits",
+    "config_policy:configpolicy_util",
     "drivers_interface_battery:libbattery_proxy_2.0",
-    "eventhandler:libeventhandler",
     "ffrt:libffrt",
     "hdf_core:libhdi",
     "hdf_core:libpub_utils",
     "hicollie:libhicollie",
     "hilog:libhilog",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "jsoncpp:jsoncpp",
+    "miscdevice:light_interface_native",
     "power_manager:power_ffrt",
     "power_manager:power_sysparam",
     "power_manager:power_vibrator",
@@ -71,6 +73,8 @@ ohos_shared_library("batteryservice") {
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
+
+  defines = []
 
   public_external_deps = [ "ability_base:want" ]
 
@@ -94,19 +98,6 @@ ohos_shared_library("batteryservice") {
 
   if (battery_manager_feature_support_notification) {
     defines += [ "BATTERY_SUPPORT_NOTIFICATION" ]
-  }
-
-  if (has_sensors_miscdevice_part) {
-    external_deps += [ "miscdevice:light_interface_native" ]
-  }
-
-  if (has_hiviewdfx_hisysevent_part) {
-    external_deps += [ "hisysevent:libhisysevent" ]
-  }
-
-  if (has_battery_config_policy_part) {
-    defines += [ "HAS_BATTERY_CONFIG_POLICY_PART" ]
-    external_deps += [ "config_policy:configpolicy_util" ]
   }
 
   if (build_variant == "user") {
