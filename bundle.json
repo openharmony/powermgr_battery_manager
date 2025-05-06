@@ -54,7 +54,6 @@
                 "hicollie",
                 "hisysevent",
                 "hilog",
-                "input",
                 "ipc",
                 "init",
                 "json",
@@ -68,6 +67,7 @@
                 "safwk",
                 "samgr",
                 "ui_lite",
+                "input",
                 "distributed_notification_service",
                 "i18n",
                 "image_framework"
