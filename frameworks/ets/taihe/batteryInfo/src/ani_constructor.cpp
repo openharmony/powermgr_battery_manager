@@ -14,14 +14,17 @@
  */
 
 #include "ohos.batteryInfo.ani.hpp"
+#include "battery_log.h"
+using namespace OHOS::PowerMgr;
 ANI_EXPORT ani_status ANI_Constructor(ani_vm *vm, uint32_t *result)
 {
     ani_env *env;
     if (ANI_OK != vm->GetEnv(ANI_VERSION_1, &env)) {
+        BATTERY_HILOGE(COMP_FWK, "Error from ohos::batteryInfo::GetEnv");
         return ANI_ERROR;
     }
     if (ANI_OK != ohos::batteryInfo::ANIRegister(env)) {
-        std::cerr << "Error from ohos::batteryInfo::ANIRegister" << std::endl;
+        BATTERY_HILOGE(COMP_FWK, "Error from ohos::batteryInfo::ANIRegister");
         return ANI_ERROR;
     }
     *result = ANI_VERSION_1;
