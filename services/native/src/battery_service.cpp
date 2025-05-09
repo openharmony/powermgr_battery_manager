@@ -19,6 +19,7 @@
 #include <ctime>
 #include <functional>
 #include <new>
+#include <modulemgr.h>
 
 #include "errors.h"
 #include "hdf_device_class.h"
@@ -46,6 +47,12 @@ using namespace OHOS::AAFwk;
 namespace OHOS {
 namespace PowerMgr {
 namespace {
+MODULE_MGR *g_moduleMgr = nullptr;
+#if (defined(__aarch64__) || defined(__x86_64__))
+const char* BATTERY_PLUGIN_AUTORUN_PATH = "/system/lib64/batteryplugin/autorun";
+#else
+const char* BATTERY_PLUGIN_AUTORUN_PATH = "/system/lib/batteryplugin/autorun";
+#endif
 constexpr const char* BATTERY_HDI_NAME = "battery_interface_service";
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
 constexpr uint32_t RETRY_TIME = 1000;
@@ -95,6 +102,7 @@ void BatteryService::OnStart()
         return;
     }
     RegisterHdiStatusListener();
+    g_moduleMgr = ModuleMgrScan(BATTERY_PLUGIN_AUTORUN_PATH);
     if (!Publish(this)) {
         BATTERY_HILOGE(COMP_SVC, "Register to system ability manager failed");
         return;
@@ -395,6 +403,10 @@ void BatteryService::OnStop()
     if (hdiServiceMgr_ != nullptr) {
         hdiServiceMgr_->UnregisterServiceStatusListener(hdiServStatListener_);
         hdiServiceMgr_ = nullptr;
+    }
+    if (g_moduleMgr != nullptr) {
+        ModuleMgrDestroy(g_moduleMgr);
+        g_moduleMgr = nullptr;
     }
 }
 

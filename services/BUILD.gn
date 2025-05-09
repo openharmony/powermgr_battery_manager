@@ -71,7 +71,10 @@ ohos_shared_library("batteryservice") {
 
   public_configs = [ ":batterysrv_public_config" ]
 
-  deps = [ "${battery_service_zidl}:batterysrv_stub" ]
+  deps = [
+    "${battery_service_zidl}:batterysrv_stub",
+    "${battery_utils}/hookmgr:battery_hookmgr"
+  ]
 
   external_deps = [ "power_manager:power_permission" ]
   external_deps += [
@@ -89,6 +92,7 @@ ohos_shared_library("batteryservice") {
     "hicollie:libhicollie",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "init:libbegetutil",
     "jsoncpp:jsoncpp",
     "power_manager:power_ffrt",
     "power_manager:power_sysparam",
