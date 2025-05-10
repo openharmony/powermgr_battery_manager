@@ -14,12 +14,14 @@
  */
 
 import { describe, it, expect, TestType, Size, Level } from "../hypium/index";
+import { BusinessError } from '@ohos.base'
 import hilog from '@ohos.hilog'
 import Utils from './Util.test';
 import batteryInfo from '@ohos.batteryInfo'
 
 let domain: number = 0x0000; //日志标识,0x0000作为测试框架的业务标识
 let tag: string = 'testTag'; //日志标识字符串,作为tag标识当前runner类下的测试行为
+const ERROR_CODE = 202;
 
 export default function BatteryInfoTest() {
 
@@ -344,39 +346,39 @@ export default function BatteryInfoTest() {
           let commonEventBatteryChangedKeySoc = batteryInfo.CommonEventBatteryChangedKey.EXTRA_SOC;
           hilog.info(domain, tag, '%{public}s', JSON.stringify(commonEventBatteryChangedKeySoc));
           hilog.info(domain, tag, '%{public}s', typeof commonEventBatteryChangedKeySoc);
-          expect(commonEventBatteryChangedKeySoc).assertEqual('soc');
+          expect(new String(commonEventBatteryChangedKeySoc)).assertEqual(new String('soc'));
           let commonEventBatteryChangedKeyChargeState = batteryInfo.CommonEventBatteryChangedKey.EXTRA_CHARGE_STATE;
           hilog.info(domain, tag, '%{public}s', JSON.stringify(commonEventBatteryChangedKeyChargeState));
           hilog.info(domain, tag, '%{public}s', typeof commonEventBatteryChangedKeyChargeState);
-          expect(commonEventBatteryChangedKeySoc).assertEqual('chargeState');
+          expect(new String(commonEventBatteryChangedKeyChargeState)).assertEqual(new String('chargeState'));
           let commonEventBatteryChangedKeyHealthState = batteryInfo.CommonEventBatteryChangedKey.EXTRA_HEALTH_STATE;
           hilog.info(domain, tag, '%{public}s', JSON.stringify(commonEventBatteryChangedKeyHealthState));
           hilog.info(domain, tag, '%{public}s', typeof commonEventBatteryChangedKeyHealthState);
-          expect(commonEventBatteryChangedKeyHealthState).assertEqual('healthState');
+          expect(new String(commonEventBatteryChangedKeyHealthState)).assertEqual(new String('healthState'));
           let commonEventBatteryChangedKeyPluggedType = batteryInfo.CommonEventBatteryChangedKey.EXTRA_PLUGGED_TYPE;
           hilog.info(domain, tag, '%{public}s', JSON.stringify(commonEventBatteryChangedKeyPluggedType));
           hilog.info(domain, tag, '%{public}s', typeof commonEventBatteryChangedKeyPluggedType);
-          expect(commonEventBatteryChangedKeyPluggedType).assertEqual('pluggedType');
+          expect(new String(commonEventBatteryChangedKeyPluggedType)).assertEqual(new String('pluggedType'));
           let commonEventBatteryChangedKeyVoltage = batteryInfo.CommonEventBatteryChangedKey.EXTRA_VOLTAGE;
           hilog.info(domain, tag, '%{public}s', JSON.stringify(commonEventBatteryChangedKeyVoltage));
           hilog.info(domain, tag, '%{public}s', typeof commonEventBatteryChangedKeyVoltage);
-          expect(commonEventBatteryChangedKeyVoltage).assertEqual('voltage');
+          expect(new String(commonEventBatteryChangedKeyVoltage)).assertEqual(new String('voltage'));
           let commonEventBatteryChangedKeyTechnology = batteryInfo.CommonEventBatteryChangedKey.EXTRA_TECHNOLOGY;
           hilog.info(domain, tag, '%{public}s', JSON.stringify(commonEventBatteryChangedKeyTechnology));
           hilog.info(domain, tag, '%{public}s', typeof commonEventBatteryChangedKeyTechnology);
-          expect(commonEventBatteryChangedKeyTechnology).assertEqual('technology');
+          expect(new String(commonEventBatteryChangedKeyTechnology)).assertEqual(new String('technology'));
           let commonEventBatteryChangedKeyTemperature = batteryInfo.CommonEventBatteryChangedKey.EXTRA_TEMPERATURE;
           hilog.info(domain, tag, '%{public}s', JSON.stringify(commonEventBatteryChangedKeyTemperature));
           hilog.info(domain, tag, '%{public}s', typeof commonEventBatteryChangedKeyTemperature);
-          expect(commonEventBatteryChangedKeyTemperature).assertEqual('temperature');
+          expect(new String(commonEventBatteryChangedKeyTemperature)).assertEqual(new String('temperature'));
           let commonEventBatteryChangedKeyPresent = batteryInfo.CommonEventBatteryChangedKey.EXTRA_PRESENT;
           hilog.info(domain, tag, '%{public}s', JSON.stringify(commonEventBatteryChangedKeyPresent));
           hilog.info(domain, tag, '%{public}s', typeof commonEventBatteryChangedKeyPresent);
-          expect(commonEventBatteryChangedKeyPresent).assertEqual('present');
+          expect(new String(commonEventBatteryChangedKeyPresent)).assertEqual(new String('present'));
           let commonEventBatteryChangedKeyCapacityLevel = batteryInfo.CommonEventBatteryChangedKey.EXTRA_CAPACITY_LEVEL;
           hilog.info(domain, tag, '%{public}s', JSON.stringify(commonEventBatteryChangedKeyCapacityLevel));
           hilog.info(domain, tag, '%{public}s', typeof commonEventBatteryChangedKeyCapacityLevel);
-          expect(commonEventBatteryChangedKeyCapacityLevel).assertEqual('capacityLevel');
+          expect(new String(commonEventBatteryChangedKeyCapacityLevel)).assertEqual(new String('capacityLevel'));
           done();
         } catch (e) {
           hilog.error(domain, tag, '%{public}s', JSON.stringify(e));
@@ -394,8 +396,9 @@ export default function BatteryInfoTest() {
           hilog.info(domain, tag, '%{public}s', typeof result);
           expect(typeof result).assertEqual('number');
           done();
-        } catch (e) {
+        } catch (e : BusinessError) {
           hilog.error(domain, tag, '%{public}s', JSON.stringify(e));
+          expect(e.code).assertEqual(ERROR_CODE);
           done();
         }
       })
@@ -409,8 +412,9 @@ export default function BatteryInfoTest() {
           hilog.info(domain, tag, '%{public}s', typeof result);
           expect(typeof result).assertEqual('string');
           done();
-        } catch (e) {
+        } catch (e : BusinessError) {
           hilog.error(domain, tag, '%{public}s', JSON.stringify(e));
+          expect(e.code).assertEqual(ERROR_CODE);
           done();
         }
       })
@@ -424,8 +428,9 @@ export default function BatteryInfoTest() {
           hilog.info(domain, tag, '%{public}s', typeof result);
           expect(typeof result).assertEqual('boolean');
           done();
-        } catch (e) {
+        } catch (e : BusinessError) {
           hilog.error(domain, tag, '%{public}s', JSON.stringify(e));
+          expect(e.code).assertEqual(ERROR_CODE);
           done();
         }
       })
