@@ -45,8 +45,6 @@ ohos_systemtest("test_systemtest") {
   deps = [
     "${battery_inner_api}:batterysrv_client",
     "${battery_service}:batteryservice",
-    "//third_party/googletest:gtest_main",
-    "//third_party/jsoncpp:jsoncpp",
   ]
 
   external_deps = [
@@ -54,12 +52,14 @@ ohos_systemtest("test_systemtest") {
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
+    "googletest:gtest_main",
     "hdf_core:libhdf_utils",
     "hdf_core:libhdi",
     "hdf_core:libpub_utils",
     "hilog:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
+    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
@@ -81,16 +81,13 @@ ohos_systemtest("test_charger_offline_shutdown") {
     "${battery_utils}:coverage_flags",
   ]
 
-  deps = [
-    "//third_party/googletest:gtest_main",
-    "//third_party/jsoncpp:jsoncpp",
-  ]
-
   external_deps = [
     "c_utils:utils",
+    "googletest:gtest_main",
     "hilog:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
+    "jsoncpp:jsoncpp",
   ]
 }
 
@@ -112,8 +109,6 @@ ohos_systemtest("test_battery_event_systemtest") {
   deps = [
     "${battery_inner_api}:batterysrv_client",
     "${battery_manager_path}/services:batteryservice",
-    "//third_party/googletest:gtest_main",
-    "//third_party/jsoncpp:jsoncpp",
   ]
 
   external_deps = [
@@ -123,9 +118,11 @@ ohos_systemtest("test_battery_event_systemtest") {
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "drivers_interface_input:libinput_proxy_1.0",
+    "googletest:gtest_main",
     "hilog:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
+    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
