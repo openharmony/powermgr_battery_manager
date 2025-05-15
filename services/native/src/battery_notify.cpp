@@ -35,6 +35,9 @@
 #include "string_ex.h"
 #include "system_ability_definition.h"
 
+#include <hookmgr.h>
+#include "battery_hookmgr.h"
+
 #include "battery_config.h"
 #include "battery_log.h"
 #include "battery_service.h"
@@ -628,6 +631,17 @@ bool BatteryNotify::PublishDischargingEvent(const BatteryInfo& info) const
 
 bool BatteryNotify::PublishCustomEvent(const BatteryInfo& info, const std::string& commonEventName) const
 {
+    UEVENT_CHECK_INFO ueventCheckInfo = {
+        .UeventName = info.GetUevent(),
+        .checkResult = true
+    };
+    int ret = HookMgrExecute(GetBatteryHookMgr(), static_cast<int32_t>(BatteryHookStage::BATTERY_UEVENT_CHECK),
+        (void*)&ueventCheckInfo, nullptr);
+    if (ret == 0 && !ueventCheckInfo.checkResult) {
+        BATTERY_HILOGW(FEATURE_BATT_INFO, "PublishCustomEvent fail, uevent=%{public}s, checkResult=%{public}d",
+            ueventCheckInfo.UeventName.c_str(), ueventCheckInfo.checkResult);
+        return false;
+    }
     Want want;
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_UEVENT, info.GetUevent());
     want.SetAction(commonEventName);
