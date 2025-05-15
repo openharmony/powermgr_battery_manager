@@ -687,3 +687,24 @@ ohos_unittest("battery_common_event_part2_test") {
     defines += [ "BATTERY_SUPPORT_NOTIFICATION" ]
   }
 }
+
+ohos_unittest("battery_hookmgr_test") {
+  module_out_path = "${module_output_path}"
+
+  sources = [ "src/battery_hookmgr_test.cpp" ]
+
+  configs = [
+    "${battery_utils}:utils_config",
+    ":module_private_config_without_json",
+    "${battery_utils}:coverage_flags",
+  ]
+
+  deps = [ "${battery_utils}/hookmgr:battery_hookmgr" ]
+  external_deps = [
+    "c_utils:utils",
+    "googletest:gtest_main",
+    "hilog:libhilog",
+    "init:libbegetutil",
+  ]
+}
+

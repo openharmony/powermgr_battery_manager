@@ -85,6 +85,7 @@
                 "service_group": [
                     "//base/powermgr/battery_manager/sa_profile:batterymgr_sa_profile",
                     "//base/powermgr/battery_manager/services:service",
+                    "//base/powermgr/battery_manager/utils/hookmgr:battery_hookmgr",
                     "//base/powermgr/battery_manager/charger:charger_group",
                     "//base/powermgr/battery_manager/charger:charger_animation",
                     "//base/powermgr/battery_manager/charger:resources_service"
@@ -109,6 +110,13 @@
                         "battery_info_ffi.h"
                       ],
                       "header_base": "//base/powermgr/battery_manager/frameworks/cj/include"
+                    }
+                },
+                {
+                    "name": "//base/powermgr/battery_manager/utils/hookmgr:battery_hookmgr",
+                    "header": {
+                        "header_files": [ "battery_hookmgr.h" ],
+                        "header_base": "//base/powermgr/battery_manager/utils/hookmgr/include"
                     }
                 }
             ],
