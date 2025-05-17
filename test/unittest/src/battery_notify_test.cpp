@@ -63,6 +63,8 @@ void BatteryNotifyTest::SetUp()
     g_batteryInfo->SetTechnology(tec);
     const int32_t nowCur = 10;
     g_batteryInfo->SetNowCurrent(nowCur);
+    const string uevent = "BatteryNotifyTest";
+    g_batteryInfo->SetUevent(uevent);
 }
 
 void BatteryNotifyTest::TearDown()
