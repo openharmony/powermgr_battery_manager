@@ -423,6 +423,9 @@ HWTEST_F(BatteryEventSystemTest, BatteryEventSystemTest001, TestSize.Level0)
 {
     shared_ptr<CommonEventBatteryLowTest> subscriber = CommonEventBatteryLowTest::RegisterEvent();
     if (g_isMock) {
+        TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "100");
+        system("hidumper -s 3302 -a -r");
+        sleep(1);
         TestUtils::WriteMock(MOCK_BATTERY_PATH + "/battery/capacity", "5");
         system("hidumper -s 3302 -a -r");
         std::unique_lock<std::mutex> lck(g_mtx);

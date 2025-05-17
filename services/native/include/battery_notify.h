@@ -17,7 +17,7 @@
 #define BATTERY_SERVICE_SUBSCRIBER_H
 
 #include <cstdint>
-
+#include <mutex>
 #include "want.h"
 
 #include "battery_info.h"
@@ -56,6 +56,7 @@ private:
     int32_t lastTemperature_ = -1;
     int32_t lastHealthState_ = -1;
     BatteryPluggedType lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_BUTT;
+    std::mutex mutex_;
 };
 } // namespace PowerMgr
 } // namespace OHOS
