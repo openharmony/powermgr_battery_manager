@@ -42,7 +42,6 @@ ohos_fuzztest("GetVoltageFuzzTest") {
   deps = [
     "${battery_service_zidl}:batterysrv_stub",
     "${battery_service}:batteryservice",
-    "//third_party/jsoncpp:jsoncpp",
   ]
 
   external_deps = [
@@ -53,6 +52,7 @@ ohos_fuzztest("GetVoltageFuzzTest") {
     "hdf_core:libpub_utils",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
   ]
 }
