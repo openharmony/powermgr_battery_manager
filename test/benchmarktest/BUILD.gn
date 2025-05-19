@@ -17,10 +17,12 @@ import("../../batterymgr.gni")
 ohos_benchmarktest("BatteryBenchmarkTest") {
   module_out_path = "${module_output_path}"
   sources = [ "battery_benchmark_test.cpp" ]
-  deps = [
-    "${battery_inner_api}:batterysrv_client",
-    "//third_party/benchmark",
-    "//third_party/googletest:gtest_main",
+  deps = [ "${battery_inner_api}:batterysrv_client" ]
+
+  external_deps = [
+    "c_utils:utils",
+    "googletest:gtest_main",
+    "ipc:ipc_core",
   ]
 
   cflags = [

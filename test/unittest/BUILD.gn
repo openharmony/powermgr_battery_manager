@@ -70,8 +70,6 @@ ohos_unittest("test_battery_service_interface") {
     "${battery_inner_api}:batterysrv_client",
     "${battery_service_zidl}:batterysrv_stub",
     "${battery_service}:batteryservice",
-    "//third_party/googletest:gtest_main",
-    "//third_party/jsoncpp:jsoncpp",
   ]
 
   external_deps = [
@@ -81,10 +79,13 @@ ohos_unittest("test_battery_service_interface") {
     "access_token:libprivacy_sdk",
     "access_token:libtoken_setproc",
     "c_utils:utils",
+    "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
+    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
   ]
 
@@ -114,8 +115,6 @@ ohos_unittest("test_battery_service_scenario") {
     "${battery_service_zidl}:batterysrv_stub",
     "${battery_service}:battery_notification",
     "${battery_service}:batteryservice",
-    "//third_party/googletest:gtest_main",
-    "//third_party/jsoncpp:jsoncpp",
   ]
 
   external_deps = [
@@ -127,9 +126,11 @@ ohos_unittest("test_battery_service_scenario") {
     "access_token:libtoken_setproc",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
+    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
   ]
 
@@ -173,8 +174,6 @@ ohos_unittest("test_battery_service_inner") {
     "${battery_inner_api}:batterysrv_client",
     "${battery_service_zidl}:batterysrv_stub",
     "${battery_service}:batteryservice",
-    "//third_party/googletest:gtest_main",
-    "//third_party/jsoncpp:jsoncpp",
   ]
 
   external_deps = [
@@ -185,9 +184,11 @@ ohos_unittest("test_battery_service_inner") {
     "access_token:libtoken_setproc",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
+    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
   ]
 
@@ -326,8 +327,6 @@ ohos_unittest("test_battery_stub") {
     "${battery_inner_api}:batterysrv_client",
     "${battery_service_zidl}:batterysrv_stub",
     "${battery_service}:batteryservice",
-    "//third_party/googletest:gtest_main",
-    "//third_party/jsoncpp:jsoncpp",
   ]
 
   external_deps = [
@@ -338,9 +337,11 @@ ohos_unittest("test_battery_stub") {
     "access_token:libtoken_setproc",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
+    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
   ]
 
@@ -366,13 +367,12 @@ ohos_unittest("test_battery_proxy_mock_iremoteobject") {
     "${battery_utils}:coverage_flags",
   ]
 
-  deps = [ "//third_party/googletest:gtest_main" ]
-
   external_deps = [
     "ability_base:base",
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
+    "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
@@ -401,13 +401,12 @@ ohos_unittest("test_battery_proxy_mock_messageparcel_write_error") {
     "${battery_utils}:coverage_flags",
   ]
 
-  deps = [ "//third_party/googletest:gtest_main" ]
-
   external_deps = [
     "ability_base:base",
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
+    "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
@@ -437,13 +436,12 @@ ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
     "${battery_utils}:coverage_flags",
   ]
 
-  deps = [ "//third_party/googletest:gtest_main" ]
-
   external_deps = [
     "ability_base:base",
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
+    "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
@@ -472,13 +470,12 @@ ohos_unittest("test_battery_proxy_mock_parcel_read_error") {
     "${battery_utils}:coverage_flags",
   ]
 
-  deps = [ "//third_party/googletest:gtest_main" ]
-
   external_deps = [
     "ability_base:base",
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
+    "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
@@ -504,15 +501,13 @@ ohos_unittest("test_batterywakeup") {
     "${battery_utils}:coverage_flags",
   ]
 
-  deps = [
-    "${battery_service}:batteryservice",
-    "//third_party/googletest:gtest_main",
-  ]
+  deps = [ "${battery_service}:batteryservice" ]
 
   external_deps = [
     "ability_base:want",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_core",
@@ -542,11 +537,12 @@ ohos_unittest("test_mock_battery_config") {
   deps = [
     "${battery_inner_api}:batterysrv_client",
     "${battery_service}:batteryservice",
-    "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
+    "c_utils:utils",
     "config_policy:configpolicy_util",
+    "googletest:gtest_main",
     "hilog:libhilog",
     "jsoncpp:jsoncpp",
   ]
@@ -567,14 +563,12 @@ ohos_unittest("test_batteryclient") {
     "${battery_utils}:coverage_flags",
   ]
 
-  deps = [
-    "${battery_inner_api}:batterysrv_client",
-    "//third_party/googletest:gtest_main",
-  ]
+  deps = [ "${battery_inner_api}:batterysrv_client" ]
 
   external_deps = [
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
+    "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
@@ -601,14 +595,12 @@ ohos_unittest("test_batteryclient_death") {
     "${battery_utils}:coverage_flags",
   ]
 
-  deps = [
-    "${battery_inner_api}:batterysrv_client",
-    "//third_party/googletest:gtest_main",
-  ]
+  deps = [ "${battery_inner_api}:batterysrv_client" ]
 
   external_deps = [
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
+    "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
@@ -634,13 +626,13 @@ ohos_unittest("battery_common_event_test") {
   deps = [
     "${battery_inner_api}:batterysrv_client",
     "${battery_manager_path}/services:batteryservice",
-    "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
     "ability_base:want",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
+    "googletest:gtest_main",
     "hilog:libhilog",
   ]
 
@@ -681,6 +673,7 @@ ohos_unittest("battery_common_event_part2_test") {
     "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "samgr:samgr_proxy",
   ]
 
   if (battery_manager_feature_support_notification) {
