@@ -714,15 +714,9 @@ HWTEST_F(BatteryClientTest, BatteryClient020, TestSize.Level1)
     BatterySrvClient.ResetProxy(nullptr);
 
     sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (sysMgr == nullptr) {
-        BATTERY_HILOGI(LABEL_TEST, "Failed to get Registry");
-        return;
-    }
+    ASSERT_NE(sysMgr, nullptr);
     wptr<IRemoteObject> remoteObj = sysMgr->CheckSystemAbility(POWER_MANAGER_SERVICE_ID);
-    if (remoteObj == nullptr) {
-        BATTERY_HILOGI(LABEL_TEST, "GetSystemAbility failed");
-        return;
-    }
+    ASSERT_NE(remoteObj, nullptr);
     EXPECT_NE(BatterySrvClient.Connect(), nullptr);
     BatterySrvClient.ResetProxy(remoteObj);
     EXPECT_NE(BatterySrvClient.proxy_, nullptr);
