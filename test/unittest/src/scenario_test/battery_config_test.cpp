@@ -79,10 +79,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig003, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig003 function start!");
     std::string key = "soc.warning";
-    if (!g_configTest.IsExist(key)) {
-        BATTERY_HILOGI(LABEL_TEST, "BatteryConfig003 %{public}s does not exist", key.c_str());
-        return;
-    }
+    ASSERT_TRUE(g_configTest.IsExist(key));
     int32_t invalid = -1;
     int32_t warnCapacity = g_configTest.GetInt(key, invalid);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig003 warnCapacity=%{public}d", warnCapacity);
@@ -100,10 +97,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig004, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig004 function start!");
     std::string key = "temperature.high";
-    if (!g_configTest.IsExist(key)) {
-        BATTERY_HILOGI(LABEL_TEST, "BatteryConfig004 %{public}s does not exist", key.c_str());
-        return;
-    }
+    ASSERT_TRUE(g_configTest.IsExist(key));
     int32_t minTemp = -900; // (-90℃)
     int32_t maxTemp = 900;  // (90℃)
     int32_t highTemperature = g_configTest.GetInt(key, maxTemp);
@@ -122,10 +116,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig005, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig005 function start!");
     std::string key = "temperature.low";
-    if (!g_configTest.IsExist(key)) {
-        BATTERY_HILOGI(LABEL_TEST, "BatteryConfig005 %{public}s does not exist", key.c_str());
-        return;
-    }
+    ASSERT_TRUE(g_configTest.IsExist(key));
     int32_t minTemp = -900; // (-90℃)
     int32_t maxTemp = 900;  // (90℃)
     int32_t lowTemperature = g_configTest.GetInt(key, minTemp);
@@ -144,10 +135,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig006, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig006 function start!");
     std::string key = "soc.shutdown";
-    if (!g_configTest.IsExist(key)) {
-        BATTERY_HILOGI(LABEL_TEST, "BatteryConfig006 %{public}s does not exist", key.c_str());
-        return;
-    }
+    ASSERT_TRUE(g_configTest.IsExist(key));
     int32_t invalid = -1;
     int32_t shtdwonCapacity = g_configTest.GetInt(key, invalid);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig006 shtdwonCapacity=%{public}d", shtdwonCapacity);
@@ -165,10 +153,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig007, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig007 function start!");
     std::string key = "soc.low";
-    if (!g_configTest.IsExist(key)) {
-        BATTERY_HILOGI(LABEL_TEST, "BatteryConfig007 %{public}s does not exist", key.c_str());
-        return;
-    }
+    ASSERT_TRUE(g_configTest.IsExist(key));
     int32_t invalid = -1;
     int32_t low_battery_event = g_configTest.GetInt(key, invalid);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig007 low_battery_event=%{public}d", low_battery_event);
@@ -239,10 +224,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig012, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0012 function start!");
     std::string key = "light.high.soc";
-    if (!g_configTest.IsExist(key)) {
-        BATTERY_HILOGI(LABEL_TEST, "BatteryConfig012 %{public}s does not exist", key.c_str());
-        return;
-    }
+    ASSERT_TRUE(g_configTest.IsExist(key));
     int32_t defVal = 90;
     int32_t highSoc = g_configTest.GetInt(key, defVal);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig012 highSoc=%{public}d", highSoc);
