@@ -66,15 +66,9 @@ HWTEST_F(BatteryClientDeathRecipientTest, BatteryClientDeathRecipient002, TestSi
     EXPECT_NE(batterySrvClient.Connect(), nullptr);
 
     sptr<ISystemAbilityManager> sysMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (sysMgr == nullptr) {
-        BATTERY_HILOGI(LABEL_TEST, "Failed to get Registry");
-        return;
-    }
+    ASSERT_NE(sysMgr, nullptr);
     wptr<IRemoteObject> remoteObj = sysMgr->CheckSystemAbility(POWER_MANAGER_BATT_SERVICE_ID);
-    if (remoteObj == nullptr) {
-        BATTERY_HILOGI(LABEL_TEST, "GetSystemAbility failed");
-        return;
-    }
+    ASSERT_NE(remoteObj, nullptr);
 
     {
         std::shared_ptr<IRemoteObject::DeathRecipient> deathRecipient =
