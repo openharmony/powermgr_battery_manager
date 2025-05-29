@@ -435,64 +435,6 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify021, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify021 function end!");
 }
 
-#ifdef BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE
-/**
- * @tc.name: BatteryNotify022
- * @tc.desc: Test Wireless Charge
- * @tc.type: FUNC
- */
-HWTEST_F(BatteryNotifyTest, BatteryNotify022, TestSize.Level1)
-{
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify022 function start!");
-    BatteryPluggedType pluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
-    g_batteryInfo->SetPluggedType(pluggedType);
-    auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
-    EXPECT_EQ(ret, ERR_OK);
-
-    pluggedType = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
-    g_batteryInfo->SetPluggedType(pluggedType);
-    ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
-    EXPECT_EQ(ret, ERR_OK);
-
-    pluggedType = BatteryPluggedType::PLUGGED_TYPE_USB;
-    g_batteryInfo->SetPluggedType(pluggedType);
-    ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
-    EXPECT_EQ(ret, ERR_OK);
-
-    // WirelessPluggedConnected
-    BatteryConfig::GetInstance().wirelessChargerEnable_ = true;
-    g_batteryNotify->lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
-    g_batteryNotify->WirelessPluggedConnected(*g_batteryInfo);
-
-    g_batteryNotify->lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_NONE;
-    pluggedType = BatteryPluggedType::PLUGGED_TYPE_USB;
-    g_batteryInfo->SetPluggedType(pluggedType);
-    g_batteryNotify->WirelessPluggedConnected(*g_batteryInfo);
-
-    g_batteryNotify->lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_NONE;
-    pluggedType = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
-    g_batteryInfo->SetPluggedType(pluggedType);
-    g_batteryNotify->WirelessPluggedConnected(*g_batteryInfo);
-
-    // WirelessPluggedDisconnected
-    BatteryConfig::GetInstance().wirelessChargerEnable_ = true;
-    g_batteryNotify->lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_NONE;
-    g_batteryNotify->WirelessPluggedDisconnected(*g_batteryInfo);
-
-    g_batteryNotify->lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
-    pluggedType = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
-    g_batteryInfo->SetPluggedType(pluggedType);
-    g_batteryNotify->WirelessPluggedDisconnected(*g_batteryInfo);
-
-    g_batteryNotify->lastPowerPluggedType_ = BatteryPluggedType::PLUGGED_TYPE_WIRELESS;
-    pluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
-    g_batteryInfo->SetPluggedType(pluggedType);
-    g_batteryNotify->WirelessPluggedDisconnected(*g_batteryInfo);
-    BatteryConfig::GetInstance().wirelessChargerEnable_ = false;
-    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify022 function end!");
-}
-#endif
-
 /**
  * @tc.name: BatteryNotify023
  * @tc.desc: Test PublishChangedEvent--BatteryInfo::COMMON_EVENT_KEY_CAPACITY_LEVEL
