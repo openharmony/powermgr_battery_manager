@@ -58,8 +58,6 @@
                 "hilog",
                 "ipc",
                 "init",
-                "json",
-                "jsoncpp",
                 "libdrm",
                 "libpng",
                 "miscdevice",

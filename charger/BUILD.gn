@@ -55,8 +55,6 @@ ohos_executable("charger") {
     "init:libbegetutil",
     "input:libmmi-client",
     "ipc:ipc_core",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
     "libpng:libpng",
   ]
 

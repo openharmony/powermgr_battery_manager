@@ -82,6 +82,14 @@ void BatteryNotifyTest::TearDown()
     }
 }
 
+void BatteryNotifyTest::DestroyJsonValue(cJSON*& value)
+{
+    if (value) {
+        cJSON_Delete(value);
+        value = nullptr;
+    }
+}
+
 /**
  * @tc.name: BatteryNotify001
  * @tc.desc: Test PublishEvents
@@ -512,15 +520,11 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify023, TestSize.Level1)
 HWTEST_F(BatteryNotifyTest, BatteryNotify024, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify024 function start!");
-    Json::CharReaderBuilder builder;
-    std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
-    Json::Value root;
-    std::string errors;
     std::string jsonStr = R"({"popup": {"XXX": [{"name": 123}]}})";
-    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
+    cJSON* parseResult = cJSON_Parse(jsonStr.c_str());
     EXPECT_TRUE(parseResult);
     auto& batteryConfig = BatteryConfig::GetInstance();
-    batteryConfig.config_ = root;
+    batteryConfig.config_ = parseResult;
     batteryConfig.ParsePopupConf();
     EXPECT_TRUE(batteryConfig.popupConfig_.size() == 1);
     bool ret = g_batteryNotify->HandleNotification("XXX");
@@ -528,6 +532,7 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify024, TestSize.Level1)
 #ifndef BATTERY_SUPPORT_NOTIFICATION
     EXPECT_TRUE(ret);
 #endif
+    DestroyJsonValue(batteryConfig.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify024 function end!");
 }
 } // namespace PowerMgr
