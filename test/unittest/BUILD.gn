@@ -76,6 +76,7 @@ ohos_unittest("test_battery_service_interface") {
     "access_token:libnativetoken",
     "access_token:libprivacy_sdk",
     "access_token:libtoken_setproc",
+    "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_2.0",
@@ -83,8 +84,6 @@ ohos_unittest("test_battery_service_interface") {
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
   ]
 
@@ -123,14 +122,13 @@ ohos_unittest("test_battery_service_scenario") {
     "access_token:libnativetoken",
     "access_token:libprivacy_sdk",
     "access_token:libtoken_setproc",
+    "cJSON:cjson",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
   ]
 
@@ -182,14 +180,13 @@ ohos_unittest("test_battery_service_inner") {
     "access_token:libnativetoken",
     "access_token:libprivacy_sdk",
     "access_token:libtoken_setproc",
+    "cJSON:cjson",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
   ]
 
@@ -276,10 +273,10 @@ ohos_unittest("test_battery_config") {
   deps = [ "${battery_service}:batteryservice" ]
 
   external_deps = [
+    "cJSON:cjson",
     "c_utils:utils",
     "googletest:gtest_main",
     "hilog:libhilog",
-    "jsoncpp:jsoncpp",
   ]
 }
 
@@ -299,12 +296,12 @@ ohos_unittest("test_battery_dump") {
 
   external_deps = [
     "ability_base:want",
+    "cJSON:cjson",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
   ]
 }
@@ -336,14 +333,13 @@ ohos_unittest("test_battery_stub") {
     "access_token:libnativetoken",
     "access_token:libprivacy_sdk",
     "access_token:libtoken_setproc",
+    "cJSON:cjson",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
   ]
 
@@ -372,13 +368,12 @@ ohos_unittest("test_battery_proxy_mock_iremoteobject") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
+    "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
@@ -408,13 +403,12 @@ ohos_unittest("test_battery_proxy_mock_messageparcel_write_error") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
+    "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
@@ -445,13 +439,12 @@ ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
+    "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
@@ -481,13 +474,12 @@ ohos_unittest("test_battery_proxy_mock_parcel_read_error") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
+    "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
@@ -515,14 +507,13 @@ ohos_unittest("test_batterywakeup") {
 
   external_deps = [
     "ability_base:want",
+    "cJSON:cjson",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
     "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
     "power_manager:powermgr_client",
     "safwk:system_ability_fwk",
   ]
@@ -536,7 +527,6 @@ ohos_unittest("test_mock_battery_config") {
   module_out_path = "${module_output_path}"
 
   sources = [
-    "mock/source/mock_json.cpp",
     "src/battery_config_mock_test.cpp",
   ]
 
@@ -552,12 +542,11 @@ ohos_unittest("test_mock_battery_config") {
   ]
 
   external_deps = [
+    "cJSON:cjson",
     "c_utils:utils",
     "config_policy:configpolicy_util",
     "googletest:gtest_main",
     "hilog:libhilog",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
   ]
 }
 
@@ -579,13 +568,12 @@ ohos_unittest("test_batteryclient") {
   deps = [ "${battery_inner_api}:batterysrv_client" ]
 
   external_deps = [
+    "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
@@ -613,13 +601,12 @@ ohos_unittest("test_batteryclient_death") {
   deps = [ "${battery_inner_api}:batterysrv_client" ]
 
   external_deps = [
+    "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
@@ -647,12 +634,11 @@ ohos_unittest("battery_common_event_test") {
 
   external_deps = [
     "ability_base:want",
+    "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "googletest:gtest_main",
     "hilog:libhilog",
-    "json:nlohmann_json_static",
-    "jsoncpp:jsoncpp",
   ]
 
   if (battery_manager_feature_support_notification) {

@@ -16,6 +16,7 @@
 #ifndef BATTERY_NOTIFY_TEST_H
 #define BATTERY_NOTIFY_TEST_H
 
+#include <cJSON.h>
 #include <gtest/gtest.h>
 
 namespace OHOS {
@@ -25,6 +26,7 @@ public:
     static void SetUpTestCase();
     void SetUp();
     void TearDown();
+    void DestroyJsonValue(cJSON*& value);
 };
 } // namespace PowerMgr
 } // namespace OHOS

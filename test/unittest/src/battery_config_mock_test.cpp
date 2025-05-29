@@ -32,12 +32,6 @@ char* GetOneCfgFile(const char *pathSuffix, char *buf, unsigned int bufLength)
     return g_returnCharPtr;
 }
 
-bool Json::parseFromStream(
-    Json::CharReader::Factory const& fact, Json::IStream& sin, Json::Value* root, Json::String* errs)
-{
-    return g_returnBool;
-}
-
 namespace OHOS {
 namespace PowerMgr {
 namespace {

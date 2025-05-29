@@ -81,6 +81,7 @@ ohos_shared_library("batteryservice") {
     "ability_base:want",
     "ability_runtime:ability_manager",
     "bundle_framework:appexecfwk_base",
+    "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_core",
     "common_event_service:cesfwk_innerkits",
@@ -93,7 +94,6 @@ ohos_shared_library("batteryservice") {
     "hilog:libhilog",
     "ipc:ipc_core",
     "init:libbegetutil",
-    "jsoncpp:jsoncpp",
     "power_manager:power_ffrt",
     "power_manager:power_sysparam",
     "power_manager:power_vibrator",
@@ -175,13 +175,13 @@ ohos_shared_library("battery_notification") {
   external_deps = [
     "ability_base:want",
     "ability_base:zuri",
+    "cJSON:cjson",
     "c_utils:utils",
     "config_policy:configpolicy_util",
     "distributed_notification_service:ans_innerkits",
     "hilog:libhilog",
     "i18n:intl_util",
     "image_framework:image_native",
-    "jsoncpp:jsoncpp",
   ]
 
   subsystem_name = "powermgr"

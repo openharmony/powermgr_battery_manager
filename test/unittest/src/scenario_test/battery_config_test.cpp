@@ -28,10 +28,26 @@ namespace OHOS {
 namespace PowerMgr {
 namespace {
 auto& g_configTest = BatteryConfig::GetInstance();
-Json::Value root;
-Json::CharReaderBuilder builder;
-std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
-std::string errors;
+}
+
+void BatteryConfigTest::DestroyJsonValue(cJSON*& value)
+{
+    if (value) {
+        cJSON_Delete(value);
+        value = nullptr;
+    }
+}
+
+bool BatteryConfigTest::ParseJsonStr(const std::string& jsonStr, bool isAssignToConfig)
+{
+    cJSON* parseResult = cJSON_Parse(jsonStr.c_str());
+    if (!parseResult) {
+        return false;
+    }
+    if (isAssignToConfig) {
+        g_configTest.config_ = parseResult;
+    }
+    return true;
 }
 
 /**
@@ -259,17 +275,15 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0014, TestSize.Level1)
     std::string key = "low";
     g_configTest.lightConf_.clear();
     std::string jsonStr = R"({"light": {"low": {"soc": "soc", "rgb": []}}})";
-    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseLightConf(key);
     EXPECT_TRUE(g_configTest.lightConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"light": {"low": {"soc": [], "rgb": "rgb"}}})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseLightConf(key);
     EXPECT_TRUE(g_configTest.lightConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0014 function end!");
 }
 
@@ -285,47 +299,40 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0015, TestSize.Level1)
     std::string key = "low";
     g_configTest.lightConf_.clear();
     std::string jsonStr = R"({"light": {"low": {"soc": [], "rgb": []}}})";
-    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseLightConf(key);
     EXPECT_TRUE(g_configTest.lightConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"light": {"low": {"soc": ["0", 10], "rgb": []}}})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseLightConf(key);
     EXPECT_TRUE(g_configTest.lightConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"light": {"low": {"soc": [0, "10"], "rgb": []}}})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseLightConf(key);
     EXPECT_TRUE(g_configTest.lightConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"light": {"low": {"soc": [0, 10], "rgb": []}}})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseLightConf(key);
     EXPECT_TRUE(g_configTest.lightConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"light": {"low": {"soc": [0, 10], "rgb": ["255", 0, 0]}}})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseLightConf(key);
     EXPECT_TRUE(g_configTest.lightConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"light": {"low": {"soc": [0, 10], "rgb": [255, "0", 0]}}})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseLightConf(key);
     EXPECT_TRUE(g_configTest.lightConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"light": {"low": {"soc": [0, 10], "rgb": [255, 0, "0"]}}})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseLightConf(key);
     EXPECT_TRUE(g_configTest.lightConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0015 function end!");
 }
 
@@ -339,23 +346,20 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0016, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0016 function start!");
     std::string jsonStr = R"({"wirelesscharger": 0})";
-    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseWirelessChargerConf();
     EXPECT_FALSE(g_configTest.wirelessChargerEnable_);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"wirelesscharger": null})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseWirelessChargerConf();
     EXPECT_FALSE(g_configTest.wirelessChargerEnable_);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"wirelesscharger": "0"})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseWirelessChargerConf();
     EXPECT_FALSE(g_configTest.wirelessChargerEnable_);
+    DestroyJsonValue(g_configTest.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0016 function end!");
 }
 
@@ -368,16 +372,14 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0016, TestSize.Level1)
 HWTEST_F(BatteryConfigTest, BatteryConfig0017, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0017 function start!");
-    g_configTest.config_.clear();
     g_configTest.commonEventConf_.clear();
     g_configTest.ParseBootActionsConf();
     EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
     std::string jsonStr = R"({"boot_actions": ""})";
-    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseBootActionsConf();
     EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0017 function end!");
 }
 
@@ -390,41 +392,44 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0017, TestSize.Level1)
 HWTEST_F(BatteryConfigTest, BatteryConfig0018, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0018 function start!");
-    root.clear();
-    g_configTest.ParseCommonEventConf(root);
+    g_configTest.ParseCommonEventConf(nullptr);
     EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
     std::string jsonStr = R"({"sendcommonevent": ""})";
-    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
+    cJSON* parseResult = cJSON_Parse(jsonStr.c_str());
     EXPECT_TRUE(parseResult);
-    g_configTest.ParseCommonEventConf(root);
+    g_configTest.ParseCommonEventConf(parseResult);
     EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
+    DestroyJsonValue(parseResult);
     jsonStr = R"({"sendcommonevent": [{
             "event_name": 123,
             "scene_config": { "name" : "wireless", "not_equal" : "0" },
             "uevent": "battery common event"
         }]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
+    parseResult = cJSON_Parse(jsonStr.c_str());
     EXPECT_TRUE(parseResult);
-    g_configTest.ParseCommonEventConf(root);
+    g_configTest.ParseCommonEventConf(parseResult);
     EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
+    DestroyJsonValue(parseResult);
     jsonStr = R"({"sendcommonevent": [{
             "event_name": "usual.event.BATTERY_CHANGED",
             "scene_config": { "name" : 123, "not_equal" : "0" },
             "uevent": "battery common event"
         }]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
+    parseResult = cJSON_Parse(jsonStr.c_str());
     EXPECT_TRUE(parseResult);
-    g_configTest.ParseCommonEventConf(root);
+    g_configTest.ParseCommonEventConf(parseResult);
     EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
+    DestroyJsonValue(parseResult);
     jsonStr = R"({"sendcommonevent": [{
             "event_name": "usual.event.BATTERY_CHANGED",
             "scene_config": { "name" : "wireless", "not_equal" : "0" },
             "uevent": 123
         }]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
+    parseResult = cJSON_Parse(jsonStr.c_str());
     EXPECT_TRUE(parseResult);
-    g_configTest.ParseCommonEventConf(root);
+    g_configTest.ParseCommonEventConf(parseResult);
     EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
+    DestroyJsonValue(parseResult);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0018 function end!");
 }
 
@@ -442,37 +447,41 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0019, TestSize.Level1)
             "scene_config": { "name" : "wireless", "equal" : "0" },
             "uevent": "battery common event"
         }]})";
-    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
+    cJSON* parseResult = cJSON_Parse(jsonStr.c_str());
     EXPECT_TRUE(parseResult);
-    g_configTest.ParseCommonEventConf(root);
+    g_configTest.ParseCommonEventConf(parseResult);
     EXPECT_TRUE(g_configTest.commonEventConf_.size() == 1);
+    DestroyJsonValue(parseResult);
     jsonStr = R"({"sendcommonevent": [{
             "event_name": "usual.event.BATTERY_CHANGED",
             "scene_config": { "name" : "wireless", "equal" : null },
             "uevent": "battery common event"
         }]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
+    parseResult = cJSON_Parse(jsonStr.c_str());
     EXPECT_TRUE(parseResult);
-    g_configTest.ParseCommonEventConf(root);
+    g_configTest.ParseCommonEventConf(parseResult);
+    DestroyJsonValue(parseResult);
     EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
     jsonStr = R"({"sendcommonevent": [{
             "event_name": "usual.event.BATTERY_CHANGED",
             "scene_config": { "name" : "wireless", "not_equal" : null },
             "uevent": "battery common event"
         }]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
+    parseResult = cJSON_Parse(jsonStr.c_str());
     EXPECT_TRUE(parseResult);
-    g_configTest.ParseCommonEventConf(root);
+    g_configTest.ParseCommonEventConf(parseResult);
     EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
+    DestroyJsonValue(parseResult);
     jsonStr = R"({"sendcommonevent": [{
             "event_name": "usual.event.BATTERY_CHANGED",
             "scene_config": { "name" : "wireless", "equal" : 0 },
             "uevent": "battery common event"
         }]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
+    parseResult = cJSON_Parse(jsonStr.c_str());
     EXPECT_TRUE(parseResult);
-    g_configTest.ParseCommonEventConf(root);
+    g_configTest.ParseCommonEventConf(parseResult);
     EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
+    DestroyJsonValue(parseResult);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0019 function end!");
 }
 
@@ -486,47 +495,40 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0020, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0020 function start!");
     std::string jsonStr = R"({"popup": null})";
-    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParsePopupConf();
     EXPECT_TRUE(g_configTest.popupConfig_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"popup": "popup"})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParsePopupConf();
     EXPECT_TRUE(g_configTest.popupConfig_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"popup": {"XXX": null}})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParsePopupConf();
     EXPECT_TRUE(g_configTest.popupConfig_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"popup": {"XXX": "XXX"}})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParsePopupConf();
     EXPECT_TRUE(g_configTest.popupConfig_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"popup": {"XXX": [{"name": 123}]}})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParsePopupConf();
     EXPECT_TRUE(g_configTest.popupConfig_.size() == 1);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"popup": {"XXX": [{"name": "123", "action": "456"}]}})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParsePopupConf();
     EXPECT_TRUE(g_configTest.popupConfig_.size() == 1);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"popup": {"XXX": [{"name": "123", "action": 456}]}})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParsePopupConf();
     EXPECT_TRUE(g_configTest.popupConfig_.size() == 1);
+    DestroyJsonValue(g_configTest.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0020 function end!");
 }
 
@@ -540,35 +542,30 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0021, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0021 function start!");
     std::string jsonStr = R"({"notification": null})";
-    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": "notification"})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": [{"name": 1}]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": [{"name": "1", "icon": 2}]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": 3}]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0021 function end!");
 }
 
@@ -582,41 +579,35 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0022, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0022 function start!");
     std::string jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": 4}]})";
-    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4", "button": 5}]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4", "button": []}]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4", "button": [1, {}]}]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4", "button": [{}, 2]}]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4",
         "button": [{"name": 1}, {}]}]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0022 function end!");
 }
 
@@ -631,32 +622,28 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0023, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0023 function start!");
     std::string jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4",
         "button": [{"name": "1", "action": 1}, {}]}]})";
-    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4",
         "button": [{"name": "1", "action": "1"}, {"name": 2}]}]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4",
         "button": [{"name": "1", "action": "1"}, {"name": "2", "action": 2}]}]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4",
         "button": [{"name": "1", "action": "1"}, {"name": "2", "action": "2"}]}]})";
-    parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 1);
+    DestroyJsonValue(g_configTest.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0023 function end!");
 }
 
@@ -684,25 +671,41 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0025, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0025 function start!");
     std::string str = "";
-    Json::Value jsonValue = g_configTest.GetValue(str);
-    EXPECT_TRUE(jsonValue.empty());
+    cJSON* jsonValue = g_configTest.GetValue(str);
+    EXPECT_TRUE((!jsonValue || cJSON_IsNull(jsonValue)));
     str = "light.low.rbg.a.b.c";
     jsonValue = g_configTest.GetValue(str);
-    EXPECT_TRUE(jsonValue.empty());
+    EXPECT_TRUE((!jsonValue || cJSON_IsNull(jsonValue)));
     std::string jsonStr = R"({"light": {"low": {"soc": "soc"}}})";
-    bool parseResult = reader->parse(jsonStr.c_str(), jsonStr.c_str() + jsonStr.size(), &root, &errors);
-    EXPECT_TRUE(parseResult);
-    g_configTest.config_ = root;
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     str = "light.low.rbg";
     jsonValue = g_configTest.GetValue(str);
-    EXPECT_FALSE(jsonValue.empty());
+    EXPECT_FALSE((jsonValue && cJSON_IsNull(jsonValue)));
     str = "light.low.soc";
     jsonValue = g_configTest.GetValue(str);
-    EXPECT_TRUE(jsonValue.asString() == "soc");
+    EXPECT_TRUE((strcmp(cJSON_GetStringValue(jsonValue), "soc") == 0));
     str = "light.low.soc.a";
     jsonValue = g_configTest.GetValue(str);
-    EXPECT_TRUE(jsonValue.asString() == "soc");
+    EXPECT_TRUE((strcmp(cJSON_GetStringValue(jsonValue), "soc") == 0));
+    DestroyJsonValue(g_configTest.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0025 function end!");
+}
+
+/**
+ * @tc.name: BatteryConfig0026
+ * @tc.desc: test ParseBootActionsConf
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryConfigTest, BatteryConfig0026, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0026 function start!");
+    g_configTest.commonEventConf_.clear();
+    std::string jsonStr = R"({"boot_actions": {"sendcommonevent": ""}})";
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
+    g_configTest.ParseBootActionsConf();
+    EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0026 function end!");
 }
 } // namespace PowerMgr
 } // namespace OHOS

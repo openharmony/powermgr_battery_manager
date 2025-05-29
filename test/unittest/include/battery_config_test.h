@@ -16,6 +16,7 @@
 #ifndef BATTERY_CONFIG_TEST_H
 #define BATTERY_CONFIG_TEST_H
 
+#include <cJSON.h>
 #include <gtest/gtest.h>
 
 namespace OHOS {
@@ -26,6 +27,9 @@ public:
     static constexpr uint32_t GREEN_LIGHT = (255 << 8);
     static constexpr uint32_t YELLOW_LIGHT = (255 << 16) | (255 << 8);
     static constexpr uint32_t LIGHT_OFF = 0;
+
+    void DestroyJsonValue(cJSON*& value);
+    bool ParseJsonStr(const std::string& jsonStr, bool isAssignToConfig);
 };
 } // namespace PowerMgr
 } // namespace OHOS
