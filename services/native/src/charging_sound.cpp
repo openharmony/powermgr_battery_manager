@@ -67,31 +67,6 @@ void ICUCleanUp()
 }
 } // namespace
 
-class SoundCallback : public Media::PlayerCallback {
-public:
-    explicit SoundCallback(const std::shared_ptr<ChargingSound>& strongSound) : weakSound_(strongSound) {}
-    virtual ~SoundCallback() = default;
-    void OnInfo(Media::PlayerOnInfoType type, int32_t /* extra */, const Media::Format& /* infoBody */) override
-    {
-        if (type == Media::INFO_TYPE_EOS) {
-            auto sound = weakSound_.lock();
-            if (sound) {
-                sound->Stop();
-            }
-        }
-    }
-    void OnError(int32_t /* errorCode */, const std::string& /*errorMsg */) override
-    {
-        auto sound = weakSound_.lock();
-        if (sound) {
-            sound->Stop();
-        }
-    }
-
-private:
-    std::weak_ptr<ChargingSound> weakSound_ {};
-};
-
 std::string ChargingSound::GetPath(const char* uri) const
 {
     std::string ret {};
@@ -159,12 +134,6 @@ bool ChargingSound::Play()
     }
     tmp->Reset(); // reset avplayer
     int32_t ret = Media::MSERR_OK;
-    std::shared_ptr<SoundCallback> callback = std::make_shared<SoundCallback>(instance_);
-    ret = tmp->SetPlayerCallback(callback);
-    if (ret != Media::MSERR_OK) {
-        BATTERY_HILOGE(COMP_SVC, "set player callback failed, ret=%{public}d", ret);
-        return false;
-    }
     ret = tmp->SetSource(uri_);
     if (ret != Media::MSERR_OK) {
         BATTERY_HILOGE(COMP_SVC, "set stream source failed, ret=%{public}d", ret);
