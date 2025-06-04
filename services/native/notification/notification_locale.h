@@ -21,7 +21,8 @@
 #include <mutex>
 #include <string>
 #include <unistd.h>
-#include <json/json.h>
+
+#include <cJSON.h>
 #include "nocopyable.h"
 
 namespace OHOS {

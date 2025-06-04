@@ -40,128 +40,172 @@ bool AnimationConfig::ParseConfig()
         BATTERY_HILOGE(FEATURE_CHARGING, "open json file failed");
         return false;
     }
-    configObj_.clear();
-    configObj_ = nlohmann::json::parse(ifs, nullptr, false);
+
+    std::string content((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+    configObj_ = cJSON_Parse(content.c_str());
     ifs.close();
-    if (configObj_.is_discarded()) {
+    if (!configObj_) {
         BATTERY_HILOGE(FEATURE_CHARGING, "parse config file error");
         return false;
     }
-
-    auto animation = configObj_[CHARGER_ANIMATION_NAME];
+    if (cJSON_IsNull(configObj_) || (cJSON_IsObject(configObj_) && (configObj_->child == nullptr)) ||
+        (cJSON_IsArray(configObj_) && (cJSON_GetArraySize(configObj_) == 0))) {
+        cJSON_Delete(configObj_);
+        configObj_ = nullptr;
+        return false;
+    }
+    auto animation = cJSON_GetObjectItemCaseSensitive(configObj_, CHARGER_ANIMATION_NAME);
     ParseAnimationConfig(animation);
-    auto chargingPrompt = configObj_[LACKPOWER_CHARGING_NAME];
+    auto chargingPrompt = cJSON_GetObjectItemCaseSensitive(configObj_, LACKPOWER_CHARGING_NAME);
     ParseLackPowerChargingConfig(chargingPrompt);
-    auto notChargingPrompt = configObj_[LACKPOWER_NOT_CHARGING_NAME];
+    auto notChargingPrompt = cJSON_GetObjectItemCaseSensitive(configObj_, LACKPOWER_NOT_CHARGING_NAME);
     ParseLackPowerNotChargingConfig(notChargingPrompt);
-
+    cJSON_Delete(configObj_);
+    configObj_ = nullptr;
     return true;
 }
 
-void AnimationConfig::ParseAnimationLabel(nlohmann::json& component, LabelComponentInfo& info)
+void AnimationConfig::ParseAnimationLabel(cJSON* component, LabelComponentInfo& info)
 {
     info.common.type = ANIMATION_COM_LABEL;
-    if (component.find("id") != component.end()) {
-        info.common.id = component.at("id").get<std::string>();
+    cJSON* idItem = cJSON_GetObjectItemCaseSensitive(component, "id");
+    if (cJSON_IsString(idItem)) {
+        info.common.id = idItem->valuestring;
     }
-    if (component.find("text") != component.end()) {
-        info.text = component.at("text").get<std::string>();
+    cJSON* textItem = cJSON_GetObjectItemCaseSensitive(component, "text");
+    if (cJSON_IsString(textItem)) {
+        info.text = textItem->valuestring;
     }
-    if (component.find("x") != component.end()) {
-        info.common.x = component.at("x").get<int>();
+    cJSON* xitem = cJSON_GetObjectItemCaseSensitive(component, "x");
+    if (cJSON_IsNumber(xitem)) {
+        info.common.x = xitem->valueint;
     }
-    if (component.find("y") != component.end()) {
-        info.common.y = component.at("y").get<int>();
+    cJSON* yItem = cJSON_GetObjectItemCaseSensitive(component, "y");
+    if (cJSON_IsNumber(yItem)) {
+        info.common.y = yItem->valueint;
     }
-    if (component.find("w") != component.end()) {
-        info.common.w = component.at("w").get<int>();
+    cJSON* wItem = cJSON_GetObjectItemCaseSensitive(component, "w");
+    if (cJSON_IsNumber(wItem)) {
+        info.common.w = wItem->valueint;
     }
-    if (component.find("h") != component.end()) {
-        info.common.h = component.at("h").get<int>();
+    cJSON* hItem = cJSON_GetObjectItemCaseSensitive(component, "h");
+    if (cJSON_IsNumber(hItem)) {
+        info.common.h = hItem->valueint;
     }
-    if (component.find("fontSize") != component.end()) {
-        info.fontSize = component.at("fontSize").get<int8_t>();
+    cJSON* fontSizeItem = cJSON_GetObjectItemCaseSensitive(component, "fontSize");
+    if (cJSON_IsNumber(fontSizeItem)) {
+        info.fontSize = static_cast<int8_t>(fontSizeItem->valueint);
     }
-    if (component.find("fontColor") != component.end()) {
-        info.fontColor = component.at("fontColor").get<std::string>();
+    cJSON* fontColorItem = cJSON_GetObjectItemCaseSensitive(component, "fontColor");
+    if (cJSON_IsString(fontColorItem)) {
+        info.fontColor = fontColorItem->valuestring;
     }
-    if (component.find("bgColor") != component.end()) {
-        info.bgColor = component.at("bgColor").get<std::string>();
+    cJSON* bgColorItem = cJSON_GetObjectItemCaseSensitive(component, "bgColor");
+    if (cJSON_IsString(bgColorItem)) {
+        info.bgColor = bgColorItem->valuestring;
     }
-    if (component.find("align") != component.end()) {
-        info.align = component.at("align").get<std::string>();
+    cJSON* alignItem = cJSON_GetObjectItemCaseSensitive(component, "align");
+    if (cJSON_IsString(alignItem)) {
+        info.align = alignItem->valuestring;
     }
 }
 
-void AnimationConfig::ParseAnimationImage(nlohmann::json& component, ImageComponentInfo& info)
+void AnimationConfig::ParseAnimationImage(cJSON* component, ImageComponentInfo& info)
 {
     info.common.type = ANIMATION_COM_IMAGEVIEW;
-    if (component.find("id") != component.end()) {
-        info.common.id = component.at("id").get<std::string>();
+    cJSON* idItem = cJSON_GetObjectItemCaseSensitive(component, "id");
+    if (cJSON_IsString(idItem)) {
+        info.common.id = idItem->valuestring;
     }
-    if (component.find("x") != component.end()) {
-        info.common.x = component.at("x").get<int>();
+    cJSON* xitem = cJSON_GetObjectItemCaseSensitive(component, "x");
+    if (cJSON_IsNumber(xitem)) {
+        info.common.x = xitem->valueint;
     }
-    if (component.find("y") != component.end()) {
-        info.common.y = component.at("y").get<int>();
+    cJSON* yItem = cJSON_GetObjectItemCaseSensitive(component, "y");
+    if (cJSON_IsNumber(yItem)) {
+        info.common.y = yItem->valueint;
     }
-    if (component.find("w") != component.end()) {
-        info.common.w = component.at("w").get<int>();
+    cJSON* wItem = cJSON_GetObjectItemCaseSensitive(component, "w");
+    if (cJSON_IsNumber(wItem)) {
+        info.common.w = wItem->valueint;
     }
-    if (component.find("h") != component.end()) {
-        info.common.h = component.at("h").get<int>();
+    cJSON* hItem = cJSON_GetObjectItemCaseSensitive(component, "h");
+    if (cJSON_IsNumber(hItem)) {
+        info.common.h = hItem->valueint;
     }
-    if (component.find("resPath") != component.end()) {
-        info.resPath = component.at("resPath").get<std::string>();
+    cJSON* resPathItem = cJSON_GetObjectItemCaseSensitive(component, "resPath");
+    if (cJSON_IsString(resPathItem)) {
+        info.resPath = resPathItem->valuestring;
     }
-    if (component.find("imgCnt") != component.end()) {
-        info.imgCnt = component.at("imgCnt").get<int>();
+    cJSON* imgCntItem = cJSON_GetObjectItemCaseSensitive(component, "imgCnt");
+    if (cJSON_IsNumber(imgCntItem)) {
+        info.imgCnt = imgCntItem->valueint;
     }
-    if (component.find("updInterval") != component.end()) {
-        info.updInterval = component.at("updInterval").get<int>();
+    cJSON* updIntervalItem = cJSON_GetObjectItemCaseSensitive(component, "updInterval");
+    if (cJSON_IsNumber(updIntervalItem)) {
+        info.updInterval = updIntervalItem->valueint;
     }
-    if (component.find("filePrefix") != component.end()) {
-        info.filePrefix = component.at("filePrefix").get<std::string>();
+    cJSON* filePrefixItem = cJSON_GetObjectItemCaseSensitive(component, "filePrefix");
+    if (cJSON_IsString(filePrefixItem)) {
+        info.filePrefix = filePrefixItem->valuestring;
     }
 }
 
-void AnimationConfig::ParseAnimationConfig(nlohmann::json& jsonObj)
+void AnimationConfig::ParseAnimationConfig(cJSON* jsonObj)
 {
-    auto components = jsonObj[ANIMATION_COM];
-    for (auto& component : components) {
-        if (component.find("type") != component.end()) {
-            auto type = component.at("type").get<std::string>();
-            if (type == ANIMATION_COM_IMAGEVIEW) {
-                ParseAnimationImage(component, animationInfo_.first);
-            } else if (type == ANIMATION_COM_LABEL) {
-                ParseAnimationLabel(component, animationInfo_.second);
-            }
+    if (!jsonObj || cJSON_IsNull(jsonObj) || !cJSON_IsObject(jsonObj)) {
+        BATTERY_HILOGW(FEATURE_CHARGING, "AnimationConfig is invalid");
+        return;
+    }
+    auto components = cJSON_GetObjectItemCaseSensitive(jsonObj, ANIMATION_COM);
+    cJSON* component = nullptr;
+    cJSON_ArrayForEach(component, components) {
+        auto typeItem = cJSON_GetObjectItemCaseSensitive(component, "type");
+        if (!typeItem || !cJSON_IsString(typeItem)) {
+            continue;
+        }
+        if (strcmp(typeItem->valuestring, ANIMATION_COM_IMAGEVIEW) == 0) {
+            ParseAnimationImage(component, animationInfo_.first);
+        } else if (strcmp(typeItem->valuestring, ANIMATION_COM_LABEL) == 0) {
+            ParseAnimationLabel(component, animationInfo_.second);
         }
     }
 }
 
-void AnimationConfig::ParseLackPowerChargingConfig(nlohmann::json& jsonObj)
+void AnimationConfig::ParseLackPowerChargingConfig(cJSON* jsonObj)
 {
-    auto components = jsonObj[ANIMATION_COM];
-    for (auto& component : components) {
-        if (component.find("type") != component.end()) {
-            auto type = component.at("type").get<std::string>();
-            if (type == ANIMATION_COM_LABEL) {
-                ParseAnimationLabel(component, chargingInfo_);
-            }
+    if (!jsonObj || cJSON_IsNull(jsonObj) || !cJSON_IsObject(jsonObj)) {
+        BATTERY_HILOGW(FEATURE_CHARGING, "LackPowerChargingConfig is invalid");
+        return;
+    }
+    auto components = cJSON_GetObjectItemCaseSensitive(jsonObj, ANIMATION_COM);
+    cJSON* component = nullptr;
+    cJSON_ArrayForEach(component, components) {
+        auto typeItem = cJSON_GetObjectItemCaseSensitive(component, "type");
+        if (!typeItem || !cJSON_IsString(typeItem)) {
+            continue;
+        }
+        if (strcmp(typeItem->valuestring, ANIMATION_COM_LABEL) == 0) {
+            ParseAnimationLabel(component, chargingInfo_);
         }
     }
 }
 
-void AnimationConfig::ParseLackPowerNotChargingConfig(nlohmann::json& jsonObj)
+void AnimationConfig::ParseLackPowerNotChargingConfig(cJSON* jsonObj)
 {
-    auto components = jsonObj[ANIMATION_COM];
-    for (auto& component : components) {
-        if (component.find("type") != component.end()) {
-            auto type = component.at("type").get<std::string>();
-            if (type == ANIMATION_COM_LABEL) {
-                ParseAnimationLabel(component, notChargingInfo_);
-            }
+    if (!jsonObj || cJSON_IsNull(jsonObj) || !cJSON_IsObject(jsonObj)) {
+        BATTERY_HILOGW(FEATURE_CHARGING, "LackPowerNotChargingConfig is invalid");
+        return;
+    }
+    auto components = cJSON_GetObjectItemCaseSensitive(jsonObj, ANIMATION_COM);
+    cJSON* component = nullptr;
+    cJSON_ArrayForEach(component, components) {
+        auto typeItem = cJSON_GetObjectItemCaseSensitive(component, "type");
+        if (!typeItem || !cJSON_IsString(typeItem)) {
+            continue;
+        }
+        if (strcmp(typeItem->valuestring, ANIMATION_COM_LABEL) == 0) {
+            ParseAnimationLabel(component, notChargingInfo_);
         }
     }
 }

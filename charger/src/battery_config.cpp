@@ -66,39 +66,55 @@ bool BatteryConfig::ParseConfig()
     }
     BATTERY_HILOGD(FEATURE_CHARGING, "GetOneCfgFile battery_config.json");
 
-    Json::CharReaderBuilder readerBuilder;
     std::ifstream ifsConf;
     if (!OpenFile(ifsConf, path)) {
         return false;
     }
 
-    config_.clear();
-    readerBuilder["collectComments"] = false;
-    JSONCPP_STRING errs;
+    if (config_) {
+        cJSON_Delete(config_);
+        config_ = nullptr;
+    }
 
-    if (parseFromStream(readerBuilder, ifsConf, &config_, &errs) && !config_.empty()) {
+    std::string content((std::istreambuf_iterator<char>(ifsConf)), std::istreambuf_iterator<char>());
+    config_ = cJSON_Parse(content.c_str());
+    ifsConf.close();
+    if (config_ == nullptr) {
+        const char* errorPtr = cJSON_GetErrorPtr();
+        BATTERY_HILOGW(FEATURE_CHARGING, "cJSON parse error: in %{public}s",
+            (errorPtr != nullptr) ? errorPtr : "unknown error");
+        return false;
+    }
+
+    if (cJSON_IsNull(config_) || (cJSON_IsObject(config_) && (config_->child == nullptr)) ||
+        (cJSON_IsArray(config_) && (cJSON_GetArraySize(config_) == 0))) {
+        cJSON_Delete(config_);
+        config_ = nullptr;
+        return false;
+    } else {
         ParseConfInner();
     }
-    ifsConf.close();
     return true;
 }
 #endif
 
 bool BatteryConfig::IsExist(std::string key) const
 {
-    return !GetValue(key).isNull();
+    cJSON* value = GetValue(key);
+    return (value && !cJSON_IsNull(value));
 }
 
 int32_t BatteryConfig::GetInt(std::string key, int32_t defVal) const
 {
-    Json::Value value = GetValue(key);
-    return (value.isNull() || !value.isInt()) ? defVal : value.asInt();
+    cJSON* value = GetValue(key);
+    return (!value || cJSON_IsNull(value) || !cJSON_IsNumber(value)) ?
+        defVal : static_cast<int32_t>(value->valueint);
 }
 
 std::string BatteryConfig::GetString(std::string key, std::string defVal) const
 {
-    Json::Value value = GetValue(key);
-    return (value.isNull() || !value.isString()) ? defVal : value.asString();
+    cJSON* value = GetValue(key);
+    return (!value || cJSON_IsNull(value) || !cJSON_IsString(value)) ? defVal : value->valuestring;
 }
 
 const std::vector<BatteryConfig::LightConf>& BatteryConfig::GetLightConf() const
@@ -150,35 +166,40 @@ void BatteryConfig::ParseConfInner()
 
 void BatteryConfig::ParseLightConf(std::string level)
 {
-    Json::Value soc = GetValue("light." + level + ".soc");
-    Json::Value rgb = GetValue("light." + level + ".rgb");
-    if (!soc.isArray() || !rgb.isArray()) {
+    cJSON* soc = GetValue("light." + level + ".soc");
+    cJSON* rgb = GetValue("light." + level + ".rgb");
+    if (!cJSON_IsArray(soc) || !cJSON_IsArray(rgb)) {
         BATTERY_HILOGW(FEATURE_CHARGING, "The battery light %{public}s configuration is invalid.", level.c_str());
         return;
     }
-
-    if (soc.size() != MAX_SOC_RANGE || !soc[BEGIN_SOC_INDEX].isInt() || !soc[END_SOC_INDEX].isInt()) {
+    cJSON* beginSocItem = cJSON_GetArrayItem(soc, BEGIN_SOC_INDEX);
+    cJSON* endSocItem = cJSON_GetArrayItem(soc, END_SOC_INDEX);
+    if (cJSON_GetArraySize(soc) != MAX_SOC_RANGE || !cJSON_IsNumber(beginSocItem) || !cJSON_IsNumber(endSocItem)) {
         BATTERY_HILOGW(FEATURE_CHARGING, "The battery light %{public}s soc data type error.", level.c_str());
         return;
     }
-    if (rgb.size() != MAX_RGB_RANGE || !rgb[RED_INDEX].isUInt() || !rgb[GREEN_INDEX].isUInt() ||
-        !rgb[BLUE_INDEX].isUInt()) {
+    cJSON* redItem = cJSON_GetArrayItem(rgb, RED_INDEX);
+    cJSON* greenItem = cJSON_GetArrayItem(rgb, GREEN_INDEX);
+    cJSON* blueItem = cJSON_GetArrayItem(rgb, BLUE_INDEX);
+    if (cJSON_GetArraySize(rgb) != MAX_RGB_RANGE || !cJSON_IsNumber(redItem) || !cJSON_IsNumber(greenItem) ||
+        !cJSON_IsNumber(blueItem)) {
         BATTERY_HILOGW(FEATURE_CHARGING, "The battery light %{public}s rgb data type error.", level.c_str());
         return;
     }
     BatteryConfig::LightConf lightConf = {
-        .beginSoc = soc[BEGIN_SOC_INDEX].asInt(),
-        .endSoc = soc[END_SOC_INDEX].asInt(),
-        .rgb = (rgb[RED_INDEX].asUInt() << MOVE_LEFT_16) |
-               (rgb[GREEN_INDEX].asUInt() << MOVE_LEFT_8) |
-               rgb[BLUE_INDEX].asUInt()
+        .beginSoc = static_cast<int32_t>(beginSocItem->valueint),
+        .endSoc = static_cast<int32_t>(endSocItem->valueint),
+        .rgb = (static_cast<uint32_t>(redItem->valueint) << MOVE_LEFT_16) |
+               (static_cast<uint32_t>(greenItem->valueint) << MOVE_LEFT_8) |
+               static_cast<uint32_t>(blueItem->valueint)
     };
     lightConf_.push_back(lightConf);
 }
 
-Json::Value BatteryConfig::FindConf(const std::string& key) const
+cJSON* BatteryConfig::FindConf(const std::string& key) const
 {
-    return (config_.isObject() && config_.isMember(key)) ? config_[key] : Json::Value();
+    return (config_ && cJSON_IsObject(config_) && cJSON_HasObjectItem(config_, key.c_str())) ?
+        cJSON_GetObjectItemCaseSensitive(config_, key.c_str()) : nullptr;
 }
 
 bool BatteryConfig::SplitKey(const std::string& key, std::vector<std::string>& keys) const
@@ -187,26 +208,26 @@ bool BatteryConfig::SplitKey(const std::string& key, std::vector<std::string>& k
     return (keys.size() < MIN_DEPTH || keys.size() > MAX_DEPTH) ? false : true;
 }
 
-Json::Value BatteryConfig::GetValue(std::string key) const
+cJSON* BatteryConfig::GetValue(std::string key) const
 {
     std::vector<std::string> keys;
     if (!SplitKey(key, keys)) {
         BATTERY_HILOGW(FEATURE_CHARGING, "The key does not meet the. key=%{public}s", key.c_str());
-        return Json::Value();
+        return nullptr;
     }
 
-    Json::Value value = FindConf(keys[MAP_KEY_INDEX]);
-    if (value.isNull()) {
+    cJSON* value = FindConf(keys[MAP_KEY_INDEX]);
+    if (!value || cJSON_IsNull(value)) {
         BATTERY_HILOGD(FEATURE_CHARGING, "Value is empty. key=%{public}s", key.c_str());
         return value;
     }
 
     for (size_t i = 1; i < keys.size(); ++i) {
-        if (!value.isObject() || !value.isMember(keys[i])) {
+        if (!cJSON_IsObject(value) || !cJSON_HasObjectItem(value, keys[i].c_str())) {
             BATTERY_HILOGW(FEATURE_CHARGING, "The key is not configured. key=%{public}s", keys[i].c_str());
             break;
         }
-        value = value[keys[i]];
+        value = cJSON_GetObjectItemCaseSensitive(value, keys[i].c_str());
     }
     return value;
 }

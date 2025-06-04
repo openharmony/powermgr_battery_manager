@@ -23,7 +23,7 @@
 #include <string>
 #include <unordered_map>
 
-#include <json/json.h>
+#include <cJSON.h>
 #include "nocopyable.h"
 
 namespace OHOS {
@@ -78,11 +78,11 @@ private:
     void ParseBootActionsConf();
     void ParsePopupConf();
     void ParseNotificationConf();
-    void ParseCommonEventConf(const Json::Value &bootActionsConfig);
-    Json::Value FindConf(const std::string& key) const;
+    void ParseCommonEventConf(const cJSON* bootActionsConfig);
+    cJSON* FindConf(const std::string& key) const;
     bool SplitKey(const std::string& key, std::vector<std::string>& keys) const;
-    Json::Value GetValue(std::string key) const;
-    Json::Value config_;
+    cJSON* GetValue(std::string key) const;
+    cJSON* config_;
     std::vector<BatteryConfig::LightConf> lightConf_;
     std::vector<BatteryConfig::CommonEventConf> commonEventConf_;
     bool wirelessChargerEnable_ { false };

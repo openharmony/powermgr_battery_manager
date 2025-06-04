@@ -36,12 +36,12 @@ ohos_unittest("test_ohbattery_info") {
   ]
 
   external_deps = [
+    "cJSON:cjson",
     "c_utils:utils",
     "googletest:gmock_main",
     "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "jsoncpp:jsoncpp",
     "samgr:samgr_proxy",
   ]
 }

@@ -22,7 +22,7 @@
 #include <vector>
 #include <string>
 
-#include <json/json.h>
+#include <cJSON.h>
 #include "nocopyable.h"
 
 namespace OHOS {
@@ -46,10 +46,10 @@ private:
     bool OpenFile(std::ifstream& ifsConf, const std::string& configPath);
     void ParseConfInner();
     void ParseLightConf(std::string level);
-    Json::Value FindConf(const std::string& key) const;
+    cJSON* FindConf(const std::string& key) const;
     bool SplitKey(const std::string& key, std::vector<std::string>& keys) const;
-    Json::Value GetValue(std::string key) const;
-    Json::Value config_;
+    cJSON* GetValue(std::string key) const;
+    cJSON* config_;
     std::vector<BatteryConfig::LightConf> lightConf_;
     static std::mutex mutex_;
     static std::shared_ptr<BatteryConfig> instance_;

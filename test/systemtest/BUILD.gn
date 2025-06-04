@@ -50,6 +50,7 @@ ohos_systemtest("test_systemtest") {
   external_deps = [
     "ability_base:base",
     "ability_base:want",
+    "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "googletest:gtest_main",
@@ -59,7 +60,6 @@ ohos_systemtest("test_systemtest") {
     "hilog:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
@@ -82,12 +82,12 @@ ohos_systemtest("test_charger_offline_shutdown") {
   ]
 
   external_deps = [
+    "cJSON:cjson",
     "c_utils:utils",
     "googletest:gtest_main",
     "hilog:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
-    "jsoncpp:jsoncpp",
   ]
 }
 
@@ -114,6 +114,7 @@ ohos_systemtest("test_battery_event_systemtest") {
   external_deps = [
     "ability_base:want",
     "battery_manager:batterysrv_client",
+    "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_2.0",
@@ -122,7 +123,6 @@ ohos_systemtest("test_battery_event_systemtest") {
     "hilog:libhilog",
     "init:libbegetutil",
     "ipc:ipc_core",
-    "jsoncpp:jsoncpp",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
