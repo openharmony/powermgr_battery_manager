@@ -52,28 +52,32 @@ bool NotificationLocale::ParseJsonfile(const std::string& targetPath,
     }
     std::ifstream inputStream(targetPath.c_str(), std::ios::in | std::ios::binary);
     std::string fileStr(std::istreambuf_iterator<char> {inputStream}, std::istreambuf_iterator<char> {});
-    Json::Reader reader;
-    Json::Value root;
-    if (!reader.parse(fileStr.data(), fileStr.data() + fileStr.size(), root)) {
+    cJSON* root = cJSON_Parse(fileStr.c_str());
+    if (!root) {
         BATTERY_HILOGE(COMP_SVC, "%{public}s json parse error", targetPath.c_str());
         return false;
     }
-    if (root.isNull() || !root.isObject()) {
+    if (cJSON_IsNull(root) || !cJSON_IsObject(root)) {
         BATTERY_HILOGE(COMP_SVC, "%{public}s json root error", targetPath.c_str());
+        cJSON_Delete(root);
         return false;
     }
-    Json::Value stringConf = root["String"];
-    if (stringConf.isNull() || !stringConf.isArray()) {
+    cJSON* stringConf = cJSON_GetObjectItemCaseSensitive(root, "String");
+    if (!stringConf || cJSON_IsNull(stringConf) || !cJSON_IsArray(stringConf)) {
         BATTERY_HILOGE(COMP_SVC, "%{public}s stringConf invalid", targetPath.c_str());
+        cJSON_Delete(root);
+        return false;
     }
-    for (const auto& conf : stringConf) {
-        Json::Value nameObj = conf["name"];
-        Json::Value valueObj = conf["value"];
-        if (nameObj.isString() && valueObj.isString() &&
-            !nameObj.asString().empty() && !valueObj.asString().empty()) {
-            container.insert(std::make_pair(nameObj.asString(), valueObj.asString()));
+    cJSON* conf = nullptr;
+    cJSON_ArrayForEach(conf, stringConf) {
+        cJSON* nameObj = cJSON_GetObjectItemCaseSensitive(conf, "name");
+        cJSON* valueObj = cJSON_GetObjectItemCaseSensitive(conf, "value");
+        if (nameObj && valueObj && cJSON_IsString(nameObj) && cJSON_IsString(valueObj) &&
+            (strlen(nameObj->valuestring) > 0) && (strlen(valueObj->valuestring) > 0)) {
+            container.insert(std::make_pair(nameObj->valuestring, valueObj->valuestring));
         }
     }
+    cJSON_Delete(root);
     BATTERY_HILOGE(COMP_SVC, "%{public}s stringConf end", targetPath.c_str());
     return true;
 }

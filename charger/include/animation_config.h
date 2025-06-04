@@ -21,8 +21,8 @@
 #include <mutex>
 #include <string>
 
+#include <cJSON.h>
 #include "nocopyable.h"
-#include <nlohmann/json.hpp>
 
 namespace OHOS {
 namespace PowerMgr {
@@ -60,16 +60,24 @@ public:
     LabelComponentInfo GetCharingPromptInfo();
     LabelComponentInfo GetNotCharingPromptInfo();
 
+    ~AnimationConfig()
+    {
+        if (configObj_) {
+            cJSON_Delete(configObj_);
+            configObj_ = nullptr;
+        }
+    }
+
 private:
-    void ParseAnimationConfig(nlohmann::json& jsonObj);
-    void ParseLackPowerChargingConfig(nlohmann::json& jsonObj);
-    void ParseLackPowerNotChargingConfig(nlohmann::json& jsonObj);
-    void ParseAnimationImage(nlohmann::json& component, ImageComponentInfo& info);
-    void ParseAnimationLabel(nlohmann::json& component, LabelComponentInfo& info);
+    void ParseAnimationConfig(cJSON* jsonObj);
+    void ParseLackPowerChargingConfig(cJSON* jsonObj);
+    void ParseLackPowerNotChargingConfig(cJSON* jsonObj);
+    void ParseAnimationImage(cJSON* component, ImageComponentInfo& info);
+    void ParseAnimationLabel(cJSON* component, LabelComponentInfo& info);
     std::pair<ImageComponentInfo, LabelComponentInfo> animationInfo_;
     LabelComponentInfo chargingInfo_;
     LabelComponentInfo notChargingInfo_;
-    nlohmann::json configObj_;
+    cJSON* configObj_;
 };
 } // namespace PowerMgr
 } // namespace OHOS
