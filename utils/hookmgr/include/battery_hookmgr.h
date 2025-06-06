@@ -17,16 +17,16 @@
 #define BATTERTMGR_UTILS_BATTERY_HOOKMGR_H
 
 #include <cstdint>
-#include "battery_info.h"
 #include <hookmgr.h>
-#include "modulemgr.h"
+#include <modulemgr.h>
 #include <string>
+#include "battery_info.h"
 
 namespace OHOS {
 namespace PowerMgr {
 enum class BatteryHookStage : int32_t {
     BATTERY_UEVENT_CHECK = 0,
-    PUBLISH_EVENT,
+    BATTERY_PUBLISH_EVENT,
     BATTERY_HOOK_STAGE_MAX = 1000,
 };
 
