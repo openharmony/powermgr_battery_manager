@@ -100,12 +100,12 @@ int32_t BatteryNotify::PublishEvents(BatteryInfo& info)
     ret = PublishOkayEvent(info);
     isAllSuccess &= ret;
 
-    //hooks
 #ifdef BATTERY_MANAGER_ENABLE_WIRELESS_CHARGE
     PublishEventContext context {.pluggedType = info.GetPluggedType(),
-        .lastPowerPluggedType = lastPowerPluggedType_,
+        .lastPluggedType = lastPowerPluggedType_,
         .wirelessChargerEnable = BatteryConfig::GetInstance().GetWirelessChargerConf()};
-    HookMgrExecute(GetBatteryHookMgr(), static_cast<int32_t>(BatteryHookStage::PUBLISH_EVENT), &context, nullptr);
+    HookMgrExecute(
+        GetBatteryHookMgr(), static_cast<int32_t>(BatteryHookStage::BATTERY_PUBLISH_EVENT), &context, nullptr);
 #endif
     ret = PublishPowerConnectedEvent(info);
     isAllSuccess &= ret;
