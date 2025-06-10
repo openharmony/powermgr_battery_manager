@@ -18,12 +18,15 @@
 
 #include <cstdint>
 #include <hookmgr.h>
+#include <modulemgr.h>
 #include <string>
+#include "battery_info.h"
 
 namespace OHOS {
 namespace PowerMgr {
 enum class BatteryHookStage : int32_t {
     BATTERY_UEVENT_CHECK = 0,
+    BATTERY_PUBLISH_EVENT,
     BATTERY_HOOK_STAGE_MAX = 1000,
 };
 
@@ -31,6 +34,12 @@ typedef struct UeventCheckInfo {
     std::string UeventName;
     bool checkResult;
 } UEVENT_CHECK_INFO;
+
+struct PublishEventContext {
+    BatteryPluggedType pluggedType;
+    BatteryPluggedType lastPluggedType;
+    bool wirelessChargerEnable;
+};
 
 HOOK_MGR* GetBatteryHookMgr();
 } // namespace PowerMgr
