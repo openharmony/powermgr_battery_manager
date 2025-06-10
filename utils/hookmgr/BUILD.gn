@@ -21,7 +21,11 @@ config("private_config") {
 }
 
 config("public_config") {
-  include_dirs = [ "include" ]
+  include_dirs = [
+    "include",
+    "../native/include",
+    "../../interfaces/inner_api/native/include",
+  ]
 }
 
 ohos_shared_library("battery_hookmgr") {
