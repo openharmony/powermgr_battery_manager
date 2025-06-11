@@ -14,12 +14,15 @@
  */
 
 #include <unistd.h>
+#include <cJSON.h>
+
 #include "notification_locale.h"
 #include "config_policy_utils.h"
 #include "locale_config.h"
 #include "locale_matcher.h"
 #include "battery_info.h"
 #include "battery_log.h"
+#include "battery_mgr_cjson_utils.h"
 #include "power_common.h"
 
 namespace {
@@ -52,6 +55,13 @@ bool NotificationLocale::ParseJsonfile(const std::string& targetPath,
     }
     std::ifstream inputStream(targetPath.c_str(), std::ios::in | std::ios::binary);
     std::string fileStr(std::istreambuf_iterator<char> {inputStream}, std::istreambuf_iterator<char> {});
+
+    return SaveJsonToMap(fileStr, targetPath, container);
+}
+
+bool NotificationLocale::SaveJsonToMap(const std::string& fileStr, const std::string& targetPath,
+    std::unordered_map<std::string, std::string>& container)
+{
     cJSON* root = cJSON_Parse(fileStr.c_str());
     if (!root) {
         BATTERY_HILOGE(COMP_SVC, "%{public}s json parse error", targetPath.c_str());
@@ -63,7 +73,7 @@ bool NotificationLocale::ParseJsonfile(const std::string& targetPath,
         return false;
     }
     cJSON* stringConf = cJSON_GetObjectItemCaseSensitive(root, "String");
-    if (!stringConf || cJSON_IsNull(stringConf) || !cJSON_IsArray(stringConf)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonArray(stringConf)) {
         BATTERY_HILOGE(COMP_SVC, "%{public}s stringConf invalid", targetPath.c_str());
         cJSON_Delete(root);
         return false;
@@ -72,13 +82,13 @@ bool NotificationLocale::ParseJsonfile(const std::string& targetPath,
     cJSON_ArrayForEach(conf, stringConf) {
         cJSON* nameObj = cJSON_GetObjectItemCaseSensitive(conf, "name");
         cJSON* valueObj = cJSON_GetObjectItemCaseSensitive(conf, "value");
-        if (nameObj && valueObj && cJSON_IsString(nameObj) && cJSON_IsString(valueObj) &&
-            (strlen(nameObj->valuestring) > 0) && (strlen(valueObj->valuestring) > 0)) {
+        if (BatteryMgrJsonUtils::IsValidJsonStringAndNoEmpty(nameObj) &&
+            BatteryMgrJsonUtils::IsValidJsonStringAndNoEmpty(valueObj)) {
             container.insert(std::make_pair(nameObj->valuestring, valueObj->valuestring));
         }
     }
     cJSON_Delete(root);
-    BATTERY_HILOGE(COMP_SVC, "%{public}s stringConf end", targetPath.c_str());
+    BATTERY_HILOGI(COMP_SVC, "%{public}s stringConf end", targetPath.c_str());
     return true;
 }
 
