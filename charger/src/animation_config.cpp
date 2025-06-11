@@ -14,6 +14,7 @@
  */
 
 #include "animation_config.h"
+#include "battery_mgr_cjson_utils.h"
 #include "charger_log.h"
 #include "string_ex.h"
 
@@ -48,10 +49,11 @@ bool AnimationConfig::ParseConfig()
         BATTERY_HILOGE(FEATURE_CHARGING, "parse config file error");
         return false;
     }
-    if (cJSON_IsNull(configObj_) || (cJSON_IsObject(configObj_) && (configObj_->child == nullptr)) ||
-        (cJSON_IsArray(configObj_) && (cJSON_GetArraySize(configObj_) == 0))) {
+    if (BatteryMgrJsonUtils::IsEmptyJsonParse(configObj_)) {
         cJSON_Delete(configObj_);
         configObj_ = nullptr;
+        BATTERY_HILOGW(FEATURE_CHARGING, "cJSON parse result is empty, animation config is %{public}s",
+            content.c_str());
         return false;
     }
     auto animation = cJSON_GetObjectItemCaseSensitive(configObj_, CHARGER_ANIMATION_NAME);
@@ -69,43 +71,43 @@ void AnimationConfig::ParseAnimationLabel(cJSON* component, LabelComponentInfo& 
 {
     info.common.type = ANIMATION_COM_LABEL;
     cJSON* idItem = cJSON_GetObjectItemCaseSensitive(component, "id");
-    if (cJSON_IsString(idItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonString(idItem)) {
         info.common.id = idItem->valuestring;
     }
     cJSON* textItem = cJSON_GetObjectItemCaseSensitive(component, "text");
-    if (cJSON_IsString(textItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonString(textItem)) {
         info.text = textItem->valuestring;
     }
     cJSON* xitem = cJSON_GetObjectItemCaseSensitive(component, "x");
-    if (cJSON_IsNumber(xitem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonNumber(xitem)) {
         info.common.x = xitem->valueint;
     }
     cJSON* yItem = cJSON_GetObjectItemCaseSensitive(component, "y");
-    if (cJSON_IsNumber(yItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonNumber(yItem)) {
         info.common.y = yItem->valueint;
     }
     cJSON* wItem = cJSON_GetObjectItemCaseSensitive(component, "w");
-    if (cJSON_IsNumber(wItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonNumber(wItem)) {
         info.common.w = wItem->valueint;
     }
     cJSON* hItem = cJSON_GetObjectItemCaseSensitive(component, "h");
-    if (cJSON_IsNumber(hItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonNumber(hItem)) {
         info.common.h = hItem->valueint;
     }
     cJSON* fontSizeItem = cJSON_GetObjectItemCaseSensitive(component, "fontSize");
-    if (cJSON_IsNumber(fontSizeItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonNumber(fontSizeItem)) {
         info.fontSize = static_cast<int8_t>(fontSizeItem->valueint);
     }
     cJSON* fontColorItem = cJSON_GetObjectItemCaseSensitive(component, "fontColor");
-    if (cJSON_IsString(fontColorItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonString(fontColorItem)) {
         info.fontColor = fontColorItem->valuestring;
     }
     cJSON* bgColorItem = cJSON_GetObjectItemCaseSensitive(component, "bgColor");
-    if (cJSON_IsString(bgColorItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonString(bgColorItem)) {
         info.bgColor = bgColorItem->valuestring;
     }
     cJSON* alignItem = cJSON_GetObjectItemCaseSensitive(component, "align");
-    if (cJSON_IsString(alignItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonString(alignItem)) {
         info.align = alignItem->valuestring;
     }
 }
@@ -114,54 +116,58 @@ void AnimationConfig::ParseAnimationImage(cJSON* component, ImageComponentInfo& 
 {
     info.common.type = ANIMATION_COM_IMAGEVIEW;
     cJSON* idItem = cJSON_GetObjectItemCaseSensitive(component, "id");
-    if (cJSON_IsString(idItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonString(idItem)) {
         info.common.id = idItem->valuestring;
     }
     cJSON* xitem = cJSON_GetObjectItemCaseSensitive(component, "x");
-    if (cJSON_IsNumber(xitem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonNumber(xitem)) {
         info.common.x = xitem->valueint;
     }
     cJSON* yItem = cJSON_GetObjectItemCaseSensitive(component, "y");
-    if (cJSON_IsNumber(yItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonNumber(yItem)) {
         info.common.y = yItem->valueint;
     }
     cJSON* wItem = cJSON_GetObjectItemCaseSensitive(component, "w");
-    if (cJSON_IsNumber(wItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonNumber(wItem)) {
         info.common.w = wItem->valueint;
     }
     cJSON* hItem = cJSON_GetObjectItemCaseSensitive(component, "h");
-    if (cJSON_IsNumber(hItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonNumber(hItem)) {
         info.common.h = hItem->valueint;
     }
     cJSON* resPathItem = cJSON_GetObjectItemCaseSensitive(component, "resPath");
-    if (cJSON_IsString(resPathItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonString(resPathItem)) {
         info.resPath = resPathItem->valuestring;
     }
     cJSON* imgCntItem = cJSON_GetObjectItemCaseSensitive(component, "imgCnt");
-    if (cJSON_IsNumber(imgCntItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonNumber(imgCntItem)) {
         info.imgCnt = imgCntItem->valueint;
     }
     cJSON* updIntervalItem = cJSON_GetObjectItemCaseSensitive(component, "updInterval");
-    if (cJSON_IsNumber(updIntervalItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonNumber(updIntervalItem)) {
         info.updInterval = updIntervalItem->valueint;
     }
     cJSON* filePrefixItem = cJSON_GetObjectItemCaseSensitive(component, "filePrefix");
-    if (cJSON_IsString(filePrefixItem)) {
+    if (BatteryMgrJsonUtils::IsValidJsonString(filePrefixItem)) {
         info.filePrefix = filePrefixItem->valuestring;
     }
 }
 
 void AnimationConfig::ParseAnimationConfig(cJSON* jsonObj)
 {
-    if (!jsonObj || cJSON_IsNull(jsonObj) || !cJSON_IsObject(jsonObj)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonObject(jsonObj)) {
         BATTERY_HILOGW(FEATURE_CHARGING, "AnimationConfig is invalid");
         return;
     }
     auto components = cJSON_GetObjectItemCaseSensitive(jsonObj, ANIMATION_COM);
+    if (!BatteryMgrJsonUtils::IsJsonArrayOrJsonObject(components)) {
+        BATTERY_HILOGW(FEATURE_CHARGING, "The animationConfig component is not an array or object");
+        return;
+    }
     cJSON* component = nullptr;
     cJSON_ArrayForEach(component, components) {
         auto typeItem = cJSON_GetObjectItemCaseSensitive(component, "type");
-        if (!typeItem || !cJSON_IsString(typeItem)) {
+        if (!BatteryMgrJsonUtils::IsValidJsonString(typeItem)) {
             continue;
         }
         if (strcmp(typeItem->valuestring, ANIMATION_COM_IMAGEVIEW) == 0) {
@@ -174,15 +180,19 @@ void AnimationConfig::ParseAnimationConfig(cJSON* jsonObj)
 
 void AnimationConfig::ParseLackPowerChargingConfig(cJSON* jsonObj)
 {
-    if (!jsonObj || cJSON_IsNull(jsonObj) || !cJSON_IsObject(jsonObj)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonObject(jsonObj)) {
         BATTERY_HILOGW(FEATURE_CHARGING, "LackPowerChargingConfig is invalid");
         return;
     }
     auto components = cJSON_GetObjectItemCaseSensitive(jsonObj, ANIMATION_COM);
+    if (!BatteryMgrJsonUtils::IsJsonArrayOrJsonObject(components)) {
+        BATTERY_HILOGW(FEATURE_CHARGING, "The lackPowerChargingConfig component is not an array or object");
+        return;
+    }
     cJSON* component = nullptr;
     cJSON_ArrayForEach(component, components) {
         auto typeItem = cJSON_GetObjectItemCaseSensitive(component, "type");
-        if (!typeItem || !cJSON_IsString(typeItem)) {
+        if (!BatteryMgrJsonUtils::IsValidJsonString(typeItem)) {
             continue;
         }
         if (strcmp(typeItem->valuestring, ANIMATION_COM_LABEL) == 0) {
@@ -193,15 +203,19 @@ void AnimationConfig::ParseLackPowerChargingConfig(cJSON* jsonObj)
 
 void AnimationConfig::ParseLackPowerNotChargingConfig(cJSON* jsonObj)
 {
-    if (!jsonObj || cJSON_IsNull(jsonObj) || !cJSON_IsObject(jsonObj)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonObject(jsonObj)) {
         BATTERY_HILOGW(FEATURE_CHARGING, "LackPowerNotChargingConfig is invalid");
         return;
     }
     auto components = cJSON_GetObjectItemCaseSensitive(jsonObj, ANIMATION_COM);
+    if (!BatteryMgrJsonUtils::IsJsonArrayOrJsonObject(components)) {
+        BATTERY_HILOGW(FEATURE_CHARGING, "The lackPowerNotChargingConfig component is not an array or object");
+        return;
+    }
     cJSON* component = nullptr;
     cJSON_ArrayForEach(component, components) {
         auto typeItem = cJSON_GetObjectItemCaseSensitive(component, "type");
-        if (!typeItem || !cJSON_IsString(typeItem)) {
+        if (!BatteryMgrJsonUtils::IsValidJsonString(typeItem)) {
             continue;
         }
         if (strcmp(typeItem->valuestring, ANIMATION_COM_LABEL) == 0) {

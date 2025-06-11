@@ -78,6 +78,7 @@ private:
     void ParseBootActionsConf();
     void ParsePopupConf();
     void ParseNotificationConf();
+    void SaveNotificationConfToMap(cJSON* nConf);
     void ParseCommonEventConf(const cJSON* bootActionsConfig);
     cJSON* FindConf(const std::string& key) const;
     bool SplitKey(const std::string& key, std::vector<std::string>& keys) const;

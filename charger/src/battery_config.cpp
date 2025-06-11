@@ -15,6 +15,7 @@
 
 #include "battery_config.h"
 
+#include "battery_mgr_cjson_utils.h"
 #include "string_ex.h"
 #ifdef HAS_BATTERY_CONFIG_POLICY_PART
 #include "config_policy_utils.h"
@@ -86,10 +87,10 @@ bool BatteryConfig::ParseConfig()
         return false;
     }
 
-    if (cJSON_IsNull(config_) || (cJSON_IsObject(config_) && (config_->child == nullptr)) ||
-        (cJSON_IsArray(config_) && (cJSON_GetArraySize(config_) == 0))) {
+    if (BatteryMgrJsonUtils::IsEmptyJsonParse(config_)) {
         cJSON_Delete(config_);
         config_ = nullptr;
+        BATTERY_HILOGW(FEATURE_CHARGING, "cJSON parse result is empty, battery config is %{public}s", content.c_str());
         return false;
     } else {
         ParseConfInner();
@@ -107,14 +108,13 @@ bool BatteryConfig::IsExist(std::string key) const
 int32_t BatteryConfig::GetInt(std::string key, int32_t defVal) const
 {
     cJSON* value = GetValue(key);
-    return (!value || cJSON_IsNull(value) || !cJSON_IsNumber(value)) ?
-        defVal : static_cast<int32_t>(value->valueint);
+    return (!BatteryMgrJsonUtils::IsValidJsonNumber(value)) ? defVal : static_cast<int32_t>(value->valueint);
 }
 
 std::string BatteryConfig::GetString(std::string key, std::string defVal) const
 {
     cJSON* value = GetValue(key);
-    return (!value || cJSON_IsNull(value) || !cJSON_IsString(value)) ? defVal : value->valuestring;
+    return (!BatteryMgrJsonUtils::IsValidJsonString(value)) ? defVal : value->valuestring;
 }
 
 const std::vector<BatteryConfig::LightConf>& BatteryConfig::GetLightConf() const
@@ -168,21 +168,29 @@ void BatteryConfig::ParseLightConf(std::string level)
 {
     cJSON* soc = GetValue("light." + level + ".soc");
     cJSON* rgb = GetValue("light." + level + ".rgb");
-    if (!cJSON_IsArray(soc) || !cJSON_IsArray(rgb)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonArray(soc) || !BatteryMgrJsonUtils::IsValidJsonArray(rgb)) {
         BATTERY_HILOGW(FEATURE_CHARGING, "The battery light %{public}s configuration is invalid.", level.c_str());
+        return;
+    }
+    if (cJSON_GetArraySize(soc) != MAX_SOC_RANGE) {
+        BATTERY_HILOGW(FEATURE_CHARGING, "The battery light %{public}s soc data length error.", level.c_str());
         return;
     }
     cJSON* beginSocItem = cJSON_GetArrayItem(soc, BEGIN_SOC_INDEX);
     cJSON* endSocItem = cJSON_GetArrayItem(soc, END_SOC_INDEX);
-    if (cJSON_GetArraySize(soc) != MAX_SOC_RANGE || !cJSON_IsNumber(beginSocItem) || !cJSON_IsNumber(endSocItem)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonNumber(beginSocItem) || !BatteryMgrJsonUtils::IsValidJsonNumber(endSocItem)) {
         BATTERY_HILOGW(FEATURE_CHARGING, "The battery light %{public}s soc data type error.", level.c_str());
+        return;
+    }
+    if (cJSON_GetArraySize(rgb) != MAX_RGB_RANGE) {
+        BATTERY_HILOGW(FEATURE_CHARGING, "The battery light %{public}s rgb data length error.", level.c_str());
         return;
     }
     cJSON* redItem = cJSON_GetArrayItem(rgb, RED_INDEX);
     cJSON* greenItem = cJSON_GetArrayItem(rgb, GREEN_INDEX);
     cJSON* blueItem = cJSON_GetArrayItem(rgb, BLUE_INDEX);
-    if (cJSON_GetArraySize(rgb) != MAX_RGB_RANGE || !cJSON_IsNumber(redItem) || !cJSON_IsNumber(greenItem) ||
-        !cJSON_IsNumber(blueItem)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonNumber(redItem) || !BatteryMgrJsonUtils::IsValidJsonNumber(greenItem) ||
+        !BatteryMgrJsonUtils::IsValidJsonNumber(blueItem)) {
         BATTERY_HILOGW(FEATURE_CHARGING, "The battery light %{public}s rgb data type error.", level.c_str());
         return;
     }
