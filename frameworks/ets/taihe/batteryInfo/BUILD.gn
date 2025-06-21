@@ -22,10 +22,10 @@ copy_taihe_idl("copy_battery_manager") {
 
 subsystem_name = "powermgr"
 part_name = "battery_manager"
-taihe_generated_file_path = "$taihe_file_path/out/$subsystem_name/$part_name"
+taihe_generated_file_path_batteryInfo = "$taihe_file_path/out/$subsystem_name/$part_name/batteryInfo"
 
 ohos_taihe("run_taihe") {
-  taihe_generated_file_path = "$taihe_generated_file_path"
+  taihe_generated_file_path = "${taihe_generated_file_path_batteryInfo}"
   deps = [ ":copy_battery_manager" ]
   outputs = [
     "$taihe_generated_file_path/src/ohos.batteryInfo.ani.cpp",
@@ -44,7 +44,7 @@ taihe_shared_library("battery_manager_taihe_native") {
     cfi_cross_dso = true
     debug = false
   }
-  taihe_generated_file_path = "$taihe_generated_file_path"
+  taihe_generated_file_path = "${taihe_generated_file_path_batteryInfo}"
   part_name = "$part_name"
   subsystem_name = "$subsystem_name"
   sources = get_target_outputs(":run_taihe")
@@ -69,8 +69,8 @@ taihe_shared_library("battery_manager_taihe_native") {
 }
 
 generate_static_abc("batteryInfo_abc") {
-  base_url = "$taihe_generated_file_path"
-  files = [ "$taihe_generated_file_path/@ohos.batteryInfo.ets" ]
+  base_url = "$taihe_generated_file_path_batteryInfo"
+  files = [ "$taihe_generated_file_path_batteryInfo/@ohos.batteryInfo.ets" ]
   is_boot_abc = "True"
   device_dst_file = "/system/framework/batteryInfo_abc.abc"
   dependencies = [ ":run_taihe" ]

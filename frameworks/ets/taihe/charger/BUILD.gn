@@ -22,10 +22,10 @@ copy_taihe_idl("copy_battery_manager_charger") {
 
 subsystem_name = "powermgr"
 part_name = "battery_manager"
-taihe_generated_file_path = "$taihe_file_path/out/$subsystem_name/$part_name"
+taihe_generated_file_path_charger = "$taihe_file_path/out/$subsystem_name/$part_name/charger"
 
 ohos_taihe("run_taihe") {
-  taihe_generated_file_path = "$taihe_generated_file_path"
+  taihe_generated_file_path = "${taihe_generated_file_path_charger}"
   deps = [ ":copy_battery_manager_charger" ]
   outputs = [
     "$taihe_generated_file_path/src/ohos.charger.ani.cpp",
@@ -40,7 +40,7 @@ taihe_shared_library("battery_manager_charger_taihe_native") {
     cfi_cross_dso = true
     debug = false
   }
-  taihe_generated_file_path = "$taihe_generated_file_path"
+  taihe_generated_file_path = "${taihe_generated_file_path_charger}"
   part_name = "$part_name"
   subsystem_name = "$subsystem_name"
   sources = get_target_outputs(":run_taihe")
@@ -58,8 +58,8 @@ taihe_shared_library("battery_manager_charger_taihe_native") {
 }
 
 generate_static_abc("charger") {
-  base_url = "$taihe_generated_file_path"
-  files = [ "$taihe_generated_file_path/@ohos.charger.ets" ]
+  base_url = "$taihe_generated_file_path_charger"
+  files = [ "$taihe_generated_file_path_charger/@ohos.charger.ets" ]
   is_boot_abc = "True"
   device_dst_file = "/system/framework/charger.abc"
   dependencies = [ ":run_taihe" ]
