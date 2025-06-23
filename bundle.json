@@ -68,6 +68,7 @@
                 "safwk",
                 "samgr",
                 "ui_lite",
+                "graphic_utils_lite",
                 "input",
                 "distributed_notification_service",
                 "i18n",
