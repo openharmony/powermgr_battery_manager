@@ -74,6 +74,7 @@ ohos_executable("charger") {
       "graphic_surface:buffer_handle",
       "libdrm:libdrm",
       "ui_lite:libupdater_layout",
+      "graphic_utils_lite:ui_lite",
     ]
   } else {
     sources = []
