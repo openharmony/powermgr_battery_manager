@@ -98,8 +98,7 @@
                     "header": {
                       "header_files": [
                         "battery_info.h",
-                        "battery_srv_client.h",
-                        "ibattery_srv.h"
+                        "battery_srv_client.h"
                       ],
                       "header_base": "//base/powermgr/battery_manager/interfaces/inner_api/native/include"
                     }

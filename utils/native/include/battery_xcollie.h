@@ -1,6 +1,5 @@
 /*
- * Copyright 2021 Huawei Device Co., Ltd.
- *
+ * Copyright (c) 2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,6 +13,29 @@
  * limitations under the License.
  */
 
-interface OhOs.PowerMgr.IBatterySrv {
-    /* the function about BatteryService */
-}
+#ifndef BATTERY_XCOLLIE_H
+#define BATTERY_XCOLLIE_H
+
+#include <functional>
+#include <string>
+#include <atomic>
+
+namespace OHOS {
+namespace PowerMgr {
+class BatteryXCollie {
+public:
+    BatteryXCollie(const std::string &logTag, bool isRecovery = false);
+    ~BatteryXCollie();
+
+private:
+    void CancelBatteryXCollie();
+
+    int32_t id_;
+    std::string logTag_;
+    std::atomic_bool isCanceled_ = false;
+};
+
+} // namespace PowerMgr
+} // namespace OHOS
+
+#endif // BATTERY_XCOLLIE_H

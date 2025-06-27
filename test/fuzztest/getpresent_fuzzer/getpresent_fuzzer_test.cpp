@@ -18,7 +18,7 @@
 #define FUZZ_PROJECT_NAME "getpresent_fuzzer"
 
 #include "battery_fuzzer_test.h"
-#include "battery_manager_ipc_interface_code.h"
+#include "ibattery_srv.h"
 
 using namespace OHOS::PowerMgr;
 
@@ -30,6 +30,7 @@ BatteryFuzzerTest g_serviceTest;
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     /* Run your code on data */
-    g_serviceTest.TestBatteryServiceStub(static_cast<uint32_t>(BatterySrvInterfaceCode::BATT_GET_PRESENT), data, size);
+    g_serviceTest.TestBatteryServiceStub(
+        static_cast<uint32_t>(IBatterySrvIpcCode::COMMAND_GET_PRESENT), data, size);
     return 0;
 }

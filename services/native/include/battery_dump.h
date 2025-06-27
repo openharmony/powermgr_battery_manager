@@ -36,6 +36,7 @@ public:
     bool Reset(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
     bool MockCapacity(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
     bool MockUevent(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args);
+    void DumpBatteryInfo(sptr<BatteryService> &service, int32_t fd);
 
 private:
     void DumpCurrentTime(int32_t fd);

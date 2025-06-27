@@ -90,112 +90,208 @@ int32_t BatterySrvClient::GetCapacity()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_INT_VALUE);
-    return proxy->GetCapacity();
+    int32_t capacity = INVALID_BATT_INT_VALUE;
+    auto ret = proxy->GetCapacity(capacity);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetCapacity ret = %{public}d", ret);
+        return INVALID_BATT_INT_VALUE;
+    }
+    return capacity;
 }
 
 BatteryChargeState BatterySrvClient::GetChargingStatus()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, BatteryChargeState::CHARGE_STATE_BUTT);
-    return proxy->GetChargingStatus();
+    uint32_t chargeState = static_cast<uint32_t>(BatteryChargeState::CHARGE_STATE_BUTT);
+    auto ret = proxy->GetChargingStatus(chargeState);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetChargingStatus ret = %{public}d", ret);
+        return BatteryChargeState::CHARGE_STATE_BUTT;
+    }
+    return static_cast<BatteryChargeState>(chargeState);
 }
 
 BatteryHealthState BatterySrvClient::GetHealthStatus()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, BatteryHealthState::HEALTH_STATE_BUTT);
-    return proxy->GetHealthStatus();
+    uint32_t healthState = static_cast<uint32_t>(BatteryHealthState::HEALTH_STATE_BUTT);
+    auto ret = proxy->GetHealthStatus(healthState);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetHealthStatus ret = %{public}d", ret);
+        return BatteryHealthState::HEALTH_STATE_BUTT;
+    }
+    return static_cast<BatteryHealthState>(healthState);
 }
 
 BatteryPluggedType BatterySrvClient::GetPluggedType()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, BatteryPluggedType::PLUGGED_TYPE_BUTT);
-    return proxy->GetPluggedType();
+    uint32_t pluggedType = static_cast<uint32_t>(BatteryPluggedType::PLUGGED_TYPE_BUTT);
+    auto ret = proxy->GetPluggedType(pluggedType);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetPluggedType ret = %{public}d", ret);
+        return BatteryPluggedType::PLUGGED_TYPE_BUTT;
+    }
+    return static_cast<BatteryPluggedType>(pluggedType);
 }
 
 int32_t BatterySrvClient::GetVoltage()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_INT_VALUE);
-    return proxy->GetVoltage();
+    int32_t voltage = INVALID_BATT_INT_VALUE;
+    auto ret = proxy->GetVoltage(voltage);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetVoltage ret = %{public}d", ret);
+        return INVALID_BATT_INT_VALUE;
+    }
+    return voltage;
 }
 
 bool BatterySrvClient::GetPresent()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_BOOL_VALUE);
-    return proxy->GetPresent();
+    bool present = INVALID_BATT_BOOL_VALUE;
+    auto ret = proxy->GetPresent(present);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetPresent ret = %{public}d", ret);
+        return INVALID_BATT_BOOL_VALUE;
+    }
+    return present;
 }
 
 std::string BatterySrvClient::GetTechnology()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, "");
-    return proxy->GetTechnology();
+    std::string technology = INVALID_STRING_VALUE;
+    auto ret = proxy->GetTechnology(technology);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetTechnology ret = %{public}d", ret);
+        return INVALID_STRING_VALUE;
+    }
+    return technology;
 }
 
 int32_t BatterySrvClient::GetBatteryTemperature()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_TEMP_VALUE);
-    return proxy->GetBatteryTemperature();
+    int32_t temperature = INVALID_BATT_TEMP_VALUE;
+    auto ret = proxy->GetBatteryTemperature(temperature);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetBatteryTemperature ret = %{public}d", ret);
+        return INVALID_BATT_TEMP_VALUE;
+    }
+    return temperature;
 }
 
 int32_t BatterySrvClient::GetNowCurrent()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_INT_VALUE);
-    return proxy->GetNowCurrent();
+    int32_t nowCurr = INVALID_BATT_INT_VALUE;
+    auto ret = proxy->GetNowCurrent(nowCurr);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetNowCurrent ret = %{public}d", ret);
+        return INVALID_BATT_INT_VALUE;
+    }
+    return nowCurr;
 }
 
 int32_t BatterySrvClient::GetRemainEnergy()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_INT_VALUE);
-    return proxy->GetRemainEnergy();
+    int32_t remainEnergy = INVALID_BATT_INT_VALUE;
+    auto ret = proxy->GetRemainEnergy(remainEnergy);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetRemainEnergy ret = %{public}d", ret);
+        return INVALID_BATT_INT_VALUE;
+    }
+    return remainEnergy;
 }
 
 int32_t BatterySrvClient::GetTotalEnergy()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, INVALID_BATT_INT_VALUE);
-    return proxy->GetTotalEnergy();
+    int32_t totalEnergy = INVALID_BATT_INT_VALUE;
+    auto ret = proxy->GetTotalEnergy(totalEnergy);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetTotalEnergy ret = %{public}d", ret);
+        return INVALID_BATT_INT_VALUE;
+    }
+    return totalEnergy;
 }
 
 BatteryCapacityLevel BatterySrvClient::GetCapacityLevel()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, BatteryCapacityLevel::LEVEL_NONE);
-    return proxy->GetCapacityLevel();
+    uint32_t batteryCapacityLevel = static_cast<uint32_t>(BatteryCapacityLevel::LEVEL_NONE);
+    auto ret = proxy->GetCapacityLevel(batteryCapacityLevel);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetCapacityLevel ret = %{public}d", ret);
+        return BatteryCapacityLevel::LEVEL_NONE;
+    }
+    return static_cast<BatteryCapacityLevel>(batteryCapacityLevel);
 }
 
 int64_t BatterySrvClient::GetRemainingChargeTime()
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, INVALID_REMAINING_CHARGE_TIME_VALUE);
-    return proxy->GetRemainingChargeTime();
+    int64_t remainTime = INVALID_REMAINING_CHARGE_TIME_VALUE;
+    auto ret = proxy->GetRemainingChargeTime(remainTime);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetRemainingChargeTime ret = %{public}d", ret);
+        return INVALID_REMAINING_CHARGE_TIME_VALUE;
+    }
+    return remainTime;
 }
 
 BatteryError BatterySrvClient::SetBatteryConfig(const std::string& sceneName, const std::string& value)
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, BatteryError::ERR_CONNECTION_FAIL);
-    return proxy->SetBatteryConfig(sceneName, value);
+    int32_t batteryErr = static_cast<int32_t>(BatteryError::ERR_CONNECTION_FAIL);
+    auto ret = proxy->SetBatteryConfig(sceneName, value, batteryErr);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "SetBatteryConfig ret = %{public}d", ret);
+        return BatteryError::ERR_CONNECTION_FAIL;
+    }
+    return static_cast<BatteryError>(batteryErr);
 }
 
 BatteryError BatterySrvClient::GetBatteryConfig(const std::string& sceneName, std::string& result)
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, BatteryError::ERR_CONNECTION_FAIL);
-    return proxy->GetBatteryConfig(sceneName, result);
+    int32_t batteryErr = static_cast<int32_t>(BatteryError::ERR_CONNECTION_FAIL);
+    auto ret = proxy->GetBatteryConfig(sceneName, result, batteryErr);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "GetBatteryConfig ret = %{public}d", ret);
+        return BatteryError::ERR_CONNECTION_FAIL;
+    }
+    return static_cast<BatteryError>(batteryErr);
 }
 
 BatteryError BatterySrvClient::IsBatteryConfigSupported(const std::string& sceneName, bool& result)
 {
     auto proxy = Connect();
     RETURN_IF_WITH_RET(proxy == nullptr, BatteryError::ERR_CONNECTION_FAIL);
-    return proxy->IsBatteryConfigSupported(sceneName, result);
+    int32_t batteryErr = static_cast<int32_t>(BatteryError::ERR_CONNECTION_FAIL);
+    auto ret = proxy->IsBatteryConfigSupported(sceneName, result, batteryErr);
+    if (ret != ERR_OK) {
+        BATTERY_HILOGE(COMP_FWK, "IsBatteryConfigSupported ret = %{public}d", ret);
+        return BatteryError::ERR_CONNECTION_FAIL;
+    }
+    return static_cast<BatteryError>(batteryErr);
 }
 }  // namespace PowerMgr
 }  // namespace OHOS

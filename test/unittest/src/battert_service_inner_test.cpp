@@ -578,5 +578,23 @@ static HWTEST_F(BatteryDumpTest, BatteryDump016, TestSize.Level1)
     EXPECT_EQ(g_service->Dump(fd, args), ERR_NO_INIT);
     BATTERY_HILOGI(LABEL_TEST, "BatteryDump016 function end!");
 }
+
+/**
+ * @tc.name: BatteryDump017
+ * @tc.desc: Get battery information
+ * @tc.type: FUNC
+ * @tc.require:
+ */
+HWTEST_F(BatteryDumpTest, BatteryDump017, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump017 begin");
+    BatteryDump& batteryDump = BatteryDump::GetInstance();
+    int32_t fd = 1;
+    std::vector<std::u16string> args;
+    std::u16string arg = u"-i";
+    args.push_back(arg);
+    EXPECT_TRUE(batteryDump.GetBatteryInfo(fd, g_service, args));
+    BATTERY_HILOGI(LABEL_TEST, "BatteryDump017 end");
+}
 } // namespace PowerMgr
 } // namespace OHOS

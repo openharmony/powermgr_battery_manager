@@ -16,6 +16,8 @@
 #ifndef BATTERY_LOG_H
 #define BATTERY_LOG_H
 
+#include <cstdint>
+
 #include "hilog/log.h"
 
 namespace OHOS {
