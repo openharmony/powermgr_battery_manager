@@ -14,23 +14,26 @@
 import("../../batterymgr.gni")
 
 config("batterysrv_public_config") {
-  include_dirs = [
-    "native/include",
-    "${battery_service_zidl}/include",
-  ]
+  include_dirs = [ "native/include" ]
 }
 
 ohos_shared_library("batterysrv_client") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+
   branch_protector_ret = "pac_ret"
 
-  sources = [
-    "${battery_frameworks}/native/src/battery_srv_client.cpp",
-    "${battery_service_zidl}/src/battery_srv_proxy.cpp",
-  ]
+  sources = [ "${battery_frameworks}/native/src/battery_srv_client.cpp" ]
+
+  deps = [ "${battery_service_zidl}:batterysrv_proxy" ]
 
   configs = [ "${battery_utils}:coverage_flags" ]
 
   public_configs = [
+    "${battery_service_zidl}:batterysrv_public_config",
     "${battery_utils}:utils_config",
     ":batterysrv_public_config",
   ]

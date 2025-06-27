@@ -217,10 +217,11 @@ bool BatteryNotify::PublishChangedEvent(const BatteryInfo& info)
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_TECHNOLOGY, info.GetTechnology());
     want.SetParam(BatteryInfo::COMMON_EVENT_KEY_UEVENT, info.GetUevent());
 
-    auto capacityLevel = g_service->GetCapacityLevel();
-    if (capacityLevel != g_lastCapacityLevel) {
+    auto capacityLevel = static_cast<uint32_t>(BatteryCapacityLevel::LEVEL_NONE);
+    g_service->GetCapacityLevel(capacityLevel);
+    if (static_cast<BatteryCapacityLevel>(capacityLevel) != g_lastCapacityLevel) {
         want.SetParam(BatteryInfo::COMMON_EVENT_KEY_CAPACITY_LEVEL, static_cast<int32_t>(capacityLevel));
-        g_lastCapacityLevel = capacityLevel;
+        g_lastCapacityLevel = static_cast<BatteryCapacityLevel>(capacityLevel);
     }
 
     want.SetAction(CommonEventSupport::COMMON_EVENT_BATTERY_CHANGED);

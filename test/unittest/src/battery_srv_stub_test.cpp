@@ -19,7 +19,7 @@
 #include "parcel.h"
 
 #include "battery_log.h"
-#include "battery_manager_ipc_interface_code.h"
+#include "ibattery_srv.h"
 #include "battery_service.h"
 #include "battery_srv_proxy.h"
 #include "ibattery_srv.h"
@@ -61,21 +61,21 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub001, TestSize.Level1)
     uint32_t code = 0;
     MessageParcel data;
     int32_t ret = g_service->OnRemoteRequest(code, data, g_reply, g_option);
-    EXPECT_EQ(ret, E_GET_POWER_SERVICE_FAILED);
+    EXPECT_EQ(ret, ERR_TRANSACTION_FAILED);
     BATTERY_HILOGI(LABEL_TEST, "BatterySrvStub001 function end!");
 }
 
 /**
  * @tc.name: BatterySrvStub002
- * @tc.desc: Test BatterySrvInterfaceCode BATT_GET_CAPACITY to BATT_GET_BATTERY_REMAIN_ENERGY code
+ * @tc.desc: Test IBatterySrvIpcCode COMMAND_GET_CAPACITY to COMMAND_GET_REMAIN_ENERGY code
  * @tc.type: FUNC
  * @tc.require: issueI6KRS8
  */
 static HWTEST_F(BatterySrvStubTest, BatterySrvStub002, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatterySrvStub002 function start!");
-    uint32_t begin = static_cast<uint32_t>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_CAPACITY);
-    uint32_t end = static_cast<uint32_t>(PowerMgr::BatterySrvInterfaceCode::BATT_GET_BATTERY_REMAIN_ENERGY);
+    uint32_t begin = static_cast<uint32_t>(PowerMgr::IBatterySrvIpcCode::COMMAND_GET_CAPACITY);
+    uint32_t end = static_cast<uint32_t>(PowerMgr::IBatterySrvIpcCode::COMMAND_GET_REMAIN_ENERGY);
     for (uint32_t code = begin; code <= end; ++code) {
         g_data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor());
         int32_t ret = g_service->OnRemoteRequest(code, g_data, g_reply, g_option);
@@ -103,7 +103,7 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub003, TestSize.Level1)
 
 /**
  * @tc.name: BatterySrvStub004
- * @tc.desc: Test BatterySrvInterfaceCode SET_BATTERY_CONFIG
+ * @tc.desc: Test IBatterySrvIpcCode COMMAND_SET_BATTERY_CONFIG
  * @tc.type: FUNC
  * @tc.require: issueI6KRS8
  */
@@ -115,7 +115,7 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub004, TestSize.Level1)
     u16string value = Str8ToStr16("0");
     g_data.WriteString16(sceneName);
     g_data.WriteString16(value);
-    uint32_t code = static_cast<uint32_t>(PowerMgr::BatterySrvInterfaceCode::SET_BATTERY_CONFIG);
+    uint32_t code = static_cast<uint32_t>(PowerMgr::IBatterySrvIpcCode::COMMAND_SET_BATTERY_CONFIG);
     int32_t ret = g_service->OnRemoteRequest(code, g_data, g_reply, g_option);
     EXPECT_EQ(ret, ERR_OK) << "ret: " << ret << " code: " << code;
     BATTERY_HILOGI(LABEL_TEST, "BatterySrvStub004 function end!");
@@ -123,7 +123,7 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub004, TestSize.Level1)
 
 /**
  * @tc.name: BatterySrvStub005
- * @tc.desc: Test BatterySrvInterfaceCode GET_BATTERY_CONFIG
+ * @tc.desc: Test IBatterySrvIpcCode COMMAND_GET_BATTERY_CONFIG
  * @tc.type: FUNC
  * @tc.require: issueI6KRS8
  */
@@ -133,7 +133,7 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub005, TestSize.Level1)
     g_data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor());
     u16string sceneName = Str8ToStr16("BatterySrvStub005");
     g_data.WriteString16(sceneName);
-    uint32_t code = static_cast<uint32_t>(PowerMgr::BatterySrvInterfaceCode::GET_BATTERY_CONFIG);
+    uint32_t code = static_cast<uint32_t>(PowerMgr::IBatterySrvIpcCode::COMMAND_GET_BATTERY_CONFIG);
     int32_t ret = g_service->OnRemoteRequest(code, g_data, g_reply, g_option);
     EXPECT_EQ(ret, ERR_OK) << "ret: " << ret << " code: " << code;
     BATTERY_HILOGI(LABEL_TEST, "BatterySrvStub005 function end!");
@@ -141,7 +141,7 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub005, TestSize.Level1)
 
 /**
  * @tc.name: BatterySrvStub006
- * @tc.desc: Test BatterySrvInterfaceCode SUPPORT_BATTERY_CONFIG
+ * @tc.desc: Test IBatterySrvIpcCode COMMAND_IS_BATTERY_CONFIG_SUPPORTED
  * @tc.type: FUNC
  * @tc.require: issueI6KRS8
  */
@@ -151,7 +151,7 @@ static HWTEST_F(BatterySrvStubTest, BatterySrvStub006, TestSize.Level1)
     g_data.WriteInterfaceToken(BatterySrvProxy::GetDescriptor());
     u16string sceneName = Str8ToStr16("BatterySrvStub006");
     g_data.WriteString16(sceneName);
-    uint32_t code = static_cast<uint32_t>(PowerMgr::BatterySrvInterfaceCode::SUPPORT_BATTERY_CONFIG);
+    uint32_t code = static_cast<uint32_t>(PowerMgr::IBatterySrvIpcCode::COMMAND_IS_BATTERY_CONFIG_SUPPORTED);
     int32_t ret = g_service->OnRemoteRequest(code, g_data, g_reply, g_option);
     EXPECT_EQ(ret, ERR_OK) << "ret: " << ret << " code: " << code;
     BATTERY_HILOGI(LABEL_TEST, "BatterySrvStub006 function end!");

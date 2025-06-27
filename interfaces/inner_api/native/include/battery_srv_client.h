@@ -19,6 +19,8 @@
 #include <singleton.h>
 #include <memory>
 #include <mutex>
+#include "battery_info.h"
+#include "battery_srv_errors.h"
 #include "iremote_object.h"
 #include "ibattery_srv.h"
 
@@ -65,7 +67,7 @@ public:
      * Return the temperature of the battery, in 0.1℃.
      */
     int32_t GetBatteryTemperature();
-     /**
+    /**
      * Return the Current of the battery, in mA.
      */
     int32_t GetNowCurrent();

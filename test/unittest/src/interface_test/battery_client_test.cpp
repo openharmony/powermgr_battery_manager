@@ -33,6 +33,9 @@
 #include "battery_srv_client.h"
 #include "test_utils.h"
 
+#include "mock_battery_srv_proxy.h"
+#include "mock_remote_object.h"
+
 using namespace testing::ext;
 using namespace OHOS::PowerMgr;
 using namespace OHOS;
@@ -48,18 +51,24 @@ constexpr int32_t BATTERY_HIGH_THRESHOLD = 99;
 constexpr int32_t BATTERY_HIGH_FULL = 100;
 const std::string MOCK_BATTERY_PATH = "/data/service/el0/battery/";
 BatteryInfo g_info;
+sptr<IRemoteObject> g_testRemoteObj;
+sptr<MockBatterySrvProxy> g_mockProxy;
 }
 
 void BatteryClientTest::SetUpTestCase(void)
 {
     g_isMock = TestUtils::IsMock();
     GTEST_LOG_(INFO) << " g_isMock: " << g_isMock;
+    g_testRemoteObj = sptr<MockRemoteObject>::MakeSptr(u"BatteryTest");
+    g_mockProxy = sptr<MockBatterySrvProxy>::MakeSptr(g_testRemoteObj);
 }
 
 void BatteryClientTest::TearDownTestCase(void)
 {
     g_isMock = false;
     TestUtils::ResetOnline();
+    g_testRemoteObj = nullptr;
+    g_mockProxy = nullptr;
 }
 
 void BatteryClientTest::SetUp(void)
@@ -784,4 +793,297 @@ HWTEST_F (BatteryClientTest, BatteryClient023, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient023 function end!");
 }
 
+/**
+ * @tc.name: BatteryClient024
+ * @tc.desc: test GetCapacity() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient024, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient024 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto capacity = BatterySrvClient.GetCapacity();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(capacity == INVALID_BATT_INT_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient024 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient025
+ * @tc.desc: test GetChargingStatus() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient025, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient024 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto chargingStatus = BatterySrvClient.GetChargingStatus();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(chargingStatus == BatteryChargeState::CHARGE_STATE_BUTT);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient025 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient026
+ * @tc.desc: test GetHealthStatus() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient026, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient026 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto healthStatus = BatterySrvClient.GetHealthStatus();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(healthStatus == BatteryHealthState::HEALTH_STATE_BUTT);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient026 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient027
+ * @tc.desc: test GetPluggedType() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient027, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient027 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto pluggedType = BatterySrvClient.GetPluggedType();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(pluggedType == BatteryPluggedType::PLUGGED_TYPE_BUTT);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient027 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient028
+ * @tc.desc: test GetVoltage() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient028, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient028 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto voltage = BatterySrvClient.GetVoltage();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(voltage == INVALID_BATT_INT_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient028 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient029
+ * @tc.desc: test GetPresent() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient029, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient029 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto present = BatterySrvClient.GetPresent();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(present == INVALID_BATT_BOOL_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient029 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient030
+ * @tc.desc: test GetTechnology() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient030, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient030 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto technology = BatterySrvClient.GetTechnology();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(technology == INVALID_STRING_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient030 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient031
+ * @tc.desc: test GetTotalEnergy() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient031, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient031 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto totalEnergy = BatterySrvClient.GetTotalEnergy();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(totalEnergy == INVALID_BATT_INT_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient031 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient032
+ * @tc.desc: test GetNowCurrent() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient032, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient032 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto nowCurr = BatterySrvClient.GetNowCurrent();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(nowCurr == INVALID_BATT_INT_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient032 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient033
+ * @tc.desc: test GetRemainEnergy() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient033, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient033 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto remainEnergy = BatterySrvClient.GetRemainEnergy();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(remainEnergy == INVALID_BATT_INT_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient033 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient034
+ * @tc.desc: test GetBatteryTemperature() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient034, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient034 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto temperature = BatterySrvClient.GetBatteryTemperature();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(temperature == INVALID_BATT_TEMP_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient034 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient035
+ * @tc.desc: test GetCapacityLevel() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient035, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient035 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto batteryCapacityLevel = BatterySrvClient.GetCapacityLevel();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(batteryCapacityLevel == BatteryCapacityLevel::LEVEL_NONE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient035 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient036
+ * @tc.desc: test GetRemainingChargeTime() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient036, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient036 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    auto remainTime = BatterySrvClient.GetRemainingChargeTime();
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_TRUE(remainTime == INVALID_REMAINING_CHARGE_TIME_VALUE);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient036 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient037
+ * @tc.desc: test SetBatteryConfig() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient037, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient037 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    std::string sceneName = "test";
+    std::string value = "test";
+    auto batteryErr = BatterySrvClient.SetBatteryConfig(sceneName, value);
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_NE(batteryErr, BatteryError::ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient037 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient038
+ * @tc.desc: test GetBatteryConfig() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient038, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient038 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    std::string sceneName = "test";
+    std::string getResult;
+    auto batteryErr = BatterySrvClient.GetBatteryConfig(sceneName, getResult);
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_NE(batteryErr, BatteryError::ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient038 function end!");
+}
+
+/**
+ * @tc.name: BatteryClient039
+ * @tc.desc: test IsBatteryConfigSupported() when proxy return fail
+ * @tc.type: FUNC
+ * @tc.require
+ */
+HWTEST_F(BatteryClientTest, BatteryClient039, TestSize.Level0)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient039 function start!");
+    auto& BatterySrvClient = BatterySrvClient::GetInstance();
+    auto proxy = BatterySrvClient.proxy_;
+    BatterySrvClient.proxy_ = g_mockProxy;
+    std::string featureName = "test";
+    bool isResult = false;
+    auto batteryErr = BatterySrvClient.IsBatteryConfigSupported(featureName, isResult);
+    BatterySrvClient.proxy_ = proxy;
+    EXPECT_NE(batteryErr, BatteryError::ERR_OK);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryClient039 function end!");
+}
 } // namespace
