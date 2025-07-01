@@ -45,7 +45,7 @@ int32_t SetBatteryConfig(string_view sceneName, string_view sceneValue)
     BatteryError code = g_battClient.SetBatteryConfig(std::string(sceneName), std::string(sceneValue));
     BATTERY_HILOGI(FEATURE_BATT_INFO, "set charge config, sceneName: %{public}s, value: %{public}s, ret: %{public}d",
         sceneName.c_str(), sceneValue.c_str(), static_cast<int32_t>(code));
-    if (code != BatteryError::ERR_OK) {
+    if (code != BatteryError::ERR_OK && code != BatteryError::ERR_FAILURE) {
         taihe::set_business_error(static_cast<int32_t>(code), errorTable[code]);
         return static_cast<int32_t>(code);
     }
@@ -59,7 +59,7 @@ string GetBatteryConfig(string_view sceneName)
     std::string result;
     BatteryError code = g_battClient.GetBatteryConfig(std::string(sceneName), result);
     BATTERY_HILOGD(COMP_FWK, "get charge config, sceneValue: %{public}s", result.c_str());
-    if (code != BatteryError::ERR_OK) {
+    if (code != BatteryError::ERR_OK && code != BatteryError::ERR_FAILURE) {
         taihe::set_business_error(static_cast<int32_t>(code), errorTable[code]);
         return string(result);
     }
@@ -74,7 +74,7 @@ bool IsBatteryConfigSupported(string_view sceneName)
     BatteryError code = g_battClient.IsBatteryConfigSupported(std::string(sceneName), result);
 
     BATTERY_HILOGI(COMP_FWK, "get support charge config, sceneValue: %{public}d", static_cast<uint32_t>(result));
-    if (code != BatteryError::ERR_OK) {
+    if (code != BatteryError::ERR_OK && code != BatteryError::ERR_FAILURE) {
         taihe::set_business_error(static_cast<int32_t>(code), errorTable[code]);
         return result;
     }
