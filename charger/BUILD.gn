@@ -64,7 +64,7 @@ ohos_executable("charger") {
   }
 
   if (has_drivers_interface_display_part && has_drivers_interface_light_part &&
-      has_graphic_surface_part && has_ui_lite_part &&
+      has_graphic_surface_part && has_ui_lite_part && has_graphic_utils_lite_part &&
       battery_manager_feature_enable_charger) {
     defines += [ "ENABLE_CHARGER" ]
     external_deps += [
