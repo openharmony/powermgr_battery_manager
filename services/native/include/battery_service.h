@@ -33,7 +33,9 @@
 #include "battery_info.h"
 #include "battery_light.h"
 #include "battery_notify.h"
+#include "battery_srv_errors.h"
 #include "battery_srv_stub.h"
+#include "battery_xcollie.h"
 #include "ibattery_srv.h"
 #include "sp_singleton.h"
 #include "v2_0/ibattery_interface.h"
@@ -62,25 +64,45 @@ public:
     }
 
     int32_t Dump(int fd, const std::vector<std::u16string> &args) override;
-    int32_t GetCapacity() override;
-    BatteryChargeState GetChargingStatus() override;
-    BatteryHealthState GetHealthStatus() override;
-    BatteryPluggedType GetPluggedType() override;
-    int32_t GetVoltage() override;
-    bool GetPresent() override;
-    std::string GetTechnology() override;
-    int32_t GetTotalEnergy() override;
-    int32_t GetCurrentAverage() override;
-    int32_t GetNowCurrent() override;
-    int32_t GetRemainEnergy() override;
-    int32_t GetBatteryTemperature() override;
-    BatteryCapacityLevel GetCapacityLevel() override;
-    int64_t GetRemainingChargeTime() override;
     ChargeType GetChargeType();
     bool ChangePath(const std::string path);
-    BatteryError SetBatteryConfig(const std::string& sceneName, const std::string& value) override;
-    BatteryError GetBatteryConfig(const std::string& sceneName, std::string& result) override;
-    BatteryError IsBatteryConfigSupported(const std::string& sceneName, bool& result) override;
+private:
+    int32_t GetCapacityInner();
+    BatteryChargeState GetChargingStatusInner();
+    BatteryHealthState GetHealthStatusInner();
+    BatteryPluggedType GetPluggedTypeInner();
+    int32_t GetVoltageInner();
+    bool GetPresentInner();
+    std::string GetTechnologyInner();
+    int32_t GetTotalEnergyInner();
+    int32_t GetCurrentAverageInner();
+    int32_t GetNowCurrentInner();
+    int32_t GetRemainEnergyInner();
+    int32_t GetBatteryTemperatureInner();
+    BatteryCapacityLevel GetCapacityLevelInner();
+    int64_t GetRemainingChargeTimeInner();
+    BatteryError SetBatteryConfigInner(const std::string& sceneName, const std::string& value);
+    BatteryError GetBatteryConfigInner(const std::string& sceneName, std::string& result);
+    BatteryError IsBatteryConfigSupportedInner(const std::string& sceneName, bool& result);
+public:
+    int32_t GetCapacity(int32_t& capacity) override;
+    int32_t GetChargingStatus(uint32_t& chargeState) override;
+    int32_t GetHealthStatus(uint32_t& healthState) override;
+    int32_t GetPluggedType(uint32_t& pluggedType) override;
+    int32_t GetVoltage(int32_t& voltage) override;
+    int32_t GetPresent(bool& present) override;
+    int32_t GetTechnology(std::string& technology) override;
+    int32_t GetTotalEnergy(int32_t& totalEnergy) override;
+    int32_t GetCurrentAverage(int32_t& curAverage) override;
+    int32_t GetNowCurrent(int32_t& nowCurr) override;
+    int32_t GetRemainEnergy(int32_t& remainEnergy) override;
+    int32_t GetBatteryTemperature(int32_t& temperature) override;
+    int32_t GetCapacityLevel(uint32_t& batteryCapacityLevel) override;
+    int32_t GetRemainingChargeTime(int64_t& remainTime) override;
+    int32_t SetBatteryConfig(const std::string& sceneName, const std::string& value, int32_t& batteryErr) override;
+    int32_t GetBatteryConfig(const std::string& sceneName, std::string& result, int32_t& batteryErr) override;
+    int32_t IsBatteryConfigSupported(const std::string& featureName, bool& result, int32_t& batteryErr) override;
+
     void InitConfig();
     void HandleTemperature(int32_t temperature);
     bool RegisterHdiStatusListener();
@@ -118,6 +140,7 @@ private:
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
     void SetLowCapacityThreshold();
 #endif
+    bool CapacityLevelCompare(int32_t capacity, int32_t minCapacity, int32_t maxCapacity);
     bool ready_ { false };
     static std::atomic_bool isBootCompleted_;
     std::shared_mutex mutex_;

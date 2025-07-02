@@ -11,17 +11,57 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//build/config/components/idl_tool/idl.gni")
 import("../../batterymgr.gni")
 
 config("batterysrv_public_config") {
   include_dirs = [
-    "include",
     "${battery_inner_api}/native/include",
+    "${target_gen_dir}",
   ]
 }
 
-ohos_shared_library("batterysrv_stub") {
-  sources = [ "${battery_service_zidl}/src/battery_srv_stub.cpp" ]
+idl_gen_interface("batterysrv_interface") {
+  sources = [ "IBatterySrv.idl" ]
+
+  log_domainid = "0xD002922"
+  log_tag = "BatterySvc"
+  subsystem_name = "powermgr"
+  part_name = "battery_manager"
+}
+
+ohos_source_set("batterysrv_proxy") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+  output_values = get_target_outputs(":batterysrv_interface")
+  sources = filter_include(output_values, [ "*_proxy.cpp" ])
+  configs = [
+    "${battery_utils}:utils_config",
+    ":batterysrv_public_config",
+    "${battery_utils}:coverage_flags",
+  ]
+  deps = [ ":batterysrv_interface" ]
+  external_deps = [
+    "c_utils:utils",
+    "hilog:libhilog",
+    "ipc:ipc_single",
+    "samgr:samgr_proxy",
+  ]
+  subsystem_name = "powermgr"
+  part_name = "battery_manager"
+}
+
+ohos_source_set("batterysrv_stub") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+  output_values = get_target_outputs(":batterysrv_interface")
+  sources = filter_include(output_values, [ "*_stub.cpp" ])
 
   configs = [
     "${battery_utils}:utils_config",
@@ -29,11 +69,12 @@ ohos_shared_library("batterysrv_stub") {
     "${battery_utils}:coverage_flags",
   ]
 
+  deps = [ ":batterysrv_interface" ]
   external_deps = [
     "c_utils:utils",
-    "hicollie:libhicollie",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "ipc:ipc_single",
   ]
 
   subsystem_name = "powermgr"

@@ -59,6 +59,54 @@ void BatteryDump::DumpCurrentTime(int32_t fd)
             int32_t { (curTime.tv_nsec / MS_NS) });
 }
 
+void BatteryDump::DumpBatteryInfo(sptr<BatteryService> &service, int32_t fd)
+{
+    int32_t capacity = 0;
+    service->GetCapacity(capacity);
+    dprintf(fd, "capacity: %d \n", capacity);
+    uint32_t batteryLevel = static_cast<uint32_t>(BatteryCapacityLevel::LEVEL_NONE);
+    service->GetCapacityLevel(batteryLevel);
+    dprintf(fd, "batteryLevel: %u \n", batteryLevel);
+    uint32_t chargingStatus = static_cast<uint32_t>(BatteryChargeState::CHARGE_STATE_NONE);
+    service->GetChargingStatus(chargingStatus);
+    dprintf(fd, "chargingStatus: %u \n", chargingStatus);
+    uint32_t healthState = static_cast<uint32_t>(BatteryHealthState::HEALTH_STATE_UNKNOWN);
+    service->GetHealthStatus(healthState);
+    dprintf(fd, "healthState: %u \n", healthState);
+    uint32_t pluggedType = static_cast<uint32_t>(BatteryPluggedType::PLUGGED_TYPE_NONE);
+    service->GetPluggedType(pluggedType);
+    dprintf(fd, "pluggedType: %u \n", pluggedType);
+    int32_t voltage = INVALID_BATT_INT_VALUE;
+    service->GetVoltage(voltage);
+    dprintf(fd, "voltage: %d \n", voltage);
+    bool present = false;
+    service->GetPresent(present);
+    dprintf(fd, "present: %d \n", present);
+    std::string technology;
+    service->GetTechnology(technology);
+    dprintf(fd, "technology: %s \n", technology.c_str());
+    int32_t nowCurrent = INVALID_BATT_INT_VALUE;
+    service->GetNowCurrent(nowCurrent);
+    dprintf(fd, "nowCurrent: %d \n", nowCurrent);
+    int32_t currentAverage = INVALID_BATT_INT_VALUE;
+    service->GetCurrentAverage(currentAverage);
+    dprintf(fd, "currentAverage: %d \n", currentAverage);
+    int32_t totalEnergy = INVALID_BATT_INT_VALUE;
+    service->GetTotalEnergy(totalEnergy);
+    dprintf(fd, "totalEnergy: %d \n", totalEnergy);
+    int32_t remainEnergy = INVALID_BATT_INT_VALUE;
+    service->GetRemainEnergy(remainEnergy);
+    dprintf(fd, "remainingEnergy: %d \n", remainEnergy);
+    int64_t remainingChargeTime = INVALID_REMAINING_CHARGE_TIME_VALUE;
+    service->GetRemainingChargeTime(remainingChargeTime);
+    dprintf(fd, "remainingChargeTime: %ld \n", remainingChargeTime);
+    int32_t temperature = INVALID_BATT_INT_VALUE;
+    service->GetBatteryTemperature(temperature);
+    dprintf(fd, "temperature: %d \n", temperature);
+    ChargeType chargeType = service->GetChargeType();
+    dprintf(fd, "chargeType: %u \n", chargeType);
+}
+
 bool BatteryDump::GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, const std::vector<std::u16string> &args)
 {
     if ((args.empty()) || (args[0].compare(u"-i") != 0)) {
@@ -66,36 +114,7 @@ bool BatteryDump::GetBatteryInfo(int32_t fd, sptr<BatteryService> &service, cons
         return false;
     }
     DumpCurrentTime(fd);
-    int32_t capacity = service->GetCapacity();
-    dprintf(fd, "capacity: %u \n", capacity);
-    BatteryCapacityLevel batteryLevel = service->GetCapacityLevel();
-    dprintf(fd, "batteryLevel: %u \n", batteryLevel);
-    BatteryChargeState chargingStatus = service->GetChargingStatus();
-    dprintf(fd, "chargingStatus: %u \n", chargingStatus);
-    BatteryHealthState healthState = service->GetHealthStatus();
-    dprintf(fd, "healthState: %u \n", healthState);
-    BatteryPluggedType pluggedType = service->GetPluggedType();
-    dprintf(fd, "pluggedType: %u \n", pluggedType);
-    int32_t voltage = service->GetVoltage();
-    dprintf(fd, "voltage: %d \n", voltage);
-    bool present = service->GetPresent();
-    dprintf(fd, "present: %d \n", present);
-    std::string technology = service->GetTechnology();
-    dprintf(fd, "technology: %s \n", technology.c_str());
-    int32_t nowCurrent = service->GetNowCurrent();
-    dprintf(fd, "nowCurrent: %d \n", nowCurrent);
-    int32_t currentAverage = service->GetCurrentAverage();
-    dprintf(fd, "currentAverage: %d \n", currentAverage);
-    int32_t totalEnergy = service->GetTotalEnergy();
-    dprintf(fd, "totalEnergy: %d \n", totalEnergy);
-    int32_t remainEnergy = service->GetRemainEnergy();
-    dprintf(fd, "remainingEnergy: %d \n", remainEnergy);
-    int64_t remainingChargeTime = service->GetRemainingChargeTime();
-    dprintf(fd, "remainingChargeTime: %ld \n", remainingChargeTime);
-    int32_t temperature = service->GetBatteryTemperature();
-    dprintf(fd, "temperature: %d \n", temperature);
-    ChargeType chargeType = service->GetChargeType();
-    dprintf(fd, "chargeType: %u \n", chargeType);
+    DumpBatteryInfo(service, fd);
     return true;
 }
 

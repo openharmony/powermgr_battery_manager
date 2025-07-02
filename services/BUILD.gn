@@ -17,7 +17,6 @@ config("batterysrv_public_config") {
   include_dirs = [
     "native/include",
     "native/notification",
-    "${battery_service_zidl}/include",
     "${battery_inner_api}/native/include",
   ]
 }
@@ -56,6 +55,7 @@ ohos_shared_library("batteryservice") {
   branch_protector_ret = "pac_ret"
 
   sources = [
+    "${battery_utils}/native/src/battery_xcollie.cpp",
     "native/src/battery_callback.cpp",
     "native/src/battery_config.cpp",
     "native/src/battery_dump.cpp",
@@ -69,7 +69,10 @@ ohos_shared_library("batteryservice") {
     "${battery_utils}:coverage_flags",
   ]
 
-  public_configs = [ ":batterysrv_public_config" ]
+  public_configs = [
+    "${battery_service_zidl}:batterysrv_public_config",
+    ":batterysrv_public_config",
+  ]
 
   deps = [
     "${battery_service_zidl}:batterysrv_stub",

@@ -22,7 +22,6 @@ config("module_private_config") {
     "include/scenario_test",
     "${battery_service_native}/include",
     "${battery_service_native}/notification/include",
-    "${battery_service_zidl}/include",
     "${battery_inner_api}/native/include",
     "${battery_manager_path}/test/utils",
   ]
@@ -35,11 +34,11 @@ config("module_private_config_without_json") {
     "include/scenario_test",
     "${battery_service_native}/include",
     "${battery_service_native}/notification/include",
-    "${battery_service_zidl}/include",
     "${battery_inner_api}/native/include",
     "${battery_manager_path}/test/utils",
     "${battery_manager_path}/charger/include",
     "${battery_manager_path}/charger/include/dev",
+    "${battery_utils}/native/include",
   ]
 }
 
@@ -54,6 +53,7 @@ ohos_unittest("test_battery_service_interface") {
 
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
+    "${battery_utils}/native/src/battery_xcollie.cpp",
     "src/interface_test/battery_info_test.cpp",
     "src/interface_test/battery_service_test.cpp",
   ]
@@ -82,6 +82,7 @@ ohos_unittest("test_battery_service_interface") {
     "drivers_interface_battery:libbattery_proxy_2.0",
     "googletest:gtest_main",
     "hdf_core:libhdi",
+    "hicollie:libhicollie",
     "hilog:libhilog",
     "ipc:ipc_single",
     "safwk:system_ability_fwk",
@@ -348,12 +349,17 @@ ohos_unittest("test_battery_stub") {
   }
 }
 
-### test exceptions when Remote() return nullptr
+# test exceptions when Remote() return nullptr
 ohos_unittest("test_battery_proxy_mock_iremoteobject") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+
   module_out_path = "${module_output_path}"
 
   sources = [
-    "${battery_service}/zidl/src/battery_srv_proxy.cpp",
     "mock/source/mock_peer_holder.cpp",
     "src/battery_srv_proxy_mock_test.cpp",
   ]
@@ -361,9 +367,12 @@ ohos_unittest("test_battery_proxy_mock_iremoteobject") {
   configs = [
     ":module_mock_private_config",
     ":module_private_config",
+    "${battery_service_zidl}:batterysrv_public_config",
     "${battery_utils}:utils_config",
     "${battery_utils}:coverage_flags",
   ]
+
+  deps = [ "${battery_service_zidl}:batterysrv_proxy" ]
 
   external_deps = [
     "ability_base:base",
@@ -383,12 +392,17 @@ ohos_unittest("test_battery_proxy_mock_iremoteobject") {
   }
 }
 
-### test exceptions when MessageParcel::WriteInterfaceToken() return false
+# test exceptions when MessageParcel::WriteInterfaceToken() return false
 ohos_unittest("test_battery_proxy_mock_messageparcel_write_error") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+
   module_out_path = "${module_output_path}"
 
   sources = [
-    "${battery_service}/zidl/src/battery_srv_proxy.cpp",
     "mock/source/mock_message_parcel.cpp",
     "src/battery_srv_proxy_mock_test.cpp",
   ]
@@ -396,9 +410,12 @@ ohos_unittest("test_battery_proxy_mock_messageparcel_write_error") {
   configs = [
     ":module_mock_private_config",
     ":module_private_config",
+    "${battery_service_zidl}:batterysrv_public_config",
     "${battery_utils}:utils_config",
     "${battery_utils}:coverage_flags",
   ]
+
+  deps = [ "${battery_service_zidl}:batterysrv_proxy" ]
 
   external_deps = [
     "ability_base:base",
@@ -418,13 +435,18 @@ ohos_unittest("test_battery_proxy_mock_messageparcel_write_error") {
   }
 }
 
-### test exceptions when SendRequest() return value not equal ERR_OK
+# test exceptions when SendRequest() return value not equal ERR_OK
 ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+
   module_out_path = "${module_output_path}"
   defines += [ "ENABLE_REMOTE_INTERFACE" ]
 
   sources = [
-    "${battery_service}/zidl/src/battery_srv_proxy.cpp",
     "mock/source/mock_remote_object.cpp",
     "src/battery_srv_proxy_mock_test.cpp",
   ]
@@ -432,9 +454,12 @@ ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
   configs = [
     ":module_mock_private_config",
     ":module_private_config",
+    "${battery_service_zidl}:batterysrv_public_config",
     "${battery_utils}:utils_config",
     "${battery_utils}:coverage_flags",
   ]
+
+  deps = [ "${battery_service_zidl}:batterysrv_proxy" ]
 
   external_deps = [
     "ability_base:base",
@@ -454,12 +479,17 @@ ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
   }
 }
 
-### test exceptions when read reply MessageParcel error
+# test exceptions when read reply MessageParcel error
 ohos_unittest("test_battery_proxy_mock_parcel_read_error") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+
   module_out_path = "${module_output_path}"
 
   sources = [
-    "${battery_service}/zidl/src/battery_srv_proxy.cpp",
     "mock/source/mock_parcel.cpp",
     "src/battery_srv_proxy_mock_test.cpp",
   ]
@@ -467,9 +497,12 @@ ohos_unittest("test_battery_proxy_mock_parcel_read_error") {
   configs = [
     ":module_mock_private_config",
     ":module_private_config",
+    "${battery_service_zidl}:batterysrv_public_config",
     "${battery_utils}:utils_config",
     "${battery_utils}:coverage_flags",
   ]
+
+  deps = [ "${battery_service_zidl}:batterysrv_proxy" ]
 
   external_deps = [
     "ability_base:base",
@@ -556,11 +589,14 @@ ohos_unittest("test_batteryclient") {
 
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
+    "mock/source/mock_battery_srv_proxy.cpp",
+    "mock/source/mock_remote_object.cpp",
     "src/interface_test/battery_client_test.cpp",
   ]
 
   configs = [
     "${battery_utils}:utils_config",
+    ":module_mock_private_config",
     ":module_private_config",
     "${battery_utils}:coverage_flags",
   ]

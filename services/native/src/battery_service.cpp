@@ -250,18 +250,18 @@ void BatteryService::ConvertingEvent(const V2_0::BatteryInfo& event)
 
 void BatteryService::InitBatteryInfo()
 {
-    batteryInfo_.SetCapacity(GetCapacity());
-    batteryInfo_.SetPluggedType(GetPluggedType());
-    batteryInfo_.SetChargeState(GetChargingStatus());
-    batteryInfo_.SetVoltage(GetVoltage());
-    batteryInfo_.SetTemperature(GetBatteryTemperature());
-    batteryInfo_.SetHealthState(GetHealthStatus());
-    batteryInfo_.SetTotalEnergy(GetTotalEnergy());
-    batteryInfo_.SetCurAverage(GetCurrentAverage());
-    batteryInfo_.SetRemainEnergy(GetRemainEnergy());
-    batteryInfo_.SetPresent(GetPresent());
-    batteryInfo_.SetTechnology(GetTechnology());
-    batteryInfo_.SetNowCurrent(GetNowCurrent());
+    batteryInfo_.SetCapacity(GetCapacityInner());
+    batteryInfo_.SetPluggedType(GetPluggedTypeInner());
+    batteryInfo_.SetChargeState(GetChargingStatusInner());
+    batteryInfo_.SetVoltage(GetVoltageInner());
+    batteryInfo_.SetTemperature(GetBatteryTemperatureInner());
+    batteryInfo_.SetHealthState(GetHealthStatusInner());
+    batteryInfo_.SetTotalEnergy(GetTotalEnergyInner());
+    batteryInfo_.SetCurAverage(GetCurrentAverageInner());
+    batteryInfo_.SetRemainEnergy(GetRemainEnergyInner());
+    batteryInfo_.SetPresent(GetPresentInner());
+    batteryInfo_.SetTechnology(GetTechnologyInner());
+    batteryInfo_.SetNowCurrent(GetNowCurrentInner());
     batteryInfo_.SetChargeType(GetChargeType());
     AddBootCommonEvents();
     HandleBatteryInfo();
@@ -295,7 +295,7 @@ bool BatteryService::FillCommonEvent(std::string& ueventName, std::string& commo
         commonEventName = iter.eventName;
         ueventName = iter.uevent;
         std::string result;
-        BatteryError error = GetBatteryConfig(iter.sceneConfigName, result);
+        BatteryError error = GetBatteryConfigInner(iter.sceneConfigName, result);
         if (error != BatteryError::ERR_OK) {
             continue;
         }
@@ -556,7 +556,7 @@ void BatteryService::UnlockShutdownGuard()
     g_shutdownGuard->UnLock();
 }
 
-int32_t BatteryService::GetCapacity()
+int32_t BatteryService::GetCapacityInner()
 {
     if (isMockCapacity_) {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "Return mock battery capacity");
@@ -598,7 +598,7 @@ void BatteryService::SetLowCapacityThreshold()
 }
 #endif
 
-BatteryError BatteryService::SetBatteryConfig(const std::string& sceneName, const std::string& value)
+BatteryError BatteryService::SetBatteryConfigInner(const std::string& sceneName, const std::string& value)
 {
     if (!Permission::IsSystem() || !Permission::IsNativePermissionGranted("ohos.permission.POWER_OPTIMIZATION")) {
         BATTERY_HILOGI(FEATURE_BATT_INFO, "SetBatteryConfig failed, System permission intercept");
@@ -616,7 +616,7 @@ BatteryError BatteryService::SetBatteryConfig(const std::string& sceneName, cons
         BatteryError::ERR_OK : BatteryError::ERR_FAILURE;
 }
 
-BatteryError BatteryService::GetBatteryConfig(const std::string& sceneName, std::string& result)
+BatteryError BatteryService::GetBatteryConfigInner(const std::string& sceneName, std::string& result)
 {
     if (!Permission::IsSystem()) {
         BATTERY_HILOGI(FEATURE_BATT_INFO, "GetBatteryConfig failed, System permission intercept");
@@ -639,7 +639,7 @@ BatteryError BatteryService::GetBatteryConfig(const std::string& sceneName, std:
     return BatteryError::ERR_OK;
 }
 
-BatteryError BatteryService::IsBatteryConfigSupported(const std::string& sceneName, bool& result)
+BatteryError BatteryService::IsBatteryConfigSupportedInner(const std::string& sceneName, bool& result)
 {
     if (!Permission::IsSystem()) {
         BATTERY_HILOGI(FEATURE_BATT_INFO, "IsBatteryConfigSupported failed, System permission intercept");
@@ -661,7 +661,7 @@ BatteryError BatteryService::IsBatteryConfigSupported(const std::string& sceneNa
     return BatteryError::ERR_OK;
 }
 
-BatteryChargeState BatteryService::GetChargingStatus()
+BatteryChargeState BatteryService::GetChargingStatusInner()
 {
     if (isMockUnplugged_) {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "Return mock charge status");
@@ -677,7 +677,7 @@ BatteryChargeState BatteryService::GetChargingStatus()
     return BatteryChargeState(chargeState);
 }
 
-BatteryHealthState BatteryService::GetHealthStatus()
+BatteryHealthState BatteryService::GetHealthStatusInner()
 {
     BATTERY_HILOGD(FEATURE_BATT_INFO, "Enter");
     std::shared_lock<std::shared_mutex> lock(mutex_);
@@ -691,7 +691,7 @@ BatteryHealthState BatteryService::GetHealthStatus()
     return BatteryHealthState(healthState);
 }
 
-BatteryPluggedType BatteryService::GetPluggedType()
+BatteryPluggedType BatteryService::GetPluggedTypeInner()
 {
     if (isMockUnplugged_) {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "Return mock plugged type");
@@ -707,7 +707,7 @@ BatteryPluggedType BatteryService::GetPluggedType()
     return BatteryPluggedType(pluggedType);
 }
 
-int32_t BatteryService::GetVoltage()
+int32_t BatteryService::GetVoltageInner()
 {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
@@ -719,7 +719,7 @@ int32_t BatteryService::GetVoltage()
     return voltage;
 }
 
-bool BatteryService::GetPresent()
+bool BatteryService::GetPresentInner()
 {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     bool present = false;
@@ -732,7 +732,7 @@ bool BatteryService::GetPresent()
     return present;
 }
 
-std::string BatteryService::GetTechnology()
+std::string BatteryService::GetTechnologyInner()
 {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
@@ -745,7 +745,7 @@ std::string BatteryService::GetTechnology()
     return technology;
 }
 
-int32_t BatteryService::GetBatteryTemperature()
+int32_t BatteryService::GetBatteryTemperatureInner()
 {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
@@ -757,7 +757,7 @@ int32_t BatteryService::GetBatteryTemperature()
     return temperature;
 }
 
-int32_t BatteryService::GetTotalEnergy()
+int32_t BatteryService::GetTotalEnergyInner()
 {
     int32_t totalEnergy = INVALID_BATT_INT_VALUE;
     if (!Permission::IsSystem()) {
@@ -773,7 +773,7 @@ int32_t BatteryService::GetTotalEnergy()
     return totalEnergy;
 }
 
-int32_t BatteryService::GetCurrentAverage()
+int32_t BatteryService::GetCurrentAverageInner()
 {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (iBatteryInterface_ == nullptr) {
@@ -785,7 +785,7 @@ int32_t BatteryService::GetCurrentAverage()
     return curAverage;
 }
 
-int32_t BatteryService::GetNowCurrent()
+int32_t BatteryService::GetNowCurrentInner()
 {
     int32_t nowCurr = INVALID_BATT_INT_VALUE;
     std::shared_lock<std::shared_mutex> lock(mutex_);
@@ -797,7 +797,7 @@ int32_t BatteryService::GetNowCurrent()
     return nowCurr;
 }
 
-int32_t BatteryService::GetRemainEnergy()
+int32_t BatteryService::GetRemainEnergyInner()
 {
     int32_t remainEnergy = INVALID_BATT_INT_VALUE;
     if (!Permission::IsSystem()) {
@@ -857,7 +857,7 @@ void BatteryService::CalculateRemainingChargeTime(int32_t capacity, BatteryCharg
     }
 }
 
-int64_t BatteryService::GetRemainingChargeTime()
+int64_t BatteryService::GetRemainingChargeTimeInner()
 {
     if (!Permission::IsSystem()) {
         BATTERY_HILOGW(FEATURE_BATT_INFO, "system permission denied.");
@@ -871,29 +871,38 @@ bool IsCapacityLevelDefined(int32_t capacityThreshold)
     return capacityThreshold != INVALID_BATT_INT_VALUE;
 }
 
-BatteryCapacityLevel BatteryService::GetCapacityLevel()
+bool BatteryService::CapacityLevelCompare(int32_t capacity, int32_t minCapacity, int32_t maxCapacity)
+{
+    if (IsCapacityLevelDefined(maxCapacity) && capacity > minCapacity && capacity <= maxCapacity) {
+        return true;
+    }
+    return false;
+}
+
+BatteryCapacityLevel BatteryService::GetCapacityLevelInner()
 {
     BatteryCapacityLevel batteryCapacityLevel = BatteryCapacityLevel::LEVEL_NONE;
-    int32_t capacity = GetCapacity();
-    if (IsCapacityLevelDefined(shutdownCapacityThreshold_) && capacity > 0 && capacity <= shutdownCapacityThreshold_) {
+    int32_t capacity = GetCapacityInner();
+    if (shutdownCapacityThreshold_ <= 0 || criticalCapacityThreshold_ <= shutdownCapacityThreshold_ ||
+        warningCapacityThreshold_ <= criticalCapacityThreshold_ ||
+        lowCapacityThreshold_ <= warningCapacityThreshold_ ||
+        normalCapacityThreshold_ <= lowCapacityThreshold_ || highCapacityThreshold_ <= normalCapacityThreshold_ ||
+        fullCapacityThreshold_ <= highCapacityThreshold_) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "capacityThreshold err");
+    }
+    if (CapacityLevelCompare(capacity, 0, shutdownCapacityThreshold_)) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_SHUTDOWN;
-    } else if (IsCapacityLevelDefined(criticalCapacityThreshold_) && capacity > shutdownCapacityThreshold_ &&
-        capacity <= criticalCapacityThreshold_) {
+    } else if (CapacityLevelCompare(capacity, shutdownCapacityThreshold_, criticalCapacityThreshold_)) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_CRITICAL;
-    } else if (IsCapacityLevelDefined(warningCapacityThreshold_) && capacity > criticalCapacityThreshold_ &&
-        capacity <= warningCapacityThreshold_) {
+    } else if (CapacityLevelCompare(capacity, criticalCapacityThreshold_, warningCapacityThreshold_)) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_WARNING;
-    } else if (IsCapacityLevelDefined(lowCapacityThreshold_) && capacity > warningCapacityThreshold_ &&
-        capacity <= lowCapacityThreshold_) {
+    } else if (CapacityLevelCompare(capacity, warningCapacityThreshold_, lowCapacityThreshold_)) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_LOW;
-    } else if (IsCapacityLevelDefined(normalCapacityThreshold_) && capacity > lowCapacityThreshold_ &&
-        capacity <= normalCapacityThreshold_) {
+    } else if (CapacityLevelCompare(capacity, lowCapacityThreshold_, normalCapacityThreshold_)) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_NORMAL;
-    } else if (IsCapacityLevelDefined(highCapacityThreshold_) && capacity > normalCapacityThreshold_ &&
-        capacity <= highCapacityThreshold_) {
+    } else if (CapacityLevelCompare(capacity, normalCapacityThreshold_, highCapacityThreshold_)) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_HIGH;
-    } else if (IsCapacityLevelDefined(fullCapacityThreshold_) && capacity > highCapacityThreshold_ &&
-        capacity <= fullCapacityThreshold_) {
+    } else if (CapacityLevelCompare(capacity, highCapacityThreshold_, fullCapacityThreshold_)) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_FULL;
     }
     return batteryCapacityLevel;
@@ -1007,6 +1016,125 @@ void BatteryService::VibratorInit()
     std::shared_ptr<PowerVibrator> vibrator = PowerVibrator::GetInstance();
     vibrator->LoadConfig(BATTERY_VIBRATOR_CONFIG_FILE,
         VENDOR_BATTERY_VIBRATOR_CONFIG_FILE, SYSTEM_BATTERY_VIBRATOR_CONFIG_FILE);
+}
+
+int32_t BatteryService::GetCapacity(int32_t& capacity)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetCapacity");
+    capacity = GetCapacityInner();
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetChargingStatus(uint32_t& chargeState)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetChargingStatus");
+    chargeState = static_cast<uint32_t>(GetChargingStatusInner());
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetHealthStatus(uint32_t& healthState)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetHealthStatus");
+    healthState = static_cast<uint32_t>(GetHealthStatusInner());
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetPluggedType(uint32_t& pluggedType)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetPluggedType");
+    pluggedType = static_cast<uint32_t>(GetPluggedTypeInner());
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetVoltage(int32_t& voltage)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetVoltage");
+    voltage = GetVoltageInner();
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetPresent(bool& present)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetPresent");
+    present = GetPresentInner();
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetTechnology(std::string& technology)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetTechnology");
+    technology = GetTechnologyInner();
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetTotalEnergy(int32_t& totalEnergy)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetTotalEnergy");
+    totalEnergy = GetTotalEnergyInner();
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetCurrentAverage(int32_t& curAverage)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetCurrentAverage");
+    curAverage = GetCurrentAverageInner();
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetNowCurrent(int32_t& nowCurr)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetNowCurrent");
+    nowCurr = GetNowCurrentInner();
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetRemainEnergy(int32_t& remainEnergy)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetRemainEnergy");
+    remainEnergy= GetRemainEnergyInner();
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetBatteryTemperature(int32_t& temperature)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetBatteryTemperature");
+    temperature = GetBatteryTemperatureInner();
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetCapacityLevel(uint32_t& batteryCapacityLevel)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetCapacityLevel");
+    batteryCapacityLevel = static_cast<uint32_t>(GetCapacityLevelInner());
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetRemainingChargeTime(int64_t& remainTime)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetRemainingChargeTime");
+    remainTime = GetRemainingChargeTimeInner();
+    return ERR_OK;
+}
+
+int32_t BatteryService::SetBatteryConfig(const std::string& sceneName, const std::string& value, int32_t& batteryErr)
+{
+    BatteryXCollie batteryXCollie("BatteryService::SetBatteryConfig");
+    batteryErr = static_cast<int32_t>(SetBatteryConfigInner(sceneName, value));
+    return ERR_OK;
+}
+
+int32_t BatteryService::GetBatteryConfig(const std::string& sceneName, std::string& result, int32_t& batteryErr)
+{
+    BatteryXCollie batteryXCollie("BatteryService::GetBatteryConfig");
+    batteryErr = static_cast<int32_t>(GetBatteryConfigInner(sceneName, result));
+    return ERR_OK;
+}
+
+int32_t BatteryService::IsBatteryConfigSupported(const std::string& featureName, bool& result, int32_t& batteryErr)
+{
+    BatteryXCollie batteryXCollie("BatteryService::IsBatteryConfigSupported");
+    batteryErr = static_cast<int32_t>(IsBatteryConfigSupportedInner(featureName, result));
+    return ERR_OK;
 }
 } // namespace PowerMgr
 } // namespace OHOS
