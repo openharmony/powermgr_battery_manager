@@ -25,6 +25,8 @@ ohos_benchmarktest("BatteryBenchmarkTest") {
     "ipc:ipc_core",
   ]
 
+  external_deps += [ "hilog:libhilog" ]
+
   cflags = [
     "-Wall",
     "-Wextra",
