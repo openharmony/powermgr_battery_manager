@@ -65,7 +65,11 @@ if (!defined(global_parts_info) || defined(global_parts_info.arkui_ui_lite)) {
 } else {
   has_ui_lite_part = false
 }
-
+if (!defined(global_parts_info) || defined(global_parts_info.graphic_utils_lite)) {
+  has_graphic_utils_lite_part = true
+} else {
+  has_graphic_utils_lite_part = false
+}
 if (!defined(global_parts_info) ||
     defined(global_parts_info.customization_config_policy)) {
   has_battery_config_policy_part = true
