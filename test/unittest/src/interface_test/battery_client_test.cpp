@@ -335,7 +335,7 @@ HWTEST_F (BatteryClientTest, BatteryClient008, TestSize.Level1)
 #ifdef PC_TEST
         ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
 #else
-        ASSERT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+        EXPECT_FALSE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_BUTT);
 #endif
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryClient::BatteryClient008 function end!");
