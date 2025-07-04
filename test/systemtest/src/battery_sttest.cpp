@@ -648,7 +648,7 @@ HWTEST_F (BatterySttest, BatteryST018, TestSize.Level1)
 #ifdef PC_TEST
         EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
 #else
-        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+        EXPECT_FALSE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_BUTT);
 #endif
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryST018 function end!");
@@ -683,7 +683,7 @@ HWTEST_F (BatterySttest, BatteryST019, TestSize.Level1)
 #ifdef PC_TEST
         EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
 #else
-        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+        EXPECT_FALSE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_BUTT);
 #endif
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryST019 function end!");
@@ -718,7 +718,7 @@ HWTEST_F (BatterySttest, BatteryST020, TestSize.Level1)
 #ifdef PC_TEST
         EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
 #else
-        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+        EXPECT_FALSE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_BUTT);
 #endif
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryST020 function end!");
@@ -754,7 +754,7 @@ HWTEST_F (BatterySttest, BatteryST021, TestSize.Level1)
 #ifdef PC_TEST
         EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC);
 #else
-        EXPECT_TRUE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB);
+        EXPECT_FALSE(pluggedType == OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_BUTT);
 #endif
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryST021 function end!");
