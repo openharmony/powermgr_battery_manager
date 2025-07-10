@@ -20,6 +20,12 @@ group("tests") {
 }
 
 ohos_unittest("test_ohbattery_info") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+
   module_out_path = "${module_output_path}"
   configs = [
     "${battery_utils}:utils_config",
