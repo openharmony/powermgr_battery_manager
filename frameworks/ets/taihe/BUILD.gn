@@ -19,3 +19,11 @@ group("battery_manager_taihe") {
     "charger:battery_manager_charger_taihe_native",
   ]
 }
+
+group("battery_manager_taihe_test") {
+  testonly = true
+  deps = [
+    "batteryInfo/test/unittest:battery_taihe_native_test",
+    "charger/test/unittest:charger_taihe_native_test",
+  ]
+}
