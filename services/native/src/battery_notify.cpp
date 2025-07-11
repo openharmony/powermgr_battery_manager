@@ -390,7 +390,10 @@ void StartChargingSoundFunc()
 #ifdef CONFIG_USE_JEMALLOC_DFX_INTF
         OHOS::PowerMgr::MemoryGuard guard;
 #endif
-        ChargingSoundStart();
+        if (!ChargingSoundStart()) {
+            g_released.store(true);
+            return;
+        }
         for (int timePassed = 0; timePassed < MAX_PLAY_TIME_MS; timePassed += TICK_INTERVAL_MS) {
             if (g_stopping.load()) {
                 break;
