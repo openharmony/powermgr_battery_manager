@@ -390,7 +390,7 @@ void StartChargingSoundFunc()
 #ifdef CONFIG_USE_JEMALLOC_DFX_INTF
         OHOS::PowerMgr::MemoryGuard guard;
 #endif
-        if(!ChargingSoundStart()) {
+        if (!ChargingSoundStart()) {
             g_released.store(true);
             return;
         }
