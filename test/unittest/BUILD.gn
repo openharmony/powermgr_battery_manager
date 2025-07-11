@@ -51,6 +51,12 @@ ohos_unittest("test_battery_service_interface") {
   module_out_path = "${module_output_path}"
   defines += [ "GTEST" ]
 
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
     "${battery_utils}/native/src/battery_xcollie.cpp",
@@ -96,6 +102,12 @@ ohos_unittest("test_battery_service_interface") {
 ohos_unittest("test_battery_service_scenario") {
   module_out_path = "${module_output_path}"
   defines += [ "GTEST" ]
+
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
 
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
@@ -234,6 +246,12 @@ ohos_unittest("test_battery_callback") {
   module_out_path = "${module_output_path}"
   defines += [ "GTEST" ]
 
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+
   sources = [ "src/scenario_test/battery_callback_test.cpp" ]
 
   configs = [
@@ -310,6 +328,12 @@ ohos_unittest("test_battery_dump") {
 ohos_unittest("test_battery_stub") {
   module_out_path = "${module_output_path}"
   defines += [ "GTEST" ]
+
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
 
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
