@@ -1,0 +1,97 @@
+/*
+ * Copyright (c) 2025 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@!namespace("@ohos.batteryInfo", "batteryInfo")
+
+@!sts_inject("""
+static { loadLibrary("battery_manager_taihe_native.z") }""")
+
+function SetBatteryConfig(sceneName: String, sceneValue: String): i32;
+
+function GetBatteryConfig(sceneName: String): String;
+
+function IsBatteryConfigSupported(sceneName: String): bool;
+
+function BatterySOC(): i32;
+
+function ChargingStatus(): BatteryChargeState;
+
+function HealthStatus(): BatteryHealthState;
+
+function PluggedType(): BatteryPluggedType;
+
+function Voltage(): i32;
+
+function Technology(): String;
+
+function BatteryTemperature(): i32;
+
+function IsBatteryPresent(): bool;
+
+@overload("batteryCapacityLevel")
+function GetCapacityLevel(): BatteryCapacityLevel;
+
+function EstimatedRemainingChargeTime(): i64;
+
+function TotalEnergy(): i32;
+
+function NowCurrent(): i32;
+
+function RemainingEnergy(): i32;
+
+enum BatteryPluggedType : i32 {
+  NONE,
+  AC,
+  USB,
+  WIRELESS
+}
+
+enum BatteryChargeState : i32 {
+  NONE,
+  ENABLE,
+  DISABLE,
+  FULL
+}
+
+enum BatteryHealthState : i32{
+  UNKNOWN,
+  GOOD,
+  OVERHEAT,
+  OVERVOLTAGE,
+  COLD,
+  DEAD
+}
+
+enum BatteryCapacityLevel : i32 {
+  LEVEL_FULL,
+  LEVEL_HIGH,
+  LEVEL_NORMAL,
+  LEVEL_LOW,
+  LEVEL_WARNING,
+  LEVEL_CRITICAL,
+  LEVEL_SHUTDOWN
+}
+
+enum CommonEventBatteryChangedKey : String {
+  EXTRA_SOC = "soc",
+  EXTRA_CHARGE_STATE = "chargeState",
+  EXTRA_HEALTH_STATE = "healthState",
+  EXTRA_PLUGGED_TYPE = "pluggedType",
+  EXTRA_VOLTAGE = "voltage",
+  EXTRA_TECHNOLOGY = "technology",
+  EXTRA_TEMPERATURE = "temperature",
+  EXTRA_PRESENT = "present",
+  EXTRA_CAPACITY_LEVEL = "capacityLevel"
+}
