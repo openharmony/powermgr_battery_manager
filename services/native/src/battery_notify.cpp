@@ -371,7 +371,11 @@ void StartChargingSoundFunc()
         return;
     }
     AntiMemLeak();
-    void* handle = dlopen("libcharging_sound.z.so", RTLD_LAZY);
+    void* handle = dlopen("libcharging_sound.z.so", RTLD_NOLOAD);
+    if (!handle) {
+        BATTERY_HILOGI(FEATURE_BATT_INFO, "libcharging_sound not loaded");
+        handle = dlopen("libcharging_sound.z.so", RTLD_LAZY);
+    }
     if (!handle) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "dlopen libcharging_sound failed: ret=%{public}s", dlerror());
         g_released.store(true);
@@ -391,6 +395,7 @@ void StartChargingSoundFunc()
         OHOS::PowerMgr::MemoryGuard guard;
 #endif
         if (!ChargingSoundStart()) {
+            BATTERY_HILOGE(FEATURE_BATT_INFO, "ChargingSoundStart failed");
             g_released.store(true);
             return;
         }
