@@ -121,6 +121,10 @@ ohos_unittest("test_battery_service_scenario") {
     "${battery_utils}:coverage_flags",
   ]
 
+  if (battery_manager_feature_enable_charging_sound) {
+    deps += [ "${battery_service}:charging_sound" ]
+  }
+
   deps = [
     "${battery_inner_api}:batterysrv_client",
     "${battery_service_zidl}:batterysrv_stub",
@@ -138,10 +142,12 @@ ohos_unittest("test_battery_service_scenario") {
     "cJSON:cjson",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "ffrt:libffrt",
     "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
+    "power_manager:power_ffrt",
     "safwk:system_ability_fwk",
   ]
 
