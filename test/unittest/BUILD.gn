@@ -121,16 +121,16 @@ ohos_unittest("test_battery_service_scenario") {
     "${battery_utils}:coverage_flags",
   ]
 
-  if (battery_manager_feature_enable_charging_sound) {
-    deps += [ "${battery_service}:charging_sound" ]
-  }
-
   deps = [
     "${battery_inner_api}:batterysrv_client",
     "${battery_service_zidl}:batterysrv_stub",
     "${battery_service}:battery_notification",
     "${battery_service}:batteryservice",
   ]
+
+  if (battery_manager_feature_enable_charging_sound) {
+    deps += [ "${battery_service}:charging_sound" ]
+  }
 
   external_deps = [
     "ability_base:want",
