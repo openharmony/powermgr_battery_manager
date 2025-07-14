@@ -25,10 +25,16 @@
 #include "battery_notify.h"
 #include "battery_service.h"
 #include "battery_config.h"
+#include "charging_sound.h"
+#include "ffrt_utils.h"
 using namespace testing::ext;
 
 namespace OHOS {
 namespace PowerMgr {
+namespace {
+bool g_retval = false;
+bool g_called = false;
+} // namespace
 BatteryInfo* g_batteryInfo;
 std::shared_ptr<BatteryNotify> g_batteryNotify;
 sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
@@ -88,6 +94,15 @@ void BatteryNotifyTest::DestroyJsonValue(cJSON*& value)
         cJSON_Delete(value);
         value = nullptr;
     }
+}
+
+// the static member function may be inlined in the C API func be the compiler
+// thus redefine the non-static one which can't be inlined out
+bool ChargingSound::Play()
+{
+    BATTERY_HILOGI(LABEL_TEST, "mock function called");
+    g_called = true;
+    return g_retval;
 }
 
 /**
@@ -476,6 +491,33 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify024, TestSize.Level1)
 #endif
     DestroyJsonValue(batteryConfig.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify024 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify026
+ * @tc.desc: Test Charger Sound
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify026, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify026 function start!");
+    DelayedSpSingleton<BatteryService>::GetInstance()->Init();
+    g_batteryInfo->SetUevent("");
+    for (bool retval : {true, false}) {
+        g_retval = retval;
+        BatteryPluggedType pluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
+        g_batteryInfo->SetPluggedType(pluggedType);
+        auto ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
+        EXPECT_EQ(ret, ERR_OK);
+        pluggedType = BatteryPluggedType::PLUGGED_TYPE_AC;
+        g_batteryInfo->SetPluggedType(pluggedType);
+        ret = g_batteryNotify->PublishEvents(*g_batteryInfo);
+        EXPECT_EQ(ret, ERR_OK);
+        ffrt::wait();
+    }
+    EXPECT_TRUE(g_called);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify026 function end!");
+    ffrt::wait();
 }
 } // namespace PowerMgr
 } // namespace OHOS
