@@ -77,7 +77,7 @@ private:
     std::pair<ImageComponentInfo, LabelComponentInfo> animationInfo_;
     LabelComponentInfo chargingInfo_;
     LabelComponentInfo notChargingInfo_;
-    cJSON* configObj_;
+    cJSON* configObj_ = nullptr;
 };
 } // namespace PowerMgr
 } // namespace OHOS

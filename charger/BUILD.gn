@@ -45,6 +45,7 @@ ohos_executable("charger") {
   configs = [
     ":batteryd_private_config",
     "./../utils:coverage_flags",
+    "./../utils:utils_config",
   ]
 
   external_deps = [
