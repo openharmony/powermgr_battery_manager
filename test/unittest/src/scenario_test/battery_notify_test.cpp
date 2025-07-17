@@ -27,6 +27,7 @@
 #include "battery_config.h"
 #include "charging_sound.h"
 #include "ffrt_utils.h"
+#include "notification_locale.h"
 using namespace testing::ext;
 
 namespace OHOS {
@@ -491,6 +492,50 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify024, TestSize.Level1)
 #endif
     DestroyJsonValue(batteryConfig.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify024 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify025
+ * @tc.desc: Test SaveJsonToMap
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify025, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify025 function start!");
+    auto& localeConfig = NotificationLocale::GetInstance();
+    std::unordered_map<std::string, std::string> stringMap;
+    std::string jsonStr = "mock data";
+    localeConfig.SaveJsonToMap(jsonStr, "", stringMap);
+    EXPECT_TRUE(stringMap.size() == 0);
+
+    jsonStr = R"(null)";
+    localeConfig.SaveJsonToMap(jsonStr, "", stringMap);
+    EXPECT_TRUE(stringMap.size() == 0);
+
+    jsonStr = R"([{"wirelesscharger": null}])";
+    localeConfig.SaveJsonToMap(jsonStr, "", stringMap);
+    EXPECT_TRUE(stringMap.size() == 0);
+
+    jsonStr = R"({"wirelesscharger": null})";
+    localeConfig.SaveJsonToMap(jsonStr, "", stringMap);
+    EXPECT_TRUE(stringMap.size() == 0);
+
+    jsonStr = R"({"string": null})";
+    localeConfig.SaveJsonToMap(jsonStr, "", stringMap);
+    EXPECT_TRUE(stringMap.size() == 0);
+
+    jsonStr = R"({"string": 1})";
+    localeConfig.SaveJsonToMap(jsonStr, "", stringMap);
+    EXPECT_TRUE(stringMap.size() == 0);
+
+    jsonStr = R"({"string": [{"name": ""},{"value": ""},{"name": 1,"value": ""}]})";
+    localeConfig.SaveJsonToMap(jsonStr, "", stringMap);
+    EXPECT_TRUE(stringMap.size() == 0);
+
+    jsonStr = R"({"string": [{"name": "","value": 1},{"name": "","value": ""}]})";
+    localeConfig.SaveJsonToMap(jsonStr, "", stringMap);
+    EXPECT_TRUE(stringMap.size() == 0);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify025 function end!");
 }
 
 /**

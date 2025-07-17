@@ -705,7 +705,42 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0026, TestSize.Level1)
     g_configTest.ParseBootActionsConf();
     EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
     DestroyJsonValue(g_configTest.config_);
+
+    jsonStr = R"({"boot_actions": null})";
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
+    g_configTest.ParseBootActionsConf();
+    EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
+
+    jsonStr = R"({"boot_actions": {"sendcommonevent": null}})";
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
+    g_configTest.ParseBootActionsConf();
+    EXPECT_TRUE(g_configTest.commonEventConf_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0026 function end!");
+}
+
+/**
+ * @tc.name: BatteryConfig0027
+ * @tc.desc: test ParsePopupConf
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryConfigTest, BatteryConfig0027, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0027 function start!");
+    g_configTest.popupConfig_.clear();
+    std::string jsonStr = R"({"popup": {"XXX": [{"action": 456},{"name": "123"},{"name": 123, "action": 456}]}})";
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
+    g_configTest.ParsePopupConf();
+    EXPECT_TRUE(g_configTest.popupConfig_.size() == 1);
+    DestroyJsonValue(g_configTest.config_);
+
+    jsonStr = R"({"popup": {"XXX": [{"name": "123", "action": "456"}]}})";
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
+    g_configTest.ParsePopupConf();
+    EXPECT_TRUE(g_configTest.popupConfig_.size() == 1);
+    DestroyJsonValue(g_configTest.config_);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0027 function end!");
 }
 } // namespace PowerMgr
 } // namespace OHOS

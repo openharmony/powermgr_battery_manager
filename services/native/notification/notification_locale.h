@@ -22,7 +22,6 @@
 #include <string>
 #include <unistd.h>
 
-#include <cJSON.h>
 #include "nocopyable.h"
 
 namespace OHOS {
@@ -38,6 +37,8 @@ public:
     std::string GetStringByKey(const std::string& key);
 private:
     bool ParseJsonfile(const std::string& targetPath, std::unordered_map<std::string, std::string>& container);
+    bool SaveJsonToMap(const std::string& fileStr, const std::string& targetPath,
+        std::unordered_map<std::string, std::string>& container);
     std::unordered_map<std::string, std::string> languageMap_;
     std::unordered_map<std::string, std::string> stringMap_;
     std::string localeBaseName_;

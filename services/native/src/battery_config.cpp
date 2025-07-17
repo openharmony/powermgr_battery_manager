@@ -22,6 +22,7 @@
 #endif
 
 #include "battery_log.h"
+#include "battery_mgr_cjson_utils.h"
 #include "power_common.h"
 
 namespace {
@@ -91,10 +92,10 @@ bool BatteryConfig::ParseConfig()
         return false;
     }
 
-    if (cJSON_IsNull(config_) || (cJSON_IsObject(config_) && (config_->child == nullptr)) ||
-        (cJSON_IsArray(config_) && (cJSON_GetArraySize(config_) == 0))) {
+    if (BatteryMgrJsonUtils::IsEmptyJsonParse(config_)) {
         cJSON_Delete(config_);
         config_ = nullptr;
+        BATTERY_HILOGW(FEATURE_CHARGING, "cJSON parse result is empty, battery config is %{public}s", content.c_str());
         return false;
     } else {
         ParseConfInner();
@@ -112,7 +113,7 @@ bool BatteryConfig::IsExist(std::string key) const
 int32_t BatteryConfig::GetInt(std::string key, int32_t defVal) const
 {
     cJSON* value = GetValue(key);
-    return (!value || cJSON_IsNull(value) || !cJSON_IsNumber(value)) ? defVal : static_cast<int32_t>(value->valueint);
+    return (!BatteryMgrJsonUtils::IsValidJsonNumber(value)) ? defVal : static_cast<int32_t>(value->valueint);
 }
 
 const std::vector<BatteryConfig::LightConf>& BatteryConfig::GetLightConf() const
@@ -169,21 +170,29 @@ void BatteryConfig::ParseLightConf(std::string level)
 {
     cJSON* soc = GetValue("light." + level + ".soc");
     cJSON* rgb = GetValue("light." + level + ".rgb");
-    if (!cJSON_IsArray(soc) || !cJSON_IsArray(rgb)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonArray(soc) || !BatteryMgrJsonUtils::IsValidJsonArray(rgb)) {
         BATTERY_HILOGW(COMP_SVC, "The battery light %{public}s configuration is invalid.", level.c_str());
+        return;
+    }
+    if (cJSON_GetArraySize(soc) != MAX_SOC_RANGE) {
+        BATTERY_HILOGW(COMP_SVC, "The battery light %{public}s soc data length error.", level.c_str());
         return;
     }
     cJSON* beginSocItem = cJSON_GetArrayItem(soc, BEGIN_SOC_INDEX);
     cJSON* endSocItem = cJSON_GetArrayItem(soc, END_SOC_INDEX);
-    if (cJSON_GetArraySize(soc) != MAX_SOC_RANGE || !cJSON_IsNumber(beginSocItem) || !cJSON_IsNumber(endSocItem)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonNumber(beginSocItem) || !BatteryMgrJsonUtils::IsValidJsonNumber(endSocItem)) {
         BATTERY_HILOGW(COMP_SVC, "The battery light %{public}s soc data type error.", level.c_str());
+        return;
+    }
+    if (cJSON_GetArraySize(rgb) != MAX_RGB_RANGE) {
+        BATTERY_HILOGW(COMP_SVC, "The battery light %{public}s rgb data length error.", level.c_str());
         return;
     }
     cJSON* redItem = cJSON_GetArrayItem(rgb, RED_INDEX);
     cJSON* greenItem = cJSON_GetArrayItem(rgb, GREEN_INDEX);
     cJSON* blueItem = cJSON_GetArrayItem(rgb, BLUE_INDEX);
-    if (cJSON_GetArraySize(rgb) != MAX_RGB_RANGE ||
-        !cJSON_IsNumber(redItem) || !cJSON_IsNumber(greenItem) || !cJSON_IsNumber(blueItem)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonNumber(redItem) || !BatteryMgrJsonUtils::IsValidJsonNumber(greenItem) ||
+        !BatteryMgrJsonUtils::IsValidJsonNumber(blueItem)) {
         BATTERY_HILOGW(COMP_SVC, "The battery light %{public}s rgb data type error.", level.c_str());
         return;
     }
@@ -200,7 +209,7 @@ void BatteryConfig::ParseLightConf(std::string level)
 void BatteryConfig::ParseWirelessChargerConf()
 {
     cJSON* wirelessCharger = GetValue("wirelesscharger");
-    if (!wirelessCharger || cJSON_IsNull(wirelessCharger) || !cJSON_IsNumber(wirelessCharger)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonNumber(wirelessCharger)) {
         BATTERY_HILOGW(COMP_SVC, "wirelesscharger is invalid");
         return;
     }
@@ -210,7 +219,7 @@ void BatteryConfig::ParseWirelessChargerConf()
 void BatteryConfig::ParseBootActionsConf()
 {
     cJSON* bootActionsConfig = GetValue("boot_actions");
-    if (!bootActionsConfig || cJSON_IsNull(bootActionsConfig) || !cJSON_IsObject(bootActionsConfig)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonObject(bootActionsConfig)) {
         BATTERY_HILOGW(COMP_SVC, "boot_actions is invalid");
         return;
     }
@@ -220,7 +229,7 @@ void BatteryConfig::ParseBootActionsConf()
 void BatteryConfig::ParseCommonEventConf(const cJSON* bootActionsConfig)
 {
     cJSON* commonEventConfs = cJSON_GetObjectItemCaseSensitive(bootActionsConfig, "sendcommonevent");
-    if (!commonEventConfs || cJSON_IsNull(commonEventConfs) || !cJSON_IsArray(commonEventConfs)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonArray(commonEventConfs)) {
         BATTERY_HILOGW(COMP_SVC, "The common event config is invalid");
         return;
     }
@@ -235,14 +244,16 @@ void BatteryConfig::ParseCommonEventConf(const cJSON* bootActionsConfig)
         cJSON* sceneConfigNotEqual = sceneConfig ?
             cJSON_GetObjectItemCaseSensitive(sceneConfig, "not_equal") : nullptr;
         cJSON* uevent = cJSON_GetObjectItemCaseSensitive(commonEventConf, "uevent");
-        if (!cJSON_IsString(eventName) || !cJSON_IsString(sceneConfigName) || !cJSON_IsString(uevent)) {
+        if (!BatteryMgrJsonUtils::IsValidJsonString(eventName) ||
+            !BatteryMgrJsonUtils::IsValidJsonString(sceneConfigName) ||
+            !BatteryMgrJsonUtils::IsValidJsonString(uevent)) {
             BATTERY_HILOGW(COMP_SVC, "parse common event config failed");
             continue;
         }
-        if (sceneConfigEqual && !cJSON_IsNull(sceneConfigEqual) && cJSON_IsString(sceneConfigEqual)) {
+        if (BatteryMgrJsonUtils::IsValidJsonString(sceneConfigEqual)) {
             tempCommonEventConf.sceneConfigEqual = true;
             tempCommonEventConf.sceneConfigValue = sceneConfigEqual->valuestring;
-        } else if (sceneConfigNotEqual && !cJSON_IsNull(sceneConfigNotEqual) && cJSON_IsString(sceneConfigNotEqual)) {
+        } else if (BatteryMgrJsonUtils::IsValidJsonString(sceneConfigNotEqual)) {
             tempCommonEventConf.sceneConfigEqual = false;
             tempCommonEventConf.sceneConfigValue = sceneConfigNotEqual->valuestring;
         } else {
@@ -267,7 +278,7 @@ const std::unordered_map<std::string, std::vector<BatteryConfig::PopupConf>>& Ba
 void BatteryConfig::ParsePopupConf()
 {
     cJSON* popupConfig = GetValue("popup");
-    if (!popupConfig || cJSON_IsNull(popupConfig) || !cJSON_IsObject(popupConfig)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonObject(popupConfig)) {
         BATTERY_HILOGW(COMP_SVC, "popupConfig invalid");
         return;
     }
@@ -279,7 +290,7 @@ void BatteryConfig::ParsePopupConf()
             continue;
         }
         std::string uevent = valueObj->string;
-        if (cJSON_IsNull(valueObj) || !cJSON_IsArray(valueObj)) {
+        if (!BatteryMgrJsonUtils::IsValidJsonArray(valueObj)) {
             BATTERY_HILOGW(COMP_SVC, "ueventConf invalid, key=%{public}s", uevent.c_str());
             continue;
         }
@@ -288,7 +299,8 @@ void BatteryConfig::ParsePopupConf()
         cJSON_ArrayForEach(popupObj, valueObj) {
             cJSON* popupName = cJSON_GetObjectItemCaseSensitive(popupObj, "name");
             cJSON* popupAction = cJSON_GetObjectItemCaseSensitive(popupObj, "action");
-            if (!popupName || !popupAction || !cJSON_IsString(popupName) || !cJSON_IsNumber(popupAction)) {
+            if (!BatteryMgrJsonUtils::IsValidJsonString(popupName) ||
+                !BatteryMgrJsonUtils::IsValidJsonNumber(popupAction)) {
                 BATTERY_HILOGW(COMP_SVC, "popupObj invalid, key=%{public}s", uevent.c_str());
                 continue;
             }
@@ -313,10 +325,15 @@ const std::unordered_map<std::string, BatteryConfig::NotificationConf>& BatteryC
 void BatteryConfig::ParseNotificationConf()
 {
     cJSON* nConf = GetValue("notification");
-    if (!nConf || cJSON_IsNull(nConf) || !cJSON_IsArray(nConf)) {
+    if (!BatteryMgrJsonUtils::IsValidJsonArray(nConf)) {
         BATTERY_HILOGW(COMP_SVC, "nConf is invalid");
         return;
     }
+    SaveNotificationConfToMap(nConf);
+}
+
+void BatteryConfig::SaveNotificationConfToMap(cJSON* nConf)
+{
     cJSON* conf = nullptr;
     cJSON_ArrayForEach(conf, nConf) {
         cJSON* nameObj = cJSON_GetObjectItemCaseSensitive(conf, "name");
@@ -324,17 +341,20 @@ void BatteryConfig::ParseNotificationConf()
         cJSON* titleObj = cJSON_GetObjectItemCaseSensitive(conf, "title");
         cJSON* textObj = cJSON_GetObjectItemCaseSensitive(conf, "text");
         cJSON* buttonObj = cJSON_GetObjectItemCaseSensitive(conf, "button");
-        if (!cJSON_IsString(nameObj) || !cJSON_IsString(iconObj) ||!cJSON_IsString(titleObj) ||
-            !cJSON_IsString(textObj) || !cJSON_IsArray(buttonObj)) {
+        if (!BatteryMgrJsonUtils::IsValidJsonString(nameObj) || !BatteryMgrJsonUtils::IsValidJsonString(iconObj) ||
+            !BatteryMgrJsonUtils::IsValidJsonString(titleObj) || !BatteryMgrJsonUtils::IsValidJsonString(textObj) ||
+            !BatteryMgrJsonUtils::IsValidJsonArray(buttonObj)) {
             BATTERY_HILOGW(COMP_SVC, "stringConf Parse failed");
             continue;
         }
         if (cJSON_GetArraySize(buttonObj) != MAX_BUTTON_RANGE) {
+            BATTERY_HILOGW(COMP_SVC, "notificationConf button data length error");
             continue;
         }
         cJSON* firstButton = cJSON_GetArrayItem(buttonObj, FIRST_BUTTON_INDEX);
         cJSON* secondButton = cJSON_GetArrayItem(buttonObj, SECOND_BUTTON_INDEX);
-        if (!cJSON_IsObject(firstButton) || !cJSON_IsObject(secondButton)) {
+        if (!BatteryMgrJsonUtils::IsValidJsonObject(firstButton) ||
+            !BatteryMgrJsonUtils::IsValidJsonObject(secondButton)) {
             BATTERY_HILOGW(COMP_SVC, "buttonConf is invalid");
             continue;
         }
@@ -342,8 +362,10 @@ void BatteryConfig::ParseNotificationConf()
         cJSON* firstButtonActionObj = cJSON_GetObjectItemCaseSensitive(firstButton, "action");
         cJSON* secondButtonNameObj = cJSON_GetObjectItemCaseSensitive(secondButton, "name");
         cJSON* secondButtonActionObj = cJSON_GetObjectItemCaseSensitive(secondButton, "action");
-        if (!cJSON_IsString(firstButtonNameObj) || !cJSON_IsString(firstButtonActionObj) ||
-            !cJSON_IsString(secondButtonNameObj) || !cJSON_IsString(secondButtonActionObj)) {
+        if (!BatteryMgrJsonUtils::IsValidJsonString(firstButtonNameObj) ||
+            !BatteryMgrJsonUtils::IsValidJsonString(firstButtonActionObj) ||
+            !BatteryMgrJsonUtils::IsValidJsonString(secondButtonNameObj) ||
+            !BatteryMgrJsonUtils::IsValidJsonString(secondButtonActionObj)) {
             BATTERY_HILOGW(COMP_SVC, "buttonConf Parse failed");
             return;
         }
