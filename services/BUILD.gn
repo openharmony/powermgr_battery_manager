@@ -185,6 +185,7 @@ ohos_shared_library("battery_notification") {
     "hilog:libhilog",
     "i18n:intl_util",
     "image_framework:image_native",
+    "ipc:ipc_single"
   ]
 
   subsystem_name = "powermgr"
