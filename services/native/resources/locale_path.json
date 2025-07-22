@@ -27,6 +27,34 @@
         {
             "name":"zz-ZX",
             "value":"zz_ZX"
+        },
+        {
+            "name":"ar-CN",
+            "value":"ar"
+        },
+        {
+            "name":"es-CN",
+            "value":"es"
+        },
+        {
+            "name":"fr-CN",
+            "value":"fr"
+        },
+        {
+            "name":"ja-CN",
+            "value":"ja"
+        },
+        {
+            "name":"ko-CN",
+            "value":"ko"
+        },
+        {
+            "name":"ru-CN",
+            "value":"ru"
+        },
+        {
+            "name":"vi-CN",
+            "value":"vi"
         }
     ]
 }
