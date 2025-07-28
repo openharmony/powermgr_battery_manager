@@ -13,12 +13,17 @@
  * limitations under the License.
  */
 
-class batteryInfo {
-    static { loadLibrary("battery_ani.z") }
-    readonly batterySOC: int;
-    static get batterySOC(): int {
-        return batteryInfo.getBatterySOC();
-    }
-    static native getBatterySOC(): int;
+@!namespace("@ohos.charger", "charger")
+
+@!sts_inject("""
+static { loadLibrary("battery_manager_charger_taihe_native.z") }""")
+
+enum ChargeType : i32 {
+  NONE,
+  WIRED_NORMAL,
+  WIRED_QUICK,
+  WIRED_SUPER_QUICK,
+  WIRELESS_NORMAL,
+  WIRELESS_QUICK,
+  WIRELESS_SUPER_QUICK
 }
-export default batteryInfo;
