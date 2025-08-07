@@ -25,16 +25,20 @@
 #include "battery_notify.h"
 #include "battery_service.h"
 #include "battery_config.h"
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
 #include "charging_sound.h"
 #include "ffrt_utils.h"
+#endif
 #include "notification_locale.h"
 using namespace testing::ext;
 
 namespace OHOS {
 namespace PowerMgr {
 namespace {
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
 bool g_retval = false;
 bool g_called = false;
+#endif
 } // namespace
 BatteryInfo* g_batteryInfo;
 std::shared_ptr<BatteryNotify> g_batteryNotify;
@@ -97,6 +101,7 @@ void BatteryNotifyTest::DestroyJsonValue(cJSON*& value)
     }
 }
 
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
 // the static member function may be inlined in the C API func be the compiler
 // thus redefine the non-static one which can't be inlined out
 bool ChargingSound::Play()
@@ -105,6 +110,7 @@ bool ChargingSound::Play()
     g_called = true;
     return g_retval;
 }
+#endif
 
 /**
  * @tc.name: BatteryNotify001
@@ -543,6 +549,7 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify025, TestSize.Level1)
  * @tc.desc: Test Charger Sound
  * @tc.type: FUNC
  */
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
 HWTEST_F(BatteryNotifyTest, BatteryNotify026, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify026 function start!");
@@ -564,5 +571,6 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify026, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify026 function end!");
     ffrt::wait();
 }
+#endif
 } // namespace PowerMgr
 } // namespace OHOS
