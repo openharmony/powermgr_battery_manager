@@ -128,10 +128,6 @@ ohos_unittest("test_battery_service_scenario") {
     "${battery_service}:batteryservice",
   ]
 
-  if (battery_manager_feature_enable_charging_sound) {
-    deps += [ "${battery_service}:charging_sound" ]
-  }
-
   external_deps = [
     "ability_base:want",
     "ability_base:zuri",
@@ -142,17 +138,24 @@ ohos_unittest("test_battery_service_scenario") {
     "cJSON:cjson",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
-    "ffrt:libffrt",
     "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "ipc:ipc_single",
-    "power_manager:power_ffrt",
     "safwk:system_ability_fwk",
   ]
 
   if (has_drivers_interface_light_part) {
     external_deps += [ "drivers_interface_light:liblight_proxy_1.0" ]
+  }
+
+  if (battery_manager_feature_enable_charging_sound) {
+    deps += [ "${battery_service}:charging_sound" ]
+    defines += [ "BATTERY_MANAGER_ENABLE_CHARGING_SOUND" ]
+    external_deps += [
+      "ffrt:libffrt",
+      "power_manager:power_ffrt",
+    ]
   }
 
   if (battery_manager_feature_enable_wireless_charge) {
