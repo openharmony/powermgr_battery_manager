@@ -44,6 +44,17 @@ BatteryFuzzerTest::~BatteryFuzzerTest()
     service_ = nullptr;
 }
 
+void BatteryFuzzerTest::TestBatteryService()
+{
+    service_->MockUnplugged();
+    service_->IsMockUnplugged();
+    int32_t capacity = 100;
+    service_->MockCapacity(capacity);
+    service_->IsMockCapacity();
+    service_->MockUevent("");
+    service_->Reset();
+}
+
 void BatteryFuzzerTest::TestBatteryServiceStub(const uint32_t code, const uint8_t* data, size_t size)
 {
     MessageParcel datas;
