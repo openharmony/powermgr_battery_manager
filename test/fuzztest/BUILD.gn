@@ -20,7 +20,6 @@ group("fuzztest") {
 
   deps += [
     # deps file
-    "batteryservice_fuzzer:BatteryServiceFuzzTest",
     "getbatteryconfig_fuzzer:GetBatteryConfigFuzzTest",
     "getbatterytemperature_fuzzer:GetBatteryTemperatureFuzzTest",
     "getcapacity_fuzzer:GetCapacityFuzzTest",
