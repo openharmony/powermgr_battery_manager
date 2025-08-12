@@ -32,5 +32,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
     /* Run your code on data */
     g_serviceTest.TestBatteryServiceStub(
         static_cast<uint32_t>(IBatterySrvIpcCode::COMMAND_IS_BATTERY_CONFIG_SUPPORTED), data, size);
+    g_serviceTest.TestBatteryService();
     return 0;
 }
