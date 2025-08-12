@@ -25,6 +25,7 @@ class BatteryFuzzerTest {
 public:
     BatteryFuzzerTest();
     ~BatteryFuzzerTest();
+    void TestBatteryService();
     void TestBatteryServiceStub(const uint32_t code, const uint8_t* data, size_t size);
 
 private:
