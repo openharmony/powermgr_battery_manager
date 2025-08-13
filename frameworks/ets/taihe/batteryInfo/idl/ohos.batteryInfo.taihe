@@ -75,6 +75,7 @@ enum BatteryHealthState : i32 {
 }
 
 enum BatteryCapacityLevel : i32 {
+  LEVEL_NONE,
   LEVEL_FULL,
   LEVEL_HIGH,
   LEVEL_NORMAL,
