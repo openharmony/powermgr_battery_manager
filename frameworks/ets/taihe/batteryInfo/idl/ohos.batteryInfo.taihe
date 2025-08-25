@@ -16,7 +16,7 @@
 @!namespace("@ohos.batteryInfo", "batteryInfo")
 
 @!sts_inject("""
-static { loadLibrary("battery_manager_taihe_native.z") }""")
+static { loadLibraryWithPermissionCheck("battery_manager_taihe_native.z", "@ohos.batteryInfo") }""")
 
 function SetBatteryConfig(sceneName: String, sceneValue: String): i32;
 
