@@ -69,7 +69,7 @@ ohos_executable("charger") {
       battery_manager_feature_enable_charger) {
     defines += [ "ENABLE_CHARGER" ]
     external_deps += [
-      "drivers_interface_display:libdisplay_composer_hdi_impl_1.2",
+      "drivers_interface_display:libdisplay_composer_hdi_impl_1.3",
       "drivers_interface_display:libdisplay_composer_proxy_1.0",
       "drivers_interface_light:liblight_proxy_1.0",
       "graphic_surface:buffer_handle",
