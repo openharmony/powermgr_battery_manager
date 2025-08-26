@@ -50,6 +50,7 @@ ohos_fuzztest("GetCapacityLevelFuzzTest") {
     "cJSON:cjson",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "eventhandler:libeventhandler",
     "hdf_core:libhdi",
     "hdf_core:libpub_utils",
     "hilog:libhilog",
