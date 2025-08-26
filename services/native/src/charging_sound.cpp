@@ -90,11 +90,6 @@ ChargingSound::ChargingSound()
 
 ChargingSound::~ChargingSound()
 {
-    Release();
-    std::shared_ptr<Media::Player> tmp = std::atomic_load_explicit(&player_, std::memory_order_acquire);
-    if (tmp) {
-        tmp->ReleaseClientListener();
-    }
     ICUCleanUp();
     BATTERY_HILOGI(COMP_SVC, "ChargingSound instance destroyed");
 }
@@ -115,6 +110,18 @@ void ChargingSound::Release()
         tmp->ReleaseSync();
     }
     isPlaying_.store(false);
+}
+
+bool ChargingSound::ReleaseClientListener()
+{
+    std::shared_ptr<Media::Player> tmp = std::atomic_load_explicit(&player_, std::memory_order_acquire);
+    if (!tmp) {
+        BATTERY_HILOGE(COMP_SVC, "player is null");
+        return false;
+    }
+    bool ret = tmp->ReleaseClientListener();
+    player_ = nullptr;
+    return ret;
 }
 
 bool ChargingSound::Play()
@@ -181,9 +188,10 @@ bool ChargingSound::PlayGlobal()
     return ret;
 }
 
-void ChargingSound::ReleaseGlobal()
+bool ChargingSound::ReleaseGlobal()
 {
     instance_->Release();
+    return instance_->ReleaseClientListener();
 }
 
 //APIs
@@ -197,5 +205,9 @@ bool IsPlaying()
     return ChargingSound::IsPlayingGlobal();
 }
 
+bool ChargingSoundRelease()
+{
+    return ChargingSound::ReleaseGlobal();
+}
 } // namespace PowerMgr
 } // namespace OHOS
