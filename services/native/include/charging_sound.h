@@ -32,10 +32,11 @@ public:
     void Release();
     void Stop();
     bool IsPlaying();
+    bool ReleaseClientListener();
     // single instance for now
     static bool IsPlayingGlobal();
     static bool PlayGlobal();
-    static void ReleaseGlobal();
+    static bool ReleaseGlobal();
 
 private:
     DISALLOW_COPY_AND_MOVE(ChargingSound);
@@ -50,6 +51,7 @@ private:
 extern "C" {
     __attribute__ ((visibility ("default"))) bool ChargingSoundStart(void);
     __attribute__ ((visibility ("default"))) bool IsPlaying(void);
+    __attribute__ ((visibility ("default"))) bool ChargingSoundRelease(void);
 }
 } // namespace PowerMgr
 } // namespace OHOS
