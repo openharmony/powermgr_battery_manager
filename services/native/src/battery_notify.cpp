@@ -383,14 +383,15 @@ void StartChargingSoundFunc()
     }
     auto ChargingSoundStart = reinterpret_cast<bool(*)(void)>(dlsym(handle, "ChargingSoundStart"));
     auto IsPlaying = reinterpret_cast<bool (*)(void)>(dlsym(handle, "IsPlaying"));
-    if (!IsPlaying || !ChargingSoundStart) {
+    auto ChargingSoundRelease = reinterpret_cast<bool (*)(void)>(dlsym(handle, "ChargingSoundRelease"));
+    if (!IsPlaying || !ChargingSoundStart || !ChargingSoundRelease) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "dlsym failed");
         dlclose(handle);
         g_released.store(true);
         return;
     }
     g_stopping.store(false);
-    ffrt::submit([ChargingSoundStart, IsPlaying, handle]() {
+    ffrt::submit([ChargingSoundStart, IsPlaying, ChargingSoundRelease, handle]() {
 #ifdef CONFIG_USE_JEMALLOC_DFX_INTF
         OHOS::PowerMgr::MemoryGuard guard;
 #endif
@@ -407,6 +408,11 @@ void StartChargingSoundFunc()
                 break;
             }
             usleep(TICK_INTERVAL_MS * US_PER_MS);
+        }
+        if (!ChargingSoundRelease()) {
+            BATTERY_HILOGE(FEATURE_BATT_INFO, "ChargingSoundRelease failed");
+            g_released.store(true);
+            return;
         }
         dlclose(handle);
         g_released.store(true);
