@@ -16,6 +16,7 @@
 #include "animation_config.h"
 #include "battery_mgr_cjson_utils.h"
 #include "charger_log.h"
+#include "config_policy_utils.h"
 #include "string_ex.h"
 
 #include <fstream>

@@ -26,10 +26,10 @@ group("battery_fuzzertest") {
 group("battery_unittest") {
   testonly = true
   deps = [
-    "unittest:test_battery_charger",
     "unittest:battery_common_event_part2_test",
     "unittest:battery_common_event_test",
     "unittest:battery_hookmgr_test",
+    "unittest:test_battery_charger",
     "unittest:test_battery_callback",
     "unittest:test_battery_config",
     "unittest:test_battery_dump",

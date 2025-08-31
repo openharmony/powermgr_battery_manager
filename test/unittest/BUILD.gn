@@ -49,7 +49,7 @@ config("module_mock_private_config") {
 ##############################unittest##########################################
 ohos_unittest("test_battery_service_interface") {
   module_out_path = "${module_output_path}"
-  defines += [ "GTEST" ]
+  defines = [ "GTEST" ]
 
   sanitize = {
     cfi = true
@@ -86,6 +86,7 @@ ohos_unittest("test_battery_service_interface") {
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "eventhandler:libeventhandler",
     "googletest:gtest_main",
     "hdf_core:libhdi",
     "hicollie:libhicollie",
@@ -101,7 +102,7 @@ ohos_unittest("test_battery_service_interface") {
 
 ohos_unittest("test_battery_service_scenario") {
   module_out_path = "${module_output_path}"
-  defines += [ "GTEST" ]
+  defines = [ "GTEST" ]
 
   sanitize = {
     cfi = true
@@ -177,7 +178,7 @@ ohos_unittest("test_battery_service_scenario") {
 
 ohos_unittest("test_battery_service_inner") {
   module_out_path = "${module_output_path}"
-  defines += [ "GTEST" ]
+  defines = [ "GTEST" ]
 
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
@@ -219,7 +220,7 @@ ohos_unittest("test_battery_service_inner") {
 
 ohos_unittest("test_battery_charger") {
   module_out_path = "${module_output_path}"
-  defines += [ "GTEST" ]
+  defines = [ "GTEST" ]
 
   sources = [ "src/battery_charger_test.cpp" ]
 
@@ -253,7 +254,7 @@ ohos_unittest("test_battery_charger") {
 
 ohos_unittest("test_battery_callback") {
   module_out_path = "${module_output_path}"
-  defines += [ "GTEST" ]
+  defines = [ "GTEST" ]
 
   sanitize = {
     cfi = true
@@ -278,6 +279,7 @@ ohos_unittest("test_battery_callback") {
     "ability_base:want",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "eventhandler:libeventhandler",
     "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
@@ -288,7 +290,7 @@ ohos_unittest("test_battery_callback") {
 
 ohos_unittest("test_battery_config") {
   module_out_path = "${module_output_path}"
-  defines += [ "GTEST" ]
+  defines = [ "GTEST" ]
 
   sources = [ "src/scenario_test/battery_config_test.cpp" ]
 
@@ -310,7 +312,7 @@ ohos_unittest("test_battery_config") {
 
 ohos_unittest("test_battery_dump") {
   module_out_path = "${module_output_path}"
-  defines += [ "GTEST" ]
+  defines = [ "GTEST" ]
 
   sources = [ "src/scenario_test/battery_dump_test.cpp" ]
 
@@ -327,6 +329,7 @@ ohos_unittest("test_battery_dump") {
     "cJSON:cjson",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "eventhandler:libeventhandler",
     "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
@@ -336,7 +339,7 @@ ohos_unittest("test_battery_dump") {
 
 ohos_unittest("test_battery_stub") {
   module_out_path = "${module_output_path}"
-  defines += [ "GTEST" ]
+  defines = [ "GTEST" ]
 
   sanitize = {
     cfi = true
@@ -370,6 +373,7 @@ ohos_unittest("test_battery_stub") {
     "cJSON:cjson",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "eventhandler:libeventhandler",
     "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
@@ -415,14 +419,11 @@ ohos_unittest("test_battery_proxy_mock_iremoteobject") {
     "common_event_service:cesfwk_innerkits",
     "googletest:gtest_main",
     "hilog:libhilog",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
-
-  if (has_hiviewdfx_hisysevent_part) {
-    external_deps += [ "hisysevent:libhisysevent" ]
-  }
 }
 
 # test exceptions when MessageParcel::WriteInterfaceToken() return false
@@ -462,10 +463,6 @@ ohos_unittest("test_battery_proxy_mock_messageparcel_write_error") {
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
-
-  if (has_hiviewdfx_hisysevent_part) {
-    external_deps += [ "hisysevent:libhisysevent" ]
-  }
 }
 
 # test exceptions when SendRequest() return value not equal ERR_OK
@@ -477,7 +474,7 @@ ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
   }
 
   module_out_path = "${module_output_path}"
-  defines += [ "ENABLE_REMOTE_INTERFACE" ]
+  defines = [ "ENABLE_REMOTE_INTERFACE" ]
 
   sources = [
     "mock/source/mock_remote_object.cpp",
@@ -502,14 +499,11 @@ ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
     "common_event_service:cesfwk_innerkits",
     "googletest:gtest_main",
     "hilog:libhilog",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
-
-  if (has_hiviewdfx_hisysevent_part) {
-    external_deps += [ "hisysevent:libhisysevent" ]
-  }
 }
 
 # test exceptions when read reply MessageParcel error
@@ -545,14 +539,11 @@ ohos_unittest("test_battery_proxy_mock_parcel_read_error") {
     "common_event_service:cesfwk_innerkits",
     "googletest:gtest_main",
     "hilog:libhilog",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
-
-  if (has_hiviewdfx_hisysevent_part) {
-    external_deps += [ "hisysevent:libhisysevent" ]
-  }
 }
 
 ohos_unittest("test_batterywakeup") {
@@ -576,6 +567,7 @@ ohos_unittest("test_batterywakeup") {
     "cJSON:cjson",
     "c_utils:utils",
     "drivers_interface_battery:libbattery_proxy_2.0",
+    "eventhandler:libeventhandler",
     "googletest:gtest_main",
     "hdf_core:libhdi",
     "hilog:libhilog",
@@ -618,7 +610,7 @@ ohos_unittest("test_mock_battery_config") {
 
 ohos_unittest("test_batteryclient") {
   module_out_path = "${module_output_path}"
-  defines += [ "GTEST" ]
+  defines = [ "GTEST" ]
 
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
@@ -654,7 +646,7 @@ ohos_unittest("test_batteryclient") {
 
 ohos_unittest("test_batteryclient_death") {
   module_out_path = "${module_output_path}"
-  defines += [ "BATTERYMGR_DEATHRECIPIENT_UNITTEST" ]
+  defines = [ "BATTERYMGR_DEATHRECIPIENT_UNITTEST" ]
 
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
@@ -683,7 +675,7 @@ ohos_unittest("test_batteryclient_death") {
 
 ohos_unittest("battery_common_event_test") {
   module_out_path = "${module_output_path}"
-  defines += [ "GTEST" ]
+  defines = [ "GTEST" ]
 
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
@@ -717,7 +709,7 @@ ohos_unittest("battery_common_event_test") {
 
 ohos_unittest("battery_common_event_part2_test") {
   module_out_path = "${module_output_path}"
-  defines += [ "GTEST" ]
+  defines = [ "GTEST" ]
 
   sources = [
     "${battery_manager_path}/test/utils/test_utils.cpp",
