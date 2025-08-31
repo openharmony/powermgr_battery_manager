@@ -19,13 +19,9 @@
 #include "mock_remote_object.h"
 #include "battery_log.h"
 #include "battery_info.h"
-#ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
-#include <hisysevent.h>
-#endif
+
 using namespace testing::ext;
-#ifdef HAS_HIVIEWDFX_HISYSEVENT_PART
 using namespace OHOS::HiviewDFX;
-#endif
 using namespace OHOS::PowerMgr;
 using namespace OHOS;
 using namespace std;

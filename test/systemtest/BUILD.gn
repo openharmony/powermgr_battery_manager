@@ -64,6 +64,7 @@ ohos_systemtest("test_systemtest") {
     "samgr:samgr_proxy",
   ]
 
+  defines = []
   if (battery_manager_feature_set_low_capacity_threshold) {
     defines += [ "PC_TEST" ]
   }
@@ -131,6 +132,7 @@ ohos_systemtest("test_battery_event_systemtest") {
     external_deps += [ "drivers_interface_light:liblight_proxy_1.0" ]
   }
 
+  defines = []
   if (build_variant == "user") {
     defines += [ "BATTERY_USER_VERSION" ]
   }

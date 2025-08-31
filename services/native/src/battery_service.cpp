@@ -53,6 +53,7 @@ const char* BATTERY_PLUGIN_AUTORUN_PATH = "/system/lib64/batteryplugin/autorun";
 #else
 const char* BATTERY_PLUGIN_AUTORUN_PATH = "/system/lib/batteryplugin/autorun";
 #endif
+constexpr const char* BATTERY_SERVICE_NAME = "BatteryService";
 constexpr const char* BATTERY_HDI_NAME = "battery_interface_service";
 constexpr int32_t BATTERY_FULL_CAPACITY = 100;
 constexpr uint32_t RETRY_TIME = 1000;
@@ -186,9 +187,7 @@ bool BatteryService::RegisterBatteryHdiCallback()
 void BatteryService::InitConfig()
 {
     auto& batteryConfig = BatteryConfig::GetInstance();
-#ifdef HAS_BATTERY_CONFIG_POLICY_PART
     batteryConfig.ParseConfig();
-#endif
 
     warnCapacity_ = batteryConfig.GetInt("soc.warning", warnCapacity_);
     highTemperature_ = batteryConfig.GetInt("temperature.high", highTemperature_);
@@ -916,7 +915,6 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
     if (!Permission::IsSystem()) {
         return ERR_PERMISSION_DENIED;
     }
-
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     if ((args.empty()) || (args[0].compare(u"-h") == 0)) {
         batteryDump.DumpBatteryHelp(fd);
