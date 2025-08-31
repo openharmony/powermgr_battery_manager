@@ -16,22 +16,17 @@
 #include "battery_config.h"
 
 #include "string_ex.h"
-
-#ifdef HAS_BATTERY_CONFIG_POLICY_PART
 #include "config_policy_utils.h"
-#endif
 
 #include "battery_log.h"
 #include "battery_mgr_cjson_utils.h"
 #include "power_common.h"
 
 namespace {
-#ifdef HAS_BATTERY_CONFIG_POLICY_PART
-constexpr const char* BATTERY_CONFIG_EXCEPTION_PATH = "";
 constexpr const char* BATTERY_CONFIG_PATH = "etc/battery/battery_config.json";
-#endif
 constexpr const char* SYSTEM_BATTERY_CONFIG_PATH = "/system/etc/battery/battery_config.json";
 constexpr const char* VENDOR_BATTERY_CONFIG_PATH = "/vendor/etc/battery/battery_config.json";
+constexpr const char* BATTERY_CONFIG_EXCEPTION_PATH = "";
 constexpr int32_t MAP_KEY_INDEX = 0;
 constexpr int32_t BEGIN_SOC_INDEX = 0;
 constexpr int32_t END_SOC_INDEX = 1;
@@ -62,7 +57,6 @@ BatteryConfig& BatteryConfig::GetInstance()
     return *(instance_.get());
 }
 
-#ifdef HAS_BATTERY_CONFIG_POLICY_PART
 bool BatteryConfig::ParseConfig()
 {
     char buf[MAX_PATH_LEN];
@@ -102,7 +96,6 @@ bool BatteryConfig::ParseConfig()
     }
     return true;
 }
-#endif
 
 bool BatteryConfig::IsExist(std::string key) const
 {

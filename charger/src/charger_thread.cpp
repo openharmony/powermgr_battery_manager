@@ -361,11 +361,10 @@ void ChargerThread::InputMonitorCancel()
 
 void ChargerThread::InitLackPowerCapacity()
 {
-#ifdef HAS_BATTERY_CONFIG_POLICY_PART
     if (!isConfigParse_) {
         isConfigParse_ = BatteryConfig::GetInstance().ParseConfig();
     }
-#endif
+
     auto& batteryConfig = BatteryConfig::GetInstance();
     lackPowerCapacity_ = batteryConfig.GetInt("soc.shutdown");
     BATTERY_HILOGD(FEATURE_CHARGING, "lackPowerCapacity_ = %{public}d", lackPowerCapacity_);
@@ -412,11 +411,10 @@ void ChargerThread::InitLed()
         BATTERY_HILOGE(FEATURE_CHARGING, "make_unique BatteryLed return nullptr");
         return;
     }
-#ifdef HAS_BATTERY_CONFIG_POLICY_PART
+
     if (!isConfigParse_) {
         isConfigParse_ = BatteryConfig::GetInstance().ParseConfig();
     }
-#endif
     led_->InitLight();
     led_->TurnOff();
 }
