@@ -90,25 +90,79 @@ int32_t BatterySOC()
 
 ohos::batteryInfo::BatteryChargeState ChargingStatus()
 {
-    ohos::batteryInfo::BatteryChargeState chargingState =
-        static_cast<ohos::batteryInfo::BatteryChargeState::key_t>(g_battClient.GetChargingStatus());
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "chargingState %{public}d", static_cast<int32_t>(chargingState));
+    ohos::batteryInfo::BatteryChargeState chargingState = ohos::batteryInfo::BatteryChargeState::key_t::NONE;
+    OHOS::PowerMgr::BatteryChargeState chargeStateNative = g_battClient.GetChargingStatus();
+    switch (chargeStateNative) {
+        case OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_NONE:
+            chargingState = ohos::batteryInfo::BatteryChargeState::key_t::NONE;
+            break;
+        case OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_ENABLE:
+            chargingState = ohos::batteryInfo::BatteryChargeState::key_t::ENABLE;
+            break;
+        case OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_DISABLE:
+            chargingState = ohos::batteryInfo::BatteryChargeState::key_t::DISABLE;
+            break;
+        case OHOS::PowerMgr::BatteryChargeState::CHARGE_STATE_FULL:
+            chargingState = ohos::batteryInfo::BatteryChargeState::key_t::FULL;
+            break;
+        default:
+            BATTERY_HILOGE(FEATURE_BATT_INFO, "Unknown chargingState");
+    }
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "chargingState %{public}d", static_cast<int32_t>(chargeStateNative));
     return chargingState;
 }
 
 ohos::batteryInfo::BatteryHealthState HealthStatus()
 {
-    ohos::batteryInfo::BatteryHealthState healthStatus =
-        static_cast<ohos::batteryInfo::BatteryHealthState::key_t>(g_battClient.GetHealthStatus());
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "healthStatus %{public}d", static_cast<int32_t>(healthStatus));
+    ohos::batteryInfo::BatteryHealthState healthStatus = ohos::batteryInfo::BatteryHealthState::key_t::UNKNOWN;
+    OHOS::PowerMgr::BatteryHealthState healthStatusNative = g_battClient.GetHealthStatus();
+    switch (healthStatusNative) {
+        case OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_UNKNOWN:
+            healthStatus = ohos::batteryInfo::BatteryHealthState::key_t::UNKNOWN;
+            break;
+        case OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_GOOD:
+            healthStatus = ohos::batteryInfo::BatteryHealthState::key_t::GOOD;
+            break;
+        case OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_OVERHEAT:
+            healthStatus = ohos::batteryInfo::BatteryHealthState::key_t::OVERHEAT;
+            break;
+        case OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_OVERVOLTAGE:
+            healthStatus = ohos::batteryInfo::BatteryHealthState::key_t::OVERVOLTAGE;
+            break;
+        case OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_COLD:
+            healthStatus = ohos::batteryInfo::BatteryHealthState::key_t::COLD;
+            break;
+        case OHOS::PowerMgr::BatteryHealthState::HEALTH_STATE_DEAD:
+            healthStatus = ohos::batteryInfo::BatteryHealthState::key_t::DEAD;
+            break;
+        default:
+            BATTERY_HILOGE(FEATURE_BATT_INFO, "Unknown healthStatus");
+    }
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "healthStatus %{public}d", static_cast<int32_t>(healthStatusNative));
     return healthStatus;
 }
 
 ohos::batteryInfo::BatteryPluggedType PluggedType()
 {
-    ohos::batteryInfo::BatteryPluggedType pluggedType =
-        static_cast<ohos::batteryInfo::BatteryPluggedType::key_t>(g_battClient.GetPluggedType());
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "pluggedType %{public}d", static_cast<int32_t>(pluggedType));
+    ohos::batteryInfo::BatteryPluggedType pluggedType = ohos::batteryInfo::BatteryPluggedType::key_t::NONE;
+    OHOS::PowerMgr::BatteryPluggedType pluggedTypeNative = g_battClient.GetPluggedType();
+    switch (pluggedTypeNative) {
+        case OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_NONE:
+            pluggedType = ohos::batteryInfo::BatteryPluggedType::key_t::NONE;
+            break;
+        case OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_AC:
+            pluggedType = ohos::batteryInfo::BatteryPluggedType::key_t::AC;
+            break;
+        case OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_USB:
+            pluggedType = ohos::batteryInfo::BatteryPluggedType::key_t::USB;
+            break;
+        case OHOS::PowerMgr::BatteryPluggedType::PLUGGED_TYPE_WIRELESS:
+            pluggedType = ohos::batteryInfo::BatteryPluggedType::key_t::WIRELESS;
+            break;
+        default:
+            BATTERY_HILOGE(FEATURE_BATT_INFO, "Unknown pluggedType");
+    }
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "pluggedType %{public}d", static_cast<int32_t>(pluggedTypeNative));
     return pluggedType;
 }
 
@@ -143,10 +197,38 @@ bool IsBatteryPresent()
 
 ohos::batteryInfo::BatteryCapacityLevel GetCapacityLevel()
 {
-    ohos::batteryInfo::BatteryCapacityLevel batteryCapacityLevel =
-        static_cast<ohos::batteryInfo::BatteryCapacityLevel::key_t>(g_battClient.GetCapacityLevel());
-    BATTERY_HILOGD(FEATURE_BATT_INFO, "batteryCapacityLevel %{public}d", static_cast<int32_t>(batteryCapacityLevel));
-    return batteryCapacityLevel;
+    ohos::batteryInfo::BatteryCapacityLevel level = ohos::batteryInfo::BatteryCapacityLevel::key_t::LEVEL_NONE;
+    OHOS::PowerMgr::BatteryCapacityLevel levelNative = g_battClient.GetCapacityLevel();
+    switch (levelNative) {
+        case OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_NONE:
+            level = ohos::batteryInfo::BatteryCapacityLevel::key_t::LEVEL_NONE;
+            break;
+        case OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_FULL:
+            level = ohos::batteryInfo::BatteryCapacityLevel::key_t::LEVEL_FULL;
+            break;
+        case OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_HIGH:
+            level = ohos::batteryInfo::BatteryCapacityLevel::key_t::LEVEL_HIGH;
+            break;
+        case OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_NORMAL:
+            level = ohos::batteryInfo::BatteryCapacityLevel::key_t::LEVEL_NORMAL;
+            break;
+        case OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_LOW:
+            level = ohos::batteryInfo::BatteryCapacityLevel::key_t::LEVEL_LOW;
+            break;
+        case OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_WARNING:
+            level = ohos::batteryInfo::BatteryCapacityLevel::key_t::LEVEL_WARNING;
+            break;
+        case OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_CRITICAL:
+            level = ohos::batteryInfo::BatteryCapacityLevel::key_t::LEVEL_CRITICAL;
+            break;
+        case OHOS::PowerMgr::BatteryCapacityLevel::LEVEL_SHUTDOWN:
+            level = ohos::batteryInfo::BatteryCapacityLevel::key_t::LEVEL_SHUTDOWN;
+            break;
+        default:
+            BATTERY_HILOGE(FEATURE_BATT_INFO, "Unknown batteryCapacityLevel");
+    }
+    BATTERY_HILOGD(FEATURE_BATT_INFO, "batteryCapacityLevel %{public}d", static_cast<int32_t>(levelNative));
+    return level;
 }
 
 int64_t EstimatedRemainingChargeTime()
