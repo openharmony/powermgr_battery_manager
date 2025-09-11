@@ -16,7 +16,7 @@
 @!namespace("@ohos.charger", "charger")
 
 @!sts_inject("""
-static { loadLibrary("battery_manager_charger_taihe_native.z") }""")
+static { loadLibraryWithPermissionCheck("battery_manager_charger_taihe_native.z", "@ohos.charger") }""")
 
 enum ChargeType : i32 {
   NONE,
