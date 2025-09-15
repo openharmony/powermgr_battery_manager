@@ -23,6 +23,11 @@
 #include <shared_mutex>
 #include <string>
 #include <vector>
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+#include <common_event_subscriber.h>
+#include <common_event_manager.h>
+#include <common_event_support.h>
+#endif
 
 #include "hdi_service_status_listener.h"
 #include "iservmgr_hdi.h"
@@ -114,6 +119,11 @@ public:
     void MockUevent(const std::string& uevent);
     void Reset();
     void VibratorInit();
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+    void ClearLowCapacityShutdownTask();
+    void SubscribeHibernateCommonEvent();
+    void UnsubscribeHibernateCommonEvent();
+#endif
 private:
     bool Init();
     void AddBootCommonEvents();
@@ -126,7 +136,11 @@ private:
     void HandleBatteryInfo();
     void CalculateRemainingChargeTime(int32_t capacity, BatteryChargeState chargeState);
     void HandleCapacity(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
-    void HandleCapacityExt(int32_t capacity, BatteryChargeState chargeState);
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+    void HandleCapacityExt(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
+    bool CheckIfCreateHibernateTask(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
+    bool CheckIfClearHibernateTask(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
+#endif
     bool IsLastPlugged();
     bool IsNowPlugged(BatteryPluggedType pluggedType);
     bool IsPlugged(BatteryPluggedType pluggedType);
@@ -137,6 +151,7 @@ private:
     void CreateShutdownGuard();
     void LockShutdownGuard();
     void UnlockShutdownGuard();
+
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
     void SetLowCapacityThreshold();
 #endif
@@ -149,6 +164,9 @@ private:
     sptr<HDI::Battery::V2_0::IBatteryInterface> iBatteryInterface_ { nullptr };
     sptr<OHOS::HDI::ServiceManager::V1_0::IServiceManager> hdiServiceMgr_ { nullptr };
     sptr<HdiServiceStatusListener::IServStatListener> hdiServStatListener_ { nullptr };
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+    std::shared_ptr<EventFwk::CommonEventSubscriber> subscriberPtr_ {nullptr};
+#endif
     bool isLowPower_ { false };
     bool isMockUnplugged_ { false };
     bool isMockCapacity_ { false };
@@ -175,6 +193,16 @@ private:
     BatteryInfo lastBatteryInfo_;
     std::mutex shutdownGuardMutex_;
 };
+
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+class BatteryCommonEventSubscriber : public EventFwk::CommonEventSubscriber {
+public:
+    explicit BatteryCommonEventSubscriber(const EventFwk::CommonEventSubscribeInfo& subscribeInfo)
+        : EventFwk::CommonEventSubscriber(subscribeInfo) {}
+    virtual ~BatteryCommonEventSubscriber() {}
+    void OnReceiveEvent(const EventFwk::CommonEventData &data) override;
+};
+#endif
 } // namespace PowerMgr
 } // namespace OHOS
 
