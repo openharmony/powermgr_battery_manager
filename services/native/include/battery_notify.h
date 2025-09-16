@@ -41,6 +41,10 @@ private:
     void StartVibrator() const;
     bool PublishPowerConnectedEvent(const BatteryInfo& info) const;
     bool PublishPowerDisconnectedEvent(const BatteryInfo& info) const;
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
+    void TriggerChargingSound(bool isStart) const;
+    std::string GetChargingSoundPath() const;
+#endif
     bool PublishChargingEvent(const BatteryInfo& info) const;
     bool PublishDischargingEvent(const BatteryInfo& info) const;
     bool PublishChargeTypeChangedEvent(const BatteryInfo& info);
