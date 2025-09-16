@@ -22,6 +22,11 @@
 #include "memory_guard.h"
 #endif
 #endif
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
+#include "ability_manager_client.h"
+#include "ability_manager_proxy.h"
+#include "config_policy_utils.h"
+#endif
 #include "common_event_data.h"
 #include "common_event_manager.h"
 #include "common_event_publish_info.h"
@@ -437,7 +442,7 @@ bool BatteryNotify::PublishPowerConnectedEvent(const BatteryInfo& info) const
     }
     StartVibrator();
 #ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
-    StartChargingSoundFunc();
+    TriggerChargingSound(true);
 #endif
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_CONNECTED);
@@ -464,6 +469,53 @@ void BatteryNotify::StartVibrator() const
     vibrator->StartVibrator(scene);
 }
 
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
+void BatteryNotify::TriggerChargingSound(bool isStart) const
+{
+    sptr<OHOS::ISystemAbilityManager> abilityMgr =
+        OHOS::SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (abilityMgr == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "Failed to get ISystemAbilityManager");
+        return;
+    }
+    sptr<IRemoteObject> remoteObject = abilityMgr->CheckSystemAbility(ABILITY_MGR_SERVICE_ID);
+    if (remoteObject == nullptr) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "Failed to get ability manager service");
+        return;
+    }
+    sptr<AppExecFwk::IAbilityManager> amsProxy = iface_cast<AppExecFwk::IAbilityManager>(remoteObject);
+    if (amsProxy == nullptr || !amsProxy->AsObject()) {
+        BATTERY_HILOGE(FEATURE_BATT_INFO, "Failed to get ability manager proxy");
+        return;
+    }
+    AAFwk::Want want;
+    // ChargeSoundPlayerExtension is ServiceExtensionAbility in power_dialog
+    want.SetElementName("com.ohos.powerdialog", "ChargeSoundPlayerExtension");
+    if (isStart) {
+        std::string audioPath = GetChargingSoundPath();
+        want.SetParam("audioPath", audioPath);
+        ErrCode ret = amsProxy->StartExtensionAbility(want, nullptr);
+        BATTERY_HILOGI(FEATURE_BATT_INFO, "StartExtensionAbility, ret=%{public}d", ret);
+    } else {
+        ErrCode ret = amsProxy->StopExtensionAbility(want, nullptr);
+        BATTERY_HILOGI(FEATURE_BATT_INFO, "StopExtensionAbility, ret=%{public}d", ret);
+    }
+}
+
+std::string BatteryNotify::GetChargingSoundPath() const
+{
+    const int32_t MAX_AUDIO_PATH_LEN = 1024;
+    char buf[MAX_AUDIO_PATH_LEN] = {0};
+    std::string audioPath = "/vendor/etc/battery/PowerConnected.ogg";
+    char* path = GetOneCfgFile("resource/media/audio/ui/PowerConnected.ogg", buf, MAX_AUDIO_PATH_LEN);
+    if (path != nullptr && *path != '\0') {
+        return std::string{path};
+    }
+    BATTERY_HILOGW(FEATURE_BATT_INFO, "GetOneCfgFile failed, using default audio path");
+    return audioPath;
+}
+#endif
+
 bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const
 {
     bool isSuccess = true;
@@ -478,7 +530,7 @@ bool BatteryNotify::PublishPowerDisconnectedEvent(const BatteryInfo& info) const
         return isSuccess;
     }
 #ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
-    g_stopping.store(true);
+    TriggerChargingSound(false);
 #endif
     Want want;
     want.SetAction(CommonEventSupport::COMMON_EVENT_POWER_DISCONNECTED);
