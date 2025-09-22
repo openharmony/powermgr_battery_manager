@@ -107,9 +107,7 @@
                 {
                     "name": "//base/powermgr/battery_manager/frameworks/cj:cj_battery_info_ffi",
                     "header": {
-                      "header_files": [
-                        "battery_info_ffi.h"
-                      ],
+                      "header_files": [],
                       "header_base": "//base/powermgr/battery_manager/frameworks/cj/include"
                     }
                 },
