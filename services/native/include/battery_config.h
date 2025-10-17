@@ -51,11 +51,13 @@ public:
         std::string icon;
         std::string title;
         std::string text;
+        uint32_t flags;
         std::pair<std::string, std::string> firstButton;
         std::pair<std::string, std::string> secondButton;
         const std::string GetInfo() const
         {
-            return "name: " + name + ", icon: " + icon + ", title: " + title + ", text: " + text +
+            return "name: " + name + ", icon: " + icon + ", title: " + title +
+                ", text: " + text + ", flags: " + std::to_string(flags) +
                 ", firstButton: " + firstButton.first + ", " + firstButton.second +
                 ", secondButton: " + secondButton.first + ", " + secondButton.second;
         }
