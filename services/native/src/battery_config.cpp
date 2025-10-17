@@ -380,7 +380,7 @@ void BatteryConfig::SaveNotificationConfToMap(cJSON* nConf)
             .icon = iconObj->valuestring,
             .title = titleObj->valuestring,
             .text = textObj->valuestring,
-            .flags = controlFlags;
+            .flags = controlFlags,
             .firstButton = std::make_pair(firstButtonNameObj->valuestring, firstButtonActionObj->valuestring),
             .secondButton = std::make_pair(secondButtonNameObj->valuestring, secondButtonActionObj->valuestring)
         };

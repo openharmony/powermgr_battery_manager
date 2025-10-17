@@ -100,7 +100,7 @@ void NotificationCenter::SetBadgeIconStyle()
 
 void NotificationCenter::SetNotificationControlFlags(uint32_t flags)
 {
-    request_.SetNotificationControlFlags(request_.GetNotificationControlFlags() | nCfg.flags);
+    request_.SetNotificationControlFlags(request_.GetNotificationControlFlags() | flags);
 }
 
 void NotificationCenter::SetLittleIcon(const std::string& iconPath)
