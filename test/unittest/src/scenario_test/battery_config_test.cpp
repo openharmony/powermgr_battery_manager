@@ -644,7 +644,6 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0023, TestSize.Level1)
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 1);
     DestroyJsonValue(g_configTest.config_);
-
     jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4",
         "flags": 512, button": [{"name": "1", "action": "1"}, {"name": "2", "action": "2"}]}]})";
     ASSERT_TRUE(ParseJsonStr(jsonStr, true));
