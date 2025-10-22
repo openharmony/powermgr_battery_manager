@@ -340,13 +340,17 @@ void BatteryConfig::SaveNotificationConfToMap(cJSON* nConf)
         cJSON* iconObj = cJSON_GetObjectItemCaseSensitive(conf, "icon");
         cJSON* titleObj = cJSON_GetObjectItemCaseSensitive(conf, "title");
         cJSON* textObj = cJSON_GetObjectItemCaseSensitive(conf, "text");
-        cJSON* flagsObj = cJSON_GetObjectItemCaseSensitive(conf, "flags");
+        cJSON* bannerFlagsObj = cJSON_GetObjectItemCaseSensitive(conf, "bannerFlags");
         cJSON* buttonObj = cJSON_GetObjectItemCaseSensitive(conf, "button");
         if (!BatteryMgrJsonUtils::IsValidJsonString(nameObj) || !BatteryMgrJsonUtils::IsValidJsonString(iconObj) ||
             !BatteryMgrJsonUtils::IsValidJsonString(titleObj) || !BatteryMgrJsonUtils::IsValidJsonString(textObj) ||
             !BatteryMgrJsonUtils::IsValidJsonArray(buttonObj)) {
             BATTERY_HILOGW(COMP_SVC, "stringConf Parse failed");
             continue;
+        }
+        uint32_t controlFlags = 0;
+        if (BatteryMgrJsonUtils::IsValidJsonNumber(bannerFlagsObj)) {
+            controlFlags = static_cast<uint32_t>(bannerFlagsObj->valueint);
         }
         if (cJSON_GetArraySize(buttonObj) != MAX_BUTTON_RANGE) {
             BATTERY_HILOGW(COMP_SVC, "notificationConf button data length error");
@@ -371,16 +375,12 @@ void BatteryConfig::SaveNotificationConfToMap(cJSON* nConf)
             return;
         }
         std::string name = nameObj->valuestring;
-        uint32_t controlFlags = 0;
-        if (BatteryMgrJsonUtils::IsValidJsonNumber(flagsObj)) {
-            controlFlags = static_cast<uint32_t>(flagsObj->valueint);
-        }
         BatteryConfig::NotificationConf notificationConf = {
             .name = name,
             .icon = iconObj->valuestring,
             .title = titleObj->valuestring,
             .text = textObj->valuestring,
-            .flags = controlFlags,
+            .bannerFlags = controlFlags,
             .firstButton = std::make_pair(firstButtonNameObj->valuestring, firstButtonActionObj->valuestring),
             .secondButton = std::make_pair(secondButtonNameObj->valuestring, secondButtonActionObj->valuestring)
         };
