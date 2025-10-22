@@ -50,7 +50,7 @@ protected:
 
     void SetBadgeIconStyle();
 
-    void SetNotificationControlFlags(uint32_t flags);
+    void SetNotificationControlFlags(uint32_t bannerFlags);
 
     void SetLittleIcon(const std::string& iconPath);
 
