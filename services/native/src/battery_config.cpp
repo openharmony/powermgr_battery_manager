@@ -384,7 +384,8 @@ void BatteryConfig::SaveNotificationConfToMap(cJSON* nConf)
             .firstButton = std::make_pair(firstButtonNameObj->valuestring, firstButtonActionObj->valuestring),
             .secondButton = std::make_pair(secondButtonNameObj->valuestring, secondButtonActionObj->valuestring)
         };
-        BATTERY_HILOGI(COMP_SVC, "notificationConf name: %{public}s, flags: %{public}u", name.c_str(), controlFlags);
+        BATTERY_HILOGI(COMP_SVC, "notificationConf name: %{public}s, bannerFlags: %{public}u",
+            name.c_str(), controlFlags);
         notificationConfMap_.emplace(name, notificationConf);
     }
     BATTERY_HILOGI(COMP_SVC, "notificationConf size: %{public}d", static_cast<int32_t>(notificationConfMap_.size()));
