@@ -39,6 +39,7 @@ void NotificationCenter::CreateBaseStyle(const BatteryConfig::NotificationConf& 
     SetUnremovable();
     SetBadgeIconStyle();
     SetLittleIcon(nCfg.icon);
+    SetNotificationControlFlags(nCfg.bannerFlags);
 }
 
 void NotificationCenter::SetNotificationId(const std::string& popupName)
@@ -95,6 +96,11 @@ void NotificationCenter::SetUnremovable()
 void NotificationCenter::SetBadgeIconStyle()
 {
     request_.SetBadgeIconStyle(Notification::NotificationRequest::BadgeStyle::LITTLE);
+}
+
+void NotificationCenter::SetNotificationControlFlags(uint32_t bannerFlags)
+{
+    request_.SetNotificationControlFlags(request_.GetNotificationControlFlags() | bannerFlags);
 }
 
 void NotificationCenter::SetLittleIcon(const std::string& iconPath)
