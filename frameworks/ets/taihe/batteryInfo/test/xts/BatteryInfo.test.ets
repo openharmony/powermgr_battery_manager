@@ -646,10 +646,14 @@ export default function BatteryInfoTest() {
           hilog.info(domain, tag, '%{public}s', typeof result);
           expect(typeof result).assertEqual('number');
           done();
-        } catch (e : BusinessError) {
-          hilog.error(domain, tag, '%{public}s', JSON.stringify(e));
-          expect(e.code).assertEqual(ERROR_CODE);
-          done();
+        } catch (e) {
+          if (e instanceof BusinessError) {
+            hilog.error(domain, tag, '%{public}s', JSON.stringify(e));
+            expect(e.code).assertEqual(ERROR_CODE);
+            done();
+          } else {
+            throw e;
+          }
         }
       })
     it("BatteryInfoTest4500", TestType.FUNCTION | Size.MEDIUMTEST | Level.LEVEL1,
@@ -662,10 +666,14 @@ export default function BatteryInfoTest() {
           hilog.info(domain, tag, '%{public}s', typeof result);
           expect(typeof result).assertEqual('string');
           done();
-        } catch (e : BusinessError) {
-          hilog.error(domain, tag, '%{public}s', JSON.stringify(e));
-          expect(e.code).assertEqual(ERROR_CODE);
-          done();
+        } catch (e) {
+          if (e instanceof BusinessError) {
+            hilog.error(domain, tag, '%{public}s', JSON.stringify(e));
+            expect(e.code).assertEqual(ERROR_CODE);
+            done();
+          } else {
+            throw e;
+          }
         }
       })
     it("BatteryInfoTest4600", TestType.FUNCTION | Size.MEDIUMTEST | Level.LEVEL1,
@@ -678,10 +686,14 @@ export default function BatteryInfoTest() {
           hilog.info(domain, tag, '%{public}s', typeof result);
           expect(typeof result).assertEqual('boolean');
           done();
-        } catch (e : BusinessError) {
-          hilog.error(domain, tag, '%{public}s', JSON.stringify(e));
-          expect(e.code).assertEqual(ERROR_CODE);
-          done();
+        } catch (e) {
+          if (e instanceof BusinessError) {
+            hilog.error(domain, tag, '%{public}s', JSON.stringify(e));
+            expect(e.code).assertEqual(ERROR_CODE);
+            done();
+          } else {
+            throw e;
+          }
         }
       })
   })
