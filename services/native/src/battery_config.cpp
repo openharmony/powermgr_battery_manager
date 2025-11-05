@@ -286,7 +286,7 @@ void BatteryConfig::ParsePopupConf()
     cJSON* valueObj = nullptr;
     cJSON_ArrayForEach(valueObj, popupConfig) {
         if (valueObj->string == nullptr) {
-            BATTERY_HILOGW(COMP_HDI, "Found null key in popup config");
+            BATTERY_HILOGW(COMP_SVC, "Found null key in popup config");
             continue;
         }
         std::string uevent = valueObj->string;
