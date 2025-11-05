@@ -216,7 +216,7 @@ uint32_t SystemBattery::BatteryInfo::IsCharging() const
         chargingState_ == BatteryChargeState::CHARGE_STATE_FULL);
 }
 
-static void SendEvent(napi_env env, SystemBattery *asyncContext, napi_event_priority prio)
+static void SendEvent(napi_env env, SystemBattery *asyncContext, napi_event_priority prio, const char* name)
 {
     auto task = [env, asyncContext]() mutable {
         BATTERY_HILOGD(FEATURE_BATT_INFO, "CompleteCallback In");
@@ -227,7 +227,7 @@ static void SendEvent(napi_env env, SystemBattery *asyncContext, napi_event_prio
         asyncContext->GetBatteryStats(env);
         delete asyncContext;
     };
-    if (napi_send_event(env, task, prio) != napi_status::napi_ok) {
+    if (napi_send_event(env, task, prio, name) != napi_status::napi_ok) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "failed to SendEvent!");
         delete asyncContext;
     }
@@ -249,7 +249,7 @@ static napi_value GetStatus(napi_env env, napi_callback_info info)
 
     std::unique_ptr<SystemBattery> asyncInfo = std::make_unique<SystemBattery>();
     RETURN_IF_WITH_RET(!asyncInfo->CreateCallbackRef(env, argv[ARGC_ONE]), nullptr);
-    SendEvent(env, asyncInfo.get(), napi_eprio_low);
+    SendEvent(env, asyncInfo.get(), napi_eprio_low, __func__);
     asyncInfo.release();
     return nullptr;
 }
