@@ -20,6 +20,7 @@
 #include <functional>
 #include <new>
 #include <modulemgr.h>
+#include <parameters.h>
 
 #include "errors.h"
 #include "hdf_device_class.h"
@@ -455,7 +456,10 @@ bool BatteryService::IsCharging(BatteryChargeState chargeState)
 bool BatteryService::IsInExtremePowerSaveMode()
 {
     PowerMode mode = PowerMgrClient::GetInstance().GetDeviceMode();
-    return mode == PowerMode::EXTREME_POWER_SAVE_MODE;
+    bool isPenglaiMode = (system::GetParameter("ohos.boot.minisys.mode", "") == "penglai");
+    bool isInExtremePowerSaveMode = (mode == PowerMode::EXTREME_POWER_SAVE_MODE) || isPenglaiMode;
+    BATTERY_HILOGI(COMP_SVC, "mode:%{public}d, isPenglaiMode:%{public}d", static_cast<int32_t>(mode), isPenglaiMode);
+    return isInExtremePowerSaveMode;
 }
 
 void BatteryService::WakeupDevice(BatteryPluggedType pluggedType)
