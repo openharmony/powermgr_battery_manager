@@ -16,8 +16,7 @@
         "name": "battery_manager",
         "subsystem": "powermgr",
         "syscap": [
-            "SystemCapability.PowerManager.BatteryManager.Core",
-            "SystemCapability.PowerManager.BatteryManager.Extension"
+            "SystemCapability.PowerManager.BatteryManager.Core"
         ],
         "features": [
             "battery_manager_feature_enable_charger",
