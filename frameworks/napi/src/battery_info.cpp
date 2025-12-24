@@ -332,6 +332,7 @@ static napi_value CreateEnumHealthState(napi_env env, napi_value exports)
 
 static napi_value CreateEnumLevelState(napi_env env, napi_value exports)
 {
+    napi_value none = nullptr;
     napi_value full = nullptr;
     napi_value high = nullptr;
     napi_value normal = nullptr;
@@ -340,6 +341,7 @@ static napi_value CreateEnumLevelState(napi_env env, napi_value exports)
     napi_value critical = nullptr;
     napi_value shutdown = nullptr;
 
+    napi_create_int32(env, (int32_t)BatteryCapacityLevel::LEVEL_NONE, &none);
     napi_create_int32(env, (int32_t)BatteryCapacityLevel::LEVEL_FULL, &full);
     napi_create_int32(env, (int32_t)BatteryCapacityLevel::LEVEL_HIGH, &high);
     napi_create_int32(env, (int32_t)BatteryCapacityLevel::LEVEL_NORMAL, &normal);
@@ -349,6 +351,7 @@ static napi_value CreateEnumLevelState(napi_env env, napi_value exports)
     napi_create_int32(env, (int32_t)BatteryCapacityLevel::LEVEL_SHUTDOWN, &shutdown);
 
     napi_property_descriptor desc[] = {
+        DECLARE_NAPI_STATIC_PROPERTY("LEVEL_NONE", none),
         DECLARE_NAPI_STATIC_PROPERTY("LEVEL_FULL", full),
         DECLARE_NAPI_STATIC_PROPERTY("LEVEL_HIGH", high),
         DECLARE_NAPI_STATIC_PROPERTY("LEVEL_NORMAL", normal),
