@@ -55,6 +55,50 @@
         {
             "name":"vi-CN",
             "value":"vi"
+        },
+        {
+            "name":"de-CN",
+            "value":"de"
+        },
+        {
+            "name":"en-CN",
+            "value":"en_GB"
+        },
+        {
+            "name":"id-CN",
+            "value":"id"
+        },
+        {
+            "name":"it-CN",
+            "value":"it"
+        },
+        {
+            "name":"lo-CN",
+            "value":"lo"
+        },
+        {
+            "name":"ms-CN",
+            "value":"ms"
+        },
+        {
+            "name":"my-CN",
+            "value":"my"
+        },
+        {
+            "name":"pl-CN",
+            "value":"pl"
+        },
+        {
+            "name":"pt-CN",
+            "value":"pt_PT"
+        },
+        {
+            "name":"th-CN",
+            "value":"th"
+        },
+        {
+            "name":"tr-CN",
+            "value":"tr"
         }
     ]
 }

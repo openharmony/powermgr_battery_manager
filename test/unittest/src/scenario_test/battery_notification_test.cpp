@@ -212,5 +212,31 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification006, TestSize.Level1)
     EXPECT_TRUE(notificationMgr->notificationMap_.size() == 0);
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotification006 function end!");
 }
+
+
+/**
+ * @tc.name: BatteryNotification007
+ * @tc.desc: Test FillNotificationCfg
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotificationTest, BatteryNotification007, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification007 function start!");
+    constexpr const char* REVERSE_CHARGE_POPUP_NAME = "reverse_super_charge_start";
+    constexpr const char* REVERSE_CHARGE_WITH_POWER_DISPLAY_POPUP_NAME =
+        "reverse_super_charge_with_power_display_start";
+    std::shared_ptr<NotificationManager> notificationMgr = std::make_shared<NotificationManager>();
+    EXPECT_TRUE(notificationMgr != nullptr);
+    BatteryConfig::NotificationConf nCfg;
+
+    nCfg.name = "testName";
+    auto ret = notificationMgr->FillNotificationCfg(nCfg);
+    EXPECT_EQ(ret.name, "testName");
+
+    nCfg.name = REVERSE_CHARGE_WITH_POWER_DISPLAY_POPUP_NAME;
+    ret = notificationMgr->FillNotificationCfg(nCfg);
+    EXPECT_EQ(ret.name, REVERSE_CHARGE_POPUP_NAME);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification007 function end!");
+}
 }
 }
