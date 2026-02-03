@@ -611,6 +611,12 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0022, TestSize.Level1)
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
     DestroyJsonValue(g_configTest.config_);
+    jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4", "inProgress": "true",
+        "button": [{"name": 1}, {}]}]})";
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
+    g_configTest.ParseNotificationConf();
+    EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
+    DestroyJsonValue(g_configTest.config_);
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0022 function end!");
 }
 
@@ -650,6 +656,18 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0023, TestSize.Level1)
     DestroyJsonValue(g_configTest.config_);
     jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4",
         "bannerFlags": 512, "button": [{"name": "1", "action": "1"}, {"name": "2", "action": "2"}]}]})";
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
+    g_configTest.ParseNotificationConf();
+    EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 1);
+    DestroyJsonValue(g_configTest.config_);
+    jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4",
+        "inProgress": true, "button": [{"name": "1", "action": "1"}, {"name": "2", "action": "2"}]}]})";
+    ASSERT_TRUE(ParseJsonStr(jsonStr, true));
+    g_configTest.ParseNotificationConf();
+    EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 1);
+    DestroyJsonValue(g_configTest.config_);
+    jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4",
+        "unRemovable": true, "button": [{"name": "1", "action": "1"}, {"name": "2", "action": "2"}]}]})";
     ASSERT_TRUE(ParseJsonStr(jsonStr, true));
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 1);
