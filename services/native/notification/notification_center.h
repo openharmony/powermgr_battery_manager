@@ -44,9 +44,9 @@ protected:
 
     void SetSlotType();
 
-    void SetInProgress();
+    void SetInProgress(bool inProgress);
 
-    void SetUnremovable();
+    void SetUnremovable(bool unRemovable);
 
     void SetBadgeIconStyle();
 

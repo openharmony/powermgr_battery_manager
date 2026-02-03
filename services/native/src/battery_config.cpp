@@ -341,6 +341,8 @@ void BatteryConfig::SaveNotificationConfToMap(cJSON* nConf)
         cJSON* titleObj = cJSON_GetObjectItemCaseSensitive(conf, "title");
         cJSON* textObj = cJSON_GetObjectItemCaseSensitive(conf, "text");
         cJSON* bannerFlagsObj = cJSON_GetObjectItemCaseSensitive(conf, "bannerFlags");
+        cJSON* inProgressObj = cJSON_GetObjectItemCaseSensitive(conf, "inProgress");
+        cJSON* unRemovableObj = cJSON_GetObjectItemCaseSensitive(conf, "unRemovable");
         cJSON* buttonObj = cJSON_GetObjectItemCaseSensitive(conf, "button");
         if (!BatteryMgrJsonUtils::IsValidJsonString(nameObj) || !BatteryMgrJsonUtils::IsValidJsonString(iconObj) ||
             !BatteryMgrJsonUtils::IsValidJsonString(titleObj) || !BatteryMgrJsonUtils::IsValidJsonString(textObj) ||
@@ -352,6 +354,8 @@ void BatteryConfig::SaveNotificationConfToMap(cJSON* nConf)
         if (BatteryMgrJsonUtils::IsValidJsonNumber(bannerFlagsObj)) {
             controlFlags = static_cast<uint32_t>(bannerFlagsObj->valueint);
         }
+        bool inProgress = BatteryMgrJsonUtils::IsValidJsonBool(inProgressObj) ? cJSON_IsTrue(inProgressObj) : false;
+        bool unRemovable = BatteryMgrJsonUtils::IsValidJsonBool(unRemovableObj) ? cJSON_IsTrue(unRemovableObj) : false;
         if (cJSON_GetArraySize(buttonObj) != MAX_BUTTON_RANGE) {
             BATTERY_HILOGW(COMP_SVC, "notificationConf button data length error");
             continue;
@@ -381,6 +385,8 @@ void BatteryConfig::SaveNotificationConfToMap(cJSON* nConf)
             .title = titleObj->valuestring,
             .text = textObj->valuestring,
             .bannerFlags = controlFlags,
+            .inProgress = inProgress,
+            .unRemovable = unRemovable,
             .firstButton = std::make_pair(firstButtonNameObj->valuestring, firstButtonActionObj->valuestring),
             .secondButton = std::make_pair(secondButtonNameObj->valuestring, secondButtonActionObj->valuestring)
         };
