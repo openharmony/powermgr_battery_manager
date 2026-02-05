@@ -21,6 +21,9 @@ namespace OHOS {
 namespace PowerMgr {
 static const uint32_t PUBLISH_POPUP_ACTION = 0;
 static const uint32_t CANCLE_POPUP_ACTION = 1;
+static constexpr const char* REVERSE_CHARGE_POPUP_NAME = "reverse_super_charge_start";
+static constexpr const char* REVERSE_CHARGE_WITH_POWER_DISPLAY_POPUP_NAME =
+    "reverse_super_charge_with_power_display_start";
 
 void NotificationManager::HandleNotification(const std::string& popupName, uint32_t popupAction,
     const std::unordered_map<std::string, BatteryConfig::NotificationConf>& nConfMap)
@@ -100,6 +103,9 @@ BatteryConfig::NotificationConf NotificationManager::FillNotificationCfg(const B
 {
     auto& localeConfig = NotificationLocale::GetInstance();
     BatteryConfig::NotificationConf temp = cfg;
+    if (temp.name == REVERSE_CHARGE_WITH_POWER_DISPLAY_POPUP_NAME) {
+        temp.name = REVERSE_CHARGE_POPUP_NAME;
+    }
     temp.title = localeConfig.GetStringByKey(cfg.title);
     temp.text = localeConfig.GetStringByKey(cfg.text);
     temp.firstButton.first = localeConfig.GetStringByKey(cfg.firstButton.first);
