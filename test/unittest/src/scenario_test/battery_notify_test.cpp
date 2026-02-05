@@ -572,5 +572,71 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify026, TestSize.Level1)
     ffrt::wait();
 }
 #endif
+
+/**
+ * @tc.name: BatteryNotify027
+ * @tc.desc: Test GetPowerDisplayString
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify027, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify027 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    std::string fmtStr = "power: %s.";
+    std::map<std::string, std::string> params = {
+        {"77", "power: 77W."},
+        {"1234", "power: 1234W."},
+        {"", "power: %s."}
+    };
+    for (auto&[param, expected]: params) {
+        auto ret = notificationLocale.GetPowerDisplayString(fmtStr, param);
+        EXPECT_EQ(ret, expected);
+    }
+    std::string bigFmtStr(1025, 's');
+    auto ret = notificationLocale.GetPowerDisplayString(bigFmtStr, "123");
+    EXPECT_EQ(ret, bigFmtStr);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify027 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify028
+ * @tc.desc: Test FillTextWithPower
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify028, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify028 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    std::string text = "%s";
+    auto ret = notificationLocale.FillTextWithPower(text);
+    EXPECT_EQ(ret, text);
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify028 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify029
+ * @tc.desc: Test GetStringByKey
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify029, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify029 function start!");
+    constexpr const char* REVERSE_CHARGE_WITH_POWER_DISPLAY_TEXT_KEY =
+        "reverse_super_charge_with_power_display_start_text";
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    auto tmpMap = notificationLocale.stringMap_;
+    notificationLocale.stringMap_.insert(std::make_pair(REVERSE_CHARGE_WITH_POWER_DISPLAY_TEXT_KEY, "power: %s"));
+    notificationLocale.stringMap_.insert(std::make_pair("key", "text"));
+
+    auto ret = notificationLocale.GetStringByKey("key");
+    EXPECT_EQ(ret, "text");
+    ret = notificationLocale.GetStringByKey(REVERSE_CHARGE_WITH_POWER_DISPLAY_TEXT_KEY);
+    EXPECT_EQ(ret, "power: %s");
+    ret = notificationLocale.GetStringByKey("invalid key");
+    EXPECT_EQ(ret, "");
+
+    notificationLocale.stringMap_ = tmpMap;
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify029 function end!");
+}
 } // namespace PowerMgr
 } // namespace OHOS

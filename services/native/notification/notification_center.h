@@ -34,6 +34,8 @@ public:
 
     void SetActionButton(const std::string& buttonName, const std::string& buttonAction) override;
 protected:
+    void SetAlertOnce();
+
     void SetNotificationId(const std::string& popupName);
 
     void SetContent(const std::string& title, const std::string& text);

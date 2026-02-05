@@ -30,6 +30,7 @@ static const std::string BATTERY_NOTIFICATION_SYS_ABILITY_NAME = "";
 
 void NotificationCenter::CreateBaseStyle(const BatteryConfig::NotificationConf& nCfg)
 {
+    SetAlertOnce();
     SetNotificationId(nCfg.name);
     SetContent(nCfg.title, nCfg.text);
     SetCreatorUid();
@@ -66,6 +67,11 @@ void NotificationCenter::SetContent(const std::string& title, const std::string&
         return;
     }
     request_.SetContent(notificationContent);
+}
+
+void NotificationCenter::SetAlertOnce()
+{
+    request_.SetAlertOneTime(true);
 }
 
 void NotificationCenter::SetCreatorUid()
