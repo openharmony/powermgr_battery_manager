@@ -55,6 +55,11 @@ inline bool IsValidJsonArray(const cJSON* jsonValue)
     return jsonValue && cJSON_IsArray(jsonValue);
 }
 
+inline bool IsValidJsonBool(const cJSON* jsonValue)
+{
+    return jsonValue && cJSON_IsBool(jsonValue);
+}
+
 inline bool IsJsonArrayOrJsonObject(const cJSON* jsonValue)
 {
     return jsonValue && (cJSON_IsArray(jsonValue) || cJSON_IsObject(jsonValue));

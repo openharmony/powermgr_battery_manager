@@ -52,12 +52,16 @@ public:
         std::string title;
         std::string text;
         uint32_t bannerFlags = 0;
+        bool inProgress = false;
+        bool unRemovable = false;
         std::pair<std::string, std::string> firstButton;
         std::pair<std::string, std::string> secondButton;
         const std::string GetInfo() const
         {
             return "name: " + name + ", icon: " + icon + ", title: " + title +
                 ", text: " + text + ", bannerFlags: " + std::to_string(bannerFlags) +
+                ", inProgress: " + std::to_string(static_cast<int>(inProgress)) +
+                ", unRemovable: " + std::to_string(static_cast<int>(unRemovable)) +
                 ", firstButton: " + firstButton.first + ", " + firstButton.second +
                 ", secondButton: " + secondButton.first + ", " + secondButton.second;
         }

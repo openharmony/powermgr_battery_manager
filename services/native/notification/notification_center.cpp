@@ -36,8 +36,8 @@ void NotificationCenter::CreateBaseStyle(const BatteryConfig::NotificationConf& 
     SetCreatorUid();
     SetCreatorBundleName();
     SetSlotType();
-    SetInProgress();
-    SetUnremovable();
+    SetInProgress(nCfg.inProgress);
+    SetUnremovable(nCfg.unRemovable);
     SetBadgeIconStyle();
     SetLittleIcon(nCfg.icon);
     SetNotificationControlFlags(nCfg.bannerFlags);
@@ -89,14 +89,14 @@ void NotificationCenter::SetSlotType()
     request_.SetSlotType(OHOS::Notification::NotificationConstant::SlotType::SOCIAL_COMMUNICATION);
 }
 
-void NotificationCenter::SetInProgress()
+void NotificationCenter::SetInProgress(bool inProgress)
 {
-    request_.SetInProgress(true);
+    request_.SetInProgress(inProgress);
 }
 
-void NotificationCenter::SetUnremovable()
+void NotificationCenter::SetUnremovable(bool unRemovable)
 {
-    request_.SetUnremovable(true);
+    request_.SetUnremovable(unRemovable);
 }
 
 void NotificationCenter::SetBadgeIconStyle()
