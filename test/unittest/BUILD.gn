@@ -388,13 +388,13 @@ ohos_unittest("test_battery_stub") {
 
 # test exceptions when Remote() return nullptr
 ohos_unittest("test_battery_proxy_mock_iremoteobject") {
+  module_out_path = "${module_output_path}"
+
   sanitize = {
     cfi = true
     cfi_cross_dso = true
     debug = false
   }
-
-  module_out_path = "${module_output_path}"
 
   sources = [
     "mock/source/mock_peer_holder.cpp",
@@ -431,13 +431,13 @@ ohos_unittest("test_battery_proxy_mock_iremoteobject") {
 
 # test exceptions when MessageParcel::WriteInterfaceToken() return false
 ohos_unittest("test_battery_proxy_mock_messageparcel_write_error") {
+  module_out_path = "${module_output_path}"
+
   sanitize = {
     cfi = true
     cfi_cross_dso = true
     debug = false
   }
-
-  module_out_path = "${module_output_path}"
 
   sources = [
     "mock/source/mock_message_parcel.cpp",
@@ -474,14 +474,14 @@ ohos_unittest("test_battery_proxy_mock_messageparcel_write_error") {
 
 # test exceptions when SendRequest() return value not equal ERR_OK
 ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
+  module_out_path = "${module_output_path}"
+  defines += [ "ENABLE_REMOTE_INTERFACE" ]
+
   sanitize = {
     cfi = true
     cfi_cross_dso = true
     debug = false
   }
-
-  module_out_path = "${module_output_path}"
-  defines += [ "ENABLE_REMOTE_INTERFACE" ]
 
   sources = [
     "mock/source/mock_remote_object.cpp",
@@ -518,13 +518,13 @@ ohos_unittest("test_battery_proxy_mock_sendrequest_error") {
 
 # test exceptions when read reply MessageParcel error
 ohos_unittest("test_battery_proxy_mock_parcel_read_error") {
+  module_out_path = "${module_output_path}"
+
   sanitize = {
     cfi = true
     cfi_cross_dso = true
     debug = false
   }
-
-  module_out_path = "${module_output_path}"
 
   sources = [
     "mock/source/mock_parcel.cpp",
@@ -757,6 +757,10 @@ ohos_unittest("battery_common_event_part2_test") {
 
   if (battery_manager_feature_support_notification) {
     defines += [ "BATTERY_SUPPORT_NOTIFICATION" ]
+  }
+
+  if (battery_manager_feature_enable_charging_sound) {
+    defines += [ "BATTERY_MANAGER_ENABLE_CHARGING_SOUND" ]
   }
 }
 

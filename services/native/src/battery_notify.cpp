@@ -71,7 +71,7 @@ const std::string REBOOT = "reboot";
 const std::string SEND_COMMONEVENT = "sendcommonevent";
 const std::string SEND_CUSTOMEVENT = "sendcustomevent";
 const std::string SEND_POPUP = "sendpopup";
-const std::string BATTERY_CUSTOM_EVENT_PREFIX = "usual.event.";
+const std::string BATTERY_CUSTOM_EVENT_PREFIX = "usual.event.battery";
 sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 
 BatteryNotify::BatteryNotify()
@@ -423,7 +423,6 @@ void StartChargingSoundFunc()
         g_released.store(true);
     });
 }
-
 }
 #endif
 

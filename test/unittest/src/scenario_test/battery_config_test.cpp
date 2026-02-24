@@ -544,7 +544,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0021, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0021 function start!");
     std::string jsonStr = R"({"notification": null})";
     ASSERT_TRUE(ParseJsonStr(jsonStr, true));
-    g_configTest.popupConfig_.clear();
+    g_configTest.notificationConfMap_.clear();
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
     DestroyJsonValue(g_configTest.config_);
@@ -582,7 +582,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0022, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryConfig0022 function start!");
     std::string jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": 4}]})";
     ASSERT_TRUE(ParseJsonStr(jsonStr, true));
-    g_configTest.popupConfig_.clear();
+    g_configTest.notificationConfMap_.clear();
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
     DestroyJsonValue(g_configTest.config_);
@@ -632,7 +632,7 @@ HWTEST_F(BatteryConfigTest, BatteryConfig0023, TestSize.Level1)
     std::string jsonStr = R"({"notification": [{"name": "1", "icon": "2", "title": "3", "text": "4",
         "button": [{"name": "1", "action": 1}, {}]}]})";
     ASSERT_TRUE(ParseJsonStr(jsonStr, true));
-    g_configTest.popupConfig_.clear();
+    g_configTest.notificationConfMap_.clear();
     g_configTest.ParseNotificationConf();
     EXPECT_TRUE(g_configTest.notificationConfMap_.size() == 0);
     DestroyJsonValue(g_configTest.config_);
