@@ -19,16 +19,11 @@
 namespace OHOS {
 namespace PowerMgr {
 static const char* BATTERY_HOOKMGR_NAME = "battery_hookmgr";
-static HOOK_MGR* g_batteryHookMgr = nullptr;
 
 HOOK_MGR* GetBatteryHookMgr()
 {
-    if (g_batteryHookMgr != nullptr) {
-        return g_batteryHookMgr;
-    }
-
-    g_batteryHookMgr = HookMgrCreate(BATTERY_HOOKMGR_NAME);
-    return g_batteryHookMgr;
+    static HOOK_MGR* batteryHookMgr = HookMgrCreate(BATTERY_HOOKMGR_NAME);
+    return batteryHookMgr;
 }
 } // namespace PowerMgr
 } // namespace OHOS

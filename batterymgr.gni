@@ -23,6 +23,11 @@ declare_args() {
 }
 
 defines = []
+
+if (battery_manager_feature_set_low_capacity_threshold) {
+  defines += [ "BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD" ]
+}
+
 if (!defined(global_parts_info) ||
     defined(global_parts_info.hiviewdfx_hisysevent)) {
   has_hiviewdfx_hisysevent_part = true

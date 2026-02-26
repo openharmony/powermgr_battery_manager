@@ -66,12 +66,12 @@ const std::string COMMON_EVENT_BATTERY_CHANGED = "usual.event.BATTERY_CHANGED";
 sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 FFRTQueue g_queue("battery_service");
 FFRTHandle g_lowCapacityShutdownHandle = nullptr;
-#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
-std::atomic_bool g_isLowCapacityShutdownHandleValid = false;
-#endif
 BatteryPluggedType g_lastPluggedType = BatteryPluggedType::PLUGGED_TYPE_NONE;
 SysParam::BootCompletedCallback g_bootCompletedCallback;
 std::shared_ptr<RunningLock> g_shutdownGuard = nullptr;
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+std::shared_ptr<FFRTTimer> g_ffrtTimer = nullptr;
+#endif
 }
 std::atomic_bool BatteryService::isBootCompleted_ = false;
 
@@ -122,6 +122,11 @@ bool BatteryService::Init()
     if (!batteryNotify_) {
         batteryNotify_ = std::make_unique<BatteryNotify>();
     }
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+    if (!g_ffrtTimer) {
+        g_ffrtTimer = std::make_shared<FFRTTimer>("battery_manager_ffrt_queue");
+    }
+#endif
     VibratorInit();
     RegisterBootCompletedCallback();
     return true;
@@ -143,6 +148,9 @@ void BatteryService::OnAddSystemAbility(int32_t systemAbilityId, const std::stri
     }
 
     if (systemAbilityId == COMMON_EVENT_SERVICE_ID && !isCommonEventReady_.load()) {
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+        SubscribeCommonEvent();
+#endif
         if (!isBatteryHdiReady_.load()) {
             BATTERY_HILOGE(COMP_SVC, "battery hdi interface is not ready, return");
             return;
@@ -412,6 +420,9 @@ void BatteryService::OnStop()
         ModuleMgrDestroy(g_moduleMgr);
         g_moduleMgr = nullptr;
     }
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+    UnSubscribeCommonEvent();
+#endif
 }
 
 bool BatteryService::IsLastPlugged()
@@ -513,20 +524,18 @@ void BatteryService::HandleCapacityExt(int32_t capacity, BatteryChargeState char
             capacity,
             static_cast<uint32_t>(chargeState),
             isBatteryPresent);
-        g_islowCapacityShutdownHandleValid = true;
-        g_service->SubscribeHibernateCommonEvent();
         CreateShutdownGuard();
         LockShutdownGuard();
         FFRTTask task = [&] {
-            g_islowCapacityShutdownHandleValid == false;
-            g_service->UnsubscribeHibernateCommonEvent();
             if (!IsInExtremePowerSaveMode()) {
                 BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt begin to hibernate");
                 PowerMgrClient::GetInstance().Hibernate(false, "LowCapacity");
             }
             UnlockShutdownGuard();
         };
-        g_lowCapacityShutdownHandle = FFRTUtils::SubmitDelayTask(task, SHUTDOWN_DELAY_TIME_MS, g_queue);
+        if (g_ffrtTimer) {
+            g_ffrtTimer->SetTimer(TIMER_ID_DELAY_HIBERNATE, task, SHUTDOWN_DELAY_TIME_MS);
+        }
     }
 
     if (CheckIfClearHibernateTask(capacity, chargeState, isBatteryPresent)) {
@@ -537,45 +546,48 @@ void BatteryService::HandleCapacityExt(int32_t capacity, BatteryChargeState char
             static_cast<uint32_t>(chargeState),
             lastBatteryInfo_.GetCapacity(),
             isBatteryPresent);
-        UnsubscribeHibernateCommonEvent();
-        ClearLowCapacityShutdownTask();
+        if (g_ffrtTimer) {
+            g_ffrtTimer->CancelTimer(TIMER_ID_DELAY_HIBERNATE);
+        }
+        UnlockShutdownGuard();
     }
+}
+
+bool BatteryService::IsDelayHibernateTimerValid()
+{
+    if (g_ffrtTimer == nullptr) {
+        BATTERY_HILOGE(COMP_SVC, "g_ffrtTimer null error");
+        return false;
+    }
+    if (g_ffrtTimer->GetTaskHandlePtr(TIMER_ID_DELAY_HIBERNATE) == nullptr) {
+        return false;
+    }
+    return true;
 }
 
 bool BatteryService::CheckIfCreateHibernateTask(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent)
 {
-    // Check if the battery capacity is below the shutdown threshold, no shutdown task is currently active,
+    // Check if the battery capacity is below the shutdown threshold, no shutdown timer is currently valid,
     // and the capacity has decreased or the battery is present but not charging.
-    if ((capacity <= shutdownCapacityThreshold_) && (_islowCapacityShutdownHandleValid == false) &&
-        (capacity < lastBatteryInfo_.GetCapacity()) || (isBatteryPresent && !IsCharging(chargeState))) {
-            return true;
-        }
+    if ((capacity <= shutdownCapacityThreshold_) && !IsDelayHibernateTimerValid() &&
+        (capacity < lastBatteryInfo_.GetCapacity() || (isBatteryPresent && !IsCharging(chargeState)))) {
+        return true;
+    }
     return false;
 }
 
 bool BatteryService::CheckIfClearHibernateTask(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent)
 {
-    // Check if a Shutdown task is already actived and if the battery capacity has increased or the battery is present
+    // Check if the Shutdown task is valid and if the battery capacity has increased or the battery is present
     // but charging.
-    if (g_islowCapacityShutdownHandleValid == true &&
+    if (IsDelayHibernateTimerValid() &&
         (capacity > lastBatteryInfo_.GetCapacity() || (isBatteryPresent && IsCharging(chargeState)))) {
         return true;
     }
     return false;
 }
 
-void BatteryService::ClearLowCapacityShutdownTask()
-{
-    if (g_islowCapacityShutdownHandleValid == true) {
-        BATTERY_HILOG(COMP_SVC, "clearLowCapacityShutdownTask");
-        g_islowCapacityShutdownHandleValid = false;
-        FFRTUtils::CancelTask(g_lowCapacityShutdownHandle, g_queue);
-        g_lowCapacityShutdownHandle = nullptr;
-        UnlockShutdownGuard();
-    }
-}
-
-void BatteryService::SubscribeHibernateCommonEvent()
+void BatteryService::SubscribeCommonEvent()
 {
     using namespace OHOS::EventFwk;
     MatchingSkills matchingSkills;
@@ -584,7 +596,7 @@ void BatteryService::SubscribeHibernateCommonEvent()
     CommonEventSubscribeInfo subscribeInfo(matchingSkills);
     subscribeInfo.SetThreadMode(CommonEventSubscribeInfo::ThreadMode::COMMON);
     if (!subscriberPtr_) {
-        subscriberPtr_ = std::make_shared<PowerCommonEventSubscriber>(subscribeInfo);
+        subscriberPtr_ = std::make_shared<BatteryCommonEventSubscriber>(subscribeInfo);
     }
     bool result = CommonEventManager::SubscribeCommonEvent(subscriberPtr_);
     if (!result) {
@@ -592,13 +604,16 @@ void BatteryService::SubscribeHibernateCommonEvent()
     }
 }
 
-void BatteryService::UnsubscribeHibernateCommonEvent()
+void BatteryService::UnSubscribeCommonEvent()
 {
-        if (!OHOS::EventFwk::CommonEventManager::UnSubscribeCommonEvent(subscriberPtr_)) {
-            BATTERY_HILOGE(COMP_SVC, "unsubscribe to commonevent manager failed!");
-        }
+    if (!subscriberPtr_) {
+        return;
+    }
+    if (!OHOS::EventFwk::CommonEventManager::UnSubscribeCommonEvent(subscriberPtr_)) {
+        BATTERY_HILOGE(COMP_SVC, "unsubscribe to commonevent manager failed!");
+    }
+    subscriberPtr_ = nullptr;
 }
-#endif
 
 void BatteryService::CreateShutdownGuard()
 {
@@ -630,6 +645,7 @@ void BatteryService::UnlockShutdownGuard()
     }
     g_shutdownGuard->UnLock();
 }
+#endif
 
 int32_t BatteryService::GetCapacityInner()
 {
@@ -991,7 +1007,6 @@ int32_t BatteryService::Dump(int32_t fd, const std::vector<std::u16string> &args
     if (!Permission::IsSystem()) {
         return ERR_PERMISSION_DENIED;
     }
-
     BatteryDump& batteryDump = BatteryDump::GetInstance();
     if ((args.empty()) || (args[0].compare(u"-h") == 0)) {
         batteryDump.DumpBatteryHelp(fd);
@@ -1084,6 +1099,9 @@ void BatteryService::Reset()
     iBatteryInterface_->GetBatteryInfo(event);
     ConvertingEvent(event);
     HandleBatteryInfo();
+#ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+    g_ffrtTimer.reset(); // all strong references gone, ffrtTimer will be destructed.
+#endif
 }
 
 void BatteryService::VibratorInit()
@@ -1099,11 +1117,12 @@ void BatteryCommonEventSubscriber::OnReceiveEvent(const OHOS::EventFwk::CommonEv
     std::string action = data.GetWant().GetAction();
     if (action == OHOS::EventFwk::CommonEventSupport::COMMON_EVENT_ENTER_HIBERNATE ||
         action == OHOS::EventFwk::CommonEventSupport::COMMON_EVENT_EXIT_HIBERNATE) {
-        FFRTTask unSubFunc = [this] {
-            g_service->UnsubscribeHibernateCommonEvent();
-        };
-        FFRTUtils::SubmitTask(unSubFunc);
-        g_service->ClearLowCapacityShutdownTask();
+        if (g_ffrtTimer) {
+            g_ffrtTimer->CancelTimer(TIMER_ID_DELAY_HIBERNATE);
+        }
+        if (g_service) {
+            g_service->UnlockShutdownGuard();
+        }
     }
 }
 #endif
