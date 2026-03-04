@@ -638,5 +638,319 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify029, TestSize.Level1)
     notificationLocale.stringMap_ = tmpMap;
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify029 function end!");
 }
+
+/**
+ * @tc.name: BatteryNotify030
+ * @tc.desc: Test GetPowerDisplayString with abnormal inputs
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify030, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify030 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    
+    std::string fmtStr = "";
+    std::string power = "100";
+    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
+    EXPECT_EQ(ret, "");
+
+    fmtStr = "No placeholder";
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
+    EXPECT_EQ(ret, "No placeholder");
+
+    fmtStr = "Power: %s";
+    power = "";
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
+    EXPECT_EQ(ret, fmtStr);
+
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify030 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify031
+ * @tc.desc: Test FillTextWithPower with empty or valid power
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify031, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify031 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    
+    std::string text = "Charging %s";
+    auto ret = notificationLocale.FillTextWithPower(text);
+    EXPECT_EQ(ret, text);
+
+    text = "";
+    ret = notificationLocale.FillTextWithPower(text);
+    EXPECT_EQ(ret, "");
+    
+    text = "No placeholder text";
+    ret = notificationLocale.FillTextWithPower(text);
+    EXPECT_EQ(ret, text);
+
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify031 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify032
+ * @tc.desc: Test GetPowerDisplayString with complex formats
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify032, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify032 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    
+    std::string fmtStr = "Power: %s%%";
+    std::string power = "90";
+    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
+    EXPECT_EQ(ret, "Power: 90W%");
+    
+    fmtStr = "Current power: %s";
+    power = "50";
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
+    EXPECT_EQ(ret, "Current power: 50W");
+    
+    fmtStr = "Status: %s";
+    power = "High";
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
+    EXPECT_EQ(ret, "Status: HighW");
+    
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify032 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify033
+ * @tc.desc: Test GetPowerDisplayString boundary conditions
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify033, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify033 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    
+    std::string longPrefix(900, 'A');
+    std::string fmtStr = longPrefix + "%s";
+    std::string power = "10";
+    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
+    EXPECT_EQ(ret, longPrefix + "10W");
+    
+    std::string hugePrefix(1050, 'B');
+    fmtStr = hugePrefix + "%s";
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
+    EXPECT_EQ(ret, fmtStr);
+    
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify033 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify034
+ * @tc.desc: Test FillTextWithPower simulation via map manipulation
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify034, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify034 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+   
+    std::string text = "Turbo Charge %s";
+    auto ret = notificationLocale.FillTextWithPower(text);
+    EXPECT_EQ(ret, text);
+    
+    ret = notificationLocale.FillTextWithPower("");
+    EXPECT_EQ(ret, "");
+
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify034 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify035
+ * @tc.desc: Test GetPowerDisplayString with multiple calls and state stability
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify035, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify035 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    std::string fmtStr = "Power: %s";
+    
+    for (int i = 0; i < 100; ++i) {
+        std::string power = std::to_string(i);
+        std::string expected = "Power: " + power + "W";
+        auto ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
+        EXPECT_EQ(ret, expected);
+    }
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify035 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify036
+ * @tc.desc: Test GetPowerDisplayString with various special characters in power string
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify036, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify036 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    std::string fmtStr = "Value: %s";
+    
+    std::vector<std::pair<std::string, std::string>> testCases = {
+        {"10.5", "Value: 10.5W"},
+        {"-5", "Value: -5W"},
+        {"0", "Value: 0W"},
+        {" ", "Value:  W"},
+        {"!", "Value: !W"},
+        {"@#$", "Value: @#$W"},
+        {"\n", "Value: \nW"},
+        {"\t", "Value: \tW"}
+    };
+    
+    for (const auto& testCase : testCases) {
+        auto ret = notificationLocale.GetPowerDisplayString(fmtStr, testCase.first);
+        EXPECT_EQ(ret, testCase.second);
+    }
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify036 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify037
+ * @tc.desc: Test GetPowerDisplayString with different placeholder positions and repeated placeholders
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify037, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify037 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("%s is power", "50"), "50W is power");
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("Power is %s", "50"), "Power is 50W");
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("P%sr", "50"), "P50Wr");
+    
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify037 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify038
+ * @tc.desc: Test FillTextWithPower with long input text
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify038, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify038 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    
+    std::string longText(500, 'A');
+    longText += " %s ";
+    longText += std::string(400, 'B');
+    
+    auto ret = notificationLocale.FillTextWithPower(longText);
+    EXPECT_EQ(ret, longText);
+    EXPECT_EQ(ret.length(), longText.length());
+    
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify038 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify039
+ * @tc.desc: Test GetPowerDisplayString with null-like characters in format
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify039, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify039 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    
+    std::string fmtStr = "Prefix";
+    fmtStr.push_back('\0');
+    fmtStr += "Suffix %s";
+    
+    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, "10");
+    EXPECT_EQ(ret, "Prefix");
+    
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify039 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify040
+ * @tc.desc: Test GetPowerDisplayString with very short format strings
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify040, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify040 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("%s", "1"), "1W");
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString(" %s", "1"), " 1W");
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("%s ", "1"), "1W ");
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("A", "1"), "A");
+    
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify040 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify041
+ * @tc.desc: Test FillTextWithPower with special characters in input text
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify041, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify041 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    
+    std::string specialText = "!@#$%^&*()_+{}|:\"<>?~`-=[]\\;',./";
+    auto ret = notificationLocale.FillTextWithPower(specialText);
+    EXPECT_EQ(ret, specialText);
+    
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify041 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify042
+ * @tc.desc: Test NotificationLocale singleton consistency in multi-threaded context (simulated)
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify042, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify042 function start!");
+    auto& instance1 = NotificationLocale::GetInstance();
+    auto& instance2 = NotificationLocale::GetInstance();
+    EXPECT_EQ(&instance1, &instance2);
+    
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify042 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify043
+ * @tc.desc: Test GetPowerDisplayString with numerical formatting (should be treated as string)
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify043, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify043 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("Power: %s", "0.001"), "Power: 0.001W");
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("Power: %s", "1e6"), "Power: 1e6W");
+    
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify043 function end!");
+}
+
+/**
+ * @tc.name: BatteryNotify044
+ * @tc.desc: Test FillTextWithPower with very long strings and no placeholders
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotifyTest, BatteryNotify044, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify044 function start!");
+    auto& notificationLocale = NotificationLocale::GetInstance();
+    
+    std::string longText(1000, 'Z');
+    auto ret = notificationLocale.FillTextWithPower(longText);
+    EXPECT_EQ(ret, longText);
+    
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotify044 function end!");
+}
 } // namespace PowerMgr
 } // namespace OHOS
