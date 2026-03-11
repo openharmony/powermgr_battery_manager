@@ -72,7 +72,7 @@ bool NotificationLocale::SaveJsonToMap(const std::string& fileStr, const std::st
         cJSON_Delete(root);
         return false;
     }
-    cJSON* stringConf = cJSON_GetObjectItemCaseSensitive(root, "String");
+    cJSON* stringConf = cJSON_GetObjectItemCaseSensitive(root, "string");
     if (!BatteryMgrJsonUtils::IsValidJsonArray(stringConf)) {
         BATTERY_HILOGE(COMP_SVC, "%{public}s stringConf invalid", targetPath.c_str());
         cJSON_Delete(root);
