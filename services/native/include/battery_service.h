@@ -120,9 +120,11 @@ public:
     void Reset();
     void VibratorInit();
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
-    void ClearLowCapacityShutdownTask();
-    void SubscribeHibernateCommonEvent();
-    void UnsubscribeHibernateCommonEvent();
+    void SubscribeCommonEvent();
+    void UnSubscribeCommonEvent();
+    void CreateShutdownGuard();
+    void LockShutdownGuard();
+    void UnlockShutdownGuard();
 #endif
 private:
     bool Init();
@@ -138,6 +140,7 @@ private:
     void HandleCapacity(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
     void HandleCapacityExt(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
+    bool IsDelayHibernateTimerValid();
     bool CheckIfCreateHibernateTask(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
     bool CheckIfClearHibernateTask(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
 #endif
@@ -148,9 +151,6 @@ private:
     void WakeupDevice(BatteryPluggedType pluggedType);
     bool IsCharging(BatteryChargeState chargeState);
     bool IsInExtremePowerSaveMode();
-    void CreateShutdownGuard();
-    void LockShutdownGuard();
-    void UnlockShutdownGuard();
 
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
     void SetLowCapacityThreshold();
@@ -195,6 +195,10 @@ private:
 };
 
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+enum BatteryTimerId {
+    TIMER_ID_DELAY_HIBERNATE,
+};
+
 class BatteryCommonEventSubscriber : public EventFwk::CommonEventSubscriber {
 public:
     explicit BatteryCommonEventSubscriber(const EventFwk::CommonEventSubscribeInfo& subscribeInfo)

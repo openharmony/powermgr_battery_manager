@@ -64,6 +64,14 @@ bool BatteryNotify::IsCommonEventServiceAbilityExist() const
 
     return true;
 }
+
+#ifdef BATTERY_MANAGER_ENABLE_CHARGING_SOUND
+void BatteryNotify::TriggerChargingSound(bool isStart) const
+{
+    BATTERY_HILOGI(LABEL_TEST, "TriggerChargingSound %{public}s", isStart ? "start" : "stop");
+}
+#endif
+
 class BatteryEventTestPart2 : public testing::Test {
 public:
     static void SetUpTestCase();
