@@ -38,6 +38,7 @@ ohos_shared_library("charging_sound") {
     "audio_framework:audio_client",
     "c_utils:utils",
     "config_policy:configpolicy_util",
+    "graphic_surface:surface",
     "hilog:libhilog",
     "player_framework:media_client",
   ]
