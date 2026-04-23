@@ -23,7 +23,8 @@
             "battery_manager_feature_enable_charging_sound",
             "battery_manager_feature_enable_wireless_charge",
             "battery_manager_feature_set_low_capacity_threshold",
-            "battery_manager_feature_support_notification"
+            "battery_manager_feature_support_notification",
+            "battery_manager_feature_support_battery_cli"
         ],
         "adapted_system_type": [
             "standard"
@@ -81,7 +82,8 @@
                     "//base/powermgr/battery_manager/frameworks:battery_napi",
                     "//base/powermgr/battery_manager/frameworks:battery_capi",
                     "//base/powermgr/battery_manager/frameworks/ets/taihe:battery_manager_taihe",
-                    "//base/powermgr/battery_manager/interfaces/inner_api:batterysrv_client"
+                    "//base/powermgr/battery_manager/interfaces/inner_api:batterysrv_client",
+                    "//base/powermgr/battery_manager/tools:cli_tool_group"
                 ],
                 "service_group": [
                     "//base/powermgr/battery_manager/sa_profile:batterymgr_sa_profile",
@@ -125,7 +127,8 @@
                 "//base/powermgr/battery_manager/test:battery_fuzzertest",
                 "//base/powermgr/battery_manager/test:battery_benchmarktest",
                 "//base/powermgr/battery_manager/test:battery_apitest",
-                "//base/powermgr/battery_manager/frameworks/ets/taihe:battery_manager_taihe_test"
+                "//base/powermgr/battery_manager/frameworks/ets/taihe:battery_manager_taihe_test",
+                "//base/powermgr/battery_manager/tools:cli_test_group"
             ]
         }
     }

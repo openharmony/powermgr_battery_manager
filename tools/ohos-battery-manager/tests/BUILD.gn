@@ -1,0 +1,46 @@
+# Copyright (c) 2026 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+import("../../../batterymgr.gni")
+
+module_output_path = "${module_output_path}"
+
+ohos_unittest("test_ohos_battery_manager_cli") {
+  module_out_path = module_output_path
+
+  sources = [
+    "../src/cli_handler.cpp",
+    "test_main.cpp",
+  ]
+
+  include_dirs = [
+    "../src",
+    "${battery_inner_api}/native/include",
+  ]
+
+  configs = [ "${battery_utils}:coverage_flags" ]
+
+  deps = [ "${battery_inner_api}:batterysrv_client" ]
+
+  external_deps = [
+    "c_utils:utils",
+    "googletest:gtest_main",
+    "hilog:libhilog",
+    "ipc:ipc_core",
+    "samgr:samgr_proxy",
+  ]
+
+  part_name = "battery_manager"
+  subsystem_name = "powermgr"
+}

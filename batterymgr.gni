@@ -20,6 +20,7 @@ declare_args() {
   battery_manager_feature_support_notification = false
   battery_manager_feature_support_notification_string = false
   battery_manager_feature_enable_wireless_charge = false
+  battery_manager_feature_support_battery_cli = false
 }
 
 defines = []
