@@ -89,7 +89,10 @@ HWTEST_F(BatteryInfoFFITest, BatteryInfo_FFI_Test007, TestSize.Level1)
     BATTERY_HILOGI(LABEL_TEST, "BatteryInfo_FFI_Test007 start");
     BatterySrvClient& batterySrvClient = BatterySrvClient::GetInstance();
     std::string resultFromClient = batterySrvClient.GetTechnology();
-    std::string resultFromCjApi = FfiBatteryInfoGetTechnology();
+    const char* tech = FfiBatteryInfoGetTechnology();
+    ASSERT_NE(tech, nullptr);
+    std::string resultFromCjApi = tech;
+    free(const_cast<char*>(tech));
     EXPECT_EQ(resultFromClient, resultFromCjApi);
     BATTERY_HILOGI(LABEL_TEST, "BatteryInfo_FFI_Test007 end");
 }
