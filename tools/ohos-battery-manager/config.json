@@ -2,7 +2,7 @@
   "$schema": "https://schemas.openharmony.org/cli/tool/v1",
   "name": "ohos-battery-manager",
   "version": "1.0.0",
-  "description": "Battery information query tool for capacity and energy status",
+  "description": "Battery information query tool for querying battery capacity and energy status. Used for system administration, monitoring, and troubleshooting battery-related issues. Not applicable for real-time battery monitoring or subscription-based battery event tracking.",
   "executable": "/system/bin/cli_tool/executable/ohos-battery-manager",
   "requirePermissions": [],
   "hasSubcommands": true,
@@ -17,13 +17,31 @@
       },
       "output": {
         "type": "object",
-        "description": "Battery capacity result",
+        "description": "Battery capacity result with standard JSON structure",
         "properties": {
-          "capacity": {
-            "type": "integer",
-            "description": "Battery capacity in percent (0-100)",
-            "minimum": 0,
-            "maximum": 100
+          "status": {
+            "type": "string",
+            "description": "Result status: success or error"
+          },
+          "data": {
+            "type": "object",
+            "description": "Core business data (only present when status is success)",
+            "properties": {
+              "capacity": {
+                "type": "integer",
+                "description": "Battery capacity in percent (0-100)",
+                "minimum": 0,
+                "maximum": 100
+              }
+            }
+          },
+          "error_code": {
+            "type": "string",
+            "description": "Standard error code (only present when status is error)"
+          },
+          "error_msg": {
+            "type": "string",
+            "description": "Human-readable error message with troubleshooting suggestions (only present when status is error)"
           }
         }
       },
@@ -42,11 +60,29 @@
       },
       "output": {
         "type": "object",
-        "description": "Battery total energy result",
+        "description": "Battery total energy result with standard JSON structure",
         "properties": {
-          "totalEnergy": {
-            "type": "integer",
-            "description": "Total battery energy in mAh"
+          "status": {
+            "type": "string",
+            "description": "Result status: success or error"
+          },
+          "data": {
+            "type": "object",
+            "description": "Core business data (only present when status is success)",
+            "properties": {
+              "totalEnergy": {
+                "type": "integer",
+                "description": "Total battery energy in mAh"
+              }
+            }
+          },
+          "error_code": {
+            "type": "string",
+            "description": "Standard error code (only present when status is error)"
+          },
+          "error_msg": {
+            "type": "string",
+            "description": "Human-readable error message with troubleshooting suggestions (only present when status is error)"
           }
         }
       },
@@ -65,11 +101,29 @@
       },
       "output": {
         "type": "object",
-        "description": "Battery remaining energy result",
+        "description": "Battery remaining energy result with standard JSON structure",
         "properties": {
-          "remainEnergy": {
-            "type": "integer",
-            "description": "Remaining battery energy in mAh"
+          "status": {
+            "type": "string",
+            "description": "Result status: success or error"
+          },
+          "data": {
+            "type": "object",
+            "description": "Core business data (only present when status is success)",
+            "properties": {
+              "remainEnergy": {
+                "type": "integer",
+                "description": "Remaining battery energy in mAh"
+              }
+            }
+          },
+          "error_code": {
+            "type": "string",
+            "description": "Standard error code (only present when status is error)"
+          },
+          "error_msg": {
+            "type": "string",
+            "description": "Human-readable error message with troubleshooting suggestions (only present when status is error)"
           }
         }
       },

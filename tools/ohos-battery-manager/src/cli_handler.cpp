@@ -15,17 +15,15 @@
 
 #include "cli_handler.h"
 
-#include <cstdlib>
-#include <cstring>
 #include <functional>
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <unordered_map>
 
 #include "battery_info.h"
 #include "battery_srv_client.h"
 #include "battery_srv_errors.h"
+#include "nlohmann/json.hpp"
 
 namespace {
 #define BATTERY_CLI_LOGI(fmt, ...) fprintf(stderr, "[INFO] " fmt "\n", ##__VA_ARGS__)
@@ -36,65 +34,53 @@ struct Command {
     const char* name;
     const char* description;
     CommandHandler handler;
+    const char* usage;  // Usage for subcommand help
 };
 
 static std::unordered_map<std::string, Command> g_commands;
 static constexpr uint32_t CLI_CMD_MIN_PARAM_COUNT = 2;
+} // namespace
+
+static void PrintSuccess(const nlohmann::json& data)
+{
+    nlohmann::json result;
+    result["status"] = "success";
+    result["data"] = data;
+    std::cout << result.dump() << std::endl;
 }
 
-namespace json_builder {
-std::string EscapeString(const std::string& s)
+static void PrintError(const std::string& errorCode, const std::string& errorMessage)
 {
-    std::ostringstream oss;
-    for (char c : s) {
-        switch (c) {
-            case '"':
-                oss << "\\\"";
-                break;
-            case '\\':
-                oss << "\\\\";
-                break;
-            case '\n':
-                oss << "\\n";
-                break;
-            case '\r':
-                oss << "\\r";
-                break;
-            case '\t':
-                oss << "\\t";
-                break;
-            default:
-                oss << c;
-                break;
+    nlohmann::json result;
+    result["status"] = "error";
+    result["error_code"] = errorCode;
+    result["error_msg"] = errorMessage;
+    std::cout << result.dump() << std::endl;
+}
+
+static void RegisterCommand(const char* name, const char* desc, CommandHandler handler, const char* usage = "")
+{
+    g_commands[name] = {name, desc, std::move(handler), usage};
+}
+
+static int CmdHelp([[maybe_unused]] int argc, char** argv)
+{
+    // Support both 'help' and 'help <command>'
+    if (argc == 1) {
+        const char* subcmd = argv[0];
+        auto it = g_commands.find(subcmd);
+        if (it != g_commands.end() && it->second.usage && strlen(it->second.usage) > 0) {
+            BATTERY_CLI_LOGI("Command: %s", it->second.name);
+            BATTERY_CLI_LOGI("Description: %s", it->second.description);
+            BATTERY_CLI_LOGI("Usage: ohos-battery-manager %s", it->second.usage);
+            return 0;
+        } else {
+            BATTERY_CLI_LOGE("Unknown command or no detailed help available: %s", subcmd);
+            BATTERY_CLI_LOGI("Run 'ohos-battery-manager help' to see all available commands.");
+            return 1;
         }
     }
-    return oss.str();
-}
 
-void PrintSuccess(const std::string& dataJson)
-{
-    std::cout << "{\"success\":true,\"data\":" << dataJson << "}" << std::endl;
-}
-
-void PrintError(const std::string& code, const std::string& message, const std::string& suggestion = "")
-{
-    std::cout << "{\"success\":false,\"error\":{\"code\":\"" << EscapeString(code) << "\",\"message\":\"" <<
-        EscapeString(message) << "\"}";
-    if (!suggestion.empty()) {
-        std::cout << ",\"suggestion\":\"" << EscapeString(suggestion) << "\"";
-    }
-    std::cout << "}" << std::endl;
-}
-
-} // namespace json_builder
-
-static void RegisterCommand(const char* name, const char* desc, CommandHandler handler)
-{
-    g_commands[name] = {name, desc, std::move(handler)};
-}
-
-static int CmdHelp([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
-{
     BATTERY_CLI_LOGI("Usage: ohos-battery-manager <command> [options]");
     BATTERY_CLI_LOGI("");
     BATTERY_CLI_LOGI("Available commands:");
@@ -117,15 +103,14 @@ static int CmdCapacity([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
     int32_t capacity = client.GetCapacity();
     if (capacity == OHOS::PowerMgr::INVALID_BATT_INT_VALUE) {
         BATTERY_CLI_LOGE("Failed to get battery capacity, service may be unavailable");
-        json_builder::PrintError("ERR_CONNECTION_FAIL",
-            "Failed to get battery capacity.",
-            "Check if powermgr process is running.");
+        PrintError("ERR_CONNECTION_FAIL",
+            "Failed to get battery capacity. Please check if powermgr process is running.");
         return 1;
     }
 
-    std::ostringstream oss;
-    oss << "{\"capacity\":" << capacity << "}";
-    json_builder::PrintSuccess(oss.str());
+    nlohmann::json data;
+    data["capacity"] = capacity;
+    PrintSuccess(data);
     return 0;
 }
 
@@ -140,15 +125,14 @@ static int CmdTotalEnergy([[maybe_unused]] int argc, [[maybe_unused]] char** arg
     int32_t totalEnergy = client.GetTotalEnergy();
     if (totalEnergy == OHOS::PowerMgr::INVALID_BATT_INT_VALUE) {
         BATTERY_CLI_LOGE("Failed to get total battery energy, service may be unavailable or permission denied");
-        json_builder::PrintError("ERR_CONNECTION_FAIL",
-            "Failed to get total battery energy.",
-            "Check if powermgr process is running and caller has system permission.");
+        PrintError("ERR_CONNECTION_FAIL",
+            "Failed to get total battery energy. Please check if powermgr process is running and caller has system permission.");
         return 1;
     }
 
-    std::ostringstream oss;
-    oss << "{\"totalEnergy\":" << totalEnergy << "}";
-    json_builder::PrintSuccess(oss.str());
+    nlohmann::json data;
+    data["totalEnergy"] = totalEnergy;
+    PrintSuccess(data);
     return 0;
 }
 
@@ -163,24 +147,23 @@ static int CmdRemainEnergy([[maybe_unused]] int argc, [[maybe_unused]] char** ar
     int32_t remainEnergy = client.GetRemainEnergy();
     if (remainEnergy == OHOS::PowerMgr::INVALID_BATT_INT_VALUE) {
         BATTERY_CLI_LOGE("Failed to get remaining battery energy, service may be unavailable or permission denied");
-        json_builder::PrintError("ERR_CONNECTION_FAIL",
-            "Failed to get remaining battery energy.",
-            "Check if powermgr process is running and caller has system permission.");
+        PrintError("ERR_CONNECTION_FAIL",
+            "Failed to get remaining battery energy. Please check if powermgr process is running and caller has system permission.");
         return 1;
     }
 
-    std::ostringstream oss;
-    oss << "{\"remainEnergy\":" << remainEnergy << "}";
-    json_builder::PrintSuccess(oss.str());
+    nlohmann::json data;
+    data["remainEnergy"] = remainEnergy;
+    PrintSuccess(data);
     return 0;
 }
 
 static void InitCommands()
 {
-    RegisterCommand("help", "Show help message", CmdHelp);
-    RegisterCommand("capacity", "Query battery capacity percentage (0-100%)", CmdCapacity);
-    RegisterCommand("total-energy", "Query battery total energy (mAh)", CmdTotalEnergy);
-    RegisterCommand("remain-energy", "Query battery remaining energy (mAh)", CmdRemainEnergy);
+    RegisterCommand("help", "Show help message", CmdHelp, "[command]");
+    RegisterCommand("capacity", "Query battery capacity percentage (0-100%)", CmdCapacity, "");
+    RegisterCommand("total-energy", "Query battery total energy (mAh)", CmdTotalEnergy, "");
+    RegisterCommand("remain-energy", "Query battery remaining energy (mAh)", CmdRemainEnergy, "");
 }
 
 static void PrintUsage(const char* prog)

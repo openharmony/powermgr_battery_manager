@@ -10,6 +10,7 @@ Query battery capacity and energy status via system SA (System Ability 3302).
 
 | Command | Description | Parameters | Permissions |
 |---------|-------------|------------|-------------|
+| help | Show help message | [command] (optional) | None |
 | capacity | Query battery capacity (0-100%) | None | None |
 | total-energy | Query battery total energy (mAh) | None | System caller identity |
 | remain-energy | Query battery remaining energy (mAh) | None | System caller identity |
@@ -25,18 +26,21 @@ ohos-battery-manager <command>
 ```bash
 # Query battery capacity
 ohos-battery-manager capacity
-# Output: {"success":true,"data":{"capacity":85}}
+# Output: {"status":"success","data":{"capacity":85}}
 
 # Query battery total energy
 ohos-battery-manager total-energy
-# Output: {"success":true,"data":{"totalEnergy":4000}}
+# Output: {"status":"success","data":{"totalEnergy":4000}}
 
 # Query battery remaining energy
 ohos-battery-manager remain-energy
-# Output: {"success":true,"data":{"remainEnergy":3200}}
+# Output: {"status":"success","data":{"remainEnergy":3200}}
 
-# Show help
+# Show general help
 ohos-battery-manager help
+
+# Show help for a specific command
+ohos-battery-manager help capacity
 ```
 
 ### Error Handling
@@ -61,13 +65,13 @@ ohos-battery-manager unknown
 ### Success Response
 
 ```json
-{"success":true,"data":{"capacity":85}}
+{"status":"success","data":{"capacity":85}}
 ```
 
 ### Error Response
 
 ```json
-{"success":false,"error":{"code":"ERR_CONNECTION_FAIL","message":"Failed to get battery capacity."},"suggestion":"Check if powermgr process is running."}
+{"status":"error","error_code":"ERR_CONNECTION_FAIL","error_msg":"Failed to get battery capacity. Please check if powermgr process is running."}
 ```
 
 ## Dependencies
