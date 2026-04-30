@@ -73,7 +73,7 @@ void BatteryManagerCliTest::TearDown() {}
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_001, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
+    char prog[] = "ohos-batteryManager";
     char* argv[] = { prog };
     EXPECT_EQ(HandleCommand(1, argv), 1);
 }
@@ -84,7 +84,7 @@ HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_001, TestSize.Level1)
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_002, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
+    char prog[] = "ohos-batteryManager";
     char cmd[] = "unknown-cmd";
     char* argv[] = { prog, cmd };
     EXPECT_EQ(HandleCommand(2, argv), 1);
@@ -92,75 +92,74 @@ HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_002, TestSize.Level1)
 
 /**
  * @tc.name: BatteryManagerCliTest_003
- * @tc.desc: Test help command (no subcommand) returns success
+ * @tc.desc: Test "help" subcommand is not supported (treated as unknown command)
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_003, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
+    char prog[] = "ohos-batteryManager";
     char cmd[] = "help";
+    char* argv[] = { prog, cmd };
+    EXPECT_EQ(HandleCommand(2, argv), 1);
+}
+
+/**
+ * @tc.name: BatteryManagerCliTest_004
+ * @tc.desc: Test capacity command returns success with valid value
+ */
+HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_004, TestSize.Level1)
+{
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "capacity";
     char* argv[] = { prog, cmd };
     EXPECT_EQ(HandleCommand(2, argv), 0);
 }
 
 /**
- * @tc.name: BatteryManagerCliTest_004
- * @tc.desc: Test help command with valid subcommand that has usage (help help)
- */
-HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_004, TestSize.Level1)
-{
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "help";
-    char subcmd[] = "help";
-    char* argv[] = { prog, cmd, subcmd };
-    EXPECT_EQ(HandleCommand(3, argv), 0);
-}
-
-/**
  * @tc.name: BatteryManagerCliTest_005
- * @tc.desc: Test help command with valid subcommand that has no usage (help capacity)
+ * @tc.desc: Test capacity command with extra arguments returns error
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_005, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "help";
-    char subcmd[] = "capacity";
-    char* argv[] = { prog, cmd, subcmd };
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "capacity";
+    char extra[] = "extra_arg";
+    char* argv[] = { prog, cmd, extra };
     EXPECT_EQ(HandleCommand(3, argv), 1);
 }
 
 /**
  * @tc.name: BatteryManagerCliTest_006
- * @tc.desc: Test help command with unknown subcommand (help unknown)
+ * @tc.desc: Test capacity command fails when service returns invalid value
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_006, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "help";
-    char subcmd[] = "unknown-cmd";
-    char* argv[] = { prog, cmd, subcmd };
-    EXPECT_EQ(HandleCommand(3, argv), 1);
+    g_capacityRet = OHOS::PowerMgr::INVALID_BATT_INT_VALUE;
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "capacity";
+    char* argv[] = { prog, cmd };
+    EXPECT_EQ(HandleCommand(2, argv), 1);
 }
 
 /**
  * @tc.name: BatteryManagerCliTest_007
- * @tc.desc: Test capacity command returns success with valid value
+ * @tc.desc: Test total-energy command returns success with valid value
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_007, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "capacity";
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "total-energy";
     char* argv[] = { prog, cmd };
     EXPECT_EQ(HandleCommand(2, argv), 0);
 }
 
 /**
  * @tc.name: BatteryManagerCliTest_008
- * @tc.desc: Test capacity command with extra arguments returns error
+ * @tc.desc: Test total-energy command with extra arguments returns error
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_008, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "capacity";
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "total-energy";
     char extra[] = "extra_arg";
     char* argv[] = { prog, cmd, extra };
     EXPECT_EQ(HandleCommand(3, argv), 1);
@@ -168,37 +167,37 @@ HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_008, TestSize.Level1)
 
 /**
  * @tc.name: BatteryManagerCliTest_009
- * @tc.desc: Test capacity command fails when service returns invalid value
+ * @tc.desc: Test total-energy command fails when service returns invalid value
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_009, TestSize.Level1)
 {
-    g_capacityRet = OHOS::PowerMgr::INVALID_BATT_INT_VALUE;
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "capacity";
+    g_totalEnergyRet = OHOS::PowerMgr::INVALID_BATT_INT_VALUE;
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "total-energy";
     char* argv[] = { prog, cmd };
     EXPECT_EQ(HandleCommand(2, argv), 1);
 }
 
 /**
  * @tc.name: BatteryManagerCliTest_010
- * @tc.desc: Test total-energy command returns success with valid value
+ * @tc.desc: Test remain-energy command returns success with valid value
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_010, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "total-energy";
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "remain-energy";
     char* argv[] = { prog, cmd };
     EXPECT_EQ(HandleCommand(2, argv), 0);
 }
 
 /**
  * @tc.name: BatteryManagerCliTest_011
- * @tc.desc: Test total-energy command with extra arguments returns error
+ * @tc.desc: Test remain-energy command with extra arguments returns error
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_011, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "total-energy";
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "remain-energy";
     char extra[] = "extra_arg";
     char* argv[] = { prog, cmd, extra };
     EXPECT_EQ(HandleCommand(3, argv), 1);
@@ -206,103 +205,65 @@ HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_011, TestSize.Level1)
 
 /**
  * @tc.name: BatteryManagerCliTest_012
- * @tc.desc: Test total-energy command fails when service returns invalid value
+ * @tc.desc: Test remain-energy command fails when service returns invalid value
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_012, TestSize.Level1)
 {
-    g_totalEnergyRet = OHOS::PowerMgr::INVALID_BATT_INT_VALUE;
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "total-energy";
+    g_remainEnergyRet = OHOS::PowerMgr::INVALID_BATT_INT_VALUE;
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "remain-energy";
     char* argv[] = { prog, cmd };
     EXPECT_EQ(HandleCommand(2, argv), 1);
 }
 
 /**
  * @tc.name: BatteryManagerCliTest_013
- * @tc.desc: Test remain-energy command returns success with valid value
+ * @tc.desc: Test capacity with boundary value 0
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_013, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "remain-energy";
+    g_capacityRet = 0;
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "capacity";
     char* argv[] = { prog, cmd };
     EXPECT_EQ(HandleCommand(2, argv), 0);
 }
 
 /**
  * @tc.name: BatteryManagerCliTest_014
- * @tc.desc: Test remain-energy command with extra arguments returns error
+ * @tc.desc: Test capacity with boundary value 100
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_014, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "remain-energy";
-    char extra[] = "extra_arg";
-    char* argv[] = { prog, cmd, extra };
-    EXPECT_EQ(HandleCommand(3, argv), 1);
+    g_capacityRet = 100;
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "capacity";
+    char* argv[] = { prog, cmd };
+    EXPECT_EQ(HandleCommand(2, argv), 0);
 }
 
 /**
  * @tc.name: BatteryManagerCliTest_015
- * @tc.desc: Test remain-energy command fails when service returns invalid value
+ * @tc.desc: Test capacity with negative value should still succeed
+ * (API may return negative values in edge cases, CLI should not reject)
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_015, TestSize.Level1)
 {
-    g_remainEnergyRet = OHOS::PowerMgr::INVALID_BATT_INT_VALUE;
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "remain-energy";
+    g_capacityRet = -1;
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "capacity";
     char* argv[] = { prog, cmd };
-    EXPECT_EQ(HandleCommand(2, argv), 1);
+    // Should succeed because -1 != INVALID_BATT_INT_VALUE
+    EXPECT_EQ(HandleCommand(2, argv), 0);
 }
 
 /**
  * @tc.name: BatteryManagerCliTest_016
- * @tc.desc: Test capacity with boundary value 0
+ * @tc.desc: Test all commands can be called sequentially
  */
 HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_016, TestSize.Level1)
 {
-    g_capacityRet = 0;
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "capacity";
-    char* argv[] = { prog, cmd };
-    EXPECT_EQ(HandleCommand(2, argv), 0);
-}
-
-/**
- * @tc.name: BatteryManagerCliTest_017
- * @tc.desc: Test capacity with boundary value 100
- */
-HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_017, TestSize.Level1)
-{
-    g_capacityRet = 100;
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "capacity";
-    char* argv[] = { prog, cmd };
-    EXPECT_EQ(HandleCommand(2, argv), 0);
-}
-
-/**
- * @tc.name: BatteryManagerCliTest_018
- * @tc.desc: Test capacity with negative value should still succeed
- * (API may return negative values in edge cases, CLI should not reject)
- */
-HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_018, TestSize.Level1)
-{
-    g_capacityRet = -1;
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "capacity";
-    char* argv[] = { prog, cmd };
-    // Should succeed because -1 != INVALID_BATT_INT_VALUE (which is checked separately)
-    EXPECT_EQ(HandleCommand(2, argv), 0);
-}
-
-/**
- * @tc.name: BatteryManagerCliTest_019
- * @tc.desc: Test all commands can be called sequentially
- */
-HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_019, TestSize.Level1)
-{
-    char prog[] = "ohos-battery-manager";
+    char prog[] = "ohos-batteryManager";
     char capacityCmd[] = "capacity";
     char totalEnergyCmd[] = "total-energy";
     char remainEnergyCmd[] = "remain-energy";
@@ -318,68 +279,78 @@ HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_019, TestSize.Level1)
 }
 
 /**
- * @tc.name: BatteryManagerCliTest_020
- * @tc.desc: Test help command with multiple subcommands (help help help)
- */
-HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_020, TestSize.Level1)
-{
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "help";
-    char subcmd[] = "help";
-    char extra[] = "help";
-    char* argv[] = { prog, cmd, subcmd, extra };
-    // Should fail because help with subcommand expects exactly 1 argument
-    EXPECT_EQ(HandleCommand(4, argv), 1);
-}
-
-/**
- * @tc.name: BatteryManagerCliTest_021
+ * @tc.name: BatteryManagerCliTest_017
  * @tc.desc: Test total-energy command with zero value
  */
-HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_021, TestSize.Level1)
+HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_017, TestSize.Level1)
 {
     g_totalEnergyRet = 0;
-    char prog[] = "ohos-battery-manager";
+    char prog[] = "ohos-batteryManager";
     char cmd[] = "total-energy";
     char* argv[] = { prog, cmd };
     EXPECT_EQ(HandleCommand(2, argv), 0);
 }
 
 /**
- * @tc.name: BatteryManagerCliTest_022
+ * @tc.name: BatteryManagerCliTest_018
  * @tc.desc: Test remain-energy command with zero value
  */
-HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_022, TestSize.Level1)
+HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_018, TestSize.Level1)
 {
     g_remainEnergyRet = 0;
-    char prog[] = "ohos-battery-manager";
+    char prog[] = "ohos-batteryManager";
     char cmd[] = "remain-energy";
     char* argv[] = { prog, cmd };
     EXPECT_EQ(HandleCommand(2, argv), 0);
 }
 
 /**
- * @tc.name: BatteryManagerCliTest_023
- * @tc.desc: Test help with total-energy subcommand (has no usage)
+ * @tc.name: BatteryManagerCliTest_019
+ * @tc.desc: Test --help flag at top level shows full help and returns success
  */
-HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_023, TestSize.Level1)
+HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_019, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "help";
-    char subcmd[] = "total-energy";
-    char* argv[] = { prog, cmd, subcmd };
-    EXPECT_EQ(HandleCommand(3, argv), 1);
+    char prog[] = "ohos-batteryManager";
+    char helpFlag[] = "--help";
+    char* argv[] = { prog, helpFlag };
+    EXPECT_EQ(HandleCommand(2, argv), 0);
 }
 
 /**
- * @tc.name: BatteryManagerCliTest_024
- * @tc.desc: Test help with remain-energy subcommand (has no usage)
+ * @tc.name: BatteryManagerCliTest_020
+ * @tc.desc: Test capacity --help shows subcommand help and returns success
  */
-HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_024, TestSize.Level1)
+HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_020, TestSize.Level1)
 {
-    char prog[] = "ohos-battery-manager";
-    char cmd[] = "help";
-    char subcmd[] = "remain-energy";
-    char* argv[] = { prog, cmd, subcmd };
-    EXPECT_EQ(HandleCommand(3, argv), 1);
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "capacity";
+    char helpFlag[] = "--help";
+    char* argv[] = { prog, cmd, helpFlag };
+    EXPECT_EQ(HandleCommand(3, argv), 0);
+}
+
+/**
+ * @tc.name: BatteryManagerCliTest_021
+ * @tc.desc: Test total-energy --help shows subcommand help and returns success
+ */
+HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_021, TestSize.Level1)
+{
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "total-energy";
+    char helpFlag[] = "--help";
+    char* argv[] = { prog, cmd, helpFlag };
+    EXPECT_EQ(HandleCommand(3, argv), 0);
+}
+
+/**
+ * @tc.name: BatteryManagerCliTest_022
+ * @tc.desc: Test remain-energy --help shows subcommand help and returns success
+ */
+HWTEST_F(BatteryManagerCliTest, BatteryManagerCliTest_022, TestSize.Level1)
+{
+    char prog[] = "ohos-batteryManager";
+    char cmd[] = "remain-energy";
+    char helpFlag[] = "--help";
+    char* argv[] = { prog, cmd, helpFlag };
+    EXPECT_EQ(HandleCommand(3, argv), 0);
 }

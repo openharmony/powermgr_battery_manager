@@ -11,40 +11,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build/ohos.gni")
-import("../../batterymgr.gni")
+import("//build/test.gni")
+import("../../../batterymgr.gni")
 
-ohos_executable("ohos-battery-manager") {
-  sanitize = {
-    cfi = true
-    cfi_cross_dso = true
-    debug = false
-  }
+module_output_path = "${module_output_path}"
 
-  branch_protector_ret = "pac_ret"
+ohos_unittest("test_ohos_battery_manager_cli") {
+  module_out_path = module_output_path
 
   sources = [
-    "src/cli_handler.cpp",
-    "src/main.cpp",
+    "../src/cli_handler.cpp",
+    "test_main.cpp",
   ]
 
-  include_dirs = [ "${battery_inner_api}/native/include" ]
-
-  deps = [ "${battery_inner_api}:batterysrv_client" ]
+  include_dirs = [
+    "../src",
+    "${battery_inner_api}/native/include",
+  ]
 
   configs = [ "${battery_utils}:coverage_flags" ]
+
+  deps = [ "${battery_inner_api}:batterysrv_client" ]
 
   external_deps = [
     "cJSON:cjson",
     "c_utils:utils",
+    "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "samgr:samgr_proxy",
   ]
-
-  install_enable = true
-  install_images = [ "system" ]
-  relative_install_dir = "cli_tool/executable"
 
   part_name = "battery_manager"
   subsystem_name = "powermgr"
