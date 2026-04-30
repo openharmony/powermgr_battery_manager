@@ -12,7 +12,7 @@
     "type": "object",
     "properties": {}
   },
-  "hasSubcommands": true,
+  "hasSubCommand": true,
   "subcommands": {
     "capacity": {
       "description": "Query battery capacity percentage (0-100%). Used for battery status checking and system management scenarios. Not applicable for real-time monitoring or subscription-based battery events.",

@@ -72,8 +72,7 @@
                 "input",
                 "distributed_notification_service",
                 "i18n",
-                "image_framework",
-                "json"
+                "image_framework"
             ]
         },
         "build": {

@@ -40,6 +40,11 @@ ohos-batteryManager <command> [options]
 # View all command help
 ohos-batteryManager --help
 
+# View subcommand help
+ohos-batteryManager capacity --help
+ohos-batteryManager total-energy --help
+ohos-batteryManager remain-energy --help
+
 # Query battery capacity
 ohos-batteryManager capacity
 # Output: {"type":"result","status":"success","data":{"capacity":85}}

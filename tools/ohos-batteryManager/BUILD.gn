@@ -39,7 +39,6 @@ ohos_executable("ohos-batteryManager") {
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "json:nlohmann_json_static",
     "samgr:samgr_proxy",
   ]
 

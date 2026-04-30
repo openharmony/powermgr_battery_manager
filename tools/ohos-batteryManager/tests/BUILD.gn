@@ -39,7 +39,6 @@ ohos_unittest("test_ohos_battery_manager_cli") {
     "googletest:gtest_main",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "json:nlohmann_json_static",
     "samgr:samgr_proxy",
   ]
 
