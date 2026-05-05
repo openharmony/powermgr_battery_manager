@@ -34,6 +34,7 @@ ohos_unittest("test_ohos_battery_manager_cli") {
   deps = [ "${battery_inner_api}:batterysrv_client" ]
 
   external_deps = [
+    "cJSON:cjson",
     "c_utils:utils",
     "googletest:gtest_main",
     "hilog:libhilog",

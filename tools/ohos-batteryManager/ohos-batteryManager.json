@@ -1,0 +1,158 @@
+{
+  "name": "ohos-batteryManager",
+  "version": "1.0.0",
+  "description": "Battery capacity and energy query tool. Used for system management, maintenance troubleshooting and battery status inspection. Not applicable for real-time battery monitoring or battery event subscription.",
+  "executablePath": "/system/bin/cli_tool/executable/ohos-batteryManager",
+  "requirePermissions": [],
+  "inputSchema": {
+    "type": "object",
+    "properties": {}
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {}
+  },
+  "hasSubCommand": true,
+  "subcommands": {
+    "capacity": {
+      "description": "Query battery capacity percentage (0-100%). Used for battery status checking and system management scenarios. Not applicable for real-time monitoring or subscription-based battery events.",
+      "requirePermissions": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["result"],
+            "description": "Response type indicator"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["success", "error"],
+            "description": "Execution status"
+          },
+          "data": {
+            "type": "object",
+            "description": "Battery capacity data",
+            "properties": {
+              "capacity": {
+                "type": "integer",
+                "description": "Battery capacity percentage (0-100)",
+                "minimum": 0,
+                "maximum": 100
+              }
+            }
+          },
+          "errCode": {
+            "type": "string",
+            "description": "Error code when execution fails"
+          },
+          "errMsg": {
+            "type": "string",
+            "description": "Error message when execution fails"
+          },
+          "suggestion": {
+            "type": "string",
+            "description": "Suggested resolution when execution fails"
+          }
+        },
+        "required": ["type", "status", "data"]
+      }
+    },
+    "total-energy": {
+      "description": "Query battery total energy in mAh. Used for battery hardware diagnostics and system maintenance scenarios. Requires system caller identity, not available for third-party applications.",
+      "requirePermissions": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["result"],
+            "description": "Response type indicator"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["success", "error"],
+            "description": "Execution status"
+          },
+          "data": {
+            "type": "object",
+            "description": "Battery total energy data",
+            "properties": {
+              "totalEnergy": {
+                "type": "integer",
+                "description": "Battery total energy (mAh)"
+              }
+            }
+          },
+          "errCode": {
+            "type": "string",
+            "description": "Error code when execution fails"
+          },
+          "errMsg": {
+            "type": "string",
+            "description": "Error message when execution fails"
+          },
+          "suggestion": {
+            "type": "string",
+            "description": "Suggested resolution when execution fails"
+          }
+        },
+        "required": ["type", "status", "data"]
+      }
+    },
+    "remain-energy": {
+      "description": "Query battery remaining energy in mAh. Used for battery health assessment and power management diagnostics. Requires system caller identity, not available for third-party applications.",
+      "requirePermissions": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["result"],
+            "description": "Response type indicator"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["success", "error"],
+            "description": "Execution status"
+          },
+          "data": {
+            "type": "object",
+            "description": "Battery remaining energy data",
+            "properties": {
+              "remainEnergy": {
+                "type": "integer",
+                "description": "Battery remaining energy (mAh)"
+              }
+            }
+          },
+          "errCode": {
+            "type": "string",
+            "description": "Error code when execution fails"
+          },
+          "errMsg": {
+            "type": "string",
+            "description": "Error message when execution fails"
+          },
+          "suggestion": {
+            "type": "string",
+            "description": "Suggested resolution when execution fails"
+          }
+        },
+        "required": ["type", "status", "data"]
+      }
+    }
+  }
+}

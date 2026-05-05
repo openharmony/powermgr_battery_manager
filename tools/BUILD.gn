@@ -16,13 +16,13 @@ import("//base/powermgr/battery_manager/batterymgr.gni")
 
 group("cli_tool_group") {
   if (battery_manager_feature_support_battery_cli) {
-    deps = [ "ohos-battery-manager:ohos-battery-manager" ]
+    deps = [ "ohos-batteryManager:ohos-batteryManager" ]
   }
 }
 
 group("cli_test_group") {
   testonly = true
   if (battery_manager_feature_support_battery_cli) {
-    deps = [ "ohos-battery-manager/tests:test_ohos_battery_manager_cli" ]
+    deps = [ "ohos-batteryManager/tests:test_ohos_battery_manager_cli" ]
   }
 }
