@@ -46,7 +46,6 @@ static constexpr uint32_t CLI_SUCCESS = 0;
 static constexpr uint32_t CLI_FAILURE = 1;
 static constexpr uint32_t CLI_CMD_PARAM_INDEX_1 = 1;
 static constexpr uint32_t CLI_CMD_PARAM_INDEX_2 = 2;
-static constexpr int CJSON_DEEP_COPY = 1;
 static const char* CLI_TOOL_NAME = nullptr;
 static constexpr const char* TOOL_DESCRIPTION =
     "Battery capacity and energy query tool. "
@@ -71,7 +70,8 @@ bool HasHelpFlag(int argc, char** argv, int start)
 }
 } // namespace
 
-static int OutputSuccess(const cJSONPtr& data)
+// Transfers ownership of data to internal JSON response. Caller must not use data after this call.
+static int OutputSuccess(cJSONPtr& data)
 {
     cJSONPtr root(cJSON_CreateObject());
     if (!root) {
@@ -80,7 +80,7 @@ static int OutputSuccess(const cJSONPtr& data)
     }
     cJSON_AddStringToObject(root.get(), "type", "result");
     cJSON_AddStringToObject(root.get(), "status", "success");
-    cJSON_AddItemToObject(root.get(), "data", cJSON_Duplicate(data.get(), CJSON_DEEP_COPY));
+    cJSON_AddItemToObject(root.get(), "data", data.release());
 
     char* output = cJSON_PrintUnformatted(root.get());
     if (output) {
