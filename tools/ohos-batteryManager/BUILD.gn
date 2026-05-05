@@ -12,9 +12,10 @@
 # limitations under the License.
 
 import("//build/ohos.gni")
+import("//build/ohos/cli/ohos_cli_executable.gni")
 import("../../batterymgr.gni")
 
-ohos_executable("ohos-batteryManager") {
+ohos_cli_executable("ohos-batteryManager") {
   sanitize = {
     cfi = true
     cfi_cross_dso = true
@@ -22,6 +23,8 @@ ohos_executable("ohos-batteryManager") {
   }
 
   branch_protector_ret = "pac_ret"
+
+  cli_config_file = "ohos-batteryManager.json"
 
   sources = [
     "src/cli_handler.cpp",
