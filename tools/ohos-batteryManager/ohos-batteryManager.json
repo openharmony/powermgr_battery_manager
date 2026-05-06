@@ -31,7 +31,7 @@
           },
           "status": {
             "type": "string",
-            "enum": ["success", "error"],
+            "enum": ["success", "failed"],
             "description": "Execution status"
           },
           "data": {
@@ -59,7 +59,7 @@
             "description": "Suggested resolution when execution fails"
           }
         },
-        "required": ["type", "status", "data"]
+        "required": ["type", "status"]
       }
     },
     "total-energy": {
@@ -79,7 +79,7 @@
           },
           "status": {
             "type": "string",
-            "enum": ["success", "error"],
+            "enum": ["success", "failed"],
             "description": "Execution status"
           },
           "data": {
@@ -105,7 +105,7 @@
             "description": "Suggested resolution when execution fails"
           }
         },
-        "required": ["type", "status", "data"]
+        "required": ["type", "status"]
       }
     },
     "remain-energy": {
@@ -125,7 +125,7 @@
           },
           "status": {
             "type": "string",
-            "enum": ["success", "error"],
+            "enum": ["success", "failed"],
             "description": "Execution status"
           },
           "data": {
@@ -151,7 +151,7 @@
             "description": "Suggested resolution when execution fails"
           }
         },
-        "required": ["type", "status", "data"]
+        "required": ["type", "status"]
       }
     }
   }
