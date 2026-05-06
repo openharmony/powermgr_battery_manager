@@ -54,8 +54,8 @@ static constexpr const char* TOOL_DESCRIPTION =
 static std::unordered_map<std::string, Command> g_commands;
 static bool g_hasSubcommands = false;
 
-#define CLI_LOG(fmt, ...) fprintf(stderr, fmt "\n", ##__VA_ARGS__)
-#define CLI_ERROR(fmt, ...) fprintf(stderr, "[ERROR] " fmt "\n", ##__VA_ARGS__)
+#define CLI_LOG(fmt, ...) fprintf(stdout, fmt "\n", ##__VA_ARGS__)
+#define CLI_ERROR(fmt, ...) fprintf(stdout, "[ERROR] " fmt "\n", ##__VA_ARGS__)
 #define REGISTER_CMD(name, desc, usage, params, examples, handler) \
     g_commands[name] = { name, desc, usage, params, examples, handler }
 
@@ -99,7 +99,7 @@ static int OutputError(const std::string& errCode, const std::string& errMsg,
         return CLI_FAILURE;
     }
     cJSON_AddStringToObject(root.get(), "type", "result");
-    cJSON_AddStringToObject(root.get(), "status", "error");
+    cJSON_AddStringToObject(root.get(), "status", "failed");
     cJSON_AddStringToObject(root.get(), "errCode", errCode.c_str());
     cJSON_AddStringToObject(root.get(), "errMsg", errMsg.c_str());
     cJSON_AddStringToObject(root.get(), "suggestion", suggestion.c_str());

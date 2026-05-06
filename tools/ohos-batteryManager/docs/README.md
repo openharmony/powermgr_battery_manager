@@ -64,7 +64,7 @@ ohos-batteryManager remain-energy
 # Extra arguments rejected
 ohos-batteryManager capacity extra_arg
 # stderr: [ERROR] Unexpected argument for 'capacity' command
-# stdout: {"type":"result","status":"error","errCode":"ERR_ARG_INVALID","errMsg":"Unexpected argument for 'capacity' command. This command takes no arguments.","suggestion":"Usage: ohos-batteryManager capacity"}
+# stdout: {"type":"result","status":"failed","errCode":"ERR_ARG_INVALID","errMsg":"Unexpected argument for 'capacity' command. This command takes no arguments.","suggestion":"Usage: ohos-batteryManager capacity"}
 
 # Unknown command
 ohos-batteryManager unknown
@@ -86,7 +86,7 @@ ohos-batteryManager unknown
 ### 失败响应
 
 ```json
-{"type":"result","status":"error","errCode":"ERR_BATT_SERVICE_UNAVAILABLE","errMsg":"Failed to get battery capacity. BatterySrvClient returned invalid value.","suggestion":"Check if powermgr process is running: ps -ef | grep powermgr"}
+{"type":"result","status":"failed","errCode":"ERR_BATT_SERVICE_UNAVAILABLE","errMsg":"Failed to get battery capacity. BatterySrvClient returned invalid value.","suggestion":"Check if powermgr process is running: ps -ef | grep powermgr"}
 ```
 
 ## 编译
