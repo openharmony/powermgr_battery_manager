@@ -63,19 +63,20 @@ ohos-batteryManager remain-energy
 ```bash
 # Extra arguments rejected
 ohos-batteryManager capacity extra_arg
-# stderr: [ERROR] Unexpected argument for 'capacity' command
-# stdout: {"type":"result","status":"failed","errCode":"ERR_ARG_INVALID","errMsg":"Unexpected argument for 'capacity' command. This command takes no arguments.","suggestion":"Usage: ohos-batteryManager capacity"}
+# {"type":"result","status":"failed","errCode":"ERR_ARG_INVALID","errMsg":"Unexpected argument for 'capacity' command. This command takes no arguments.","suggestion":"Usage: ohos-batteryManager capacity"}
 
 # Unknown command
 ohos-batteryManager unknown
-# stderr: [ERROR] Unknown command: unknown
-# stderr: [ERROR] Usage: ohos-batteryManager <command> [options]
+# {"type":"result","status":"failed","errCode":"ERR_UNKNOWN_COMMAND","errMsg":"Unknown command: 'unknown'.","suggestion":"Run 'ohos-batteryManager --help' for available commands."}
+
+# No command specified
+ohos-batteryManager
+# {"type":"result","status":"failed","errCode":"ERR_NO_COMMAND","errMsg":"No command specified.","suggestion":"Run 'ohos-batteryManager --help' for available commands."}
 ```
 
 ## 输出格式
 
-- **stdout**: JSON result
-- **stderr**: Logs and debug information
+- **stdout**: JSON result (success and error responses both output to stdout)
 
 ### 成功响应
 
