@@ -55,7 +55,6 @@ static std::unordered_map<std::string, Command> g_commands;
 static bool g_hasSubcommands = false;
 
 #define CLI_LOG(fmt, ...) fprintf(stdout, fmt "\n", ##__VA_ARGS__)
-#define CLI_ERROR(fmt, ...) fprintf(stdout, "[ERROR] " fmt "\n", ##__VA_ARGS__)
 #define REGISTER_CMD(name, desc, usage, params, examples, handler) \
     g_commands[name] = { name, desc, usage, params, examples, handler }
 
@@ -70,13 +69,23 @@ bool HasHelpFlag(int argc, char** argv, int start)
 }
 } // namespace
 
+static int OutputFallbackError(const std::string& errCode, const std::string& errMsg,
+    const std::string& suggestion)
+{
+    std::cout << "{\"type\":\"result\",\"status\":\"failed\",\"errCode\":\"" << errCode
+              << "\",\"errMsg\":\"" << errMsg
+              << "\",\"suggestion\":\"" << suggestion << "\"}" << std::endl;
+    return CLI_FAILURE;
+}
+
 // Transfers ownership of data to internal JSON response. Caller must not use data after this call.
 static int OutputSuccess(cJSONPtr& data)
 {
     cJSONPtr root(cJSON_CreateObject());
     if (!root) {
-        CLI_ERROR("Failed to create JSON response");
-        return CLI_FAILURE;
+        return OutputFallbackError("ERR_JSON_ALLOC_FAILED",
+            "Failed to create JSON response.",
+            "System memory may be insufficient. Try again later.");
     }
     cJSON_AddStringToObject(root.get(), "type", "result");
     cJSON_AddStringToObject(root.get(), "status", "success");
@@ -95,8 +104,9 @@ static int OutputError(const std::string& errCode, const std::string& errMsg,
 {
     cJSONPtr root(cJSON_CreateObject());
     if (!root) {
-        CLI_ERROR("Failed to create JSON response");
-        return CLI_FAILURE;
+        return OutputFallbackError("ERR_JSON_ALLOC_FAILED",
+            "Failed to create JSON response.",
+            "System memory may be insufficient. Try again later.");
     }
     cJSON_AddStringToObject(root.get(), "type", "result");
     cJSON_AddStringToObject(root.get(), "status", "failed");
@@ -147,8 +157,9 @@ static int PrintSubcommandHelp(const std::string& targetCmd)
 {
     auto it = g_commands.find(targetCmd);
     if (it == g_commands.end()) {
-        CLI_ERROR("Unknown command: %s", targetCmd.c_str());
-        return CLI_FAILURE;
+        return OutputError("ERR_UNKNOWN_COMMAND",
+            std::string("Unknown command: '") + targetCmd + "'.",
+            std::string("Run '") + CLI_TOOL_NAME + " --help' for available commands.");
     }
     const Command& cmd = it->second;
     CLI_LOG("%s %s - %s", CLI_TOOL_NAME, cmd.name, cmd.description ? cmd.description : "N/A");
@@ -171,16 +182,9 @@ static int PrintSubcommandHelp(const std::string& targetCmd)
     return CLI_SUCCESS;
 }
 
-static void PrintUsage(const char* prog)
-{
-    CLI_ERROR("Usage: %s <command> [options]", prog);
-    CLI_ERROR("Run '%s --help' for more information.", prog);
-}
-
 static int CmdCapacity([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
     if (argc > 0) {
-        CLI_ERROR("Unexpected argument for 'capacity' command");
         return OutputError("ERR_ARG_INVALID",
             "Unexpected argument for 'capacity' command. This command takes no arguments.",
             "Usage: ohos-batteryManager capacity");
@@ -188,7 +192,6 @@ static int CmdCapacity([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
     auto& client = OHOS::DelayedRefSingleton<OHOS::PowerMgr::BatterySrvClient>::GetInstance();
     int32_t capacity = client.GetCapacity();
     if (capacity == OHOS::PowerMgr::INVALID_BATT_INT_VALUE) {
-        CLI_ERROR("Failed to get battery capacity, service may be unavailable");
         return OutputError("ERR_BATT_SERVICE_UNAVAILABLE",
             "Failed to get battery capacity. BatterySrvClient returned invalid value.",
             "Check if powermgr process is running: ps -ef | grep powermgr");
@@ -202,7 +205,6 @@ static int CmdCapacity([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 static int CmdTotalEnergy([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
     if (argc > 0) {
-        CLI_ERROR("Unexpected argument for 'total-energy' command");
         return OutputError("ERR_ARG_INVALID",
             "Unexpected argument for 'total-energy' command. This command takes no arguments.",
             "Usage: ohos-batteryManager total-energy");
@@ -210,7 +212,6 @@ static int CmdTotalEnergy([[maybe_unused]] int argc, [[maybe_unused]] char** arg
     auto& client = OHOS::DelayedRefSingleton<OHOS::PowerMgr::BatterySrvClient>::GetInstance();
     int32_t totalEnergy = client.GetTotalEnergy();
     if (totalEnergy == OHOS::PowerMgr::INVALID_BATT_INT_VALUE) {
-        CLI_ERROR("Failed to get total battery energy, service may be unavailable or permission denied");
         return OutputError("ERR_BATT_SERVICE_UNAVAILABLE",
             "Failed to get total battery energy. BatterySrvClient returned invalid value.",
             "Check if powermgr process is running and caller has system permission.");
@@ -224,7 +225,6 @@ static int CmdTotalEnergy([[maybe_unused]] int argc, [[maybe_unused]] char** arg
 static int CmdRemainEnergy([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
     if (argc > 0) {
-        CLI_ERROR("Unexpected argument for 'remain-energy' command");
         return OutputError("ERR_ARG_INVALID",
             "Unexpected argument for 'remain-energy' command. This command takes no arguments.",
             "Usage: ohos-batteryManager remain-energy");
@@ -232,7 +232,6 @@ static int CmdRemainEnergy([[maybe_unused]] int argc, [[maybe_unused]] char** ar
     auto& client = OHOS::DelayedRefSingleton<OHOS::PowerMgr::BatterySrvClient>::GetInstance();
     int32_t remainEnergy = client.GetRemainEnergy();
     if (remainEnergy == OHOS::PowerMgr::INVALID_BATT_INT_VALUE) {
-        CLI_ERROR("Failed to get remaining battery energy, service may be unavailable or permission denied");
         return OutputError("ERR_BATT_SERVICE_UNAVAILABLE",
             "Failed to get remaining battery energy. BatterySrvClient returned invalid value.",
             "Check if powermgr process is running and caller has system permission.");
@@ -275,8 +274,9 @@ int HandleCommand(int argc, char** argv)
     InitCommands();
 
     if (argc < CLI_CMD_PARAM_INDEX_2) {
-        PrintUsage(argv[0]);
-        return CLI_FAILURE;
+        return OutputError("ERR_NO_COMMAND",
+            "No command specified.",
+            std::string("Run '") + argv[0] + " --help' for available commands.");
     }
     if (strcmp(argv[CLI_CMD_PARAM_INDEX_1], "--help") == 0) {
         PrintFullHelp();
@@ -286,9 +286,9 @@ int HandleCommand(int argc, char** argv)
     std::string cmdName = argv[CLI_CMD_PARAM_INDEX_1];
     auto it = g_commands.find(cmdName);
     if (it == g_commands.end()) {
-        CLI_ERROR("Unknown command: %s", cmdName.c_str());
-        PrintUsage(argv[0]);
-        return CLI_FAILURE;
+        return OutputError("ERR_UNKNOWN_COMMAND",
+            std::string("Unknown command: '") + cmdName + "'.",
+            std::string("Run '") + argv[0] + " --help' for available commands.");
     }
     if (HasHelpFlag(argc, argv, CLI_CMD_PARAM_INDEX_2)) {
         return PrintSubcommandHelp(cmdName);
