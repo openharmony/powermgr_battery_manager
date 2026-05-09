@@ -126,6 +126,7 @@ bool BatteryService::Init()
     if (!g_ffrtTimer) {
         g_ffrtTimer = std::make_shared<FFRTTimer>("battery_manager_ffrt_queue");
     }
+    isHibernateEnable_ = system::GetBoolParameter("const.power.enable_s4", true);
 #endif
     VibratorInit();
     RegisterBootCompletedCallback();
@@ -515,6 +516,19 @@ void BatteryService::HandleCapacity(int32_t capacity, BatteryChargeState chargeS
 }
 
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
+void BatteryService::DoHibernateOrShutdown()
+{
+    if (!IsInExtremePowerSaveMode()) {
+        if (isHibernateEnable_) {
+            BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt begin to hibernate");
+            PowerMgrClient::GetInstance().Hibernate(false, "LowCapacity");
+        } else {
+            BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt begin to shutdown");
+            PowerMgrClient::GetInstance().ShutDownDevice("LowCapacity");
+        }
+    }
+}
+
 void BatteryService::HandleCapacityExt(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent)
 {
     if (CheckIfCreateHibernateTask(capacity, chargeState, isBatteryPresent)) {
@@ -527,10 +541,7 @@ void BatteryService::HandleCapacityExt(int32_t capacity, BatteryChargeState char
         CreateShutdownGuard();
         LockShutdownGuard();
         FFRTTask task = [&] {
-            if (!IsInExtremePowerSaveMode()) {
-                BATTERY_HILOGI(COMP_SVC, "HandleCapacityExt begin to hibernate");
-                PowerMgrClient::GetInstance().Hibernate(false, "LowCapacity");
-            }
+            DoHibernateOrShutdown();
             UnlockShutdownGuard();
         };
         if (g_ffrtTimer) {
@@ -981,7 +992,7 @@ BatteryCapacityLevel BatteryService::GetCapacityLevelInner()
         fullCapacityThreshold_ <= highCapacityThreshold_) {
         BATTERY_HILOGE(FEATURE_BATT_INFO, "capacityThreshold err");
     }
-    if (CapacityLevelCompare(capacity, 0, shutdownCapacityThreshold_)) {
+    if (CapacityLevelCompare(capacity, INVALID_BATT_INT_VALUE, shutdownCapacityThreshold_)) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_SHUTDOWN;
     } else if (CapacityLevelCompare(capacity, shutdownCapacityThreshold_, criticalCapacityThreshold_)) {
         batteryCapacityLevel = BatteryCapacityLevel::LEVEL_CRITICAL;
