@@ -140,6 +140,7 @@ private:
     void HandleCapacity(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
     void HandleCapacityExt(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
+    void DoHibernateOrShutdown();
     bool IsDelayHibernateTimerValid();
     bool CheckIfCreateHibernateTask(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
     bool CheckIfClearHibernateTask(int32_t capacity, BatteryChargeState chargeState, bool isBatteryPresent);
@@ -166,6 +167,7 @@ private:
     sptr<HdiServiceStatusListener::IServStatListener> hdiServStatListener_ { nullptr };
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
     std::shared_ptr<EventFwk::CommonEventSubscriber> subscriberPtr_ {nullptr};
+    bool isHibernateEnable_ { true };
 #endif
     bool isLowPower_ { false };
     bool isMockUnplugged_ { false };
