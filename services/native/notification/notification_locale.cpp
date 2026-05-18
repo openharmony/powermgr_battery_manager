@@ -34,9 +34,10 @@ constexpr const char* SYSTEM_BATTERY_RESOURCEEXT_PATH = "/system/etc/battery/res
 constexpr const char* ELEMENT_STRING_FILE = "/element/string.json";
 constexpr const char* DEFAULT_LANGUAGE_EN = "base";
 constexpr const char* REVERSE_CHARGE_WITH_POWER_DISPLAY_TEXT_KEY =
-    "reverse_super_charge_with_power_display_start_text";
-constexpr int32_t MAX_BUFFER_SIZE = 1024;
+    "reverse_super_charge_with_power_detail_display_start_text";
 constexpr char WATT = 'W';
+constexpr char PERCENT = '%';
+constexpr uint32_t VALID_STRING_LEN = 2;
 }
 
 namespace OHOS {
@@ -150,32 +151,51 @@ std::string NotificationLocale::GetStringByKey(const std::string& key)
     return "";
 }
 
-std::string NotificationLocale::FillTextWithPower(const std::string& text)
+std::string NotificationLocale::GetBatteryConfig(const std::string& config)
 {
-    std::string powerStr;
-    BatterySrvClient::GetInstance().GetBatteryConfig("rchg_charging_power", powerStr);
-    BATTERY_HILOGI(COMP_SVC, "rchg_charging_power: %{public}s", powerStr.c_str());
-    if (powerStr.empty()) {
-        return text;
-    }
-    powerStr.pop_back();
-    return GetPowerDisplayString(text, powerStr);
+    std::string value;
+    BatterySrvClient::GetInstance().GetBatteryConfig(config, value);
+    BATTERY_HILOGI(COMP_SVC, "%{public}s: %{public}s", config.c_str(), value.c_str());
+    return value;
 }
 
-std::string NotificationLocale::GetPowerDisplayString(const std::string& text, const std::string& power)
+std::string NotificationLocale::FillTextWithPower(const std::string& text)
 {
-    if (power.empty()) {
+    std::string powerStr = GetBatteryConfig("max_power");
+    std::string batteryLevelStr = GetBatteryConfig("sink_bat_level");
+    if (powerStr.size() <= VALID_STRING_LEN + 1 || batteryLevelStr.size() <= VALID_STRING_LEN) {
+        auto iter = stringMap_.find("reverse_super_charge_start_text");
+        if (iter != stringMap_.end()) {
+            return iter->second;
+        }
+        return text;
+    }
+    powerStr = powerStr.substr(0, powerStr.size() - VALID_STRING_LEN - 1);
+    batteryLevelStr = batteryLevelStr.substr(0, batteryLevelStr.size() - VALID_STRING_LEN);
+    return GetPowerDisplayString(text, powerStr, batteryLevelStr);
+}
+
+std::string NotificationLocale::GetPowerDisplayString(const std::string& text, const std::string& power,
+    const std::string& batteryLevel)
+{
+    if (power.empty() || batteryLevel.empty()) {
         return text;
     }
     std::string powerStr = power;
     powerStr.push_back(WATT);
-    char buffer[MAX_BUFFER_SIZE] = {0};
-    int ret = sprintf_s(buffer, sizeof(buffer), text.c_str(), powerStr.c_str());
-    if (ret < 0) {
-        BATTERY_HILOGE(COMP_SVC, "sprintf_s: %{public}d", ret);
-        return text;
+    std::string batteryLevelStr = batteryLevel;
+    batteryLevelStr.push_back(PERCENT);
+
+    std::string str(text);
+    auto pos = str.find("%1$s");
+    if (pos != std::string::npos) {
+        str.replace(pos, 4, powerStr); // %1$s len is 4
     }
-    return std::string(buffer);
+    pos = str.find("%2$s");
+    if (pos != std::string::npos) {
+        str.replace(pos, 4, batteryLevelStr); // %2$s len is 4
+    }
+    return str;
 }
 }
 }

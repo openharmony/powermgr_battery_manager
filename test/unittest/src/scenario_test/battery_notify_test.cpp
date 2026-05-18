@@ -575,26 +575,15 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify026, TestSize.Level1)
 
 /**
  * @tc.name: BatteryNotify027
- * @tc.desc: Test GetPowerDisplayString
+ * @tc.desc: Test GetBatteryConfig
  * @tc.type: FUNC
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify027, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify027 function start!");
     auto& notificationLocale = NotificationLocale::GetInstance();
-    std::string fmtStr = "power: %s.";
-    std::map<std::string, std::string> params = {
-        {"77", "power: 77W."},
-        {"1234", "power: 1234W."},
-        {"", "power: %s."}
-    };
-    for (auto&[param, expected]: params) {
-        auto ret = notificationLocale.GetPowerDisplayString(fmtStr, param);
-        EXPECT_EQ(ret, expected);
-    }
-    std::string bigFmtStr(1025, 's');
-    auto ret = notificationLocale.GetPowerDisplayString(bigFmtStr, "123");
-    EXPECT_EQ(ret, bigFmtStr);
+    auto ret = notificationLocale.GetBatteryConfig("xxx_charging_power");
+    EXPECT_EQ(ret, "");
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify027 function end!");
 }
 
@@ -622,7 +611,7 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify029, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify029 function start!");
     constexpr const char* REVERSE_CHARGE_WITH_POWER_DISPLAY_TEXT_KEY =
-        "reverse_super_charge_with_power_display_start_text";
+        "reverse_super_charge_with_power_detail_display_start_text";
     auto& notificationLocale = NotificationLocale::GetInstance();
     auto tmpMap = notificationLocale.stringMap_;
     notificationLocale.stringMap_.insert(std::make_pair(REVERSE_CHARGE_WITH_POWER_DISPLAY_TEXT_KEY, "power: %s"));
@@ -641,27 +630,27 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify029, TestSize.Level1)
 
 /**
  * @tc.name: BatteryNotify030
- * @tc.desc: Test GetPowerDisplayString with abnormal inputs
+ * @tc.desc: Test GetPowerDisplayString with abnormal inputs for power and batteryLevel
  * @tc.type: FUNC
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify030, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify030 function start!");
     auto& notificationLocale = NotificationLocale::GetInstance();
-    
-    std::string fmtStr = "";
-    std::string power = "100";
-    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
-    EXPECT_EQ(ret, "");
+    notificationLocale.localeBaseName_ = "zh-Hans-CN";
+    std::string fmtStr = "Charging at %1$s with %2$s";
 
-    fmtStr = "No placeholder";
-    ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
-    EXPECT_EQ(ret, "No placeholder");
-
-    fmtStr = "Power: %s";
-    power = "";
-    ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
+    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, "", "50");
     EXPECT_EQ(ret, fmtStr);
+
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, "50", "");
+    EXPECT_EQ(ret, fmtStr);
+
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, "", "");
+    EXPECT_EQ(ret, fmtStr);
+
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, "15", "80");
+    EXPECT_EQ(ret, "Charging at 15W with 80%");
 
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify030 function end!");
 }
@@ -693,53 +682,49 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify031, TestSize.Level1)
 
 /**
  * @tc.name: BatteryNotify032
- * @tc.desc: Test GetPowerDisplayString with complex formats
+ * @tc.desc: Test GetPowerDisplayString with various power and batteryLevel values
  * @tc.type: FUNC
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify032, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify032 function start!");
     auto& notificationLocale = NotificationLocale::GetInstance();
-    
-    std::string fmtStr = "Power: %s%%";
-    std::string power = "90";
-    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
-    EXPECT_EQ(ret, "Power: 90W%");
-    
-    fmtStr = "Current power: %s";
-    power = "50";
-    ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
-    EXPECT_EQ(ret, "Current power: 50W");
-    
-    fmtStr = "Status: %s";
-    power = "High";
-    ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
-    EXPECT_EQ(ret, "Status: HighW");
-    
+    notificationLocale.localeBaseName_ = "zh-Hans-CN";
+    std::string fmtStr = "Output: %1$s, Device: %2$s";
+
+    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, "90", "50");
+    EXPECT_EQ(ret, "Output: 90W, Device: 50%");
+
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, "50", "75");
+    EXPECT_EQ(ret, "Output: 50W, Device: 75%");
+
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, "15", "100");
+    EXPECT_EQ(ret, "Output: 15W, Device: 100%");
+
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify032 function end!");
 }
 
 /**
  * @tc.name: BatteryNotify033
- * @tc.desc: Test GetPowerDisplayString boundary conditions
+ * @tc.desc: Test GetPowerDisplayString boundary conditions with batteryLevel
  * @tc.type: FUNC
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify033, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify033 function start!");
     auto& notificationLocale = NotificationLocale::GetInstance();
-    
-    std::string longPrefix(900, 'A');
-    std::string fmtStr = longPrefix + "%s";
-    std::string power = "10";
-    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
-    EXPECT_EQ(ret, longPrefix + "10W");
-    
-    std::string hugePrefix(1050, 'B');
-    fmtStr = hugePrefix + "%s";
-    ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
-    EXPECT_EQ(ret, fmtStr);
-    
+    notificationLocale.localeBaseName_ = "zh-Hans-CN";
+
+    std::string fmtStr = "%1$s / %2$s";
+    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, "10", "0");
+    EXPECT_EQ(ret, "10W / 0%");
+
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, "100", "100");
+    EXPECT_EQ(ret, "100W / 100%");
+
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, "1", "25");
+    EXPECT_EQ(ret, "1W / 25%");
+
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify033 function end!");
 }
 
@@ -765,19 +750,21 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify034, TestSize.Level1)
 
 /**
  * @tc.name: BatteryNotify035
- * @tc.desc: Test GetPowerDisplayString with multiple calls and state stability
+ * @tc.desc: Test GetPowerDisplayString with multiple calls and different batteryLevel values
  * @tc.type: FUNC
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify035, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify035 function start!");
     auto& notificationLocale = NotificationLocale::GetInstance();
-    std::string fmtStr = "Power: %s";
-    
-    for (int i = 0; i < 100; ++i) {
-        std::string power = std::to_string(i);
-        std::string expected = "Power: " + power + "W";
-        auto ret = notificationLocale.GetPowerDisplayString(fmtStr, power);
+    notificationLocale.localeBaseName_ = "zh-Hans-CN";
+    std::string fmtStr = "Power: %1$s, Level: %2$s";
+
+    for (int i = 0; i < 10; ++i) {
+        std::string power = std::to_string(i * 10);
+        std::string batteryLevel = std::to_string(i * 10);
+        std::string expected = "Power: " + power + "W, Level: " + batteryLevel + "%";
+        auto ret = notificationLocale.GetPowerDisplayString(fmtStr, power, batteryLevel);
         EXPECT_EQ(ret, expected);
     }
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify035 function end!");
@@ -785,47 +772,47 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify035, TestSize.Level1)
 
 /**
  * @tc.name: BatteryNotify036
- * @tc.desc: Test GetPowerDisplayString with various special characters in power string
+ * @tc.desc: Test GetPowerDisplayString with special characters in power and batteryLevel
  * @tc.type: FUNC
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify036, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify036 function start!");
     auto& notificationLocale = NotificationLocale::GetInstance();
-    std::string fmtStr = "Value: %s";
-    
-    std::vector<std::pair<std::string, std::string>> testCases = {
-        {"10.5", "Value: 10.5W"},
-        {"-5", "Value: -5W"},
-        {"0", "Value: 0W"},
-        {" ", "Value:  W"},
-        {"!", "Value: !W"},
-        {"@#$", "Value: @#$W"},
-        {"\n", "Value: \nW"},
-        {"\t", "Value: \tW"}
-    };
-    
-    for (const auto& testCase : testCases) {
-        auto ret = notificationLocale.GetPowerDisplayString(fmtStr, testCase.first);
-        EXPECT_EQ(ret, testCase.second);
-    }
+    notificationLocale.localeBaseName_ = "zh-Hans-CN";
+    std::string fmtStr = "%1$s / %2$s";
+
+    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, "10.5", "50");
+    EXPECT_EQ(ret, "10.5W / 50%");
+
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, "0", "0");
+    EXPECT_EQ(ret, "0W / 0%");
+
+    ret = notificationLocale.GetPowerDisplayString(fmtStr, "-5", "25");
+    EXPECT_EQ(ret, "-5W / 25%");
+
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify036 function end!");
 }
 
 /**
  * @tc.name: BatteryNotify037
- * @tc.desc: Test GetPowerDisplayString with different placeholder positions and repeated placeholders
+ * @tc.desc: Test GetPowerDisplayString with different placeholder positions for power and batteryLevel
  * @tc.type: FUNC
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify037, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify037 function start!");
     auto& notificationLocale = NotificationLocale::GetInstance();
-    
-    EXPECT_EQ(notificationLocale.GetPowerDisplayString("%s is power", "50"), "50W is power");
-    EXPECT_EQ(notificationLocale.GetPowerDisplayString("Power is %s", "50"), "Power is 50W");
-    EXPECT_EQ(notificationLocale.GetPowerDisplayString("P%sr", "50"), "P50Wr");
-    
+    notificationLocale.localeBaseName_ = "zh-Hans-CN";
+
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("%1$s is power, %2$s is battery", "50", "85"),
+        "50W is power, 85% is battery");
+
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("Battery: %1$s, Power: %2$s", "50", "85"),
+        "Battery: 50W, Power: 85%");
+
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("%1$s/%2$s", "50", "85"), "50W/85%");
+
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify037 function end!");
 }
 
@@ -859,32 +846,35 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify039, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify039 function start!");
     auto& notificationLocale = NotificationLocale::GetInstance();
-    
+
     std::string fmtStr = "Prefix";
     fmtStr.push_back('\0');
-    fmtStr += "Suffix %s";
-    
-    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, "10");
-    EXPECT_EQ(ret, "Prefix");
-    
+    fmtStr += "Suffix";
+
+    auto ret = notificationLocale.GetPowerDisplayString(fmtStr, "10", "50");
+    EXPECT_EQ(ret, fmtStr);
+
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify039 function end!");
 }
 
 /**
  * @tc.name: BatteryNotify040
- * @tc.desc: Test GetPowerDisplayString with very short format strings
+ * @tc.desc: Test GetPowerDisplayString with very short format strings with two placeholders
  * @tc.type: FUNC
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify040, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify040 function start!");
     auto& notificationLocale = NotificationLocale::GetInstance();
-    
-    EXPECT_EQ(notificationLocale.GetPowerDisplayString("%s", "1"), "1W");
-    EXPECT_EQ(notificationLocale.GetPowerDisplayString(" %s", "1"), " 1W");
-    EXPECT_EQ(notificationLocale.GetPowerDisplayString("%s ", "1"), "1W ");
-    EXPECT_EQ(notificationLocale.GetPowerDisplayString("A", "1"), "A");
-    
+    notificationLocale.localeBaseName_ = "zh-Hans-CN";
+
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("%1$s%2$s", "1", "50"), "1W50%");
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("%1$s %2$s", "1", "50"), "1W 50%");
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString("[%1$s][%2$s]", "1", "50"), "[1W][50%]");
+
+    auto ret = notificationLocale.GetPowerDisplayString("%1$s", "1", "50");
+    EXPECT_EQ(ret, "1W");
+
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify040 function end!");
 }
 
@@ -922,17 +912,21 @@ HWTEST_F(BatteryNotifyTest, BatteryNotify042, TestSize.Level1)
 
 /**
  * @tc.name: BatteryNotify043
- * @tc.desc: Test GetPowerDisplayString with numerical formatting (should be treated as string)
+ * @tc.desc: Test GetPowerDisplayString with numerical formatting for power and batteryLevel
  * @tc.type: FUNC
  */
 HWTEST_F(BatteryNotifyTest, BatteryNotify043, TestSize.Level1)
 {
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify043 function start!");
     auto& notificationLocale = NotificationLocale::GetInstance();
-    
-    EXPECT_EQ(notificationLocale.GetPowerDisplayString("Power: %s", "0.001"), "Power: 0.001W");
-    EXPECT_EQ(notificationLocale.GetPowerDisplayString("Power: %s", "1e6"), "Power: 1e6W");
-    
+    notificationLocale.localeBaseName_ = "zh-Hans-CN";
+    std::string fmtStr = "%1$s / %2$s";
+
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString(fmtStr, "0.001", "50"), "0.001W / 50%");
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString(fmtStr, "1e6", "50"), "1e6W / 50%");
+
+    EXPECT_EQ(notificationLocale.GetPowerDisplayString(fmtStr, "50", "0.5"), "50W / 0.5%");
+
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotify043 function end!");
 }
 
