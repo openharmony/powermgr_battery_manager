@@ -60,6 +60,7 @@
                 "init",
                 "libdrm",
                 "libpng",
+                "media_foundation",
                 "miscdevice",
                 "napi",
                 "player_framework",
