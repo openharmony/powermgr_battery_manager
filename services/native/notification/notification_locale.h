@@ -40,7 +40,9 @@ private:
     bool SaveJsonToMap(const std::string& fileStr, const std::string& targetPath,
         std::unordered_map<std::string, std::string>& container);
     std::string FillTextWithPower(const std::string& text);
-    std::string GetPowerDisplayString(const std::string& text, const std::string& power);
+    std::string GetBatteryConfig(const std::string& config);
+    std::string GetPowerDisplayString(const std::string& text, const std::string& power,
+        const std::string& batteryLevel);
     std::unordered_map<std::string, std::string> languageMap_;
     std::unordered_map<std::string, std::string> stringMap_;
     std::string localeBaseName_;

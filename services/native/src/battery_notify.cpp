@@ -72,6 +72,9 @@ const std::string SEND_COMMONEVENT = "sendcommonevent";
 const std::string SEND_CUSTOMEVENT = "sendcustomevent";
 const std::string SEND_POPUP = "sendpopup";
 const std::string BATTERY_CUSTOM_EVENT_PREFIX = "usual.event.battery";
+const std::string PRODUCT_TYPE_THREE = "RVS_ADAPTER_PRODUCT_TYPE=3";
+const std::string PRODUCT_TYPE_FOUR = "RVS_ADAPTER_PRODUCT_TYPE=4";
+const std::string PRODUCT_TYPE_FIVE = "RVS_ADAPTER_PRODUCT_TYPE=5";
 sptr<BatteryService> g_service = DelayedSpSingleton<BatteryService>::GetInstance();
 
 BatteryNotify::BatteryNotify()
@@ -146,6 +149,10 @@ void BatteryNotify::HandleUevent(BatteryInfo& info)
         } else if (ueventAct.compare(0, BATTERY_CUSTOM_EVENT_PREFIX.size(), BATTERY_CUSTOM_EVENT_PREFIX) == 0) {
             info.SetUevent(ueventName);
             PublishCustomEvent(info, ueventAct);
+            if (ueventName == PRODUCT_TYPE_THREE || ueventName == PRODUCT_TYPE_FOUR
+                || ueventName == PRODUCT_TYPE_FIVE) {
+                HandleNotification(ueventName);
+            }
         } else if (ueventAct == SEND_POPUP) {
             info.SetUevent(ueventName);
             PublishChangedEvent(info);
