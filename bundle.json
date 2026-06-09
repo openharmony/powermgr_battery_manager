@@ -73,7 +73,8 @@
                 "input",
                 "distributed_notification_service",
                 "i18n",
-                "image_framework"
+                "image_framework",
+                "taihe_ffi_gen"
             ]
         },
         "build": {
