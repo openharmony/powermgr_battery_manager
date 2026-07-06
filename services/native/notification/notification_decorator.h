@@ -18,6 +18,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 #include "button_event.h"
 #include "notification_center.h"
 
@@ -47,7 +48,7 @@ public:
     ~ButtonDecorator() override = default;
     void SetActionButton(const std::string& buttonName, const std::string& buttonAction) override;
 private:
-    std::shared_ptr<ButtonFactory> button_;
+    std::vector<std::shared_ptr<ButtonFactory>> buttonVec_;
 };
 
 class ReverseSuperChargeOpenButton : public ButtonFactory {
@@ -73,6 +74,19 @@ public:
     void RegisterButtonEvent(const std::string& buttonAction) override;
 private:
     void CloseMode();
+    ButtonCes buttonCes_;
+};
+
+class ReverseSuperChargeChangeDirButton : public ButtonFactory {
+public:
+    ReverseSuperChargeChangeDirButton() {}
+    ~ReverseSuperChargeChangeDirButton() override
+    {
+        buttonCes_.UnRegisterCesEvent();
+    }
+    void RegisterButtonEvent(const std::string& buttonAction) override;
+private:
+    void ChangeDir();
     ButtonCes buttonCes_;
 };
 }   // namespace PowerMgr
