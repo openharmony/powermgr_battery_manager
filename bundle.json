@@ -63,6 +63,7 @@
                 "media_foundation",
                 "miscdevice",
                 "napi",
+                "node",
                 "player_framework",
                 "power_manager",
                 "runtime_core",
