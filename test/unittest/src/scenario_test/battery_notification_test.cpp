@@ -238,5 +238,33 @@ HWTEST_F(BatteryNotificationTest, BatteryNotification007, TestSize.Level1)
     EXPECT_EQ(ret.name, REVERSE_CHARGE_POPUP_NAME);
     BATTERY_HILOGI(LABEL_TEST, "BatteryNotification007 function end!");
 }
+
+/**
+ * @tc.name: BatteryNotification008
+ * @tc.desc: Test reverse super charge change direction button
+ * @tc.type: FUNC
+ */
+HWTEST_F(BatteryNotificationTest, BatteryNotification008, TestSize.Level1)
+{
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification008 function start!");
+    std::shared_ptr<NotificationManager> notificationMgr = std::make_shared<NotificationManager>();
+    EXPECT_TRUE(notificationMgr != nullptr);
+
+    // Test change direction button
+    BatteryConfig::NotificationConf nCfg {
+        .name = "BatteryNotification008_popup",
+        .icon = "/etc/battery/battery_icon.png",
+        .text = "Change Direction",
+        .title = "Reverse Super Charge",
+        .firstButton = std::make_pair("Change Dir", "notification.battery.reverse_super_charge_change_direction"),
+        .secondButton = std::make_pair("", ""),
+    };
+    notificationMgr->PublishNotification(nCfg);
+    EXPECT_TRUE(notificationMgr->notificationMap_.size() == 1);
+    notificationMgr->CancleNotification("BatteryNotification008_popup");
+    EXPECT_TRUE(notificationMgr->notificationMap_.size() == 0);
+
+    BATTERY_HILOGI(LABEL_TEST, "BatteryNotification008 function end!");
+}
 }
 }
