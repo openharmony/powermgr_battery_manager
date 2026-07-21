@@ -167,6 +167,7 @@ ohos_unittest("test_battery_service_scenario") {
     sources += [ "src/scenario_test/battery_notification_test.cpp" ]
 
     external_deps += [
+      "ability_runtime:wantagent_innerkits",
       "distributed_notification_service:ans_innerkits",
       "i18n:intl_util",
       "image_framework:image_native",
