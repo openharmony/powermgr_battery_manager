@@ -18,6 +18,7 @@ config("batterynapi_private_config") {
 }
 
 ohos_shared_library("batteryinfo") {
+  branch_protector_ret = "pac_ret"
   sources = [
     "src/battery_info.cpp",
     "src/napi_error.cpp",
@@ -43,6 +44,7 @@ ohos_shared_library("batteryinfo") {
 }
 
 ohos_shared_library("charger") {
+  branch_protector_ret = "pac_ret"
   sources = [ "src/charger.cpp" ]
   configs = [
     "${battery_utils}:utils_config",
@@ -63,6 +65,7 @@ ohos_shared_library("charger") {
 }
 
 ohos_shared_library("battery") {
+  branch_protector_ret = "pac_ret"
   sources = [ "src/system_battery.cpp" ]
   configs = [
     "${battery_utils}:utils_config",
