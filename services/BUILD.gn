@@ -178,6 +178,7 @@ ohos_shared_library("battery_notification") {
   deps = [ "${battery_inner_api}:batterysrv_client" ]
 
   external_deps = [
+    "ability_base:configuration",
     "ability_base:want",
     "ability_base:zuri",
     "cJSON:cjson",
