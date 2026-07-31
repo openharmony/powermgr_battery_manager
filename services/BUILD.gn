@@ -180,6 +180,7 @@ ohos_shared_library("battery_notification") {
   external_deps = [
     "ability_base:want",
     "ability_base:zuri",
+    "ability_runtime:wantagent_innerkits",
     "cJSON:cjson",
     "c_utils:utils",
     "config_policy:configpolicy_util",
