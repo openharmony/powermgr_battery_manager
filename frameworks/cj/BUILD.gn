@@ -26,6 +26,7 @@ ohos_shared_library("cj_battery_info_ffi") {
     cfi_cross_dso = true
     debug = false
   }
+  branch_protector_ret = "pac_ret"
 
   sources = [ "src/battery_info_ffi.cpp" ]
   configs = [
