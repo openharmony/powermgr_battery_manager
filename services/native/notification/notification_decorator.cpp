@@ -20,6 +20,7 @@
 namespace {
 static const std::string REVERSE_SUPER_CHARGE_OPEN = "notification.battery.reverse_super_charge_open";
 static const std::string REVERSE_SUPER_CHARGE_CLOSE = "notification.battery.reverse_super_charge_close";
+static const std::string REVERSE_SUPER_CHARGE_CHANGE_DIR = "notification.battery.reverse_super_charge_change_direction";
 }
 namespace OHOS {
 namespace PowerMgr {
@@ -50,17 +51,21 @@ void ButtonDecorator::SetActionButton(const std::string& buttonName, const std::
         return;
     }
     batteryNotification_->SetActionButton(buttonName, buttonAction);
+    std::shared_ptr<ButtonFactory> button = nullptr;
     if (buttonAction == REVERSE_SUPER_CHARGE_OPEN) {
-        button_ = std::make_shared<ReverseSuperChargeOpenButton>();
+        button = std::make_shared<ReverseSuperChargeOpenButton>();
     } else if (buttonAction == REVERSE_SUPER_CHARGE_CLOSE) {
-        button_ = std::make_shared<ReverseSuperChargeCloseButton>();
+        button = std::make_shared<ReverseSuperChargeCloseButton>();
+    } else if (buttonAction == REVERSE_SUPER_CHARGE_CHANGE_DIR) {
+        button = std::make_shared<ReverseSuperChargeChangeDirButton>();
     }
-    if (button_ == nullptr) {
+    if (button == nullptr) {
         BATTERY_HILOGW(COMP_SVC, "button_ is nullptr, buttonName[%{public}s] buttonAction[%{public}s]",
             buttonName.c_str(), buttonAction.c_str());
         return;
     }
-    button_->RegisterButtonEvent(buttonAction);
+    button->RegisterButtonEvent(buttonAction);
+    buttonVec_.emplace_back(button);
 }
 
 void ReverseSuperChargeOpenButton::RegisterButtonEvent(const std::string& buttonAction)
@@ -91,6 +96,21 @@ void ReverseSuperChargeCloseButton::CloseMode()
 {
     BatterySrvClient::GetInstance().SetBatteryConfig("reverse_super_charge", "1");
     BATTERY_HILOGI(COMP_SVC, "onReceiveCloseModeEvent end");
+}
+
+void ReverseSuperChargeChangeDirButton::RegisterButtonEvent(const std::string& buttonAction)
+{
+    EventHandle onReceiveChangeDirEvent = [this](const OHOS::EventFwk::CommonEventData& data) {
+        this->ChangeDir();
+    };
+    buttonCes_.AddEventHandle(buttonAction, onReceiveChangeDirEvent);
+    buttonCes_.RegisterCesEvent();
+}
+
+void ReverseSuperChargeChangeDirButton::ChangeDir()
+{
+    BatterySrvClient::GetInstance().SetBatteryConfig("reverse_super_charge", "0");
+    BATTERY_HILOGI(COMP_SVC, "onReceiveChangeDirEvent end");
 }
 }
 }
