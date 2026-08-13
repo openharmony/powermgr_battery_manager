@@ -19,6 +19,7 @@ config("batterynapi_private_config") {
 
 ohos_shared_library("batteryinfo") {
   branch_protector_ret = "pac_ret"
+  branch_protector_frt = "bti"
   sources = [
     "src/battery_info.cpp",
     "src/napi_error.cpp",
