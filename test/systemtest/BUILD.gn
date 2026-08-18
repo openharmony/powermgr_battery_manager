@@ -113,7 +113,6 @@ ohos_systemtest("test_battery_event_systemtest") {
 
   external_deps = [
     "ability_base:want",
-    "battery_manager:batterysrv_client",
     "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
