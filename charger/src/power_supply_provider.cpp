@@ -15,6 +15,7 @@
 
 #include "power_supply_provider.h"
 #include "charger_log.h"
+#include "parse_sysfs_int.h"
 #include <dirent.h>
 #include <fcntl.h>
 #include <fstream>
@@ -28,7 +29,6 @@ namespace PowerMgr {
 namespace {
 constexpr int32_t MAX_SYSFS_SIZE = 64;
 constexpr int32_t MAX_BUFF_SIZE = 128;
-constexpr int32_t STR_TO_LONG_LEN = 10;
 constexpr int32_t MKDIR_WAIT_TIME = 1;
 constexpr int32_t NUM_ZERO = 0;
 const std::string POWER_SUPPLY_BASE_PATH = "/sys/class/power_supply";
@@ -54,7 +54,13 @@ PowerSupplyProvider::PowerSupplyProvider()
 
 inline int32_t PowerSupplyProvider::ParseInt(const char* str)
 {
-    return static_cast<int32_t>(strtol(str, nullptr, STR_TO_LONG_LEN));
+    int32_t value = 0;
+    if (!ParseSysfsInt32(str, value)) {
+        BATTERY_HILOGW(FEATURE_CHARGING, "invalid sysfs integer: %{public}s",
+            (str == nullptr) ? "null" : str);
+        return 0;
+    }
+    return value;
 }
 
 inline void PowerSupplyProvider::Trim(char* str)
