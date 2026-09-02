@@ -32,6 +32,8 @@ ohos_shared_library("batterysrv_client") {
 
   configs = [ "${battery_utils}:coverage_flags" ]
 
+  version_script = "libbatterysrv_client.map"
+
   public_configs = [
     "${battery_service_zidl}:batterysrv_public_config",
     "${battery_utils}:utils_config",
