@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2026 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+{
+    global:
+        extern "C++" {
+            OHOS::PowerMgr::BatterySrvClient::GetPresent*;
+            OHOS::PowerMgr::BatterySrvClient::GetVoltage*;
+            OHOS::PowerMgr::BatterySrvClient::ResetProxy*;
+            OHOS::PowerMgr::BatterySrvClient::GetCapacity*;
+            OHOS::PowerMgr::BatterySrvClient::GetNowCurrent*;
+            OHOS::PowerMgr::BatterySrvClient::GetTechnology*;
+            OHOS::PowerMgr::BatterySrvClient::GetPluggedType*;
+            OHOS::PowerMgr::BatterySrvClient::GetTotalEnergy*;
+            OHOS::PowerMgr::BatterySrvClient::GetHealthStatus*;
+            OHOS::PowerMgr::BatterySrvClient::GetRemainEnergy*;
+            OHOS::PowerMgr::BatterySrvClient::GetBatteryConfig*;
+            OHOS::PowerMgr::BatterySrvClient::GetCapacityLevel*;
+            OHOS::PowerMgr::BatterySrvClient::SetBatteryConfig*;
+            OHOS::PowerMgr::BatterySrvClient::GetChargingStatus*;
+            OHOS::PowerMgr::BatterySrvClient::GetBatteryTemperature*;
+            OHOS::PowerMgr::BatterySrvClient::GetRemainingChargeTime*;
+            OHOS::PowerMgr::BatterySrvClient::IsBatteryConfigSupported*;
+            OHOS::PowerMgr::BatterySrvClient::Connect*;
+            OHOS::PowerMgr::BatterySrvClient::BatterySrvClient*;
+            OHOS::PowerMgr::BatterySrvClient::~BatterySrvClient*;
+            OHOS::PowerMgr::BatterySrvClient::BatterySrvDeathRecipient::OnRemoteDied*;
+            OHOS::PowerMgr::BatterySrvProxy::GetPresent*;
+            OHOS::PowerMgr::BatterySrvProxy::GetVoltage*;
+            OHOS::PowerMgr::BatterySrvProxy::GetCapacity*;
+            OHOS::PowerMgr::BatterySrvProxy::GetNowCurrent*;
+            OHOS::PowerMgr::BatterySrvProxy::GetTechnology*;
+            OHOS::PowerMgr::BatterySrvProxy::GetPluggedType*;
+            OHOS::PowerMgr::BatterySrvProxy::GetTotalEnergy*;
+            OHOS::PowerMgr::BatterySrvProxy::GetHealthStatus*;
+            OHOS::PowerMgr::BatterySrvProxy::GetRemainEnergy*;
+            OHOS::PowerMgr::BatterySrvProxy::GetBatteryConfig*;
+            OHOS::PowerMgr::BatterySrvProxy::GetCapacityLevel*;
+            OHOS::PowerMgr::BatterySrvProxy::SetBatteryConfig*;
+            OHOS::PowerMgr::BatterySrvProxy::GetChargingStatus*;
+            OHOS::PowerMgr::BatterySrvProxy::GetCurrentAverage*;
+            OHOS::PowerMgr::BatterySrvProxy::GetBatteryTemperature*;
+            OHOS::PowerMgr::BatterySrvProxy::GetRemainingChargeTime*;
+            OHOS::PowerMgr::BatterySrvProxy::IsBatteryConfigSupported*;
+            vtable?for?OHOS::PowerMgr::BatterySrvProxy;
+            vtable?for?OHOS::PowerMgr::BatterySrvClient*;
+            VTT?for?OHOS::PowerMgr::BatterySrvProxy;
+            VTT?for?OHOS::PowerMgr::BatterySrvClient*;
+        };
+    local:
+        *;
+};
