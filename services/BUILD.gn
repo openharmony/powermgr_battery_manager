@@ -158,6 +158,8 @@ ohos_shared_library("battery_notification") {
   }
   branch_protector_ret = "pac_ret"
 
+  version_script = "libbattery_notification.map"
+
   include_dirs = [ "native/notification" ]
 
   sources = [

@@ -61,6 +61,8 @@ taihe_shared_library("battery_manager_taihe_native") {
     "ipc:ipc_core",
   ]
 
+  version_script = "libbattery_manager_taihe_native.map"
+
   subsystem_name = "powermgr"
   part_name = "$batterymgr_native_part_name"
 }
