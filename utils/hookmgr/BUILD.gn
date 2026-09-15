@@ -38,6 +38,8 @@ ohos_shared_library("battery_hookmgr") {
 
   sources = [ "src/battery_hookmgr.cpp" ]
 
+  version_script = "libbattery_hookmgr.map"
+
   configs = [
     ":private_config",
     "${battery_utils}:coverage_flags",
