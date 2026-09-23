@@ -113,6 +113,7 @@ void BatteryService::OnStart()
     }
     AddSystemAbilityListener(MISCDEVICE_SERVICE_ABILITY_ID);
     AddSystemAbilityListener(COMMON_EVENT_SERVICE_ID);
+    AddSystemAbilityListener(DEVICE_SERVICE_MANAGER_SA_ID);
     ready_ = true;
 }
 
@@ -148,6 +149,10 @@ void BatteryService::OnAddSystemAbility(int32_t systemAbilityId, const std::stri
         batteryLight_.InitLight();
     }
 
+    if (systemAbilityId == DEVICE_SERVICE_MANAGER_SA_ID && !isHdiReady_.load()) {
+        RegisterHdiStatusListener();
+    }
+
     if (systemAbilityId == COMMON_EVENT_SERVICE_ID && !isCommonEventReady_.load()) {
 #ifdef BATTERY_MANAGER_SET_LOW_CAPACITY_THRESHOLD
         SubscribeCommonEvent();
@@ -172,6 +177,17 @@ void BatteryService::OnAddSystemAbility(int32_t systemAbilityId, const std::stri
             info.GetUevent().c_str());
         batteryNotify_->PublishEvents(info);
         isCommonEventReady_.store(true, std::memory_order_relaxed);
+    }
+}
+
+void BatteryService::OnRemoveSystemAbility(int32_t systemAbilityId, const std::string& deviceId)
+{
+    BATTERY_HILOGI(COMP_SVC, "Remove systemAbilityId=%{public}d, deviceId=%{private}s",
+        systemAbilityId, deviceId.c_str());
+    if (systemAbilityId == DEVICE_SERVICE_MANAGER_SA_ID) {
+        hdiServiceMgr_ = nullptr;
+        iBatteryInterface_ = nullptr;
+        isHdiReady_.store(false, std::memory_order_relaxed);
     }
 }
 
@@ -397,6 +413,7 @@ bool BatteryService::RegisterHdiStatusListener()
         FFRTUtils::SubmitDelayTask(retryTask, RETRY_TIME, g_queue);
         return false;
     }
+    isHdiReady_.store(true, std::memory_order_relaxed);
     return true;
 }
 
