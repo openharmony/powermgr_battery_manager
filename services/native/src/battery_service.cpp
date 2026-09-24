@@ -149,7 +149,7 @@ void BatteryService::OnAddSystemAbility(int32_t systemAbilityId, const std::stri
         batteryLight_.InitLight();
     }
 
-    if (systemAbilityId == DEVICE_SERVICE_MANAGER_SA_ID && !isHdiReady_.load()) {
+    if (systemAbilityId == DEVICE_SERVICE_MANAGER_SA_ID && isHdiRemove_.load()) {
         RegisterHdiStatusListener();
     }
 
@@ -187,7 +187,7 @@ void BatteryService::OnRemoveSystemAbility(int32_t systemAbilityId, const std::s
     if (systemAbilityId == DEVICE_SERVICE_MANAGER_SA_ID) {
         hdiServiceMgr_ = nullptr;
         iBatteryInterface_ = nullptr;
-        isHdiReady_.store(false, std::memory_order_relaxed);
+        isHdiRemove_.store(true, std::memory_order_relaxed);
     }
 }
 
@@ -413,7 +413,6 @@ bool BatteryService::RegisterHdiStatusListener()
         FFRTUtils::SubmitDelayTask(retryTask, RETRY_TIME, g_queue);
         return false;
     }
-    isHdiReady_.store(true, std::memory_order_relaxed);
     return true;
 }
 

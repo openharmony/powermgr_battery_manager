@@ -177,7 +177,7 @@ private:
     bool chargeFlag_ { false };
     std::atomic_bool isBatteryHdiReady_ { false };
     std::atomic_bool isCommonEventReady_ { false };
-    std::atomic_bool isHdiReady_ { false };
+    std::atomic_bool isHdiRemove_ { false };
     int32_t commEventRetryTimes_ { 0 };
     int32_t lastCapacity_ { 0 };
     int32_t dialogId_ { INVALID_BATT_INT_VALUE };
