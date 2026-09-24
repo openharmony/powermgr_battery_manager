@@ -151,6 +151,7 @@ void BatteryService::OnAddSystemAbility(int32_t systemAbilityId, const std::stri
 
     if (systemAbilityId == DEVICE_SERVICE_MANAGER_SA_ID && isHdiRemove_.load()) {
         RegisterHdiStatusListener();
+        isHdiRemove_.store(false, std::memory_order_relaxed);
     }
 
     if (systemAbilityId == COMMON_EVENT_SERVICE_ID && !isCommonEventReady_.load()) {
@@ -184,7 +185,7 @@ void BatteryService::OnRemoveSystemAbility(int32_t systemAbilityId, const std::s
 {
     BATTERY_HILOGI(COMP_SVC, "Remove systemAbilityId=%{public}d, deviceId=%{private}s",
         systemAbilityId, deviceId.c_str());
-    if (systemAbilityId == DEVICE_SERVICE_MANAGER_SA_ID) {
+    if (systemAbilityId == DEVICE_SERVICE_MANAGER_SA_ID && !isHdiRemove_.load()) {
         hdiServiceMgr_ = nullptr;
         iBatteryInterface_ = nullptr;
         isHdiRemove_.store(true, std::memory_order_relaxed);
